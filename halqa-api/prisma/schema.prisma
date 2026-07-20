@@ -1,0 +1,644 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MEMBER
+  ADMIN
+}
+enum KycStatus {
+  NONE
+  PENDING
+  VERIFIED
+  REJECTED
+}
+enum CommitteeStatus {
+  FORMING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+enum CommitteeMode {
+  ROTATING
+  HYBRID
+  INVESTMENT
+}
+enum CadencePreset {
+  VERY_SHORT
+  SHORT
+  MID
+  LONG
+}
+enum DistributionMode {
+  SHARE
+  COMPOUND
+}
+enum OrderMode {
+  RANDOM_BALLOT
+  HOST_ASSIGNED
+  CREDIT_WEIGHTED
+}
+enum JoinPolicy {
+  OPEN_UNTIL_FULL
+  OPEN_UNTIL_DATE
+  INVITE_ONLY
+}
+enum MemberStatus {
+  ACTIVE
+  EXITED
+  BANNED
+  REMOVED
+}
+enum RoundStatus {
+  PENDING
+  COLLECTING
+  INVESTED
+  CLOSED
+}
+enum PaymentStatus {
+  PENDING
+  PAID
+  LATE
+  MISSED
+}
+enum DepositStatus {
+  PENDING
+  HELD
+  REFUNDED
+  FORFEITED
+}
+enum InvestmentStatus {
+  ACTIVE
+  LIQUIDATED
+}
+enum ListingStatus {
+  OPEN
+  ACCEPTED
+  CANCELLED
+}
+enum ChangeStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+enum RiskBand {
+  LOW
+  MEDIUM
+  HIGH
+  EXTREME
+}
+enum RiskConsentStatus {
+  PENDING
+  ACCEPTED
+  WITHDRAWN
+}
+enum HoldbackStatus {
+  HELD
+  RELEASED
+  FORFEITED
+}
+enum RecoveryStatus {
+  OPEN
+  PAYMENT_RECORDED
+  REHABILITATED
+  WAIVED
+}
+enum CustodyMode {
+  RECORDED
+  BANK_CUSTODY
+}
+enum CommitteeTier {
+  CLASSIC
+  SUKOON
+  BAZAAR
+  PRIORITY
+  SIGMA
+}
+enum StatementLineStatus {
+  MATCHED
+  UNMATCHED
+  DUPLICATE
+}
+
+model User {
+  id String @id @default(cuid())
+  fullName String
+  username String @unique
+  phone String @unique
+  email String @unique
+  cnic String? @unique
+  passwordHash String
+  dataConsent Boolean @default(false)
+  failedLogins Int @default(0)
+  lockUntil DateTime?
+  creditScore Int @default(700)
+  role Role @default(MEMBER)
+  kycLevel Int @default(0)
+  kycStatus KycStatus @default(NONE)
+  isBanned Boolean @default(false)
+  banReason String?
+  defaultFlag Boolean @default(false)
+  cooldownUntil DateTime?
+  deviceId String?
+  bankVerifiedAt DateTime?
+  bankVerifyRef String?
+  vaultParkingEnabled Boolean @default(false)
+  vaultTier String @default("STANDARD")
+  vaultAutoCover Boolean @default(false)
+  vaultAllocation String @default("")
+  referredById String?
+  referredBy User? @relation("Referrals", fields:[referredById], references:[id])
+  referrals User[] @relation("Referrals")
+  paymentStreak Int @default(0)
+  averageRating Float @default(0)
+  ratingCount Int @default(0)
+  createdAt DateTime @default(now())
+  hostedCommittees Committee[] @relation("Host")
+  memberships CommitteeMember[]
+  receivedRounds Round[] @relation("Recipient")
+  payments Payment[]
+  creditEvents CreditEvent[]
+  notifications Notification[]
+  chatMessages ChatMessage[]
+  chatReads ChatRead[]
+  sellListings ExchangeListing[] @relation("Seller")
+  buyListings ExchangeListing[] @relation("Buyer")
+  ledgerEntries LedgerEntry[] @relation("LedgerActor")
+  kyc KycRecord?
+  refreshTokens RefreshToken[]
+  scheduleRequests ScheduleChangeRequest[] @relation("Requester")
+  reviewedScheduleRequests ScheduleChangeRequest[] @relation("Reviewer")
+  riskConsents RiskConsent[]
+  bids ExchangeBid[]
+  guaranteesGiven ProtectionCommitment[] @relation("Guarantor")
+  recoveryCases RecoveryCase[]
+}
+
+model Committee {
+  id String @id @default(cuid())
+  name String
+  hostId String
+  host User @relation("Host", fields:[hostId], references:[id])
+  status CommitteeStatus @default(FORMING)
+  mode CommitteeMode @default(ROTATING)
+  memberCap Int
+  contributionPaisa BigInt
+  cadencePreset CadencePreset
+  periodDays Int
+  reinvestRatio Float @default(0)
+  schemeId String?
+  scheme Scheme? @relation(fields:[schemeId], references:[id])
+  distributionMode DistributionMode @default(SHARE)
+  allowTurnCashout Boolean @default(false)
+  allowTurnSale Boolean @default(true)
+  orderMode OrderMode @default(CREDIT_WEIGHTED)
+  joinPolicy JoinPolicy @default(OPEN_UNTIL_FULL)
+  joinDeadline DateTime?
+  minMembersToStart Int
+  autoStart Boolean @default(false)
+  currentRound Int @default(0)
+  cycleNumber Int @default(1)
+  scheduleLockedAt DateTime?
+  inviteCode String @unique
+  createdAt DateTime @default(now())
+  riskBand RiskBand @default(LOW)
+  riskScore Int @default(2)
+  riskTolerance Int @default(3)
+  riskPolicyJson Json?
+  memberConsentRequired Boolean @default(true)
+  liquidityReserveBps Int @default(1000)
+  payoutBufferBps Int @default(1500)
+  insuranceReserveBps Int @default(0)
+  latePenaltyBps Int @default(200)
+  depositCoverageBps Int @default(7000)
+  expectedPaymentLeadDays Int @default(0)
+  custodyMode CustodyMode @default(RECORDED)
+  partnerId String?
+  partner PartnerBank? @relation(fields:[partnerId], references:[id])
+  payoutGuaranteed Boolean @default(false)
+  slotFeeBps Int @default(0)
+  tier CommitteeTier @default(CLASSIC)
+  prizeDrawEnabled Boolean @default(false)
+  earlyFeeBps Int @default(0)
+  dividendPooled Boolean @default(false)
+  goalType String?
+  goalName String?
+  goalTargetPaisa BigInt?
+  cleanStreak Int @default(0)
+  floatSchemeId String?
+  floatScheme Scheme? @relation("FloatScheme", fields:[floatSchemeId], references:[id])
+  depositSchemeId String?
+  depositScheme Scheme? @relation("DepositScheme", fields:[depositSchemeId], references:[id])
+  statementBatches StatementBatch[]
+  members CommitteeMember[]
+  rounds Round[]
+  ledgerEntries LedgerEntry[]
+  investments Investment[]
+  exchangeListings ExchangeListing[]
+  chatMessages ChatMessage[]
+  chatReads ChatRead[]
+  creditEvents CreditEvent[]
+  scheduleRequests ScheduleChangeRequest[]
+  riskAssessments RiskAssessment[]
+  riskConsents RiskConsent[]
+  payoutHoldbacks PayoutHoldback[]
+  recoveryCases RecoveryCase[]
+}
+
+model CommitteeMember {
+  id String @id @default(cuid())
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
+  userId String
+  user User @relation(fields:[userId], references:[id])
+  turnPosition Int
+  hasReceived Boolean @default(false)
+  status MemberStatus @default(ACTIVE)
+  paidPrincipalPaisa BigInt @default(0)
+  joinedAt DateTime @default(now())
+  exitedAt DateTime?
+  securityDeposits SecurityDeposit[]
+  protectionCommitment ProtectionCommitment?
+  payoutHoldbacks PayoutHoldback[]
+  @@unique([committeeId,userId])
+  @@unique([committeeId,turnPosition])
+}
+
+model Round {
+  id String @id @default(cuid())
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
+  roundNumber Int
+  recipientId String
+  recipient User @relation("Recipient", fields:[recipientId], references:[id])
+  status RoundStatus @default(PENDING)
+  dueDate DateTime
+  payoutDate DateTime
+  graceDays Int @default(5)
+  grossPoolPaisa BigInt @default(0)
+  reinvestPaisa BigInt @default(0)
+  payoutPaisa BigInt @default(0)
+  payments Payment[]
+  investments Investment[]
+  creditEvents CreditEvent[]
+  payoutHoldback PayoutHoldback?
+  recoveryCases RecoveryCase[]
+  @@unique([committeeId,roundNumber])
+}
+
+model Payment {
+  id String @id @default(cuid())
+  roundId String
+  round Round @relation(fields:[roundId], references:[id], onDelete:Cascade)
+  payerId String
+  payer User @relation(fields:[payerId], references:[id])
+  amountPaisa BigInt
+  dueDate DateTime
+  status PaymentStatus @default(PENDING)
+  paidVia String?
+  txnRef String?
+  paidAt DateTime?
+  createdAt DateTime @default(now())
+  penaltyPaisa BigInt @default(0)
+  reminderLevel Int @default(0)
+  recoveryCase RecoveryCase?
+  @@unique([roundId,payerId])
+}
+
+model LedgerEntry {
+  id String @id @default(cuid())
+  committeeId String?
+  committee Committee? @relation(fields:[committeeId], references:[id])
+  actorId String?
+  actor User? @relation("LedgerActor", fields:[actorId], references:[id])
+  debit String
+  credit String
+  amountPaisa BigInt
+  reason String
+  refType String
+  refId String
+  idempotencyKey String @unique
+  createdAt DateTime @default(now())
+}
+
+model SecurityDeposit {
+  id String @id @default(cuid())
+  membershipId String
+  membership CommitteeMember @relation(fields:[membershipId], references:[id])
+  amountPaisa BigInt
+  status DepositStatus @default(PENDING)
+  txnRef String?
+  confirmedAt DateTime?
+  createdAt DateTime @default(now())
+  releasedAt DateTime?
+  accruedYieldPaisa BigInt @default(0)
+}
+
+model ProtectionCommitment {
+  id String @id @default(cuid())
+  membershipId String @unique
+  membership CommitteeMember @relation(fields:[membershipId], references:[id], onDelete:Cascade)
+  guarantorUserId String?
+  guarantor User? @relation("Guarantor", fields:[guarantorUserId], references:[id])
+  promissoryRef String?
+  autoDebitRef String?
+  acceptedTermsAt DateTime?
+  verifiedByHostAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PayoutHoldback {
+  id String @id @default(cuid())
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
+  membershipId String
+  membership CommitteeMember @relation(fields:[membershipId], references:[id], onDelete:Cascade)
+  roundId String @unique
+  round Round @relation(fields:[roundId], references:[id], onDelete:Cascade)
+  amountPaisa BigInt
+  requiredCleanPayments Int @default(2)
+  cleanPayments Int @default(0)
+  status HoldbackStatus @default(HELD)
+  createdAt DateTime @default(now())
+  releasedAt DateTime?
+}
+
+model RecoveryCase {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
+  roundId String
+  round Round @relation(fields:[roundId], references:[id], onDelete:Cascade)
+  paymentId String @unique
+  payment Payment @relation(fields:[paymentId], references:[id], onDelete:Cascade)
+  outstandingPaisa BigInt
+  penaltyPaisa BigInt @default(0)
+  status RecoveryStatus @default(OPEN)
+  openedAt DateTime @default(now())
+  resolvedAt DateTime?
+  @@index([userId,status])
+}
+
+model Scheme {
+  id String @id @default(cuid())
+  name String
+  slug String @unique
+  category String
+  riskLevel String @default("low")
+  issuer String
+  tenorDays Int
+  indicativeRatePct Float
+  minAmountPaisa BigInt
+  shariahCompliant Boolean
+  isActive Boolean @default(true)
+  rateAsOf DateTime
+  sourceUrl String
+  riskScore Int @default(2)
+  liquidityDays Int @default(1)
+  volatilityBps Int @default(100)
+  creditRiskBps Int @default(50)
+  regulatoryStatus String @default("CURATED")
+  eligibilityNotes String?
+  committees Committee[]
+  floatCommittees Committee[] @relation("FloatScheme")
+  depositCommittees Committee[] @relation("DepositScheme")
+  investments Investment[]
+}
+
+model RiskAssessment {
+  id String @id @default(cuid())
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
+  modelVersion String
+  score Int
+  band RiskBand
+  investmentRisk Int
+  defaultRisk Int
+  liquidityRisk Int
+  concentrationRisk Int
+  controlStrength Int
+  expectedLossBps Int
+  coverageRatioBps Int
+  factorsJson Json
+  recommendationsJson Json
+  assessedAt DateTime @default(now())
+  @@index([committeeId, assessedAt])
+}
+
+model RiskConsent {
+  id String @id @default(cuid())
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  modelVersion String
+  riskScore Int
+  policyHash String
+  status RiskConsentStatus @default(PENDING)
+  acceptedAt DateTime?
+  createdAt DateTime @default(now())
+  @@unique([committeeId,userId,policyHash])
+}
+
+model Investment {
+  id String @id @default(cuid())
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id])
+  roundId String?
+  round Round? @relation(fields:[roundId], references:[id])
+  schemeId String
+  scheme Scheme @relation(fields:[schemeId], references:[id])
+  principalPaisa BigInt
+  ratePctAtDeploy Float
+  status InvestmentStatus @default(ACTIVE)
+  deployedAt DateTime @default(now())
+  liquidatedAt DateTime?
+  realizedProfitPaisa BigInt?
+}
+
+model ExchangeListing {
+  id String @id @default(cuid())
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id])
+  sellerId String
+  seller User @relation("Seller", fields:[sellerId], references:[id])
+  position Int
+  payoutPaisa BigInt
+  premiumPaisa BigInt @default(0)
+  buyerId String?
+  buyer User? @relation("Buyer", fields:[buyerId], references:[id])
+  status ListingStatus @default(OPEN)
+  listedAt DateTime @default(now())
+  acceptedAt DateTime?
+  bids ExchangeBid[]
+}
+
+model ExchangeBid {
+  id String @id @default(cuid())
+  listingId String
+  listing ExchangeListing @relation(fields:[listingId], references:[id], onDelete:Cascade)
+  bidderId String
+  bidder User @relation(fields:[bidderId], references:[id])
+  premiumPaisa BigInt
+  status ListingStatus @default(OPEN)
+  createdAt DateTime @default(now())
+}
+
+model CreditEvent {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id])
+  committeeId String?
+  committee Committee? @relation(fields:[committeeId], references:[id])
+  roundId String?
+  round Round? @relation(fields:[roundId], references:[id])
+  checkpoint String
+  delta Int
+  reason String
+  scoredAt DateTime @default(now())
+  @@unique([userId,roundId,checkpoint])
+}
+
+model ChatMessage {
+  id String @id @default(cuid())
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
+  senderId String
+  sender User @relation(fields:[senderId], references:[id])
+  body String
+  pinned Boolean @default(false)
+  sentAt DateTime @default(now())
+}
+
+model ChatRead {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id])
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
+  lastReadAt DateTime
+  @@unique([userId,committeeId])
+}
+
+model Notification {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  type String
+  message String
+  isRead Boolean @default(false)
+  createdAt DateTime @default(now())
+}
+
+model KycRecord {
+  id String @id @default(cuid())
+  userId String @unique
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  cnicNumber String
+  cnicFrontUrl String
+  cnicBackUrl String
+  selfieUrl String
+  faceMatchScore Float?
+  ocrName String?
+  status KycStatus @default(PENDING)
+  verifiedAt DateTime?
+}
+
+model ScheduleChangeRequest {
+  id String @id @default(cuid())
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id])
+  requestedById String
+  requestedBy User @relation("Requester", fields:[requestedById], references:[id])
+  payloadJson Json
+  status ChangeStatus @default(PENDING)
+  reviewedById String?
+  reviewedBy User? @relation("Reviewer", fields:[reviewedById], references:[id])
+  reviewedAt DateTime?
+}
+
+model AuditLog {
+  id String @id @default(cuid())
+  actorId String?
+  action String
+  entityType String
+  entityId String
+  payloadJson Json
+  at DateTime @default(now())
+}
+
+model PartnerBank {
+  id String @id @default(cuid())
+  name String
+  shortCode String @unique
+  custodyEnabled Boolean @default(true)
+  kycEnabled Boolean @default(true)
+  raastEnabled Boolean @default(true)
+  sandbox Boolean @default(true)
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  committees Committee[]
+  statementBatches StatementBatch[]
+}
+
+model StatementBatch {
+  id String @id @default(cuid())
+  partnerId String
+  partner PartnerBank @relation(fields:[partnerId], references:[id])
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
+  importedById String
+  totalLines Int
+  matchedLines Int
+  createdAt DateTime @default(now())
+  lines StatementLine[]
+}
+
+model StatementLine {
+  id String @id @default(cuid())
+  batchId String
+  batch StatementBatch @relation(fields:[batchId], references:[id], onDelete:Cascade)
+  lineRef String
+  amountPaisa BigInt
+  narration String
+  postedAt DateTime
+  matchedPaymentId String? @unique
+  status StatementLineStatus @default(UNMATCHED)
+  @@index([batchId])
+}
+
+model RefreshToken {
+  id String @id @default(cuid())
+  tokenHash String @unique
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  familyId String @default("legacy")
+  revokedAt DateTime?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([familyId])
+}
+
+// Append-only forensic trail of security-relevant events. Never updated or
+// deleted in normal operation — this is the record you hand an auditor.
+model SecurityEvent {
+  id String @id @default(cuid())
+  type String
+  userId String?
+  identity String?
+  ip String?
+  userAgent String?
+  detail String?
+  createdAt DateTime @default(now())
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+}

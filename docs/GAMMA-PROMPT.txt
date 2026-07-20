@@ -1,0 +1,85 @@
+GAMMA SETTINGS: Presentation · 10 cards · 16:9 · split by "---" breaks · preserve text as written.
+STYLE INSTRUCTION: Clean, premium fintech look; deep green and gold accents on warm off-white; minimal imagery, no clip-art; keep all numbers and source attributions exactly as written.
+
+# Halqa
+## The committee, made safe and rewarding
+Pakistan's oldest savings habit — digital, protected, halal, and profitable.
+Kayani Solutions · Introductory overview · 2026
+
+---
+
+# The Problem
+Committees (kameti / BC / ROSCA) are how Pakistan actually saves — but they carry two century-old flaws:
+- **Fragile:** one member takes their payout and disappears → the group loses months of savings, zero recovery
+- **Unrewarding:** the pooled money sits idle between payments, earning nothing while inflation erodes it
+- **Invisible:** 20 years of perfect payments builds no credit history and no financial identity
+
+---
+
+# The Habit IS the Market
+- **~41% of Pakistanis** have participated in a committee (Oraan research, TechCrunch 2021)
+- **~US$5 billion** rotates through committees every year (same source)
+- Pakistan is one of just **8 countries holding ~650M of the world's 1.3B unbanked adults** (World Bank Global Findex 2025)
+- **~30 percentage point gender gap** in account ownership — among the widest in the world (Findex 2025)
+The behaviour already exists at national scale. Nobody needs to be taught to save this way.
+
+---
+
+# The Product: Halqa
+The committee people already trust — with four things paper can never do:
+- **Protection** — security deposits, payout holdbacks, reliability scores, real consequences for default
+- **Profit** — idle pool days and deposits earn on disclosed, Shariah-compliant instruments
+- **Reputation** — every on-time payment builds a verified, portable **Credit Passport** a landlord or lender can check
+- **Honesty** — halal engines labelled halal; the one conventional option clearly labelled; no guaranteed-return promises, ever
+
+---
+
+# How Members Earn
+Two honest sources — and only two:
+- **Real yield on idle money:** Islamic money-market, Mudarabah deposit, income-fund and gold-linked sleeves (≈10.8%–15% indicative, dated rates)
+- **Disclosed member-to-member mechanics:** an optional early-turn fee (capped at 10%) paid by members who want cash sooner to members who wait
+Reference case — 12 members, Rs 140,000 monthly pool: the best-placed member earns **≈ Rs 16,000–17,000/year** on top of her savings. Modelled, disclosed, never guaranteed.
+
+---
+
+# Market Research (verified sources)
+- 41% committee participation · US$5B/year informal rotation — TechCrunch / Oraan research
+- Findex 2025: Pakistan among 8 countries with the most unbanked; 30-pt gender gap; 24% of women own a mobile phone vs 89% of men
+- Microfinance sector (PMN MicroWatch, Dec 2024): **12.34M active borrowers · Rs 604B loan portfolio · Rs 733B deposits · Rs ~49k average loan**
+The formal sector is the tip; the informal committee economy is the iceberg.
+
+---
+
+# The Microfinance Opportunity
+Microfinance banks spend heavily to find creditworthy borrowers among the undocumented. Halqa generates that data as a by-product:
+- Years of **verified, timestamped committee payment history** per member
+- The **Credit Passport** becomes an underwriting bridge into a 12.3M-borrower, Rs 604B market
+- Committee groups are natural **deposit-mobilisation** channels (Rs 733B sector deposits today)
+The committee becomes the credit bureau the sector never had.
+
+---
+
+# Competition & Our Edge
+**Oraan proved the category:** US$3.31M seed (Jan 2024) · 10,000+ savers · 84% women · 170+ cities · SECP NBFC licence — demand and licensing are both de-risked.
+**Halqa's depth:**
+- Yield-sharing engine vs their flat service fee
+- Shariah-labelled end to end (halal and conventional clearly separated)
+- Portable credit identity — offered by no one in the market
+- Protection stack validated by a 100,000-member calibrated simulation
+
+---
+
+# Business Model
+**One line: Halqa takes a 5% share of the profit it generates on members' idle money — and 0% of their savings.**
+- Classic Mudarabah structure: members provide capital, Halqa does the work, profit is shared
+- If members don't earn, Halqa doesn't earn — total alignment
+- Revenue scales with **earning balances** (pool float + personal vault), not just user count
+- Member-to-member fees (early-turn) pass through 100% — Halqa keeps none
+
+---
+
+# Where We Are & Where We're Going
+**Built:** complete platform — engines, protection stack, reputation layer, guide assistant — verified by 237 automated end-to-end tests, operating record-only (money tracked, never held)
+**Next milestone:** SECP NBFC licence — the same path Oraan already walked — unlocking custody and real deployment
+**Goal:** make Pakistan's own savings instrument safe, rewarding, and a door into the formal economy
+*Figures marked indicative are modelled at dated rates and are not guarantees.*

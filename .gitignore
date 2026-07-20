@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+.tools/
+.data/
+*.log
+.DS_Store
+halqa-web/android/
+halqa-web/ios/

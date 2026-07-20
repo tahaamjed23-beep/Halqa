@@ -1,0 +1,485 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Halqa Investment Memorandum</title>
+<style>
+  @page { size: A4; margin: 22mm 20mm; }
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: #1a2b23; font-size: 10.5pt; line-height: 1.55; margin: 0; }
+  h1 { font-size: 17pt; color: #0e2a1e; border-bottom: 2.5px solid #1c6349; padding-bottom: 2mm; margin: 10mm 0 4mm; page-break-after: avoid; }
+  h2 { font-size: 12.5pt; color: #1c6349; margin: 6mm 0 2mm; page-break-after: avoid; }
+  h3 { font-size: 11pt; color: #33443c; margin: 4mm 0 1.5mm; page-break-after: avoid; }
+  p { margin: 0 0 2.5mm; text-align: justify; }
+  ul, ol { margin: 0 0 2.5mm; padding-left: 6mm; }
+  li { margin-bottom: 1.2mm; }
+  table { border-collapse: collapse; width: 100%; margin: 2.5mm 0 3.5mm; page-break-inside: avoid; }
+  td, th { border: 1px solid #b9cfc5; padding: 1.6mm 2.5mm; font-size: 9pt; text-align: left; vertical-align: top; }
+  th { background: #eaf3ee; }
+  .stage { font-size: 8.5pt; letter-spacing: 1px; text-transform: uppercase; padding: 0.5mm 2mm; border: 1px solid #1c6349; color: #1c6349; border-radius: 2mm; white-space: nowrap; }
+  .stage.b { border-color: #8a5a00; color: #8a5a00; }
+  .stage.c { border-color: #444; color: #444; }
+  .note { font-size: 9pt; color: #55685e; }
+  .fig { margin: 3mm 0 4mm; page-break-inside: avoid; }
+  .fig figcaption { font-size: 8.5pt; color: #55685e; margin-top: 1mm; }
+  .fig svg { display: block; width: 100%; height: auto; }
+  .cover { text-align: center; padding-top: 60mm; page-break-after: always; }
+  .cover h1 { border: none; font-size: 30pt; }
+  .toc td { border: none; padding: 0.8mm 1mm; font-size: 10pt; }
+  .kv b { color: #0e2a1e; }
+</style></head><body>
+
+<div class="cover">
+  <p style="letter-spacing:4px;color:#1c6349;font-size:10pt">CONFIDENTIAL &middot; JULY 2026</p>
+  <h1>HALQA</h1>
+  <p style="font-size:13pt;color:#33443c">Investment memorandum</p>
+  <p style="max-width:120mm;margin:8mm auto;color:#55685e">Committee savings infrastructure for Pakistan. This memorandum describes the platform, its earning engines, its risk controls, the market, the competitive landscape, the business model and the development plan. Throughout the document, each capability is marked by stage: <span class="stage">LIVE</span> operates today with no licence; <span class="stage b">LICENCE + BANK</span> requires the SECP NBFC licence and a custodial banking partner; <span class="stage c">PARTNER</span> requires a named non-bank partnership. No return described in this document is guaranteed.</p>
+</div>
+
+<h1>Contents</h1>
+<table class="toc">
+<tr><td>1.</td><td>What Halqa is</td></tr>
+<tr><td>2.</td><td>How the platform operates, and the company's role</td></tr>
+<tr><td>3.</td><td>The earning engines and the turn marketplace</td></tr>
+<tr><td>4.</td><td>The investment framework and the personal vault</td></tr>
+<tr><td>5.</td><td>Default risk management and the simulation evidence</td></tr>
+<tr><td>6.</td><td>The credit system</td></tr>
+<tr><td>7.</td><td>The Islamic finance framework</td></tr>
+<tr><td>8.</td><td>Market analysis</td></tr>
+<tr><td>9.</td><td>Competitive landscape and international precedents</td></tr>
+<tr><td>10.</td><td>Business model and the receivables platform</td></tr>
+<tr><td>11.</td><td>Development roadmap</td></tr>
+<tr><td>12.</td><td>Investment rationale</td></tr>
+</table>
+
+<h1>1. What Halqa is</h1>
+
+<h2>1.1 The underlying instrument</h2>
+<p>A committee, known locally as a kameti or BC and in the academic literature as a rotating savings and credit association (ROSCA), is an arrangement in which a fixed group of members contributes an identical installment each period and one member per period receives the entire pooled amount, until every member has received the pool once. In a representative circle of twelve members contributing Rs 11,667 per month, the monthly pool is Rs 140,004 and the cycle runs twelve months. Over the full cycle each member pays in and receives exactly the same amount; the instrument's value lies in timing. Early positions receive what is functionally an interest-free loan repaid over the remaining months. Late positions receive a disciplined savings plan enforced by social obligation. Approximately 41 percent of Pakistanis have participated in a committee and roughly US$5 billion rotates through them annually (Oraan research cited in TechCrunch, 2021; a 2021 baseline that likely understates current nominal flows, and a 2022 Dawn analysis independently estimated annual committee flows near Rs 4 trillion).</p>
+<p>The instrument exists in several forms on the ground: fixed-order household circles, lottery-drawn (qura) circles, high-frequency daily committees run by bazaar traders as working-capital machines, commodity and gold-denominated circles, and payday-aligned office circles. The platform described in this memorandum supports the general mechanics of all of these forms and preserves the feature that makes them work: members join with people they already know, so the group's own social accountability, which the economics literature identifies as the instrument's core enforcement asset (Besley, Coate and Loury, American Economic Review, 1993), remains intact.</p>
+
+<h2>1.2 The three deficiencies of the informal instrument</h2>
+<p><b>Fragility.</b> A member who collects the pool and then stops contributing leaves the group with no recovery mechanism. In the representative circle, a member in the second position who absconds after her payout owes the group Rs 116,670 with no collateral, no record admissible anywhere and no realistic legal recourse. Recovery in the paper instrument is zero. The failure mode also operates at the organiser level: in the Karachi case of 2022, an organiser operating ballot committees across 117 WhatsApp groups, with no written records of depositors, defaulted on approximately Rs 420 million and filed for bankruptcy (Dawn, Express Tribune, Geo, verified). Structurally that scheme had become a Ponzi arrangement wearing the committee's clothing, which was possible only because a single individual held all funds with no auditable ledger.</p>
+<p><b>Idle capital.</b> Contributions sit unproductive between collection and payout in every round of every circle, and security has historically been provided by nothing, so no collateral exists to earn either. In an economy with recurring double-digit inflation, the idle pool loses purchasing power continuously.</p>
+<p><b>Invisibility.</b> Committee repayment behaviour is recorded nowhere a lender can read. A participant with a decade of flawless installments has no credit file. Pakistan's credit bureau (eCIB) covers roughly 12 million borrowers while more than 100 million adults have no formal credit history of any kind.</p>
+
+<h2>1.3 The platform, defined</h2>
+<p>Halqa is non-custodial market infrastructure for committees. It performs three functions on one platform.</p>
+<ol>
+<li><b>System of record and enforcement.</b> The platform maintains the authoritative double-entry ledger of every obligation and settlement in every circle and enforces the scheme's rules in software: contribution schedules, turn ordering, collateral requirements, penalty regimes and payout release conditions. <span class="stage">LIVE</span></li>
+<li><b>Treasury function.</b> The platform computes, and at custody will place, the idle balances of each circle and each member into disclosed Islamic instruments matched to the timing of the obligations they must fund. Computation is live today at dated indicative rates; deployment of actual funds requires the licence. <span class="stage b">LICENCE + BANK</span> for deployment</li>
+<li><b>Credit data layer.</b> Every recorded settlement accrues verified repayment history on a population that has none, productised as a member-owned Credit Passport and a circle-level receivables statement today, and as credit bureau submissions and commercial underwriting data after licensing. <span class="stage">LIVE</span> for the artifacts; <span class="stage b">LICENCE + BANK</span> for bureau reporting</li>
+</ol>
+
+<h2>1.4 The defining architectural decision: record-only operation</h2>
+<p>The platform does not hold client money in its current stage. Members settle with each other directly over Raast (the State Bank's free instant payment rail), mobile wallets or cash, and record the settlement reference on the platform. This decision does three kinds of work simultaneously. First, it removes the possibility of the organiser-flight fraud entirely: there is no pooled fund for any party, including the company, to abscond with. Second, it defers licensing: custody and deployment of client funds are the activities that trigger the SECP non-bank financial company licensing requirement, and neither is performed in the current stage. The regulatory path itself is proven; Oraan, a Karachi committee platform, holds NBFC licence SECP/LRD/107/OFSPL/2023. Third, it lowers the trust threshold for adoption to zero: a new member extends no custody trust on day one, and the platform earns standing through enforced, transparent cycles.</p>
+<p>The platform is deliberately built so that the licensed stage is an activation rather than a redesign. Custody adds a real settlement leg beneath ledger entries that already exist; the ledger remains the source of truth in both stages.</p>
+
+<h1>2. How the platform operates, and the company's role</h1>
+
+<h2>2.1 The ledger</h2>
+<p>All value movement is recorded on a double-entry ledger denominated in integer paisa. Every entry carries a debit account, a credit account, a reason code identifying why the movement occurred, a reference to the object that caused it and an idempotency key that makes duplicate submission of the same event arithmetically impossible: a retried or double-submitted request produces exactly one entry. Balances are not stored figures that could drift; they are derivations from the entries and can be reconstructed from first principles at any time. A conservation property is enforced by automated test: across any completed cycle, the sum of member bonuses equals the real profit created, to the paisa, because member-to-member transfers cancel in aggregate. The ledger is therefore structurally incapable of manufacturing a rupee, which is the precise mechanical property whose absence defines a Ponzi scheme.</p>
+
+<h2>2.2 The circle lifecycle</h2>
+<h3>2.2.1 Creation</h3>
+<p>A host with a reliability score of at least 700 configures the circle: name, size (3 to 30 members), installment, period (7 to 365 days), an optional goal designation (wedding, education, Hajj, home, business), the earning configuration described in Section 3, the deposit coverage level (30 to 90 percent, discussed in Section 5), an optional Safety Fund (Section 4.4) and the protection settings. Members join by invitation with a full preview of terms and the host's reputation record before committing. <span class="stage">LIVE</span></p>
+<h3>2.2.2 Admission controls</h3>
+<p>Two admission gates operate at the platform level. A member requires a reliability score of at least 550 to join any circle. A member who has never completed a full cycle on the platform may not join a circle above Rs 25,000 per installment; the restriction lifts permanently after one clean completed cycle. This graduates the platform's exposure to unproven participants. <span class="stage">LIVE</span></p>
+<h3>2.2.3 Turn ordering</h3>
+<p>The default ordering algorithm assigns the earliest turns, which carry the greatest remaining exposure, to the members with the highest reliability scores. The host may override with a manual assignment or a random ballot. The risk logic of the default is set out in Section 5.2. <span class="stage">LIVE</span></p>
+<h3>2.2.4 Rounds and payout release</h3>
+<p>Each round, every member's installment is recorded against the round with its settlement reference. Payout release requires that all installments for the round are recorded (or covered by the Safety Fund where enabled), that no investment position remains open on the round, that the recipient satisfies an eligibility deadline for her own current installment, that the scheduled payout date has arrived and that the host executes the release. Upon release, the platform itemises the disbursement: a 15 percent holdback is retained, any configured early-turn fee is deducted, realised profit for the round is recorded, and each element appears as its own ledger entry. <span class="stage">LIVE</span></p>
+<h3>2.2.5 Completion</h3>
+<p>At cycle end, security deposits are returned in full to all non-defaulting members together with the yield attributable to them under the circle's configuration, remaining holdbacks are force-released, the cycle profit pool is distributed under the rules of Section 3, reliability scores are credited (plus 25 per clean completion) and each member's Credit Passport gains a completed cycle. <span class="stage">LIVE</span></p>
+
+<h2>2.3 Transaction flow in the two stages</h2>
+<p>In the current stage the platform records settlements that members execute directly with one another. After licensing, each ledger entry that requires a real movement of funds additionally generates a settlement instruction against an omnibus escrow account held at the partner bank. The instruction is generated from the ledger entry and never the reverse, so the books and the bank cannot diverge by construction. A nightly reconciliation matches the bank statement line by line against the day's instructions, and an unreconciled day blocks the following day's disbursements until resolved. <span class="stage b">LICENCE + BANK</span></p>
+
+<h2>2.4 The boundaries of the company's role</h2>
+<p>The company operates the ledger, the enforcement rules, the earning computations, the marketplace, the data products and, at the licensed stage, the treasury placements through the partner institution. The company does not, in any stage, take ownership of member principal, act as counterparty to any circle, lend from its own balance sheet, retain member-to-member fees beyond the disclosed processing cuts described in Section 10, or retain late-payment penalties, which are routed to charity in the halal configurations and otherwise to members who were never late. The word "guaranteed" does not appear in the product; every projection is computed at dated indicative rates and labelled as such.</p>
+
+<h1>3. The earning engines and the turn marketplace</h1>
+
+<h2>3.1 Classification of member returns</h2>
+<p>Every rupee of member return on the platform derives from one of two sources, and the platform accounts for and labels them separately. Created profit (carry) is genuine yield produced by deploying idle balances into earning instruments; new wealth enters the group. Transfers are redistributions between members under disclosed, consented rules; the group in aggregate is unchanged. The conservation test of Section 2.1 enforces the distinction mechanically. Misrepresentation of transfers as yield is the defining mechanic of financial fraud, and the platform's accounting makes it impossible rather than merely prohibited.</p>
+
+<h2>3.2 Engine one: the float sweep <span class="stage">LIVE</span> (computation) <span class="stage b">LICENCE + BANK</span> (deployment)</h2>
+<p>Contributions arrive across each collection window while the payout executes at period end, leaving idle intraperiod balances (float). The engine sweeps float into an Islamic money-market sleeve at approximately 10.8 percent per annum (indicative, dated) and accrues profit per payment on an actual/365 day-count: profit equals principal multiplied by the rate multiplied by days elapsed over 365. The day-count is clamped to server-recorded timestamps so that no participant can backdate a payment to manufacture accrual days. In the representative circle a single installment of Rs 11,667 paid at round opening and idle for 29 days accrues approximately Rs 100; across eleven funding members and twelve rounds the circle generates roughly Rs 12,000 to 14,000 per year from balances that the paper instrument leaves unproductive. The money-market sleeve is selected for minimum duration and daily liquidity because committee obligations carry hard dates; the matching rule is formalised in Section 4.1.</p>
+
+<h2>3.3 Engine two: remunerated collateral <span class="stage">LIVE</span> (computation) <span class="stage b">LICENCE + BANK</span> (deployment)</h2>
+<p>The security deposits described in Section 5.3 are placed for the cycle in Mudarabah deposits at approximately 11.2 percent per annum (indicative). A Mudarabah deposit is an Islamic profit-sharing placement in which the bank invests the funds in its own permissible business and shares realised profit with the depositor at a pre-agreed ratio; the return is variable by construction, which is what distinguishes it from interest. Collateral on the platform is therefore productive rather than a dead-weight cost. The coverage ratio is a coupled parameter: raising it simultaneously increases recovery in the event of default and enlarges the earning base of the circle. In the representative circle at the default 70 percent coverage, total deposits of approximately Rs 378,000 accrue roughly Rs 42,000 across the cycle. Deposit principal is returned in full to every non-defaulting member in all configurations.</p>
+
+<h2>3.4 Engine three: patience-weighted distribution <span class="stage">LIVE</span></h2>
+<p>Late positions fund the circle: their continuing installments fill the early pools, and in an inflationary currency they additionally bear the erosion of a delayed nominal payout. The classical instrument pays them nothing for either. At cycle end, the platform distributes the pooled created profit by capital-days multiplied by a disclosed position weight. Capital-days are the sum over payments of amount multiplied by days in the system, a time-weighted measure of funding actually provided. The position weight rises linearly from 1.0 for the first turn to 2.0 for the final turn. The distribution therefore pays the late positions an explicit term premium by formula, the same economic object that causes a ten-year instrument to yield more than a three-month instrument, applied to the committee for the first time.</p>
+
+<h2>3.5 Engine four: behavioural incentives <span class="stage">LIVE</span></h2>
+<p>Two incentive rules align individual behaviour with group outcomes. First, a member who records at least three quarters of her installments three or more days early carries a 1.25 multiplier on her distribution weight. The incentive is self-funding: early payment extends float duration and therefore creates the marginal profit that the multiplier redistributes. Second, each round that the entire circle completes with no late payment raises the circle's float participation by five percent, accumulating to a cap of fifty percent, and any late payment resets the accumulation. The second rule converts individual punctuality into a group payoff and thereby prices the peer accountability that makes committees function. It is funded as a loyalty cost from the company's own revenue share on the float line and is capped accordingly.</p>
+
+<h2>3.6 Engine five: the early-turn access fee <span class="stage">LIVE</span></h2>
+<p>Certain configurations permit the pricing of early access to the pool. The fee is capped at ten percent of the pool, is charged against the early recipient's own disbursement rather than out of pocket, declines linearly to zero by the final turn under the schedule fee(r) equals cap multiplied by (N minus r) over (N minus 1), and is redistributed entirely to the waiting members, either as an immediate per-round dividend or through the patience-weighted distribution. The company retains none of it. In the representative circle the first turn receives Rs 126,004 rather than Rs 140,004 and the final turn pays nothing. Because a charge for earlier access to money is economically a charge on time value, the platform does not represent this engine as Shariah-compliant: it is opt-in, confined to two configurations, and labelled as not Shariah-reviewed on every screen on which it appears, with a fully halal configuration always available. The same economic object is priced monthly by auction in India's regulated chit fund industry; the platform's fixed declining schedule replaces the auction's desperation-driven price discovery.</p>
+<figure class="fig"><svg viewBox="0 0 640 175" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="9">
+<text x="10" y="14" fill="#33443c" font-size="10">Access fee by turn (% of pool, cap 10%)</text>
+<line x1="30" y1="140" x2="310" y2="140" stroke="#b9cfc5"/>
+<rect x="34" y="40" width="16" height="100" fill="#1c6349"/><rect x="57" y="49" width="16" height="91" fill="#1c6349"/><rect x="80" y="58" width="16" height="82" fill="#1c6349"/><rect x="103" y="67" width="16" height="73" fill="#1c6349"/><rect x="126" y="76" width="16" height="64" fill="#1c6349"/><rect x="149" y="86" width="16" height="54" fill="#1c6349"/><rect x="172" y="95" width="16" height="45" fill="#1c6349"/><rect x="195" y="104" width="16" height="36" fill="#1c6349"/><rect x="218" y="113" width="16" height="27" fill="#1c6349"/><rect x="241" y="122" width="16" height="18" fill="#1c6349"/><rect x="264" y="131" width="16" height="9" fill="#1c6349"/><rect x="287" y="140" width="16" height="1" fill="#1c6349"/>
+<text x="34" y="34" fill="#33443c">10%</text><text x="284" y="134" fill="#33443c">0%</text>
+<text x="34" y="155" fill="#55685e">turn 1</text><text x="278" y="155" fill="#55685e">turn 12</text>
+<text x="350" y="14" fill="#33443c" font-size="10">Patience weight by turn (1.0x to 2.0x)</text>
+<line x1="360" y1="140" x2="630" y2="140" stroke="#b9cfc5"/>
+<rect x="364" y="90" width="16" height="50" fill="#8fb8a8"/><rect x="386" y="85" width="16" height="55" fill="#8fb8a8"/><rect x="408" y="81" width="16" height="59" fill="#8fb8a8"/><rect x="430" y="76" width="16" height="64" fill="#8fb8a8"/><rect x="452" y="72" width="16" height="68" fill="#8fb8a8"/><rect x="474" y="67" width="16" height="73" fill="#8fb8a8"/><rect x="496" y="63" width="16" height="77" fill="#8fb8a8"/><rect x="518" y="58" width="16" height="82" fill="#8fb8a8"/><rect x="540" y="54" width="16" height="86" fill="#8fb8a8"/><rect x="562" y="49" width="16" height="91" fill="#8fb8a8"/><rect x="584" y="45" width="16" height="95" fill="#8fb8a8"/><rect x="606" y="40" width="16" height="100" fill="#1c6349"/>
+<text x="364" y="84" fill="#33443c">1.0x</text><text x="600" y="34" fill="#33443c">2.0x</text>
+<text x="364" y="155" fill="#55685e">turn 1</text><text x="596" y="155" fill="#55685e">turn 12</text>
+</svg><figcaption>Figure 1. The two position-dependent schedules of the earning system: the declining early-access fee (left) and the rising patience weight (right), for a twelve-member circle. The fee is paid by early positions to waiting members; the weight tilts the profit distribution toward the positions that fund the circle longest.</figcaption></figure>
+
+<h2>3.7 Tier configurations</h2>
+<p>The five published tiers are bundles of the engines above, all host-selected and all optional: a plain rotation with no engines; an earn-only configuration in which each member retains the yield her own balances generated; a pooled configuration adding the patience-weighted distribution; a fee-only configuration; and a maximal configuration combining all engines. The halal configurations carry a halal label; the two configurations containing the access fee carry the not-Shariah-reviewed label. Engine output for the representative circle, computed by the platform's own arithmetic and locked as an automated test, ranges from zero (plain rotation) through approximately Rs 6,300 (pooled halal) to approximately Rs 15,600 for the best-positioned member in the maximal configuration, with a stress floor of approximately Rs 13,000 when rates are shocked thirty percent downward, because the transfer component of the maximal configuration does not vary with rates.</p>
+<figure class="fig"><svg viewBox="0 0 640 150" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="9">
+<text x="10" y="14" fill="#33443c" font-size="10">Best-member annual bonus by configuration, reference circle (Rs)</text>
+<line x1="150" y1="30" x2="150" y2="125" stroke="#b9cfc5"/>
+<text x="145" y="44" text-anchor="end" fill="#33443c">Plain rotation</text><rect x="152" y="36" width="2" height="12" fill="#8fb8a8"/><text x="160" y="46" fill="#55685e">0</text>
+<text x="145" y="72" text-anchor="end" fill="#33443c">Pooled halal</text><rect x="152" y="64" width="182" height="12" fill="#8fb8a8"/><text x="340" y="74" fill="#55685e">~6,300</text>
+<text x="145" y="100" text-anchor="end" fill="#33443c">Maximal</text><rect x="152" y="92" width="450" height="12" fill="#1c6349"/><text x="472" y="88" fill="#8a5a00">stress floor ~13,000</text>
+<line x1="527" y1="88" x2="527" y2="108" stroke="#8a5a00" stroke-dasharray="3,2"/>
+<text x="608" y="102" fill="#55685e">~15,600</text>
+</svg><figcaption>Figure 2. Engine output for the representative twelve-member circle by configuration, computed by the platform's own arithmetic and locked as an automated test. The dashed marker shows the maximal configuration's floor under a thirty percent downward rate shock; the floor exists because the transfer component is rate-independent.</figcaption></figure>
+
+<h2>3.8 The turn marketplace <span class="stage">LIVE</span></h2>
+<p>Members may exchange turn positions. Two transaction types exist. Free swaps, available in all configurations, exchange positions by mutual consent with no consideration. Premium sales, available only in the conventional configurations, allow a member to sell an earlier position for a premium capped at fifty percent of the payout; a ten percent marketplace fee applies to the premium only, never to the pool, and the halal configurations block premium sales at the server. After licensing, premium settlement can move through escrow so that the consideration is held until the position transfer executes. <span class="stage b">LICENCE + BANK</span> A further institutional extension is described in Section 10.4: a partner bank standing in the marketplace as a liquidity provider, purchasing positions at transparent prices, with the existing marketplace fee applying to institutional trades.</p>
+
+<h1>4. The investment framework and the personal vault</h1>
+
+<h2>4.1 The governing principle: asset-liability matching</h2>
+<p>No pool of money on the platform may be placed in an instrument slower than the obligation it funds. Committee floats carry hard monthly payout dates and are therefore confined to daily-liquidity money-market instruments, with redemption fitting inside a seven-day payout buffer between the due date and the payout date. Security deposits are committed for a known cycle length and may therefore be placed in term Mudarabah deposits matched to that length, capturing the term premium; for short circles where no matching term exists, deposits remain in the short instrument. The principle is enforced in software rather than left to judgment: an instrument is selectable for a circle only if its liquidity window fits within the circle's period less the buffer, and gold-linked allocation, which settles in approximately three days, is automatically unavailable to circles shorter than ten days.</p>
+
+<h2>4.2 The optional allocation layer <span class="stage">LIVE</span> (computation) <span class="stage b">LICENCE + BANK</span> (deployment)</h2>
+<p>By default a circle carries no market exposure; the base engines require no investment decision from the host. The host may optionally allocate a percentage of each pool to a gold-linked hedge (5 to 50 percent, at approximately 15 percent indicative, reflecting the collateral this market has always trusted) or to a catalogued scheme at a selected risk band, in which case the platform automatically selects the highest-yielding eligible instrument within the band and the liquidity filter. Rotating circles cap the allocation percentage because the pool is owed monthly; investment-mode circles, which pay at maturity rather than rotating, may allocate the majority of the pool. The scheme catalogue comprises 26 instruments, each carrying a dated indicative rate with a verification stamp and staleness warning, a risk score, liquidity days and plain-language documentation.</p>
+
+<h2>4.3 The personal vault <span class="stage">LIVE</span> (computation) <span class="stage b">LICENCE + BANK</span> (deployment)</h2>
+<p>Each member holds a personal savings facility independent of any circle. Balances enter by parking a payout, by direct top-up from Rs 100, or through the auto-cover mechanism described in Section 5.4. The member selects among yield tiers: money-market at approximately 10.8 percent, Islamic income at approximately 12.1 percent, and gold-linked at approximately 15 percent, all halal-labelled; and a digital-asset basket labelled as speculative and not Shariah-reviewed, which is switchable only through a double confirmation in the interface and an explicit acknowledgement flag at the API, which applies to the personal vault only, and which is excluded from committee funds under every configuration. Withdrawal is available at any time and returns principal plus accrued profit less the platform's share of profit only. The vault carries no scheduled obligation and is therefore the one pool whose balances may compound indefinitely; its significance to the business model is set out in Section 10.</p>
+
+<h2>4.4 The Safety Fund <span class="stage">LIVE</span> (recorded) <span class="stage b">LICENCE + BANK</span> (funded)</h2>
+<p>A host may enable guaranteed on-time payouts at creation. Each round, a slot fee of 0.5 to 3 percent, set by the host, accrues to a guarantee fund owned by the circle itself. If a member's installment is missing on a recipient's payout date, the fund covers the shortfall so that the payout releases in full and on time, up to the fund's balance. The platform's validation requires a funding slot fee wherever a guarantee is enabled and prohibits a slot fee where no guarantee exists. The fund is the circle's money: the company retains only the processing cut described in Section 10, and the residual fund returns to the circle at completion. In the current stage the fund is recorded on the ledger; at custody it holds actual cash and its disbursements become real transfers. The structure is that of a mutual protection pool and is presented as such, without bank terminology, in the product.</p>
+
+<h1>5. Default risk management and the simulation evidence</h1>
+
+<h2>5.1 Definition of the risk</h2>
+<p>The material risk in any rotating instrument is the post-payout default: a member collects the pool and ceases contributing. Her exposure equals her remaining unpaid installments. In the representative circle a second-position defaulter owes Rs 116,670; a tenth-position defaulter owes Rs 23,334. The risk is therefore concentrated by construction in the early positions, and the platform's controls are shaped around that asymmetry. The expected loss from any seat is the product of the occupant's probability of default and the loss given default of the position; the platform reduces the first factor by selection and deterrence, matches the two factors by ordering, and reduces the second by collateral.</p>
+
+<h2>5.2 Preventive controls <span class="stage">LIVE</span></h2>
+<ul>
+<li><b>Score gating.</b> Reliability scores, beginning at 700 and updated on every payment event (positive for punctuality and completion, progressively negative for lateness), gate participation at 550 and hosting at 700.</li>
+<li><b>Graduated exposure.</b> The first-circle cap restricts members with no completed cycle to circles of at most Rs 25,000 per installment.</li>
+<li><b>Credit-weighted ordering.</b> The default assignment places the highest-reliability members in the earliest positions, matching the lowest available default probabilities to the largest losses given default. A consequence, confirmed in the simulation of Section 5.6, is that residual defaults migrate toward late positions where remaining exposure is small.</li>
+</ul>
+
+<h2>5.3 Collateral controls <span class="stage">LIVE</span> (recorded) <span class="stage b">LICENCE + BANK</span> (held)</h2>
+<ul>
+<li><b>Graduated security deposits.</b> Each member posts collateral equal to the host-selected coverage ratio (30 to 90 percent, default 70) multiplied by her remaining dues after payout, declining linearly down the order to approximately zero for the final position, adjusted per member by reliability score within a small band. In the representative circle at 70 percent, the first position posts approximately Rs 89,800 and the second approximately Rs 74,200. Deposits earn throughout (Section 3.3) and are returned in full to non-defaulters. The host's coverage selection is presented in the product with a live chart of its two effects: recovery in the event of default, and the projected member bonus, both of which rise with coverage, against the liquidity cost borne by early positions.</li>
+<li><b>Payout holdback.</b> Fifteen percent of each disbursement is retained and released as the recipient continues to pay cleanly; residual holdbacks force-release at completion. The holdback places part of the recipient's own money on the far side of the moment of maximum temptation, and because it is a flat percentage of the pool it dominates the small remaining exposure of late positions, which is why late-position defaults are largely covered.</li>
+</ul>
+
+<figure class="fig"><svg viewBox="0 0 640 165" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="9">
+<text x="10" y="14" fill="#33443c" font-size="10">Security deposit by turn position at the 70 percent default coverage, reference circle (Rs)</text>
+<line x1="30" y1="130" x2="620" y2="130" stroke="#b9cfc5"/>
+<rect x="40" y="30" width="30" height="100" fill="#1c6349"/><rect x="88" y="47" width="30" height="83" fill="#1c6349"/><rect x="136" y="63" width="30" height="67" fill="#1c6349"/><rect x="184" y="77" width="30" height="53" fill="#1c6349"/><rect x="232" y="90" width="30" height="40" fill="#1c6349"/><rect x="280" y="100" width="30" height="30" fill="#8fb8a8"/><rect x="328" y="109" width="30" height="21" fill="#8fb8a8"/><rect x="376" y="117" width="30" height="13" fill="#8fb8a8"/><rect x="424" y="123" width="30" height="7" fill="#8fb8a8"/><rect x="472" y="127" width="30" height="3" fill="#8fb8a8"/><rect x="520" y="129" width="30" height="1" fill="#8fb8a8"/><rect x="568" y="130" width="30" height="1" fill="#8fb8a8"/>
+<text x="36" y="26" fill="#33443c">~89,800</text><text x="84" y="43" fill="#33443c">~74,200</text><text x="272" y="96" fill="#33443c">~26,700</text><text x="560" y="124" fill="#33443c">~0</text>
+<text x="40" y="145" fill="#55685e">turn 1</text><text x="562" y="145" fill="#55685e">turn 12</text>
+<text x="10" y="160" fill="#55685e">Collateral mirrors exposure: the deposit equals the coverage ratio multiplied by remaining dues, which decline down the order.</text>
+</svg><figcaption>Figure 3. Graduated security deposits by position. The first position, which owes the group most after its payout, posts the most; the final position, which owes nothing after collecting, posts nothing. Deposits earn throughout the cycle and return in full to non-defaulters.</figcaption></figure>
+<h2>5.4 Curative controls <span class="stage">LIVE</span></h2>
+<ul>
+<li><b>Reminders and peer notification</b>, followed by a calibrated grace period after the due date whose length is a bounded function of the circle's period and is deliberately not disclosed in the interface, because a published grace period functions as a new deadline. Score and penalty consequences accrue during grace; escalation to default waits.</li>
+<li><b>Progressive penalties</b> in flat, non-compounding bands of two, five and ten percent. Penalties are routed to charity in the halal configurations and otherwise to members who were never late. The company retains no penalty revenue in any configuration, which removes the platform's own incentive to profit from lateness.</li>
+<li><b>Vault auto-cover.</b> A member may authorise the platform to settle an overdue installment automatically from her own vault balance. The penalty and score consequence still apply; the group is made whole without escalation. The mechanism is self-insurance: no pool, no premium, no cross-subsidy.</li>
+</ul>
+
+<h2>5.5 Consequence controls <span class="stage">LIVE</span></h2>
+<p>A confirmed post-payout default triggers forfeiture of the defaulter's deposit and outstanding holdback to the group, a platform-wide ban visible to every future circle, and an open recovery case. In the representative circle a second-position default forfeits approximately Rs 95,000 against the Rs 116,670 exposure. A rehabilitation path exists: clearance of dues plus a fee and a cooldown period restores standing, because a priced road back deters more effectively than permanent exile.</p>
+
+<h2>5.6 Partnership-dependent enhancements</h2>
+<p>The following controls are specified and await the licence and the relevant partners. Each is marked accordingly.</p>
+<table>
+<tr><th>Control</th><th>Mechanism</th><th>Requires</th></tr>
+<tr><td>Minimum-balance capacity check</td><td>The partner bank verifies by API that a member maintains a threshold balance in her linked account before admission to a high-value circle or before an early-position payout; a breach flags early warning and the balance is a fallback recovery source. Present controls measure willingness to pay; this adds capacity to pay.</td><td><span class="stage b">LICENCE + BANK</span></td></tr>
+<tr><td>Direct debit mandates</td><td>Installments auto-collect on the due date under Raast or bank standing instructions, removing lateness as a decision.</td><td><span class="stage b">LICENCE + BANK</span></td></tr>
+<tr><td>Post-dated cheque instruments</td><td>For early positions in large circles, cheques covering remaining dues are held through the partner; dishonour of a cheque is a criminal offence under section 489-F of the Pakistan Penal Code, converting a reputational deterrent into a legal one.</td><td><span class="stage b">LICENCE + BANK</span></td></tr>
+<tr><td>Escrowed collateral</td><td>Deposits and holdbacks become cash held in segregated escrow; forfeiture becomes an actual transfer rather than a recorded entitlement.</td><td><span class="stage b">LICENCE + BANK</span></td></tr>
+<tr><td>Credit bureau reporting</td><td>Defaults report to eCIB with consent captured at onboarding, extending deterrence across the member's entire formal financial life; positive history reports first.</td><td><span class="stage b">LICENCE + BANK</span></td></tr>
+<tr><td>Takaful cover</td><td>A master policy with a takaful operator covers defaults arising from death, disability or verified hardship, with contributions paid from the company's own revenue share. Wilful default remains uninsured by design, to avoid creating the behaviour being insured.</td><td><span class="stage c">PARTNER</span> (takaful operator)</td></tr>
+<tr><td>Structured collections</td><td>A dignity-bounded ladder from automated reminders through field referral to legal notice, operated with the partner institution's field capability, with contact rules and a hardship pause.</td><td><span class="stage c">PARTNER</span> (MFB field force or agency)</td></tr>
+</table>
+
+<h2>5.7 The simulation evidence</h2>
+<h3>5.7.1 Method</h3>
+<p>Because committees are informal, no dataset of real committee ledgers exists anywhere; the platform's claims are therefore tested on a calibrated agent-based simulation, constructed to publication standards and reproducible exactly. The model comprises 120,000 synthetic members in 10,441 committees of 8 to 15 income-matched members, with incomes drawn from bands consistent with national household survey data across five segments (salaried lower-middle, daily-wage informal, home-business women, young gig workers, and over-committed members holding multiple simultaneous obligations), contribution burdens of 8 to 15 percent of income, and individual attributes for discipline, savings buffer, urban or rural location and a possible family wedding scheduled in the year.</p>
+<p>The population lives calendar year 2025 month by month with the year's actual features: Ramadan in March, Eid-ul-Fitr on 31 March, Eid-ul-Adha with sacrifice costs on 7 June, school-fee months in January, August and September, monsoon flooding in July and August weighted toward rural members, the wedding season with approximately nine percent of households hosting a wedding costing four to ten months of income, monthly hazards for medical shocks, funerals, job loss and remittance receipts, and the State Bank's actual 2025 policy path (12 percent from January, 11 percent from May) with monthly inflation. The design is dual-arm with decision-paired randomness: the same population lives the same year twice, once as paper committees and once under the platform's controls, and every random event is drawn identically for the same member in both arms, so that outcome differences are attributable to the controls rather than to chance. The run is seeded and deterministic; re-execution reproduces every figure exactly.</p>
+<h3>5.7.2 Results</h3>
+<table>
+<tr><th>Metric, calendar 2025</th><th>Paper arm</th><th>Platform arm</th></tr>
+<tr><td>Post-payout default rate</td><td>2.48%</td><td><b>0.99%</b></td></tr>
+<tr><td>Recovery on defaulted exposure</td><td>0%</td><td><b>75.3%</b></td></tr>
+<tr><td>On-time payments</td><td>91.5%</td><td>94.0%</td></tr>
+<tr><td>Unresolved missed payments</td><td>1.23%</td><td>0.24%</td></tr>
+<tr><td>Wedding-goal circles completing their fund</td><td>84.0%</td><td>86.1%</td></tr>
+<tr><td>Default rate, over-committed segment</td><td>10.4%</td><td><b>0.94%</b></td></tr>
+<tr><td>Member yield created, net (at actual 2025 rate curve)</td><td>none</td><td>≈ Rs 69.7M across the cohort</td></tr>
+</table>
+<figure class="fig"><svg viewBox="0 0 640 175" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="9">
+<text x="10" y="14" fill="#33443c" font-size="10">Headline simulation outcomes, paper arm against platform arm (each row scaled to its own maximum)</text>
+<text x="180" y="40" text-anchor="end" fill="#33443c">Post-payout defaults</text><rect x="186" y="26" width="240" height="8" fill="#8fb8a8"/><text x="432" y="34" fill="#55685e">2.48%</text><rect x="186" y="36" width="96" height="8" fill="#1c6349"/><text x="288" y="44" fill="#55685e">0.99%</text>
+<text x="180" y="72" text-anchor="end" fill="#33443c">Recovery on default</text><rect x="186" y="58" width="2" height="8" fill="#8fb8a8"/><text x="194" y="66" fill="#55685e">0%</text><rect x="186" y="68" width="330" height="8" fill="#1c6349"/><text x="522" y="76" fill="#55685e">75.3%</text>
+<text x="180" y="104" text-anchor="end" fill="#33443c">Unresolved misses</text><rect x="186" y="90" width="240" height="8" fill="#8fb8a8"/><text x="432" y="98" fill="#55685e">1.23%</text><rect x="186" y="100" width="47" height="8" fill="#1c6349"/><text x="239" y="108" fill="#55685e">0.24%</text>
+<text x="180" y="136" text-anchor="end" fill="#33443c">Over-committed segment</text><rect x="186" y="122" width="240" height="8" fill="#8fb8a8"/><text x="432" y="130" fill="#55685e">10.4%</text><rect x="186" y="132" width="22" height="8" fill="#1c6349"/><text x="214" y="140" fill="#55685e">0.94%</text>
+<rect x="186" y="152" width="10" height="8" fill="#8fb8a8"/><text x="200" y="160" fill="#55685e">paper arm</text>
+<rect x="280" y="152" width="10" height="8" fill="#1c6349"/><text x="294" y="160" fill="#55685e">platform arm</text>
+</svg><figcaption>Figure 4. Principal simulation outcomes for calendar 2025. Identical populations and identical random events in both arms; the differences are attributable to the platform's controls.</figcaption></figure>
+<figure class="fig"><svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="9">
+<text x="10" y="14" fill="#33443c" font-size="10">Post-payout defaults by month, calendar 2025 (count across the simulated cohort)</text>
+<line x1="30" y1="140" x2="620" y2="140" stroke="#b9cfc5"/>
+<polyline points="40,100 90,80 140,55 190,34 240,35 290,48 340,30 390,46 440,68 490,80 540,92 590,100" fill="none" stroke="#8fb8a8" stroke-width="2.5"/>
+<polyline points="40,127 90,121 140,112 190,109 240,106 290,99 340,90 390,84 440,95 490,96 540,103 590,104" fill="none" stroke="#1c6349" stroke-width="2.5"/>
+<text x="40" y="152" fill="#55685e">Jan</text><text x="140" y="152" fill="#55685e">Mar</text><text x="240" y="152" fill="#55685e">May</text><text x="340" y="152" fill="#55685e">Jul</text><text x="440" y="152" fill="#55685e">Sep</text><text x="540" y="152" fill="#55685e">Nov</text>
+<text x="128" y="46" fill="#8a5a00">Ramadan and Eid</text><text x="322" y="22" fill="#8a5a00">monsoon floods</text>
+<line x1="340" y1="26" x2="340" y2="140" stroke="#8a5a00" stroke-dasharray="3,3" opacity="0.5"/>
+<rect x="40" y="165" width="10" height="8" fill="#8fb8a8"/><text x="54" y="173" fill="#55685e">paper arm (peak 376, July)</text>
+<rect x="240" y="165" width="10" height="8" fill="#1c6349"/><text x="254" y="173" fill="#55685e">platform arm (peak 173, August)</text>
+</svg><figcaption>Figure 5. The seasonal pattern of defaults in the simulation. Both arms stress at the country's real stress points, the Eid season and the floods; the platform arm's curve is lower throughout, and its advantage is largest in the early months, where credit-weighted ordering concentrates reliable members in the high-exposure turns.</figcaption></figure>
+<p>The monthly pattern conforms to the country's actual stress calendar: lateness peaks in the sacrifice month of June and defaults peak in the flood months of July and August, which is the model's face-validity check. Two interpretive notes are stated in the meeting before they are asked. First, the recovery figure is largely mechanical arithmetic on collateral sizes at defaulters' positions rather than a behavioural assumption, and it is the platform's strongest-founded claim; the credit-weighted ordering moves residual defaults to late positions where the coverage percentage is lower but the rupee exposure is small, so unrecovered rupees per member fall by roughly an order of magnitude against the paper arm. Second, behavioural multipliers in the platform arm (reminder, deterrence and auto-cover effects) are calibrated judgments mapped one-to-one to shipped features and are presented as directional. The headline claims are locked as automated tests so that they cannot drift from the code that produces them; the pilot's purpose is to replace the model with the platform's own ledger data.</p>
+
+<h1>6. The credit system</h1>
+
+<h2>6.1 The Credit Passport <span class="stage">LIVE</span></h2>
+<p>Each member may generate a Credit Passport: a cryptographically signed export of her verified history comprising completed cycles, on-time percentage and totals recorded. The document carries a public verification endpoint through which any third party, including one with no platform account, confirms its authenticity; signature verification makes tampering detectable. Validity is ninety days with regeneration at will. Because the Passport derives deterministically from the ledger, it cannot disagree with the underlying record. Its present limitation is that it persuades only the party to whom the member presents it; it is an island of verified history awaiting connection to the formal system.</p>
+
+<h2>6.2 The receivables statement <span class="stage">LIVE</span></h2>
+<p>A host may export a circle-level receivables statement: the forward inflow schedule of the circle's remaining rounds, per-round and total expected inflows, and, per member, reliability score, verification level, on-time percentage and collateral held, with a record-only disclaimer. The statement answers the two questions any financier asks of a committee, namely what money is scheduled to arrive and how reliable are the payers. In the current stage it is informational; the inflows are informal and carry no verified payer capacity and no recourse.</p>
+
+<h2>6.3 Conversion at the licensed stage</h2>
+<p>Three additions convert these artifacts into formal credit infrastructure. First, bureau reporting: with consent captured at onboarding, member repayment histories report monthly to eCIB, positive history first, so that committee discipline appears inside the files that formal lenders already query; the member's Passport becomes her personal copy of a bureau-visible record. <span class="stage b">LICENCE + BANK</span> Second, verified capacity: the partner bank's balance checks attach demonstrated payer capacity to the receivables statement. <span class="stage b">LICENCE + BANK</span> Third, recourse: escrowed collateral, cheque instruments under section 489-F and bureau consequences give a financier enforceable protection, at which point the receivables statement functions as an underwriting file for financing against committee inflows, with the platform's role and economics set out in Section 10.4. <span class="stage b">LICENCE + BANK</span></p>
+
+<h1>7. The Islamic finance framework</h1>
+
+<h2>7.1 The prohibition of riba and its economic meaning</h2>
+<p>Riba is any predetermined, guaranteed charge for the use of money itself; in practice, interest. The prohibition's economic logic is that return should arise from productive activity in which the recipient of the return bears risk: trade, real assets, enterprise. A fixed charge on money transfers the entire venture risk to the borrower while guaranteeing the lender, and it is that asymmetry which Islamic law forbids. The operating rule that follows, and which governs every earning mechanism on this platform, is that permissible return is variable profit from real instruments, and that a fixed price on time is impermissible. This rule also explains the platform's labelling decisions in Section 7.4: the earning engines produce variable profit from real placements and are labelled halal by design; the early-turn access fee is economically a charge on the time value of money and is therefore not represented as compliant.</p>
+<p>The prohibition is not a market niche in Pakistan; it is a mainstream constraint. A substantial share of the population avoids interest-bearing products on religious grounds, the committee itself owes part of its national popularity to being interest-free by construction, and the Federal Shariat Court has directed the conversion of the banking system toward interest-free operation, with official timelines pointing to the late 2020s. A platform that is structurally aligned with that direction operates with a regulatory and cultural tailwind rather than against one.</p>
+
+<h2>7.2 The contracts employed</h2>
+<ul>
+<li><b>Mudarabah.</b> A profit-sharing partnership in which one party supplies capital (rab-ul-maal) and the other supplies management (mudarib); profit divides by a pre-agreed ratio, monetary loss falls on the capital, and the manager's loss is his unremunerated effort. The contract appears at one level of the platform's architecture: member balances are placed in Mudarabah deposits with the licensed bank, which acts as mudarib at its standard industry ratio, exactly as for any depositor of that bank. The profit rates displayed to members are net of that upstream share. The company itself takes no share of member profit; its channel economics are set out in Section 10. <span class="stage">LIVE</span> as computation; <span class="stage b">LICENCE + BANK</span> as placement</li>
+<li><b>Hiba.</b> A gift, freely given, creating no counter-obligation. Where gifting mechanics appear on the platform, only realised profit is ever gifted and no participant stakes anything; a participant who does not receive a gift retains her full ordinary entitlement. The structure therefore lacks the stake-and-loss element that defines gambling.</li>
+<li><b>Iltizam bi-tasadduq.</b> The classical resolution of the late-payment dilemma: a penalty is required for discipline, but a penalty that enriches the counterparty is economically indistinguishable from default interest. The resolution is a binding commitment to charity, and the platform implements it in code: late penalties in the halal configurations are routed to charity at completion, and in no configuration are they retained by the company. The rule simultaneously removes the platform's own incentive to profit from lateness.</li>
+<li><b>Gharar avoidance.</b> Islamic law requires contracts free of material ambiguity. The platform's practice of dated rates, disclosed formulas, per-configuration consent text and the absence of the word "guaranteed" satisfies the same requirement that modern consumer-protection law imposes; the two disciplines converge on identical documentation.</li>
+</ul>
+
+<h2>7.3 The instruments</h2>
+<p>The placement universe used by the engines and the vault consists of instruments whose permissibility rests on established structures: Islamic money-market funds for the float sleeve; Mudarabah bank deposits for collateral; sovereign and corporate sukuk, which are certificates over real assets' returns rather than interest-bearing debt; Murabaha trade finance, a disclosed cost-plus sale that finances goods rather than lending cash; and gold-linked allocation, ownership exposure to a real commodity. Takaful, the mutual-insurance category in which participants' contributions form a pool that compensates whichever participant suffers the covered loss, is the framework for the partnership described in Section 5.6. Conventional instruments also present in the catalogue for the optional allocation layer, and the digital-asset basket in the vault, are labelled as not Shariah-reviewed and are never represented otherwise.</p>
+
+<h2>7.4 The labelling discipline</h2>
+<p>The platform's position is that compliance claims must be granular, feature by feature, rather than blanket. Accordingly: the float sweep, the remunerated collateral, the patience-weighted distribution, the behavioural incentives, the free swap facility, the halal vault tiers and the charity routing of penalties are labelled halal by design, meaning structurally built to the principles of Sections 7.1 and 7.2. The early-turn access fee, premium turn sales and the digital-asset vault tier are labelled not Shariah-reviewed on every surface on which they appear, are opt-in, and coexist with a fully halal configuration that is always available. The platform makes no representation of certification anywhere.</p>
+
+<h2>7.5 Certification status and the commercial logic of honesty</h2>
+<p>The platform's halal engines are design-intent compliant: built to the classical principles, documented as such, and awaiting formal review. Engagement of a Shariah supervisory board is a named milestone of the licensed stage, and the placement map of the treasury function is precisely the artifact such a board reviews. Until that review concludes, the platform does not claim certification, and the in-product language reflects this.</p>
+<p>The commercial logic of this discipline is grounded in the market's own history. Pakistan's savers have been defrauded repeatedly under religious framing, most notably in the Mudarabah-company scandals of the last decade, in which fraudulent schemes marketed as profit-sharing collected billions under clerical endorsement. In the aftermath, an unsupported compliance claim is a liability under scrutiny, and a granular, verifiable labelling regime is a commercial asset. The platform's refusal to blur the line, at the cost of conceding that one of its own revenue-relevant features is unreviewed, is the credibility position from which every other claim in this memorandum benefits.</p>
+
+<h2>7.6 Mutual protection structures</h2>
+<p>Two of the platform's protection mechanisms are Islamic in shape as well as in labelling. The Safety Fund of Section 4.4 is a mutual pool: participants contribute small amounts, the pool compensates whichever participant's payout would otherwise fall short, the company takes only a processing charge, and the residue returns to the contributors. This is the takaful structure in miniature. The vault auto-cover of Section 5.4 is self-provision: a member's own savings cure her own missed installment, with no pooling and no premium, which raises no compliance question at all. Both mechanisms protect without recourse to interest-bearing credit, which is the conventional instrument's default remedy for a missed payment.</p>
+
+<h1>8. Market analysis</h1>
+
+<h2>8.1 Scale of the committee economy</h2>
+<table>
+<tr><th>Step</th><th>Figure</th><th>Basis</th></tr>
+<tr><td>Population; adults</td><td>~240M; ~140M</td><td>national statistics</td></tr>
+<tr><td>Adults who have ever participated (41%)</td><td>~57M</td><td>participation rate applied to adults</td></tr>
+<tr><td>Currently active participants</td><td>~25 to 30M</td><td>conservative activity assumption, consistent with surveys ranking committees the leading savings device</td></tr>
+<tr><td>Implied average installment</td><td>Rs 4,000 to 4,700 per month</td><td>cross-check: annual flow of ~Rs 1.4 trillion divided across active members</td></tr>
+<tr><td>Households touched</td><td>~15 to 18M of ~35M</td><td>derivation</td></tr>
+</table>
+<figure class="fig"><svg viewBox="0 0 640 150" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="9">
+<text x="10" y="14" fill="#33443c" font-size="10">The participation funnel (adults, millions)</text>
+<text x="150" y="40" text-anchor="end" fill="#33443c">Adults</text><rect x="156" y="28" width="460" height="14" fill="#8fb8a8"/><text x="580" y="39" fill="#0e2a1e">~140</text>
+<text x="150" y="68" text-anchor="end" fill="#33443c">Ever participated</text><rect x="156" y="56" width="187" height="14" fill="#8fb8a8"/><text x="349" y="67" fill="#55685e">~57</text>
+<text x="150" y="96" text-anchor="end" fill="#33443c">Currently active</text><rect x="156" y="84" width="92" height="14" fill="#1c6349"/><text x="254" y="95" fill="#55685e">~25 to 30</text>
+<text x="150" y="124" text-anchor="end" fill="#33443c">Obtainable, five years</text><rect x="156" y="112" width="8" height="14" fill="#8a5a00"/><text x="170" y="123" fill="#55685e">~1 to 2.4 (about four percent of actives)</text>
+</svg><figcaption>Figure 6. From the adult population to the obtainable membership. The business at full projection requires roughly four percent of currently active committee participants.</figcaption></figure>
+<p>The figures triangulate: participation, average installment and the US$5 billion annual flow are mutually consistent, and the flow figure predates the 2022-23 inflation wave that repriced installments upward. An independent 2022 estimate published in Dawn put annual committee flows near Rs 4 trillion on its own assumptions, bracketing the US$5 billion figure from above. The instrument spans classes, from daily bazaar circles of Rs 500 to professional circles with pools of Rs 500,000, which is why the platform's parameters (coverage, tiers, pool sizes) are configurable rather than fixed.</p>
+
+<h2>8.2 The financial system context</h2>
+<table>
+<tr><th>Indicator</th><th>Figure</th><th>Source</th></tr>
+<tr><td>Global account ownership; South Asia</td><td>79%; 78%</td><td>World Bank Global Findex 2025, verified</td></tr>
+<tr><td>Pakistan account ownership</td><td>roughly one in five adults; one in ten under stricter financial-inclusion measures</td><td>Findex 2025; FinDev Gateway, verified</td></tr>
+<tr><td>Unbanked concentration</td><td>one of eight countries holding over half of the world's 1.3B unbanked</td><td>Findex 2025, verified</td></tr>
+<tr><td>Gender gaps</td><td>~30-point account gap; women's phone ownership 24% against men's 89%</td><td>Findex</td></tr>
+<tr><td>Credit bureau coverage</td><td>eCIB ~12M borrowers; >100M credit-invisible adults</td><td>SBP</td></tr>
+<tr><td>Banking deposits; Islamic share</td><td>~Rs 30+ trillion; roughly one fifth and rising under the Federal Shariat Court's directive toward an interest-free system (official timelines point to the late 2020s)</td><td>SBP</td></tr>
+<tr><td>Microfinance sector</td><td>12.34M borrowers (~72% of all borrowers in the financial system); Rs 604B loans, average ~Rs 49,000; Rs 733B deposits; 4,145 branches</td><td>PMN MicroWatch, December 2024</td></tr>
+<tr><td>Payment rails</td><td>Raast free instant transfers; JazzCash ~21M and easypaisa ~18M monthly active users; Easypaisa Bank received the country's first digital retail banking licence on 28 January 2025</td><td>SBP; sector coverage, verified</td></tr>
+<tr><td>Policy rate path 2025</td><td>13% to 12% (January) to 11% (May), held</td><td>SBP</td></tr>
+<tr><td>Remittances</td><td>~US$30B+ per year</td><td>SBP</td></tr>
+</table>
+<figure class="fig"><svg viewBox="0 0 640 120" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="9">
+<text x="10" y="14" fill="#33443c" font-size="10">Account ownership, adults (Global Findex 2025, verified)</text>
+<text x="120" y="42" text-anchor="end" fill="#33443c">Global</text><rect x="126" y="30" width="474" height="14" fill="#8fb8a8"/><text x="560" y="41" fill="#0e2a1e">79%</text>
+<text x="120" y="70" text-anchor="end" fill="#33443c">South Asia</text><rect x="126" y="58" width="468" height="14" fill="#8fb8a8"/><text x="554" y="69" fill="#0e2a1e">78%</text>
+<text x="120" y="98" text-anchor="end" fill="#33443c">Pakistan</text><rect x="126" y="86" width="126" height="14" fill="#1c6349"/><text x="258" y="97" fill="#55685e">~21% (about one in ten under stricter inclusion measures)</text>
+</svg><figcaption>Figure 7. Pakistan is the regional outlier by a factor of nearly four, which is the density of the unserved market.</figcaption></figure>
+<figure class="fig"><svg viewBox="0 0 640 175" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="9">
+<text x="10" y="14" fill="#33443c" font-size="10">Whose needle the platform's balances move (deposits, Rs billions)</text>
+<text x="10" y="32" fill="#55685e">Panel A: full system scale (linear)</text>
+<text x="150" y="52" text-anchor="end" fill="#33443c">Banking sector</text><rect x="156" y="40" width="460" height="12" fill="#8fb8a8"/><text x="500" y="50" fill="#0e2a1e">~30,000</text>
+<text x="150" y="74" text-anchor="end" fill="#33443c">MFB sector</text><rect x="156" y="62" width="11" height="12" fill="#8fb8a8"/><text x="173" y="72" fill="#55685e">733</text>
+<text x="150" y="96" text-anchor="end" fill="#33443c">Platform at 1M members</text><rect x="156" y="84" width="2" height="12" fill="#1c6349"/><text x="164" y="94" fill="#55685e">45 (invisible at this scale)</text>
+<text x="10" y="118" fill="#55685e">Panel B: microfinance scale (linear)</text>
+<text x="150" y="138" text-anchor="end" fill="#33443c">MFB sector</text><rect x="156" y="126" width="460" height="12" fill="#8fb8a8"/><text x="500" y="136" fill="#0e2a1e">733</text>
+<text x="150" y="160" text-anchor="end" fill="#33443c">Platform at 1M members</text><rect x="156" y="148" width="28" height="12" fill="#1c6349"/><text x="190" y="158" fill="#55685e">45, about six percent of the sector; over sixty percent of one mid-size institution</text>
+</svg><figcaption>Figure 8. The same balances at two scales. Immaterial to the banking system, strategic to the microfinance sector, transformational to a single institution; the partnership conversation belongs at the tier where the bar is long.</figcaption></figure>
+<p>Two contextual facts carry particular weight. The average microfinance loan of approximately Rs 49,000 is close to one committee payout; the two instruments already substitute for each other in household life, and only one of them currently builds a credit file. And the constitutional-court direction of the banking system toward Islamic structures is a regulatory tailwind for an instrument that is interest-free by construction.</p>
+
+<h2>8.3 Target segments</h2>
+<table>
+<tr><th>Segment</th><th>Population (~)</th><th>Currently in committees (~)</th><th>Obtainable in 5 years</th></tr>
+<tr><td>Committee organisers (the distribution channel)</td><td>2-3M</td><td>2-3M</td><td>50-150k hosts</td></tr>
+<tr><td>Home-business women</td><td>4-5M</td><td>2.5-3M</td><td>300-600k</td></tr>
+<tr><td>Salaried lower-middle</td><td>~25M</td><td>8-10M</td><td>400-800k</td></tr>
+<tr><td>Bazaar traders and shopkeepers</td><td>6-7M</td><td>3-4M</td><td>150-400k</td></tr>
+<tr><td>Young gig and freelance workers</td><td>3-4M</td><td>0.7-1M</td><td>100-300k</td></tr>
+<tr><td>Upper-middle professionals</td><td>2-3M households</td><td>0.8-1.2M</td><td>50-150k</td></tr>
+</table>
+<figure class="fig"><svg viewBox="0 0 640 185" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="9">
+<text x="10" y="14" fill="#33443c" font-size="10">Obtainable membership by segment, five-year midpoints (thousands)</text>
+<text x="185" y="42" text-anchor="end" fill="#33443c">Salaried lower-middle</text><rect x="191" y="30" width="420" height="13" fill="#1c6349"/><text x="560" y="41" fill="#fff">~600</text>
+<text x="185" y="68" text-anchor="end" fill="#33443c">Home-business women</text><rect x="191" y="56" width="315" height="13" fill="#1c6349"/><text x="455" y="67" fill="#fff">~450</text>
+<text x="185" y="94" text-anchor="end" fill="#33443c">Bazaar traders</text><rect x="191" y="82" width="192" height="13" fill="#8fb8a8"/><text x="389" y="93" fill="#55685e">~275</text>
+<text x="185" y="120" text-anchor="end" fill="#33443c">Young gig workers</text><rect x="191" y="108" width="140" height="13" fill="#8fb8a8"/><text x="337" y="119" fill="#55685e">~200</text>
+<text x="185" y="146" text-anchor="end" fill="#33443c">Professionals</text><rect x="191" y="134" width="70" height="13" fill="#8fb8a8"/><text x="267" y="145" fill="#55685e">~100</text>
+<text x="185" y="172" text-anchor="end" fill="#33443c">Organiser hosts</text><rect x="191" y="160" width="70" height="13" fill="#8a5a00"/><text x="267" y="171" fill="#55685e">~100 (the acquisition channel for all of the above)</text>
+</svg><figcaption>Figure 9. Obtainable membership by segment. Hosts are counted separately because each host imports six to twenty members with her circle.</figcaption></figure>
+<p>The obtainable totals of one to 2.4 million members correspond to winning roughly four percent of the currently active committee population. The organiser is the unit of acquisition: one demonstration converts 6 to 20 pre-trusted members with their circle intact, the host pays no service fee, and the referral incentive of Rs 250 pays only upon a referred member's first completed cycle and is funded from the company's own revenue, so that growth expenditure purchases finished circles rather than downloads. A later diaspora segment attaches family committees to the remittance corridor.</p>
+
+<h1>9. Competitive landscape and international precedents</h1>
+
+<h2>9.1 The paper committee</h2>
+<p>The incumbent, at effectively full market share, is free, culturally native and frictionless, and will remain so. It recovers nothing on default, earns nothing on idle balances and records nothing. The platform's positioning is accordingly not substitution of the circle but infrastructure for it; digitising existing circles preserves the social accountability that stranger-matching discards.</p>
+
+<h2>9.2 Oraan</h2>
+<p>Oraan, founded 2018, is the category pioneer: the first women-led financial technology seed round (~US$3M, 2021), the SECP NBFC licence (2023), and, by its own published figures as of July 2026, more than 600,000 savers on committee and gold products, with plans from approximately Rs 1,000 per month. Its verified scale is the single most important market fact available: digital committees have crossed into mass adoption with precisely the demographic at issue. The model is a service-fee facilitator matching circles of strangers that Oraan itself underwrites. Its structural constraints are also structural to that model: a flat fee that a yield engine would cannibalise; default risk carried on its own book because matched strangers carry no social accountability; a blanket Shariah-compliance representation against the platform's per-feature labelling; and no credit identity or receivables products, which are the layers with institutional economics. The company regards Oraan's success as category validation rather than an obstacle.</p>
+
+<h2>9.3 Wallets and digital banks</h2>
+<p>JazzCash and easypaisa hold approximately 21 million and 18 million monthly active users respectively, and Easypaisa Bank holds the country's first digital retail banking licence (January 2025). Verification as of July 2026 finds no live committee product at either. The absence is informative: a committee feature inside a wallet is a record-keeper without an underwriting machine, and the sector's own history (SimSim, free and first, nonetheless failed against distribution) demonstrates that features do not defeat community trust. The realistic relationship is rails today and white-label licensees or acquirers later, on the precedent of Gojek's acquisition of the arisan platform Mapan. The material competitive risk is a funded committee build inside Easypaisa Bank; the mitigations are speed, the assurance layer that constitutes the audit-grade part of the platform, and the fact that partnership with the platform is cheaper than replication of it.</p>
+
+<h2>9.4 Register applications and savings substitutes</h2>
+<p>A verified cluster of bookkeeping applications (Kameti.pk, Kameti Digital Guru, iKAMETI, Circlys) digitises committee record-keeping without enforcement, collateral, yield or identity. They demonstrate organiser demand for committee software and constitute an efficient acquisition pool. Savings substitutes (National Savings at ~12-13 percent, bank term deposits at ~11 percent, physical gold, prize bonds) compete for the vault rupee rather than for the circle; several are distributed within the platform's own catalogue, converting them from competitors into trail-paying suppliers.</p>
+
+<h2>9.5 International precedents</h2>
+<table>
+<tr><th>Market</th><th>Case</th><th>Relevance</th></tr>
+<tr><td>India</td><td>Chit funds under the Chit Funds Act 1982 (amended 2019): licensed foremen, registrar-held security deposits, commission capped at five, later seven, percent; a legal industry of billions of dollars. The associated frauds (Saradha and similar) were unlicensed custody schemes wearing chit clothing rather than failures of regulated chits.</td><td>The regulated endgame for committee finance exists at national scale, and the custody-versus-instrument distinction that exonerates the instrument is the same distinction at the centre of this platform's design.</td></tr>
+<tr><td>Egypt</td><td>Money Fellows digitised the gam'eya to more than 8.5 million users and over US$1.5 billion in transactions, reaching profitability in Egypt, on total funding above US$60M including a US$13M pre-Series C (verified July 2026).</td><td>The model functions in a Muslim-majority, cash-heavy, inflation-prone economy directly comparable to Pakistan.</td></tr>
+<tr><td>Indonesia</td><td>Gojek acquired the arisan platform Mapan (2017).</td><td>Large technology firms acquire community-finance networks rather than rebuild them.</td></tr>
+<tr><td>United States</td><td>Esusu reports informal payments to credit bureaus; US$130M raised at a US$1B valuation (2022; verified July 2026).</td><td>The credit-data layer alone, without lending, supports a billion-dollar enterprise. It is the closest external validation of the Passport-to-bureau thesis.</td></tr>
+<tr><td>South Africa; Kenya</td><td>Stokvels (~11M participants, ~R50B annually, with national association recognition); chamas served by dedicated bank account categories and tooling.</td><td>Cooperative recognition paths and the migration of group savings into formal bank product categories.</td></tr>
+<tr><td>West Africa; Korea</td><td>Susu collectors charge fees to hold savings; Korea's kye circles financed households for a century before absorption into formal banking.</td><td>Households pay for committee infrastructure, and rotating instruments are proto-banks whose formaliser inherits their book.</td></tr>
+</table>
+<p>No market has yet produced the combined stack of yield, protection, credit identity and receivables in one platform. That combination is the position this company has built toward.</p>
+
+<h1>10. Business model and the receivables platform</h1>
+
+<h2>10.1 Principles</h2>
+<p>The company takes no share of member profit. The licensed bank partner is the Mudarib on deposited funds at its standard industry split, upstream of the platform, exactly as for any depositor; the profit rates members see are already net of it. The company's revenue is earned as a channel and infrastructure provider, predominantly from the institutions to which it delivers deposits, receivables and underwriting data, with a deliberately small member-side fee. Member principal is untouched in every line; penalties route to charity; the referral programme is funded from the company's own revenue.</p>
+
+<h2>10.2 Revenue operating today <span class="stage">LIVE</span></h2>
+<ul>
+<li>Circle service fee of Rs 49 per member per month, with the host free. The fee is approximately 0.4 percent of a typical installment and roughly one twentieth of the incumbent digital competitor's plan pricing.</li>
+<li>Processing cuts on optional flows: fifteen percent of early-turn fee flows, ten percent of Safety Fund slot fees, and the existing ten percent marketplace fee on turn premiums. Members who use no optional flow pay none of these.</li>
+<li>Passport verification fees of Rs 75 per inquiry, paid by the inquiring institution rather than the member.</li>
+<li>Premium host tooling by subscription for multi-circle organisers.</li>
+</ul>
+
+<h2>10.3 Revenue at the licensed stage <span class="stage b">LICENCE + BANK</span></h2>
+<ul>
+<li><b>Deposit-mobilisation commission, approximately 1.25 percent per annum on balances placed, paid by the bank.</b> Banks pay one to two percent all-in for deposit acquisition through agent networks; the platform delivers granular, stable, low-cost deposits that cure concentration risk, and is paid from the bank's own spread. The member's rate is unaffected.</li>
+<li>Payout processing of 0.25 percent capped at Rs 299 per disbursement.</li>
+<li>Fund-distribution trail of approximately 0.5 percent per annum on allocated slices, paid by the asset manager. <span class="stage c">PARTNER</span> (AMC)</li>
+<li>Takaful distribution commission at the standard fifteen to twenty percent of contributions, paid by the operator. <span class="stage c">PARTNER</span> (takaful)</li>
+</ul>
+
+<h2>10.4 The receivables platform <span class="stage b">LICENCE + BANK</span></h2>
+<p>A committee is, in banking terms, a self-amortising stream of short-dated receivables with behavioural collateral, and the platform is the only party that can see, score and service it. Five revenue lines follow, none of which touches the member's profit share.</p>
+<ol>
+<li><b>Origination fees</b> of one to 1.5 percent where a lender finances against a circle's receivables statement. The platform sources and documents the transaction; credit risk remains with the financier.</li>
+<li><b>Servicing fees</b> of approximately 0.5 percent per annum on financed books: schedule administration, reminders, collections escalation and reporting, all of which the platform already performs as software.</li>
+<li><b>Payout-advance facilitation</b>: financing against a member's own scheduled payout, originated and serviced by the platform. The halal route is the existing turn marketplace; the discounting route carries the conventional label.</li>
+<li><b>Institutional marketplace participation</b>: the partner bank standing as a liquidity provider in the existing turn marketplace, purchasing positions at transparent prices, with the existing marketplace fee applying to institutional trades.</li>
+<li><b>Securitisation arrangement</b>: at scale, pooled circle receivables structured for institutional purchase in sukuk form, with the platform earning arrangement and ongoing servicing fees. Sale of a share of the company's own fee revenue, a non-dilutive financing route, is sequenced after twelve to twenty-four months of audited revenue history; the circles' receivables precede the company's own because institutions purchase seasoned, collateralised cash flows before startup fee lines.</li>
+</ol>
+
+<h2>10.5 Longer-term lines</h2>
+<ul>
+<li>Underwriting-data licensing to lenders (per-score or subscription), alongside consent-based bureau reporting. <span class="stage b">LICENCE + BANK</span></li>
+<li>White-label committee infrastructure for banks and digital banks, as licence plus volume fees. <span class="stage c">PARTNER</span></li>
+<li>Remittance-funded committees for the diaspora corridor, with referral economics. <span class="stage c">PARTNER</span> (remittance rail)</li>
+<li>Employer payroll circles with per-employee pricing. <span class="stage c">PARTNER</span> (employers)</li>
+</ul>
+
+<h2>10.6 Financial projections</h2>
+<table>
+<tr><th>Scale</th><th>Balances under management</th><th>Company revenue per year</th><th>Per month</th></tr>
+<tr><td>250,000 members</td><td>~Rs 11B</td><td>~Rs 530-570M</td><td>~Rs 4.4-4.8 crore</td></tr>
+<tr><td>1,000,000 members</td><td>~Rs 45B</td><td>~Rs 1.9-2.3B</td><td>~Rs 16-19 crore</td></tr>
+<tr><td>2,000,000 members</td><td>~Rs 100B</td><td>~Rs 4.2-5B</td><td>~Rs 35-42 crore</td></tr>
+</table>
+<p>Composition at the 250,000-member point: deposit commission approximately Rs 140M, service fees approximately Rs 147M, optional-flow cuts approximately Rs 90M, receivables lines Rs 60 to 100M as the financed book builds, distribution trail, takaful commission and data fees approximately Rs 45M, and payout processing approximately Rs 45M. Before licensing, the live lines of Section 10.2 produce a modest recurring base (roughly Rs 25 to 35M per year at the same membership) whose function is proof and continuity rather than scale. Sensitivities are stated plainly: the deposit commission and trail move with the rate cycle while the service, receivables and data lines do not; the single-bank dependency is mitigated over time by the white-label ambition; and all licensed-stage figures assume the SECP licence and a custodial partner, which is what the raise funds.</p>
+
+<figure class="fig"><svg viewBox="0 0 640 130" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="9">
+<text x="10" y="14" fill="#33443c" font-size="10">Company revenue at scale, licensed stage (Rs crore per month)</text>
+<text x="180" y="46" text-anchor="end" fill="#33443c">250,000 members</text><rect x="186" y="34" width="54" height="14" fill="#8fb8a8"/><text x="246" y="45" fill="#55685e">~4.5</text>
+<text x="180" y="76" text-anchor="end" fill="#33443c">1,000,000 members</text><rect x="186" y="64" width="204" height="14" fill="#1c6349"/><text x="396" y="75" fill="#55685e">~17</text>
+<text x="180" y="106" text-anchor="end" fill="#33443c">2,000,000 members</text><rect x="186" y="94" width="456" height="14" fill="#1c6349"/><text x="560" y="90" fill="#55685e">~38</text>
+</svg><figcaption>Figure 10. Monthly revenue at three membership scales under the channel model. The majority of each bar is institution-paid.</figcaption></figure>
+<figure class="fig"><svg viewBox="0 0 640 110" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="9">
+<text x="10" y="14" fill="#33443c" font-size="10">Composition of annual revenue at 250,000 members (Rs millions, midpoints)</text>
+<rect x="30" y="28" width="154" height="20" fill="#1c6349"/><rect x="184" y="28" width="162" height="20" fill="#2e7d5e"/><rect x="346" y="28" width="99" height="20" fill="#8fb8a8"/><rect x="445" y="28" width="88" height="20" fill="#b9cfc5"/><rect x="533" y="28" width="50" height="20" fill="#8a5a00"/><rect x="583" y="28" width="50" height="20" fill="#d8c49a"/>
+<text x="34" y="42" fill="#fff">bank 140</text><text x="190" y="42" fill="#fff">service 147</text><text x="352" y="42" fill="#0e2a1e">flows 90</text><text x="450" y="42" fill="#0e2a1e">receiv. 80</text><text x="536" y="42" fill="#fff">trail 45</text><text x="586" y="42" fill="#0e2a1e">proc. 45</text>
+<text x="30" y="66" fill="#55685e">Institution-paid share (bank commission, receivables, trail, data): roughly 55 to 60 percent of the total.</text>
+<text x="30" y="82" fill="#55685e">Member-paid share: the Rs 49 service fee and the optional-flow cuts paid only by users of those features.</text>
+<text x="30" y="98" fill="#55685e">Rate-sensitive share (bank commission and trail): roughly a third; the remainder does not move with the policy rate.</text>
+</svg><figcaption>Figure 11. Revenue composition at the first partnership scale. The mix is deliberately weighted toward recurring, institution-paid lines.</figcaption></figure>
+<h2>10.7 Comparison with adjacent charging models</h2>
+<table>
+<tr><th>Model</th><th>Charge</th><th>Contrast</th></tr>
+<tr><td>Regulated chit fund (India)</td><td>foreman commission of five to seven percent of every pool</td><td>charged against members' own money; the platform's member fee is Rs 49 per month</td></tr>
+<tr><td>Asset manager</td><td>one to two percent of assets annually, independent of performance</td><td>the platform's all-in take approximates five percent of balances only when its institution-paid lines are included; the member-paid component is a fraction of one percent</td></tr>
+<tr><td>Incumbent digital committee</td><td>flat plans from ~Rs 1,000 per month</td><td>approximately twenty times the platform's member fee</td></tr>
+<tr><td>Bank</td><td>net interest margin on the balance sheet, with credit risk, provisioning and capital requirements</td><td>the platform carries no lending book, no provisioning line and no capital-adequacy burden</td></tr>
+</table>
+
+<h1>11. Development roadmap</h1>
+<table>
+<tr><th>Stage</th><th>Contents</th><th>Dependency</th></tr>
+<tr><td>Current: record-only operation</td><td>Host-led growth; the full product of Sections 2 through 6 live; service-fee and processing revenue; data accrual; verification maintained at 25 unit and 283 end-to-end automated checks including simulated attacks</td><td>none</td></tr>
+<tr><td>Licensing and custody</td><td>SECP NBFC licence; omnibus escrow with the partner bank; nightly reconciliation; deployment of float, deposits and vault at live rates; balance checks; direct debit; funded Safety Funds; bureau reporting in shadow then production; the enforcement additions of Section 5.6</td><td><span class="stage b">LICENCE + BANK</span></td></tr>
+<tr><td>Scale</td><td>Receivables financing and securitisation; data licensing; white-label infrastructure; takaful distribution; payroll and diaspora channels</td><td><span class="stage b">LICENCE + BANK</span> plus <span class="stage c">PARTNER</span> agreements per line</td></tr>
+</table>
+<p>Every licensed-stage system is specified today to the checklist level in internal activation documents covering custody and reconciliation, identity verification and bureau integration, collections and takaful, production security including second-factor authentication, treasury deployment, and the anti-money-laundering programme. Regulatory approval therefore converts to implementation rather than design.</p>
+
+<h1>12. Investment rationale</h1>
+<h2>12.1 The position</h2>
+<p>The company sits at the junction of a verified mass behaviour (25 to 30 million active committee participants moving about US$5 billion a year), a proven category (600,000 savers on the incumbent digital platform), a proven regulatory path (the incumbent's NBFC licence), institutional demand on three sides (banks short of granular deposits, lenders short of thin-file underwriting data, and a financial system under constitutional direction toward Islamic structures), and an unoccupied product position: no platform anywhere combines yield, protection, credit identity and receivables.</p>
+<h2>12.2 The asset already built</h2>
+<p>A complete working platform rather than a plan: the lifecycle, engines, protection stack, marketplace, vault, Urdu interface and phone installation of Sections 2 through 6, verified by 25 unit and 283 end-to-end automated checks including attack simulations, with an evidence base whose headline claims are locked as tests. The audit-grade construction is itself the due-diligence artifact: the ledger, the test suite and the simulation are open to any technical adviser.</p>
+<h2>12.3 Principal risks and mitigations</h2>
+<table>
+<tr><th>Risk</th><th>Mitigation</th></tr>
+<tr><td>Licence timing</td><td>Record-only operation is lawful today, accrues the data asset regardless, and carries live revenue lines; the incumbent's licence proves the path; the raise is sized for the bridge.</td></tr>
+<tr><td>Entry by a funded incumbent (in particular the licensed digital wallet-bank)</td><td>Speed; the assurance layer, which is the slow part to replicate; the host network, which cannot be purchased in a feature cycle; white-label conversion of would-be competitors into customers.</td></tr>
+<tr><td>Rate-cycle compression</td><td>The revenue mix is majority rate-independent; the protection proposition is rate-independent entirely.</td></tr>
+<tr><td>Adoption cold start</td><td>No custody trust is requested of a new member; acquisition runs through organisers within existing circles; the interface is Urdu-first with assisted onboarding.</td></tr>
+<tr><td>Shariah scrutiny</td><td>Structural honesty: halal engines architecturally halal, the conventional lever labelled not-reviewed on every surface, penalties to charity, and formal board certification as a named milestone. The market's history of religiously framed frauds makes granular honesty a commercial asset.</td></tr>
+<tr><td>Category reputational shock (a future organiser fraud in the informal market)</td><td>The platform's architecture makes the organiser-flight fraud impossible and the explanation is published in advance; a category scare directs demand toward audited infrastructure.</td></tr>
+<tr><td>Key-person concentration</td><td>The finished, tested system reduces execution dependency; the raise funds compliance and growth hires around the founder.</td></tr>
+</table>
+<h2>12.4 The application of funds</h2>
+<p>The raise funds the SECP licensing workstream, the custodial partnership with a microfinance or digital bank, the pilot cohort whose ledger data replaces the simulation, production security certification including external penetration testing, and the first compliance and growth hires. The pilot is the decisive step: it converts every simulated claim in this memorandum into measured claims on the company's own books.</p>
+<h2>12.5 Concluding statement</h2>
+<p>Pakistan already trusts the committee; what it has never had is committee infrastructure. The company has built that infrastructure, verified it to an institutional standard, priced it so that institutions rather than savers carry the cost, and sequenced the regulated stage so that approval converts to activation. The residual requirements are the licence, the partner and the pilot, which are precisely what this raise is for.</p>
+
+<p class="note" style="margin-top:8mm">Confidential. Prepared by the founder. Figures marked as verified were checked against the cited public sources in July 2026 and independently audited source-by-source against live references in the same month; approximations are marked, and time-stamped baselines state their provenance in the text. Nothing in this memorandum is an offer of securities or a promise of return.</p>
+
+</body></html>

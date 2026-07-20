@@ -1,0 +1,461 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Halqa — The Learning Volumes — finance and Halqa, taught from zero</title>
+<style>
+  body{font-family:Georgia,'Times New Roman',serif;color:#1a2b23;max-width:820px;margin:40px auto;line-height:1.55;font-size:11.5pt}
+  h1{font-size:20pt;color:#1c6349;border-bottom:3px solid #1c6349;padding-bottom:6px}
+  h2{font-size:14pt;color:#1c6349;margin-top:1.4em}
+  h3{font-size:11.5pt;color:#444;font-style:italic;font-weight:normal}
+  h4{font-size:11pt;color:#1c6349}
+  table{border-collapse:collapse;margin:10px 0;width:100%}
+  td{border:1px solid #b9cfc5;padding:5px 8px;font-size:10pt;vertical-align:top}
+  tr:first-child td{background:#eaf3ee;font-weight:bold}
+  ul{margin:6px 0;padding-left:22px}
+  li{margin:3px 0}
+  code{background:#f0f4f2;padding:1px 4px;border-radius:3px;font-size:10pt}
+  a{color:#1c6349;word-break:break-all}
+  .note{color:#555;font-style:italic;font-size:10.5pt}
+  section{margin-bottom:30px}
+</style></head><body>
+<div style="text-align:center;margin-bottom:50px"><h1 style="border:none">HALQA</h1>
+<p class="note">The Learning Volumes — finance and Halqa, taught from zero · 2026-07-13 · prepared for the chairman</p></div>
+<section><h1>Learning Volume 1 — HOW HALQA ACTUALLY WORKS</h1>
+<h3>A complete teaching walkthrough. No prior finance knowledge assumed. Read with a calculator; every number here can be checked by hand.</h3>
+<p>---</p>
+<h2>Part 1 — What a committee is (start from absolute zero)</h2>
+<p>A <b>committee</b> (kameti / BC / ROSCA — "rotating savings and credit association" in economics textbooks) is the simplest financial machine humans ever invented. Here is the whole thing:</p>
+<p>&gt; Twelve people agree to each put in Rs 11,667 every month. That makes a pot of Rs 140,004 each month (12 × 11,667 = 140,004). Each month, ONE member takes the entire pot. After 12 months, everyone has had exactly one turn, and the committee ends.</p>
+<p>That's it. Now check the arithmetic of what each person experienced:</p>
+<ul>
+<li>Every member paid in 12 × 11,667 = <b>Rs 140,004</b> over the year.</li>
+<li>Every member received the pot once = <b>Rs 140,004</b>.</li>
+<li>Net position: exactly zero. Nobody gained or lost a rupee.</li>
+</ul>
+<p>So why does anyone bother? Because of <b>when</b> you get the money:</p>
+<ul>
+<li>The person with <b>turn 1</b> gets Rs 140,004 in month 1, having only paid in Rs 11,667 so far. She has effectively received an <b>interest-free loan</b> of the rest, which she repays over the following 11 months.</li>
+<li>The person with <b>turn 12</b> pays in for 12 months and gets her money at the end. For her, it worked like a <b>forced savings plan</b> — the social pressure of the group made her save when a bank account never would have.</li>
+<li>Everyone in between gets a blend.</li>
+</ul>
+<p>One machine, three products: a loan (early turns), a savings account (late turns), and a <b>commitment device</b> — you can't skip a payment when the "bank" is your neighbours and your reputation. About 41% of Pakistanis have used one; roughly US$5 billion a year rotates through them.</p>
+<h3>The three flaws Halqa exists to fix</h3>
+<p>1. <b>Fragility.</b> Suppose the turn-2 member collects her Rs 140,004 in month 2 and then simply stops paying. She owes the group 10 more payments of 11,667 = <b>Rs 116,670</b>, and there is no contract, no collateral, no court that will realistically recover it. The group eats the loss. In a paper committee, recovery on a default like this is essentially <b>0%</b>.</p>
+<p>2. <b>Dead money.</b> Money sits idle inside the committee constantly (paid on the 1st, handed over on the 30th). With Pakistani inflation in double digits, idle money is literally shrinking in purchasing power while it waits. Nobody has ever been paid for those waiting days.</p>
+<p>3. <b>Invisibility.</b> A woman who pays 144 installments over 12 years with zero misses has demonstrated world-class creditworthiness — and has <b>no credit history whatsoever</b>, because none of it was recorded anywhere a bank can read.</p>
+<p>Halqa = the same machine + enforcement + yield on the dead days + a recorded, portable reputation.</p>
+<p>---</p>
+<h2>Part 2 — The golden rule: recorded, never held</h2>
+<p>This is the single most important design decision, so let's be precise about it.</p>
+<p><b>Halqa does not hold anyone's money.</b> When Bilal owes Ayesha his installment, Bilal sends the money directly to Ayesha — by Raast (the state's free instant transfer system), a wallet, or cash — and then records the payment in Halqa with a reference number. Halqa's job is to be the <b>scorekeeper and referee</b>: it knows who has paid, who is late, whose turn it is, what everyone's deposit covers, and it enforces the consequences.</p>
+<p>Why build it this way?</p>
+<ul>
+<li><b>Every big committee fraud in history</b> — the Karachi Rs 400 million online-committee scam, India's chit-fund collapses — had the same root cause: one operator physically held everyone's money and ran. Halqa is structurally incapable of this fraud because there is no pot to run with.</li>
+<li><b>Regulation.</b> In Pakistan, the moment you hold or invest client money, you need a licence from the SECP (the securities regulator). Recording and refereeing needs none. So Stage 1 (now) is record-only; Stage 2 (after the NBFC licence — the exact licence the startup Oraan already obtained, so the path is proven) adds real custody and real investment.</li>
+<li><b>Trust psychology.</b> A new user doesn't have to trust Halqa with a single rupee on day one. She only has to let it keep score. Trust is earned one clean cycle at a time.</li>
+</ul>
+<p>One consequence you must understand: <b>today, all the "profit" numbers are computed, not banked.</b> The engine calculates what the idle money <i>would</i> earn at real, dated market rates, and records it. Nothing is actually deployed until the licence exists. The app says this openly.</p>
+<p>---</p>
+<h2>Part 3 — The double-entry ledger (the machine's skeleton)</h2>
+<p>Everything in Halqa sits on a <b>double-entry ledger</b>. This concept is 600 years old and it is the reason accounting works:</p>
+<p>&gt; Every movement of value is recorded twice — once as a <b>debit</b> (where it came from) and once as a <b>credit</b> (where it went). The two sides must always be equal.</p>
+<p>Example: Bilal pays his Rs 11,667 installment for round 3:</p>
+<table>
+<tr><td>Debit (from)</td><td>Credit (to)</td><td>Amount</td><td>Reason code</td></tr>
+<tr><td>user:bilal:external</td><td>committee:X:round3</td><td>1,166,700 paisa</td><td>CONTRIBUTION_RECORDED</td></tr>
+</table>
+<p>Two details worth noticing:</p>
+<ul>
+<li>The amount is in <b>paisa</b> (1 rupee = 100 paisa) and stored as a whole number. Why? Because computers represent decimal fractions imperfectly (try 0.1 + 0.2 in any programming language — you get 0.30000000000000004). If you do millions of money calculations with decimals, tiny errors accumulate. Whole-number paisa can never drift. This is the same reason physicists prefer exact integer units.</li>
+<li>Every entry has a <b>reason code</b> and an <b>idempotency key</b> — a unique tag that makes it impossible to accidentally record the same payment twice (if the same key arrives again, the ledger refuses the duplicate).</li>
+</ul>
+<p>The payoff: at any moment, anyone can reconstruct every balance from the entries, and the system has automated tests proving <b>conservation</b> — across a full cycle, the bonuses paid out sum <i>exactly</i> to the profit created, to the paisa. Money cannot be invented or vanish. Think of it as the ledger's conservation of energy.</p>
+<p>---</p>
+<h2>Part 4 — One circle, start to finish (the running example)</h2>
+<p>Meet the reference circle used everywhere in Halqa's documents: <b>12 women, Rs 11,667/month each, pot Rs 140,004, 12 monthly rounds.</b> Ayesha is the host. Let's walk the whole year.</p>
+<h3>4.1 Creation</h3>
+<p>Ayesha (reliability score 700+, required to host) creates the circle: name, 12 members, Rs 11,667 contribution, 30-day period. She picks a <b>tier</b> (Part 5 explains tiers) — say Sigma, the full engine. She can add a goal tag ("Hajj fund"), and configure the protection settings (deposits, holdback, penalties — all on by default).</p>
+<h3>4.2 Joining</h3>
+<p>Ayesha invites her own circle — the same women she already runs a paper committee with. Each one sees a <b>pre-join preview</b>: the exact terms, and Ayesha's reputation card (her history as a host). Two automatic gates check every joiner:</p>
+<ul>
+<li><b>Score gate:</b> reliability score must be ≥ 550 (everyone starts at 700; being late costs points).</li>
+<li><b>First-circle cap:</b> someone who has <i>never completed a committee on Halqa</i> cannot join a circle above Rs 25,000/installment. New people prove themselves in small circles first — the app enforces the caution a wise host applies instinctively.</li>
+</ul>
+<h3>4.3 Turn order</h3>
+<p>Who gets month 1? Halqa's default is <b>credit-weighted ordering</b>: the most reliable members are placed in the earliest turns. Why? Work out who can hurt the group most. The turn-1 member collects Rs 140,004 while having paid in only 11,667 — she owes the group Rs 128,337 of future payments. The turn-12 member owes nothing after collecting (her turn is the last event). <b>Early positions are where the risk lives</b>, so the platform puts its most proven people there. (The host can override; a random ballot is also available.)</p>
+<h3>4.4 Security deposits — sized to the danger</h3>
+<p>Before the circle starts, each member posts a <b>security deposit</b> — and here is the elegant part: the deposit is sized to how much that member could run away with.</p>
+<p>Formula: deposit ≈ <b>90% of the member's remaining dues after her payout</b>, shrinking linearly to 0 for the last position (capped at 95% after credit adjustments).</p>
+<p>Worked out for our circle (remaining dues after payout = 11,667 × number of payments still owed):</p>
+<table>
+<tr><td>Position</td><td>Still owes after payout</td><td>Deposit (~90% of it)</td></tr>
+<tr><td>1</td><td>11 × 11,667 = 128,337</td><td>≈ Rs 115,500</td></tr>
+<tr><td>6</td><td>6 × 11,667 = 70,002</td><td>≈ Rs 57,300</td></tr>
+<tr><td>12</td><td>0</td><td>Rs 0</td></tr>
+</table>
+<p>Check the logic: position 12 can't abscond (she gets paid last), so she posts nothing. Position 1 could do maximum damage, so she posts nearly everything she could steal. If anyone defaults, their deposit is <b>forfeited to the group</b>, covering most of the hole.</p>
+<p>And the deposit is not dead weight — it <b>earns profit the whole year</b> (Part 5). Collateral that pays you. Deposits always come back in full to anyone who doesn't default.</p>
+<h3>4.5 A round, day by day</h3>
+<p>Round 3, say. The round opens; each of the 12 owes Rs 11,667, due by day 30.</p>
+<ul>
+<li>Day 1–29: members pay (transfer to the round's recipient directly, record with reference). Early payment is rewarded (the early-bird mechanic, Part 5).</li>
+<li>The app sends reminders as the due date approaches; other members can send gentle nudges from the Protection tab.</li>
+<li>Day 30: due date. Suppose Sana hasn't paid.</li>
+<li><b>The grace window:</b> Halqa quietly allows a short internal grace period after the due date (calibrated to the circle's length, clamped between 2 and 14 days) before the heavy escalation starts. Crucially, <b>the member is never told how long it is</b> — if people knew the real deadline was day 37, day 37 would become the new deadline. (This is the one number in the whole system that is deliberately secret. Never mention its size to anyone.) Penalties and score damage still apply from day 30 — only the <i>escalation to ban</i> waits.</li>
+<li><b>Late penalties:</b> progressive and fixed — 2%, then 5%, then 10% bands, never compounding. Where does penalty money go? <b>Not to Halqa.</b> In halal tiers, to charity at completion (there's a classical Islamic ruling behind this — Volume 3 explains); otherwise, to the members who were never late.</li>
+<li><b>Auto-cover:</b> if Sana opted in, her missed installment is automatically paid from her personal vault savings (Part 6). She still gets the penalty and the score hit — fairness to the group — but the miss never snowballs toward default.</li>
+<li>Once all 12 payments are in, Ayesha releases the payout to the round's recipient, and the next round opens.</li>
+</ul>
+<h3>4.6 The payout holdback</h3>
+<p>When a member receives her Rs 140,004 pot, <b>15% (Rs 21,000) is held back</b> and released only as she keeps paying her remaining installments cleanly. Why: the moment of maximum temptation is right after collecting. The holdback keeps skin in the game past that moment. (At cycle end, any remaining holdbacks are force-released — an automated test exists specifically to prove no holdback can get stuck.)</p>
+<h3>4.7 If the worst happens</h3>
+<p>Say the turn-2 member collects and vanishes. The sequence: grace expires → marked defaulted → <b>platform ban</b> (visible to every future circle) → her deposit (≈ Rs 105,000 at position 2) and her Rs 21,000 holdback are forfeited to the group → a recovery case opens. She can rehabilitate — clear the dues plus a fee, serve a cooldown — because permanent exile helps nobody, but her record remembers.</p>
+<p>Group's arithmetic: she owed 10 × 11,667 = Rs 116,670. Forfeited collateral ≈ Rs 126,000 — the group is actually made whole. This is why the deposit curve was raised to 90%: in the calibrated 100,000-person simulation, <b>90.4% of defaulted exposure is recovered</b> and <b>70% of defaults are fully covered</b>, versus <b>0%</b> in a paper committee.</p>
+<h3>4.8 Completion</h3>
+<p>Round 12 ends. Deposits return in full to everyone (plus the profit they earned). Remaining holdbacks release. The cycle's pooled profit is split (Volume 2 — the engines). Everyone's reliability score gets +25 for a clean completion. Each member's <b>Credit Passport</b> — a signed, verifiable export of her record (cycles completed, on-time %, total recorded) — gets one cycle richer. Any lender can verify a Passport through its link without having a Halqa account.</p>
+<p>---</p>
+<h2>Part 5 — The five tiers (choose your engine)</h2>
+<p>A tier is just a bundle of engine switches. From simplest to fullest:</p>
+<table>
+<tr><td>Tier</td><td>What's on</td><td>Halal status shown in-app</td></tr>
+<tr><td><b>Classic</b></td><td>Nothing — pure rotation, exactly the paper committee</td><td>Neutral</td></tr>
+<tr><td><b>Sukoon</b> ("peace")</td><td>Idle money earns; deposits earn; each keeps their own yield</td><td>🟢 Halal structure</td></tr>
+<tr><td><b>Bazaar</b></td><td>Sukoon + "patience pays": all profit pooled, split favouring later turns</td><td>🟢 Halal structure</td></tr>
+<tr><td><b>Priority</b></td><td>Early positions pay a fee (max 10%) that goes to the waiting members</td><td>🟠 NOT Shariah-reviewed</td></tr>
+<tr><td><b>Sigma</b></td><td>Everything at once</td><td>🟠 NOT Shariah-reviewed</td></tr>
+</table>
+<p>The labels are the point: Halqa never blurs the halal line to sell a feature. The two 🟠 tiers exist because some groups want them (the chit-fund tradition of paying for early access), but they're labelled honestly, the fee is capped at 10%, declines to zero across positions, and <b>Halqa keeps none of it</b> — it moves member-to-member. A fully halal option is always one tap away.</p>
+<p>What the engines produce in our reference circle (all numbers are outputs of the actual code, locked by automated tests): best member's annual bonus ≈ <b>Rs 0</b> (Classic) → <b>7,600</b> (Priority) → <b>7,650</b> (Bazaar) → <b>15,285</b> (Sigma monthly) → <b>16,982</b> (Sigma pooled). The full mechanics, with arithmetic, are Volume 2.</p>
+<p>---</p>
+<h2>Part 6 — The Sukoon Vault (your personal pocket)</h2>
+<p>Outside any committee, every member has a <b>vault</b> — a personal halal savings pocket.</p>
+<ul>
+<li><b>Park a payout:</b> collected Rs 140,004 but only need 100,000 now? Leave 40,004 in the vault, where it keeps earning until you sweep it out.</li>
+<li><b>Top up:</b> deposit any amount from Rs 100, committee or no committee.</li>
+<li><b>Four yield tiers</b> (pick your risk): Standard ~10.8% 🟢 · Income ~12.1% 🟢 · Gold-linked ~15% 🟢 · Crypto "~30%" 🟠 <b>extreme</b> — see below.</li>
+<li><b>Sweep anytime:</b> principal + profit − 5% of the <i>profit only</i> (Halqa's share; Volume 4 explains why 5%-of-profit is the whole business model).</li>
+<li><b>Auto-cover:</b> the opt-in from Part 4.5 — your vault automatically pays your own late installment. Your savings become your own default insurance: no insurance pool, no premiums, no one else's money at risk.</li>
+</ul>
+<p><b>About that crypto tier</b> — it exists mostly to prove the system can say no. It is rated 10/10 risk, marked "not government-backed" in red, invisible until you deliberately raise your risk ceiling to maximum, requires a double confirmation in the app AND a special acknowledgement flag in the API (the server refuses a silent switch with an HTTP error), applies to the personal vault only, and is <b>permanently barred from committees</b>. Group money can never touch it.</p>
+<p>---</p>
+<h2>Part 7 — The protection stack, assembled</h2>
+<p>You've now met every layer. Here they are in firing order, from prevention to cure:</p>
+<p>1. <b>Score gates</b> (550 join / 700 host) — filter at the door.</p>
+<p>2. <b>First-circle cap</b> (Rs 25,000 until one clean cycle) — small stakes until proven.</p>
+<p>3. <b>Credit-weighted ordering</b> — reliable people in dangerous seats.</p>
+<p>4. <b>Graduated deposits</b> (≈90% of remaining dues) — collateral sized to temptation.</p>
+<p>5. <b>Reminders + peer nudges</b> — social pressure, digitised.</p>
+<p>6. <b>Hidden grace window</b> — humanity without gameability.</p>
+<p>7. <b>Progressive penalties</b> (2/5/10%, → charity or the never-late) — discipline that doesn't enrich the platform.</p>
+<p>8. <b>15% payout holdback</b> — skin in the game after the payout.</p>
+<p>9. <b>Vault auto-cover</b> — your own savings absorb your own slip.</p>
+<p>10. <b>Ban + forfeiture + recovery + rehabilitation</b> — real consequences, real road back.</p>
+<p>11. <b>Credit Passport</b> — the long game: your behaviour follows you, both ways.</p>
+<p>Measured effect (calibrated 100k simulation, same simulated people living the same year with and without the stack): post-payout defaults <b>1.41% → 0.27%</b>, recovery on default <b>0% → 90.4%</b>, the worst-risk segment improves <b>7.95% → 0.83%</b>.</p>
+<p>---</p>
+<h2>Part 8 — What Halqa is NOT (honesty section)</h2>
+<ul>
+<li>It does <b>not</b> hold or invest real money yet — everything yield-related is computed at dated market rates and labelled indicative. Custody needs the SECP licence.</li>
+<li>It is <b>not</b> Shariah-certified — the halal engines are <i>designed</i> to classical halal principles (Volume 3 teaches them) and labelled as such, but a formal Shariah board sign-off is a milestone ahead, and the app says so.</li>
+<li>The simulations are <b>calibrated models, not history</b> — no real-ledger dataset of committees exists anywhere on earth; the pilot's purpose is to replace the model with Halqa's own ledger data.</li>
+<li>The word "<b>guaranteed</b>" appears nowhere in the product. If you ever catch it, that's a bug.</li>
+</ul></section>
+<section style="page-break-before:always"><h1>Learning Volume 2 — THE PROFIT ENGINES, FROM ZERO</h1>
+<h3>Where every rupee of bonus actually comes from. Full arithmetic — check everything with a calculator. Requires Volume 1.</h3>
+<p>---</p>
+<h2>Part 0 — The one idea behind all of it</h2>
+<p>There are exactly <b>two</b> ways a committee member can end up with more money than she put in:</p>
+<p>1. <b>Create value:</b> put idle money to work in something that genuinely earns (a money-market fund, a profit-sharing bank deposit). New wealth enters the group from outside.</p>
+<p>2. <b>Move value:</b> one member pays another for something she values (getting the pot early). No new wealth — it just changes hands, transparently.</p>
+<p>Every Halqa engine is one of these two, and the app always tells you which. The halal engines are all type 1 (plus fair redistribution of type-1 profit). The one conventional lever (the early-turn fee) is type 2, labelled accordingly. Keep this sorting in your head and no engine will ever confuse you.</p>
+<p>A <b>conservation law</b> guards the whole system (enforced by an automated test): across a full cycle,</p>
+<p>&gt; sum of all member bonuses = total type-1 profit actually created.</p>
+<p>Type-2 transfers net to zero across the group by definition. The ledger cannot invent a rupee.</p>
+<p>---</p>
+<h2>Part 1 — The float sweep (the foundation engine)</h2>
+<h3>The idea</h3>
+<p>"Float" = money that has been paid in but not yet paid out. In a monthly committee, contributions arrive across the month; the payout happens at month-end. Every rupee of every contribution therefore sits idle for some days. Multiply small amounts by many members by many days and it stops being small.</p>
+<h3>The rate, and how "annual %" works</h3>
+<p>Rates are quoted <b>per year</b>. An "annual 10.8%" doesn't mean you get 10.8% in a month — you get the fraction of the year your money actually sat:</p>
+<p>&gt; profit = amount × rate × (days ÷ 365)</p>
+<p>Halqa's float engine parks (in Stage 2; computes, in Stage 1) the float in an <b>Islamic money-market fund</b> — the safest, most liquid class of fund, currently ~10.8%/yr — and credits profit for the <i>exact days each payment sat</i>. (It also clamps the day-count so nobody can backdate a payment to fake extra days. Every anti-cheat like this exists because someone would eventually try.)</p>
+<h3>Worked example</h3>
+<p>Bilal pays his Rs 11,667 on day 1 of a 30-day round. Payout happens day 30, so his money sits 29 days:</p>
+<p>&gt; 11,667 × 0.108 × 29/365 = <b>Rs 100.1</b></p>
+<p>One member, one round: about Rs 100. Now scale it: if all 12 pay early-ish, the round generates roughly 11 × 100 ≈ Rs 1,100 (the recipient's own contribution nets off), and the circle runs 12 rounds ≈ <b>Rs 12–13k of real profit a year</b> — from money that was previously just... waiting. Halqa takes 5% of the profit (its entire business model, Volume 4); the rest belongs to members.</p>
+<p>Notice the behavioural loop: the earlier people pay, the more days the money sits, the bigger the pool. Which sets up:</p>
+<p>---</p>
+<h2>Part 2 — Deposits that earn (Mudarabah)</h2>
+<p>Volume 1 showed deposits sized to ~90% of remaining dues — big money. Position 1 in our reference circle posts ≈ Rs 115,500 and it sits there the <b>entire year</b>. Dead collateral would be a tax; Halqa makes it productive.</p>
+<p>The deposits are placed (computed, today) in <b>Islamic Mudarabah bank deposits</b> (~11.2%/yr). Mudarabah is a profit-<i>sharing</i> contract, not interest — Volume 3 explains why that distinction is everything; for the math here it behaves like a rate.</p>
+<h3>Worked example — position 1's deposit</h3>
+<p>&gt; 115,500 × 0.112 × 365/365 = <b>Rs 12,936</b> earned by her deposit over the year.</p>
+<p>The person with the most locked up earns the most on it — the protection literally pays its own participants. In Sukoon tier, each depositor keeps her own deposit yield. In Bazaar/Sigma, deposit yield flows into the shared pool (Part 3) to be split by the patience rules.</p>
+<p>Now you can see why raising the deposit curve from 70% to 90% coverage did <b>two</b> things at once: recovery on default jumped (more collateral) <i>and</i> the group's profit pool grew (bigger earning base). Safety and yield turned out to be the same lever pushed harder. That is why the best-member bonus rose from ~15.6k to ~17k when the protection was strengthened — a result you can now derive yourself.</p>
+<p>---</p>
+<h2>Part 3 — The patience tilt (Bazaar's fairness correction)</h2>
+<h3>The unfairness it fixes</h3>
+<p>Recall from Volume 1: turn 1 is an interest-free loan, turn 12 is a forced savings account. In inflationary Pakistan, turn 1 also collects full-value rupees and repays in shrunken ones. The <b>late positions carry the committee</b> — their money is what funds everyone else's early pots — and for a century they were paid nothing for it.</p>
+<h3>The mechanism</h3>
+<p>At cycle end, the pooled profit (float + deposit yield) is split by <b>capital-days × position weight</b>:</p>
+<ul>
+<li><b>Capital-days</b> = amount × days it sat. The same quantity a physicist would call an "integral of money over time." Someone whose money stayed in the system longer accumulates more capital-days. Late positions naturally accumulate the most (they paid all year and collected last).</li>
+<li><b>Position weight</b> = a disclosed multiplier from <b>1.0× (turn 1) to 2.0× (turn 12)</b>, linear in between. Turn 6 gets ≈ 1.45×, and so on.</li>
+</ul>
+<h3>Toy example you can fully verify (3 members)</h3>
+<p>Amina (turn 1), Bushra (turn 2), Chandni (turn 3). Suppose their raw capital-days come out proportional to 1 : 2 : 3 (last position's money sat the longest). Weights: 1.0, 1.5, 2.0. Pool to split: Rs 6,600.</p>
+<p>Weighted shares: A = 1×1.0 = 1.0 · B = 2×1.5 = 3.0 · C = 3×2.0 = 6.0. Total = 10.</p>
+<p>&gt; A gets 6,600 × 1/10 = Rs 660 · B gets 6,600 × 3/10 = Rs 1,980 · C gets 6,600 × 6/10 = Rs 3,960.</p>
+<p>Patience got paid. Nobody lost principal; the <i>profit</i> was tilted toward whoever waited. This is Bazaar tier. It is halal type-1 redistribution: only real profit is being split, by disclosed rules everyone consented to.</p>
+<p>---</p>
+<h2>Part 4 — The behaviour bonuses (small engines, big psychology)</h2>
+<ul>
+<li><b>Early-bird boost:</b> pay ≥75% of your installments 3+ days early → your profit weight is multiplied by <b>1.25×</b> in the split. Why it's self-funding: early payments create extra float days (Part 1), i.e., the early birds <i>generate</i> the very profit they get a larger slice of.</li>
+<li><b>Staking streak:</b> every consecutive round the whole circle completes with nobody late, the circle's float bonus rises +5% (cap +20%). One late payment resets it. The design makes discipline a <i>team sport</i> — eleven people have a financial reason to remind the twelfth.</li>
+<li><b>Prize draw (opt-in):</b> each round, half the round's realised float profit is gifted (hiba) to one randomly chosen on-time payer. Two properties matter: (a) <b>principal is never staked</b> — only already-earned profit is gifted, so no one can lose anything, which is what separates it from gambling; (b) the "random" draw is a <b>deterministic hash</b> — a published mathematical function of the round's data. Anyone can recompute it and verify the winner. Provably fair, literally. (Marked 🟡: halal-intent, awaiting formal scholar sign-off.)</li>
+</ul>
+<p>---</p>
+<h2>Part 5 — The early-turn fee (the one conventional engine — 🟠)</h2>
+<h3>What it is</h3>
+<p>Some groups <i>want</i> to price early access — this is exactly how India's chit funds work, via auction. Halqa's version, in Priority and Sigma tiers, is deliberately tamer:</p>
+<ul>
+<li>The fee is a percentage of the pot, <b>capped at 10%</b>, charged to early positions and <b>declining linearly to 0%</b> for the last position.</li>
+<li>It is deducted <b>from the early member's own payout</b> — she never pays out of pocket; she just receives a bit less pot in exchange for receiving it early.</li>
+<li>100% of it is <b>redistributed to the waiting members</b>. Halqa keeps none.</li>
+</ul>
+<h3>Worked example (our 12-member circle, pot Rs 140,004)</h3>
+<p>Turn 1's fee: 10% = <b>Rs 14,000</b> (she receives 126,004). Turn 7's fee ≈ 10% × (12−7)/11 ≈ 4.5% ≈ Rs 6,360. Turn 12's fee: <b>Rs 0</b>.</p>
+<p>In <b>Priority</b>, each round's fee is split immediately among the other 11 members as a monthly dividend. In <b>Sigma pooled</b> mode, the fees flow into the completion pool and get split by the patience rules — which concentrates them toward the late positions, and is precisely why Sigma-pooled produces the biggest single bonus.</p>
+<h3>Why it's labelled 🟠</h3>
+<p>Charging for <i>time</i> on money is the definition of riba territory in Islamic finance (Volume 3). It might be structurable, it might not — no scholar has ruled on Halqa's version, so the app refuses to call it halal. It is capped, opt-in, disclosed at consent, and quarantined to two tiers. Honesty is the product.</p>
+<p>---</p>
+<h2>Part 6 — Putting it together: where Rs 16,982 comes from</h2>
+<p>The reference case: 12 members, Rs 140,004 pot, Sigma tier, pooled mode, fee at the 10% cap, everyone paying promptly. For the <b>best-positioned member</b> (turn 12 — maximum patience weight, zero fee paid, full early-bird boost), her annual bonus stacks like this:</p>
+<p>1. Her <b>share of the real profit</b> — float (~10.8% on everyone's idle days) + deposit yield (~11.2% on ~Rs 620k of total posted deposits, all year) — tilted toward her by 2.0× patience weight and 1.25× early-bird.</p>
+<p>2. Her <b>share of the pooled fees</b> — eleven other members' fees (totalling ~Rs 77k across the year, each declining by position) flow through the same tilted split; she pays no fee herself.</p>
+<p>3. Result, computed by the engine's own integer arithmetic: <b>Rs 16,982</b>.</p>
+<p>The whole group's bonuses sum to ≈ <b>Rs 68,800</b> — and here's your conservation check: fees moved money <i>within</i> the group (they cancel out group-wide), so the group total ≈ the real profit created by float + deposits. The ladder of configurations, each locked by an automated test:</p>
+<table>
+<tr><td>Configuration</td><td>Best member's annual bonus</td></tr>
+<tr><td>Classic (no engines)</td><td>Rs 0</td></tr>
+<tr><td>Priority (fee dividends only)</td><td>~Rs 7,600</td></tr>
+<tr><td>Bazaar (real yield + patience, no fee)</td><td>~Rs 7,650</td></tr>
+<tr><td>Sigma, monthly dividends</td><td><b>Rs 15,285</b></td></tr>
+<tr><td>Sigma, pooled</td><td><b>Rs 16,982</b></td></tr>
+</table>
+<p>Note what the Bazaar row tells you: <b>~Rs 7,650 of the story is pure created value</b> — no fee, fully halal. The fee roughly doubles the headline for groups that choose it, but the halal path alone is already a month's contribution back per year.</p>
+<h3>Stress test (what if the world turns against us?)</h3>
+<p>The same arithmetic swept across bad scenarios (an automated backtest): drop all rates by 30% AND make everyone pay lazily at the deadline (killing most float days) → the best bonus still comes out at <b>Rs 13,821</b>. Why doesn't it collapse? Decompose it: ~Rs 9,334 of the Sigma-pooled bonus is fee redistribution — member-to-member movement that <b>doesn't care what interest rates do</b>. Only the real-yield component breathes with the economy. Engines built on two independent sources fail more gracefully than engines built on one — a diversification argument you'll meet again in Volume 3.</p>
+<p>---</p>
+<h2>Part 7 — The vault tiers (same math, personal scale)</h2>
+<p>Your vault balance earns at the tier you chose: Standard ~10.8%, Income ~12.1%, Gold ~15% (indicative — gold is volatile short-term), Crypto "~30%" (speculative, double-gated, and the quote marks are load-bearing). Worked example: park Rs 100,000 in Income tier for 6 months:</p>
+<p>&gt; 100,000 × 0.121 × 182/365 ≈ Rs 6,033 profit → Halqa keeps 5% (Rs 302) → <b>you sweep Rs 105,731.</b></p>
+<p>That 5%-of-profit-only is the entire revenue model, and it's the subject of Volume 4.</p>
+<p>---</p>
+<h2>Self-test (if you can answer these, you own this material)</h2>
+<p>1. Why does raising deposit coverage from 70% to 90% increase the group's profit pool? <i>(Part 2)</i></p>
+<p>2. A member pays Rs 20,000 on day 3 of a 30-day round at 10.8%/yr. How much float profit does that payment generate? <i>(≈ 20,000 × 0.108 × 27/365 ≈ Rs 160)</i></p>
+<p>3. In the 3-member toy split, what happens to Chandni's share if she was late twice and loses her early-bird boost — which number in the formula changes? <i>(Her weight multiplier; her weighted capital-days shrink relative to the others.)</i></p>
+<p>4. Why is the group's total bonus unaffected by the fee, while individuals' bonuses change a lot? <i>(Fees are type-2: they move value within the group and cancel in the sum.)</i></p>
+<p>5. Which single engine would survive a 0%-interest-rate world completely untouched? <i>(The fee — it's not interest-rate linked. This is also exactly why it needs the 🟠 label.)</i></p></section>
+<section style="page-break-before:always"><h1>Learning Volume 3 — FINANCE FROM ZERO</h1>
+<h3>The actual finance course: money, interest, risk, instruments, Islamic finance, and the banking words investors use. Written for a strong A-level student with no finance background. Examples throughout.</h3>
+<p>---</p>
+<h2>Chapter 1 — Money over time (the one idea all finance is built on)</h2>
+<p><b>Finance is the study of moving money through time.</b> Savings move today's money to the future; loans move future money to today. Everything else — banks, funds, sukuk, committees — is machinery for doing this, and every price in finance (every interest rate, every yield) is the price of time.</p>
+<h3>1.1 Interest and yield</h3>
+<p>If you lend Rs 100,000 for a year at 12%/yr, you get back Rs 112,000. The 12,000 is the price the borrower paid to have your money for a year. Two words you'll meet:</p>
+<ul>
+<li><b>Interest</b> — a <i>fixed, promised</i> charge for the use of money (this exact fixedness is what Islamic finance forbids; Chapter 5).</li>
+<li><b>Yield / return</b> — the general word for what an investment actually produced, promised or not. A fund's yield varies; a loan's interest doesn't.</li>
+</ul>
+<h3>1.2 Annualisation (do this arithmetic in your sleep)</h3>
+<p>Rates are quoted per year, but money rarely sits exactly a year:</p>
+<p>&gt; profit = principal × annual rate × (days ÷ 365)</p>
+<p>Rs 50,000 at 10.8% for 45 days: 50,000 × 0.108 × 45/365 = <b>Rs 666</b>. This one formula is Halqa's entire float engine.</p>
+<h3>1.3 Compounding (the exponential you already know)</h3>
+<p>Simple return: profit is paid out; the base never grows. Compound return: profit stays in and itself earns — the base grows geometrically. Rs 100,000 at 12%:</p>
+<ul>
+<li>Simple, 10 years: 100,000 + 10 × 12,000 = <b>Rs 220,000</b>.</li>
+<li>Compound, 10 years: 100,000 × (1.12)^10 = <b>Rs 310,585</b>.</li>
+</ul>
+<p>The gap (Rs 90,585) is profit-on-profit. As a physics student: simple growth is linear, compound is exponential — same distinction as constant velocity vs constant growth <i>rate</i>. Rule of thumb: money at r% doubles in roughly <b>72 ÷ r</b> years (the "rule of 72": at 12%, ~6 years — check: 1.12^6 = 1.97 ✓).</p>
+<h3>1.4 Inflation and real return</h3>
+<p>Inflation = the general price level rising = each rupee buying less. If your savings earn 11% but inflation is 13%, your <b>real return</b> is ≈ 11 − 13 = <b>−2%</b>: you have more rupees that buy less stuff. This is why "keeping cash safe at home" is actually losing ~13%/yr, why a paper committee's idle pool is "melting ice", and why gold matters here (Chapter 4) — it tends to hold <i>real</i> value when the rupee doesn't.</p>
+<h3>1.5 The risk–return–liquidity triangle</h3>
+<p>Every investment has three dials:</p>
+<ul>
+<li><b>Return</b> — what it earns.</li>
+<li><b>Risk</b> — how uncertain that earning is (including losing principal).</li>
+<li><b>Liquidity</b> — how fast you can turn it back into cash without loss.</li>
+</ul>
+<p>Iron law: <b>you can maximise two, never all three.</b> A government T-bill: safe + liquid → modest return. Property: good return + fairly safe → illiquid (months to sell). Crypto: huge <i>possible</i> return → terrible on both other dials. When someone offers high return, safe, AND instant access — that's not an investment, that's a scam's sales pitch, and it's precisely the promise every Ponzi makes. Every scheme card in Halqa's Terminal is one point on this triangle with all three dials disclosed.</p>
+<h3>1.6 Diversification</h3>
+<p>Don't hold one asset; hold several that fail differently. Math view: combining imperfectly-correlated risks lowers total variance without proportionally lowering return — the only free lunch in finance. It's why Halqa's engine has <i>two</i> profit sources (market yield AND member-to-member fee): when rates fell 30% in the stress test, the fee component didn't move, and the floor held at Rs 13,821.</p>
+<p>---</p>
+<h2>Chapter 2 — Banks, deposits, and where "bank profit" comes from</h2>
+<p>A bank is a matching machine: it takes <b>deposits</b> (your savings, which the bank owes back to you) and makes <b>loans</b> (money it's owed by borrowers), earning the <b>spread</b> between what it charges borrowers (say 18%) and what it pays depositors (say 11%).</p>
+<p>Words you'll hear from bankers, decoded:</p>
+<ul>
+<li><b>Deposit mobilisation</b> — a bank's constant hunt for more deposits. Deposits are a bank's raw material; without them it cannot lend. Cheap, stable, <i>granular</i> deposits (many small savers) are gold; <b>concentration</b> (a few huge depositors) is dangerous — if one leaves, the bank wobbles. <i>This is why organised committee savings genuinely interest banks: thousands of small, sticky savers.</i></li>
+<li><b>GLP (gross loan portfolio)</b> — the total of all loans a bank has out.</li>
+<li><b>NPL (non-performing loan)</b> — a loan that's stopped being repaid. The bank's nightmare metric.</li>
+<li><b>CAR (capital adequacy ratio)</b> — the cushion of the bank's own money it must hold against losses; regulators set minimums. A bank near its CAR floor must raise capital or shrink.</li>
+<li><b>Receivables</b> — money contractually <i>due to arrive</i>. A committee's future rounds are receivables. Banks routinely lend against receivables (it's called receivables financing) IF they can see a schedule and judge the payers — which is exactly what Halqa's exportable "bank pack" provides: the schedule, each payer's reliability score, and the collateral behind them.</li>
+<li><b>Thin-file borrower</b> — someone with little or no credit history, whom a bank can't assess. Pakistan's informal economy is almost entirely thin-file. Halqa's Credit Passport exists to thicken those files.</li>
+<li><b>Underwriting</b> — the act of judging a risk before taking it (deciding whether to make the loan). Data that improves underwriting is worth real money to lenders.</li>
+</ul>
+<p><b>Microfinance banks (MFBs)</b> are banks specialised in small loans/deposits for lower-income customers (U Bank, Khushhali, ex-FINCA). Pakistan's microfinance sector (Dec 2024): <b>12.34M borrowers, Rs 604B loans (avg ~Rs 49k), Rs 733B deposits</b>. Notice: the average microfinance loan ≈ one committee payout. The two instruments already do the same job in people's lives; only one currently builds a credit file.</p>
+<p>---</p>
+<h2>Chapter 3 — Funds: what a "money-market fund" actually is</h2>
+<p>A <b>fund</b> pools many people's money and buys a basket of assets; you own units of the basket. A professional manages it for a small fee; your unit price tracks the basket's value. Types, arranged along the risk dial:</p>
+<ul>
+<li><b>Money-market fund (~10.8–10.9%)</b> — holds the safest, shortest-term paper (T-bills, overnight bank placements). Near-cash: low risk, high liquidity, modest return. <i>This is where Halqa's float sits — because committee money must never be gambled and must be available by payout day.</i></li>
+<li><b>Income fund (~12.1–12.2%)</b> — mostly bonds/sukuk; a bit more return, a bit of wobble. Halqa's vault "Income" tier.</li>
+<li><b>Balanced / asset-allocation (~13–16%)</b> — mixes bonds and shares; medium volatility.</li>
+<li><b>Equity fund / ETF (~17–18%)</b> — owns shares of companies. An <b>ETF</b> (exchange-traded fund) is a fund that itself trades on the stock exchange like a single share, typically tracking an index (e.g., the PSX top-100). Highest mainstream returns, biggest swings; suitable for years-long horizons, not next month's payout.</li>
+<li><b>REIT (~14.4%)</b> — a fund owning rental property; you earn rent + revaluation without buying a building.</li>
+</ul>
+<p>The other instruments in Halqa's catalog: <b>T-bills/PIBs</b> (lending to the government short/long term — the "risk-free" PKR benchmark, ~11.5–13.8%), <b>National Savings certificates</b> (state retail savings products, ~12.8–13.7%), <b>bank term deposits</b> (~11.2–11.5%), <b>gold-linked</b> (~15% indicative), <b>Murabaha trade finance</b> (~13.4%, Chapter 5), <b>sukuk</b> (Chapter 5), microfinance deposits and private credit (~13–16.5%, higher yield, real credit risk, slow exits), and one <b>crypto basket</b> ("~30%", speculative, can halve in weeks, not backed by any state — in Halqa it's personal-vault-only behind double confirmation, and permanently barred from committees).</p>
+<p>---</p>
+<h2>Chapter 4 — Gold (why Pakistan trusts it, and why Halqa speaks it)</h2>
+<p>Gold pays no interest and runs no business — so why hold it? Because it is nobody's promise. Every rupee, deposit and bond is someone's liability that inflation or default can erode; gold just <i>is</i>. In a country with recurring double-digit inflation and a sliding currency, gold has been the household's real store of value for generations (it's literally the form weddings save in). Hard evidence of its status: at U Microfinance Bank, <b>roughly half the entire loan book is backed by gold</b> — it is the collateral ordinary Pakistan actually pledges. Short-term it's volatile (it can drop 10% in a quarter); long-term it holds purchasing power. Halqa meets this culture where it lives: a gold-linked vault tier, and an optional per-circle "gold hedge" that routes 5–50% of each pool into gold-linked allocation (auto-disabled for very short circles, because gold takes ~3 days to liquidate and payout day waits for no fund).</p>
+<p>---</p>
+<h2>Chapter 5 — Islamic finance (Halqa's identity — learn this properly)</h2>
+<h3>5.1 Riba: the core prohibition</h3>
+<p><b>Riba</b> = any <i>guaranteed, predetermined</i> charge for the use of money itself. In practice: interest. The prohibition's logic: money should not breed money by mere passage of time; profit must come from <b>real economic activity</b> — trade, assets, enterprise — and the profit-taker must bear some of the venture's <b>risk</b>. Fixed interest transfers all risk to the borrower while guaranteeing the lender — that asymmetry is what's forbidden.</p>
+<p>Consequence: <b>variable profit from real assets = permissible; fixed charge for time = riba.</b> Now re-read Halqa's engines with this lens: money-market/Mudarabah yields are variable profit from real instruments (🟢); the early-turn fee is a charge for <i>time</i> (getting money sooner) — which is why the app labels it 🟠 and refuses to call it halal until scholars rule. The label placement isn't marketing caution; it's the definition applied honestly.</p>
+<h3>5.2 The contracts (each with its one-line worked example)</h3>
+<ul>
+<li><b>Mudarabah</b> — one party brings capital (<i>rab-ul-maal</i>), the other brings work (<i>mudarib</i>); profit splits by a pre-agreed <b>ratio</b> (not a pre-agreed amount!); monetary loss falls on the capital, the worker loses only effort. <i>Example: you give a trader Rs 100k at 80/20. Venture makes 20k → you get 16k, he gets 4k. Venture loses 10k → you bear the 10k, he earned nothing for his months of work.</i> Halqa's entire revenue model is a Mudarabah: members' idle money is the capital, Halqa is the mudarib, ratio 95/5. <b>No profit → no Halqa revenue.</b> That is a structural honesty guarantee: the platform cannot earn unless members do.</li>
+<li><b>Musharakah</b> — like Mudarabah but both sides contribute capital; both share losses proportionally. (Vocabulary — not currently a Halqa feature.)</li>
+<li><b>Sukuk</b> — Islamic "bonds": certificates of ownership in real assets whose <i>income</i> you receive (rent, tolls), rather than interest on a loan. Pakistan's government issues them (~11.8%); companies too (~14%).</li>
+<li><b>Murabaha</b> — cost-plus trade: the financier <i>buys the actual goods</i> and resells them to the client at a disclosed markup, payable later. Profit from trade in a real thing, not from lending cash. (~13.4% in the catalog.)</li>
+<li><b>Hiba</b> — a gift, freely given. Halqa's prize draw is structured as hiba: only realised profit is gifted, nobody stakes anything, so the gambling structure (stake → chance of loss) is absent. Compare a lottery: you <i>pay</i> for a ticket and most people lose their stake. In the draw, the "losers" lose nothing — they keep their exact normal share.</li>
+<li><b>Iltizam bi-tasadduq</b> — a classical solution to a real dilemma: late payers need a penalty (or everyone pays late), but if the penalty enriches the counterparty, it's effectively interest on the delay. Resolution: the offender pays, but the money goes to <b>charity</b>. Halqa implements this in code: halal-tier penalties route to charity at completion. This single detail signals more fiqh literacy than any brochure.</li>
+<li><b>Gharar</b> — excessive uncertainty/ambiguity in a contract. Islamic law demands disclosed, dated, defined terms — which happens to be identical to what good consumer-protection law demands. Halqa's dated rates, disclosed splits, and consent screens serve both masters at once.</li>
+<li><b>Takaful</b> — mutual insurance: members contribute to a shared pool that compensates whoever suffers the insured loss; surplus can return to members. (Future partnership category. Note how Halqa's auto-cover is even cleaner: your own savings cover your own slip — no pool, no premium, no moral hazard.)</li>
+</ul>
+<h3>5.3 The chit-fund contrast (one paragraph you should be able to reproduce)</h3>
+<p>India's chit funds auction each month's pot: whoever accepts the biggest discount takes it, and the discount is distributed to the others. Functionally, the early taker pays the group for time-value of money — interest in costume — plus the auction makes the price opaque and desperate-bidder-driven. Halqa's halal tiers refuse to price the turns at all (profit comes only from real instruments); its conventional tier prices turns by a <b>fixed, capped, disclosed, declining formula</b> instead of an auction — and still wears the 🟠 label, because a cap doesn't settle the fiqh question. Knowing exactly where your own product might be non-compliant, and saying so in the UI, is rarer than certification.</p>
+<p>---</p>
+<h2>Chapter 6 — Startup finance (the vocabulary of the meeting itself)</h2>
+<ul>
+<li><b>TAM / SAM / SOM</b> — total market / the slice you could serve / the slice you can win <i>now</i>. Halqa's honest version: US$5B/yr rotates in committees (TAM); the digitally-reachable share of the 41% over ~5 years, maybe 15–25M adults (SAM); thousands of host-led circles (SOM). Distrust any pitch whose SOM is a percentage of TAM with no mechanism.</li>
+<li><b>Unit economics</b> — profit per unit served, after direct costs. Halqa's unit is an <i>earning balance</i>: marginal cost of one more earning-day ≈ a database row; marginal revenue = 5% of the yield on it. Positive from early on, by construction.</li>
+<li><b>CAC / LTV</b> — cost to acquire a customer / lifetime value of that customer. A business is healthy when LTV ≫ CAC. Halqa's CAC is structurally low (one host brings 6–20 members; the Rs 250 referral bonus pays only on a <i>completed first cycle</i> — you cannot farm it with fake signups) and LTV compounds (vault balances grow).</li>
+<li><b>Take rate</b> — the platform's cut of the flow it facilitates. Halqa: <b>5% of profit created, 0% of principal.</b> Contrast with a flat monthly fee (which extracts even when members earn nothing) — the difference is both ethics and regulatory survivability.</li>
+<li><b>Burn / runway</b> — monthly net spend / months of cash left at that spend. What kills startups isn't usually the idea; it's runway hitting zero before the milestone.</li>
+<li><b>SAFE / valuation cap</b> — the standard early-stage instrument: money now, shares later at the next priced round, with a cap on the valuation used. If terms come up in a first meeting: "not running a priced process — exploring fit." Never negotiate live.</li>
+<li><b>Pre-money / post-money / dilution</b> — company value before the cheque / after (pre + cheque) / the ownership % founders give up. Rs 20M in at Rs 80M pre → post 100M → investor owns 20%.</li>
+<li><b>Cap table</b> — the ownership ledger. Yours is one line (you), which sophisticated investors like: no messy co-founder disputes or dead equity.</li>
+<li><b>Due diligence</b> — the investor's verification phase: books, code, claims, references. Halqa's edge: a double-entry ledger and 262 automated checks make diligence <i>fast</i>, and offering the audit proactively ("bring your technical adviser") signals you have nothing buried.</li>
+</ul>
+<p>---</p>
+<h2>Chapter 7 — Regulation in Pakistan (the map)</h2>
+<ul>
+<li><b>SBP</b> (State Bank of Pakistan) — the central bank; regulates banks, MFBs, wallets/EMIs, and runs <b>Raast</b>, the free instant transfer rail (the reason committee payments cost nothing to move).</li>
+<li><b>SECP</b> (Securities &amp; Exchange Commission of Pakistan) — regulates securities, funds, and <b>NBFCs</b> (non-bank financial companies — entities that may manage/hold client money without being full banks). <b>This is Halqa's gating licence</b> for custody and real investment. Precedent: Oraan, a digital-committee startup, obtained exactly this licence (SECP/LRD/107/OFSPL/2023) — the path is proven, which converts "is this even legal?" into "execute the known process."</li>
+<li><b>KYC / AML</b> — know-your-customer (verify identities) and anti-money-laundering (detect dirty money moving). Record-only Stage 1 has minimal AML surface (Halqa never touches funds); the full program is a licensing deliverable.</li>
+<li>The two-stage logic in one line: <b>record-only requires no licence and builds trust + data; the licence converts computed yield into real yield.</b> Every "indicative" label in the app marks exactly the boundary between the stages.</li>
+</ul>
+<p>---</p>
+<h2>Chapter 8 — Fraud patterns (know the enemy)</h2>
+<ul>
+<li><b>Ponzi</b> — pays "returns" to old investors out of <i>new investors' deposits</i>. Needs two ingredients: opacity (no one can see where money is) and promised fixed returns. Collapses when inflow slows. Halqa's structural answers: no custody, open ledger, and the word "guaranteed" existing nowhere.</li>
+<li><b>Custody frauds wearing committee clothing</b> — Karachi's Rs 400M online-kameti scam, India's Saradha: an operator collected everyone's money centrally and vanished. The committee <i>instrument</i> wasn't the flaw; central custody was. Record-only design makes this fraud physically impossible rather than merely forbidden.</li>
+<li><b>The triangle test</b> (from Chapter 1): high return + safe + liquid promised together = walk away. Your fastest scam detector for life.</li>
+</ul>
+<p>---</p>
+<h2>Final self-test</h2>
+<p>1. Rs 75,000 sits 40 days at 11.2%/yr — profit? <i>(75,000 × 0.112 × 40/365 ≈ Rs 920)</i></p>
+<p>2. Inflation 12%, savings rate 10% — what's happening to your money, precisely? <i>(Nominal +10%, real ≈ −2%: more rupees, less purchasing power.)</i></p>
+<p>3. Why does a fixed "10% return, always, withdraw anytime" pitch violate the triangle — and which fraud is it the signature of? <i>(Claims all three dials at once; Ponzi.)</i></p>
+<p>4. In a Mudarabah that loses money, what exactly does each side lose? <i>(Capital-provider: the money. Manager: their effort/time — no fee.)</i></p>
+<p>5. Why do banks care about <i>granular</i> deposits, and what does a committee platform offer them? <i>(Concentration risk; thousands of small sticky savers.)</i></p>
+<p>6. Why does the penalties-to-charity rule exist — what would be wrong with the group keeping the penalty? <i>(Enriching the counterparty for delay ≈ interest on time; charity breaks the enrichment while keeping the deterrent.)</i></p></section>
+<section style="page-break-before:always"><h1>Learning Volume 4 — HOW HALQA MAKES MONEY, AND HOW WE KNOW THE SYSTEM WORKS</h1>
+<h3>The business model taught from first principles, then the three simulations explained the way a physicist would explain an experiment. Requires Volumes 1–3.</h3>
+<p>---</p>
+<h2>Part 1 — The business model, derived (not asserted)</h2>
+<h3>1.1 Start from the constraint</h3>
+<p>Volume 1 gave you the golden rule: recorded, never held. Volume 3 gave you riba: no fixed charges for money-time. Add the market reality: our users are lower-middle-income savers who rightly distrust fees. Question: <b>what revenue model survives all three constraints?</b></p>
+<p>Work through the options like an elimination proof:</p>
+<ul>
+<li><i>Charge a subscription?</i> Extracts money even when members earn nothing; punishes the poorest; dies in any price comparison with the free paper committee. ✗</li>
+<li><i>Take a cut of contributions?</i> That's a tax on savings — 0.5% of a Rs 140k pot is Rs 700/month for... bookkeeping. Worse than the flaw we're fixing. ✗</li>
+<li><i>Interest-spread lending (be a bank)?</i> Needs a full licence, a balance sheet, capital, and it's riba. ✗✗</li>
+<li><i>Take a share of profit we create that wouldn't otherwise exist?</i> Members lose nothing they ever had; we earn only by making them richer; it is literally the classical Mudarabah contract (Volume 3, §5.2); and it needs no custody to <i>compute</i>. ✓</li>
+</ul>
+<p>That's the model: <b>Halqa is the mudarib (working manager) of members' idle money, keeping 5% of realised profit. 0% of principal, 0% of contributions, 0% of the fees members pay each other.</b></p>
+<h3>1.2 What Halqa explicitly does NOT touch (and why each matters)</h3>
+<ul>
+<li><b>Contribution principal</b> — the committee's own money. Touching it = becoming the fraud we exist to kill.</li>
+<li><b>Deposit principal</b> — collateral belongs to members; it earns <i>for them</i>.</li>
+<li><b>Early-turn fees</b> — member-to-member (Volume 2, Part 5). If Halqa kept any of it, Halqa would profit from the one 🟠 mechanic — an unacceptable conflict: never build revenue on the thing your own app labels religiously questionable.</li>
+<li><b>Late penalties</b> — go to charity (halal tiers) or the never-late. A platform that profits from lateness wants members late. Incentive hygiene.</li>
+<li><b>The referral bonus (Rs 250)</b> — paid <i>from Halqa's own 5% share</i> when a referred member completes a first cycle. Even marketing spend never touches member money.</li>
+</ul>
+<h3>1.3 Worked example — one circle's year, full accounting</h3>
+<p>Reference circle (12 × Rs 11,667, Sigma pooled, prompt payers):</p>
+<ul>
+<li>Real profit created (float + deposit yield, Volume 2): ≈ <b>Rs 72,400</b> over the cycle.</li>
+<li>Halqa's 5%: ≈ <b>Rs 3,620</b>. Members keep ≈ 68,800.</li>
+<li>The fees (~Rs 77k) that boosted individual bonuses: pass straight through, Halqa keeps Rs 0.</li>
+</ul>
+<p>Rs 3,620/year from a whole circle is <i>tiny</i>. That's not a flaw — it's the design forcing the right growth strategy:</p>
+<h3>1.4 Why tiny-per-circle is fine: the model scales on balances, not circles</h3>
+<p>Compare two members:</p>
+<ul>
+<li>Fatima: one Rs 5,000/month circle, sweeps every payout instantly. Earning balance: a few thousand rupees on a few float days. Halqa's revenue from her: coins.</li>
+<li>Khadija: same circle, but parks her Rs 60,000 payout in the vault's Income tier for the rest of the year. Her balance earns 60,000 × 0.121 ≈ Rs 7,260/yr → Halqa's 5% ≈ <b>Rs 363/yr from one behaviour</b>, roughly 10× what her committee activity generates.</li>
+</ul>
+<p>Lesson: <b>revenue ∝ rupee-days under management</b> ("earning-days" — the north-star metric), not user count. One saver deepening beats fifty downloads. This is also why the product invests so much in making the vault attractive (four tiers, auto-cover, parking): the vault is the business.</p>
+<p>Illustrative steady state (a shape, never a promise): 100k active savers × average Rs 40–60k earning balances ≈ Rs 4–6B under management × ~11% blended yield ≈ Rs 440–660M/yr member profit → <b>Rs 22–33M/yr Halqa revenue</b>. Double vault adoption in the same cohort ≈ double the revenue with zero new users.</p>
+<h3>1.5 The cost side, and the two moats this model buys</h3>
+<p>Costs: engineers, cloud, compliance/licensing (front-loaded), support (largely deflected by the in-app assistant). No branches, no field force, no cost-of-funds, and — because we don't lend — <b>no NPLs and no CAR pressure</b> (Volume 3, Ch 2 vocabulary: we carry a bank's data advantages with none of a bank's balance-sheet risks).</p>
+<p>The alignment moat: "if members don't earn, we don't" survives regulators, journalists, and fiqh scholars — three audiences that routinely kill extractive fintechs.</p>
+<p>The future lines (post-licence): custody margin, Credit-Passport verification partnerships (lenders paying for underwriting data on thin-file borrowers), receivables-data feeds for banks (the exportable bank pack), premium host tooling.</p>
+<p>---</p>
+<h2>Part 2 — The simulations (how we know, not just hope)</h2>
+<h3>2.0 Why simulate — and the experimental-design problem</h3>
+<p>No dataset of real committee ledgers exists anywhere on earth (informal = unrecorded, by definition). So claims like "our protections reduce defaults" can be adjectives, or they can be a <b>model with visible assumptions</b>. We built the model — and treated it like a physics experiment:</p>
+<p>The naive approach — simulate a paper committee, then simulate Halqa, compare — is broken, because each run's random events differ: maybe run B just got luckier people. The fix is the <b>paired experiment</b>: generate ONE population with ONE random seed (a seed makes "random" numbers exactly reproducible — same seed, same sequence, forever), then run the <i>same</i> people through both worlds. Same incomes, same shocks, same tempted absconders — the only difference between arms is Halqa's protection stack. Any outcome difference is therefore <i>caused</i> by the stack. In experimental terms: perfectly matched control and treatment groups, n = 100,000. And determinism means any reviewer can re-run it and get bit-identical results.</p>
+<h3>2.1 Instrument 1 — the red-team stress test (<code>monte-carlo.ts</code>)</h3>
+<p>Purpose: attack our own design. 100k members under deliberately hostile assumptions — 15% unreliable population, <b>random</b> turn ordering (no credit-weighting), no deterrence effects modelled. Findings: 7.28% post-payout default; and the collateral of that era (70% coverage curve) fully covered only ~59% of worst-case absconds.</p>
+<p>What we did with the bad news: shipped <b>vault auto-cover</b>, and raised the <b>deposit curve to 90%</b> (cap 95%). This is the honest use of simulation — not to generate brag numbers, but to find the design's weakest joint and fix it. When an investor asks "what breaks this?", the answer is "here's the test where we broke it ourselves, and here's the patch."</p>
+<h3>2.2 Instrument 2 — the Pakistan-calibrated model (<code>lib-pakistan-sim.ts</code>)</h3>
+<p>The main result. The population is built from public evidence, not convenience:</p>
+<table>
+<tr><td>Segment</td><td>Share</td><td>Monthly income band</td><td>Why it's modelled</td></tr>
+<tr><td>Salaried lower-middle</td><td>30%</td><td>Rs 40–90k</td><td>steady but stretched</td></tr>
+<tr><td>Daily-wage informal</td><td>25%</td><td>Rs 28–48k</td><td>volatile income = late risk</td></tr>
+<tr><td>Home-business women</td><td>25%</td><td>Rs 30–60k</td><td>the committee's core demographic</td></tr>
+<tr><td>Young gig workers</td><td>12%</td><td>—</td><td>new economy, thin files</td></tr>
+<tr><td>Overcommitted</td><td>8%</td><td>—</td><td>in too many circles — the danger group</td></tr>
+</table>
+<p>Realism layers: contribution burden 8–15% of income; committee sizes 8–15; <b>two Eid months</b> (+10 percentage points lateness — festival spending is real), a <b>school-fee month</b> (+6pp and 1.4× income-shock rate), per-segment random income shocks (5–18% monthly probability), lateness scaling with burden.</p>
+<p>The Halqa arm applies only effects that map 1:1 to shipped features: reminders (lateness ×0.70), ban+Passport deterrence (abscond ×0.60), auto-cover (15% adoption, 80% effective), the live 90% deposit curve + 15% holdback for recovery, credit-weighted ordering.</p>
+<p class="note"><i>Results (paper arm → Halqa arm, same 100k lives):</i></p>
+<table>
+<tr><td>Metric</td><td>Paper</td><td>Halqa</td></tr>
+<tr><td>Post-payout defaulters</td><td>1.41%</td><td><b>0.27%</b></td></tr>
+<tr><td>Recovery on default</td><td>0%</td><td><b>90.4%</b> of exposure</td></tr>
+<tr><td>Defaults fully collateralised</td><td>0%</td><td><b>70%</b></td></tr>
+<tr><td>Pre-payout dropouts</td><td>1.06%</td><td>0.36%</td></tr>
+<tr><td>On-time payments</td><td>84.4%</td><td>88.9%</td></tr>
+<tr><td>Worst segment (overcommitted) default</td><td>7.95%</td><td>0.83%</td></tr>
+</table>
+<p>How to read it like a skeptic: the deterrence multipliers (×0.60 etc.) are <i>calibrated judgments</i> — arguable. But the <b>recovery</b> line barely depends on them: it's near-arithmetic. If position-2 defaults owing Rs 116,670 and her posted deposit ≈ Rs 105,000 + holdback Rs 21,000 are forfeited, recovery is what division says it is. The strongest claim rests on the most mechanical assumption — that's the right way around.</p>
+<h3>2.3 Instrument 3 — the bonus backtest (<code>bonus-backtest.ts</code>)</h3>
+<p>Question: is Rs 16,982 a fair-weather number? Method: run the engine's own arithmetic across a grid of worlds — rates at −30%/base/+20% × four payer-behaviour profiles (day-one → due-date payers). Corners: best cell <b>Rs 17,319</b>; worst cell (rates −30% AND lazy payers) <b>Rs 13,821</b>. The floor's cause (you derived it in Volume 2): ~Rs 9,334 of the bonus is fee redistribution, immune to interest rates. Two independent profit sources = graceful degradation. This is diversification (Volume 3, §1.6) working inside a single product.</p>
+<h3>2.4 The lock (the part that makes it engineering, not marketing)</h3>
+<p>All headline claims are <b>CI assertions</b> — automated tests that run on every code change: determinism, segment shares ±1%, burden bounds, ≥3× default reduction, &gt;60% recovery, risk-ordering sanity, robustness under a second seed, and the Rs 15,000-promise ladder. If an engineer's edit quietly weakens the protection stack, <b>the build fails before the claim can drift from the code</b>. Documents can lie; a red build cannot.</p>
+<h3>2.5 The honest boundary (memorise this sentence)</h3>
+<p>"It's a calibrated model, not history — the pilot's purpose is to replace the model with our own ledger data." Say it <i>before</i> the skeptic does. It converts your biggest weakness (no real data) into evidence of intellectual honesty, and it frames the pilot as the obvious next step — which is exactly what you're raising for.</p>
+<p>---</p>
+<h2>Part 3 — Self-test</h2>
+<p>1. Why is a subscription fee worse than 5%-of-profit for this specific market? <i>(Extracts when members earn nothing; loses to the free paper committee; punishes smallest savers.)</i></p>
+<p>2. Khadija parks Rs 80,000 in the Gold tier (~15%) for 9 months. Member profit? Halqa revenue? <i>(80,000 × 0.15 × 274/365 ≈ Rs 9,008 → Halqa ≈ Rs 450, member keeps ≈ 8,558.)</i></p>
+<p>3. What experimental flaw does the shared random seed eliminate? <i>(Luck differences between arms — makes the comparison causal, like matched control/treatment groups.)</i></p>
+<p>4. Which simulation number is most assumption-proof, and why? <i>(Recovery ~90.4% — mostly arithmetic on collateral sizes, not behavioural guesses.)</i></p>
+<p>5. Why does the platform's revenue not fall when a circle chooses the fully-halal Bazaar tier over Sigma? <i>(Halqa's 5% applies to real profit — float + deposit yield — which both tiers have; the fee was never Halqa's money in any tier.)</i></p></section>
+</body></html>

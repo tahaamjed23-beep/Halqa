@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\")",
+      "PowerShell(foreach\\($p in 2028,300,4208,1132\\){ try { Stop-Process -Id $p -Force -Confirm:$false -ErrorAction Stop; Write-Output \"killed $p\" } catch { Write-Output \"skip $p : $\\($_.Exception.Message\\)\" } })"
+    ]
+  }
+}

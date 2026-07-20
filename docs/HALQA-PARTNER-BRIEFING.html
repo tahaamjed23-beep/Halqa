@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Halqa — Partner Briefing</title>
+<style>
+  @page{size:297mm 210mm;margin:0}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Georgia,'Times New Roman',serif;color:#2a2620;background:#ffffff}
+  .slide{width:297mm;height:210mm;page-break-after:always;background:#fffefb;padding:11mm 15mm;position:relative;overflow:hidden;display:flex;flex-direction:column;border-top:2.2mm solid #b8912f}
+  .slide:last-child{page-break-after:auto}
+  .kicker{font-size:9pt;letter-spacing:.16em;text-transform:uppercase;color:#a97c1e;margin-bottom:2.2mm;font-weight:700}
+  h1{font-size:22pt;color:#1f1a12;font-weight:400;letter-spacing:-.01em;margin-bottom:3.5mm;line-height:1.13}
+  h2{font-size:11.5pt;color:#8a6a15;font-weight:700;margin:3mm 0 1.6mm}
+  h3{font-size:9.6pt;color:#a97c1e;font-weight:700;margin:2mm 0 1mm;letter-spacing:.02em}
+  p{font-size:9.8pt;line-height:1.42;color:#3a352c;margin-bottom:2mm}
+  ul{margin:0 0 2.2mm 5mm}
+  li{font-size:9.3pt;line-height:1.4;margin-bottom:1mm}
+  .tag{display:inline-block;font-size:6.6pt;font-weight:700;letter-spacing:.05em;padding:.4mm 1.6mm;border-radius:2mm;vertical-align:1pt;margin-left:1mm}
+  .tb{background:#e9f1e5;color:#3d6b3d}
+  .tl{background:#f7edcf;color:#8a6414}
+  .tlb{background:#f5e5da;color:#9b4a2e}
+  table{width:100%;border-collapse:collapse;margin:1.2mm 0 2mm}
+  th{font-size:7.6pt;text-transform:uppercase;letter-spacing:.06em;color:#a97c1e;text-align:left;padding:1.2mm 2mm;border-bottom:.5mm solid #d9c286}
+  td{font-size:8.6pt;line-height:1.3;padding:1.2mm 2mm;border-bottom:.2mm solid #ece2c8;vertical-align:top;color:#3a352c}
+  td b{color:#1f1a12}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:7mm;flex:1;min-height:0}
+  .footer{position:absolute;bottom:5mm;left:15mm;right:15mm;display:flex;justify-content:space-between;font-size:7.5pt;color:#b09a63}
+  .box{border:.3mm solid #e0cd90;border-radius:3mm;padding:3mm 4mm;background:#fdf8ea;margin-bottom:2mm}
+  .formula{font-family:'Courier New',monospace;font-size:8.5pt;color:#6a5312;background:#fbf3dc;border:.2mm solid #ecdca8;padding:1.3mm 2.2mm;border-radius:2mm;display:block;margin:.8mm 0}
+  .fname{font-size:8.4pt;font-weight:700;color:#1f1a12;margin:1.4mm 0 .3mm}
+  .fig{margin:1.2mm 0}
+  .fig svg{display:block;width:100%;height:auto}
+  .figcap{font-size:7.6pt;color:#9a8a63;margin-top:1mm}
+  .cover{justify-content:center;background:linear-gradient(150deg,#fffefb 55%,#faf1d8)}
+  .cover h1{font-size:44pt;color:#8a6a15}
+  .cover .sub{font-size:13.5pt;color:#3a352c;margin-bottom:7mm}
+  .legend{display:flex;gap:4mm;margin-top:6mm;font-size:9pt;align-items:center;color:#3a352c}
+</style>
+</head>
+<body>
+
+<!-- 1 COVER -->
+<section class="slide cover">
+  <div class="kicker">Partner Briefing</div>
+  <h1>Halqa</h1>
+  <p class="sub">Digital infrastructure for Pakistan's committee economy.</p>
+  <p style="font-size:11pt">Presented by Taha Kayani</p>
+  <div class="box" style="margin-top:8mm;max-width:225mm">
+    <p style="font-size:9pt;margin:0"><b style="color:#8a6a15">Structure:</b> 1 The committee economy · 2 Failure modes · 3 Halqa: the three roles · 4 Earning engines and mathematics · 5 Turn market · 6 Vault and investments · 7 Treasury and custody · 8 Default protection · 9 Competitive landscape · 10 Application and technology · 11 Business model · 12 Demands · 13 Build inventory and delivery status</p>
+  </div>
+  <div class="legend">
+    <span class="tag tb">BUILT</span><span>operational today</span>
+    <span class="tag tl">LICENCE</span><span>requires SECP authorisation</span>
+    <span class="tag tlb">LICENCE+BANK</span><span>requires authorisation and partner bank</span>
+  </div>
+  <div class="footer"><span>Halqa</span><span>1</span></div>
+</section>
+
+<!-- 2 THE INSTRUMENT -->
+<section class="slide">
+  <div class="kicker">Part 1 · The Committee Economy</div>
+  <h1>The instrument</h1>
+  <div class="cols">
+    <div>
+      <h2>Mechanics (ROSCA — rotating savings and credit association)</h2>
+      <ul>
+        <li>Fixed group of n members; identical installment each period.</li>
+        <li>One member per period collects the full pool; n periods complete the cycle.</li>
+        <li>Early positions receive interest-free credit, repaid in installments.</li>
+        <li>Late positions hold enforced, disciplined savings.</li>
+        <li>Net transfer over the full cycle is zero; the traded quantity is time.</li>
+      </ul>
+      <h2>The dual function</h2>
+      <p>Each member is simultaneously lender and borrower. Members fund each other's turns and accept 0% because each receives a 0% turn in return. No intermediary spread exists — which is why the pricing is sustainable, and why an institution inserting itself must break it.</p>
+    </div>
+    <div>
+      <h2>Foundations</h2>
+      <table>
+        <tr><th>Foundation</th><th>Function</th></tr>
+        <tr><td><b>Social collateral</b></td><td>Group-embedded enforcement outperforms legal paperwork at this scale (Besley, Coate &amp; Loury, AER 1993).</td></tr>
+        <tr><td><b>Riba-free structure</b></td><td>No interest instrument anywhere in the cycle.</td></tr>
+        <tr><td><b>Zero overhead</b></td><td>No branches, forms, or minimums; operating cost near zero.</td></tr>
+        <tr><td><b>Commitment mechanism</b></td><td>The rigidity is the product: members join in order to be bound to save.</td></tr>
+      </table>
+      <h2>Why banks hold neither side</h2>
+      <p>The credit side runs on social information banks cannot observe; the 0% price requires the absence of a funding spread banks cannot escape. Banks captured only the savings shell (recurring deposit schemes), which loses to the kameti because the rotation is the demanded product.</p>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>2</span></div>
+</section>
+
+<!-- 3 GLOBAL + PK FIGURES -->
+<section class="slide">
+  <div class="kicker">Part 1 · The Committee Economy</div>
+  <h1>One structure worldwide, and the Pakistani figures</h1>
+  <div class="cols">
+    <div>
+      <table>
+        <tr><th>Market</th><th>Form</th><th>Scale reference</th></tr>
+        <tr><td><b>Pakistan</b></td><td>kameti / BC</td><td>41% adult participation; 25–30M active</td></tr>
+        <tr><td><b>Egypt</b></td><td>gam'eya</td><td>Money Fellows: 8.5M+ users, profitable</td></tr>
+        <tr><td><b>India</b></td><td>chit funds</td><td>Regulated (Chit Funds Act 1982); licensed foremen; capped commissions; operators at multi-billion scale</td></tr>
+        <tr><td><b>South Africa</b></td><td>stokvels</td><td>11M members; 800k+ groups</td></tr>
+        <tr><td><b>Indonesia</b></td><td>arisan</td><td>Nationally ubiquitous; platform-integrated (Mapan)</td></tr>
+        <tr><td><b>Mexico / W. Africa / Korea</b></td><td>tanda / susu / kye</td><td>Documented in development-finance literature</td></tr>
+      </table>
+      <p style="font-size:8.6pt;color:#9a8a63">The identical structure recurs independently across unconnected cultures — the mechanism is economic, not folkloric.</p>
+    </div>
+    <div>
+      <div class="fig"><svg viewBox="0 0 460 205" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="11" fill="#3a352c">
+        <text x="8" y="16" fill="#a97c1e" font-size="11">Account ownership, adults (Findex 2025)</text>
+        <text x="120" y="44" text-anchor="end">Global</text><rect x="128" y="33" width="284" height="13" fill="#e3cf94"/><text x="418" y="44">79%</text>
+        <text x="120" y="70" text-anchor="end">South Asia</text><rect x="128" y="59" width="281" height="13" fill="#e3cf94"/><text x="415" y="70">78%</text>
+        <text x="120" y="96" text-anchor="end">Pakistan</text><rect x="128" y="85" width="76" height="13" fill="#b8912f"/><text x="210" y="96">~21%</text>
+        <text x="8" y="128" fill="#a97c1e" font-size="11">Annual committee flow, Pakistan (Rupees)</text>
+        <text x="120" y="156" text-anchor="end">2021 baseline</text><rect x="128" y="145" width="105" height="13" fill="#e3cf94"/><text x="239" y="156">~Rs 1.4 trillion</text>
+        <text x="120" y="182" text-anchor="end">2022 estimate</text><rect x="128" y="171" width="300" height="13" fill="#b8912f"/><text x="240" y="182" fill="#fffdf5" font-weight="bold">~Rs 4 trillion</text>
+      </svg><p class="figcap">All monetary figures in rupees. Pakistan is the regional inclusion outlier by nearly four times; the committee flow is of national-budget magnitude and entirely unrecorded.</p></div>
+      <p>One of eight countries holding over half the world's 1.3B unbanked adults. 240M population → ~140M adults → ~57M ever participated → 25–30M active today.</p>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>3</span></div>
+</section>
+
+<!-- 4 FAILURE MODES -->
+<section class="slide">
+  <div class="kicker">Part 1 · Failure Modes</div>
+  <h1>How the instrument fails</h1>
+  <div class="cols">
+    <div>
+      <div class="box">
+        <h2 style="margin-top:0">Case: Sidra Humaid, Karachi, 2022</h2>
+        <ul>
+          <li>Committees operated across <b>117 WhatsApp groups</b>.</li>
+          <li>Collections taken into <b>her personal custody</b>.</li>
+          <li><b>Rs 420 million</b> collected; no written records maintained.</li>
+          <li>No repayment capacity; declared inability to pay.</li>
+          <li>Member recovery: <b>zero</b>. Without records, victims had no legal existence as creditors.</li>
+        </ul>
+      </div>
+      <h2>The structural pattern</h2>
+      <p><b>Self-custody plus absence of records equals unrecoverable loss.</b> The organiser holds both the money and the only memory of who is owed what.</p>
+    </div>
+    <div>
+      <h2>Frequency</h2>
+      <ul>
+        <li>Large-scale precedents: Double Shah (2005–07); modaraba scandals (2013–14).</li>
+        <li>Small-circle collapses occur continuously and go unreported — a defaulted street committee produces no filing, no record, no statistic.</li>
+        <li>Each unrecorded collapse pushes savers toward smaller, poorer circles; the failure mode taxes the entire system's scale.</li>
+      </ul>
+      <h2>The diagnosis</h2>
+      <p>The committee's weakness is not its economics — those have survived a century on every continent. The weakness is the absence of <b>records, collateral, scoring, and recovery</b>.</p>
+      <p style="color:#8a6a15">That absence is the opportunity.</p>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>4</span></div>
+</section>
+
+<!-- 5 WHY INFORMAL PERSISTS -->
+<section class="slide">
+  <div class="kicker">Part 1 · Why Informal Persists</div>
+  <h1>Why members prefer committees over bank products</h1>
+  <table>
+    <tr><th style="width:20%">Reason</th><th style="width:42%">Mechanism</th><th>Why the bank cannot match it</th></tr>
+    <tr><td><b>Interest-free</b></td><td>No riba anywhere in the cycle; a binding religious constraint for a large share of the population.</td><td>Bank deposits and loans are interest instruments by construction.</td></tr>
+    <tr><td><b>Credit access</b></td><td>The circle approves on years of direct social observation.</td><td>Banks require documented income, collateral, and history — which this population lacks. The circle's information is non-transferable to an institution.</td></tr>
+    <tr><td><b>Price</b></td><td>Early liquidity at 0%, funded mutually by members who each receive their own 0% turn.</td><td>Bank funds carry deposit cost, branch cost, and capital charges; consumer credit prices at 25–40%. A bank 0% product loses money per transaction.</td></tr>
+    <tr><td><b>Zero friction</b></td><td>No forms, branches, or minimum balances.</td><td>Onboarding and servicing costs exceed lifetime revenue at these tickets.</td></tr>
+    <tr><td><b>Commitment</b></td><td>Social pressure enforces saving; the rigidity is the purchased product.</td><td>A deposit account is voluntary and frictionless to empty — the opposite of what the saver is buying.</td></tr>
+  </table>
+  <p>Part 1 conclusion: demand proven at national scale; failure mode precisely identified; incumbent institutions structurally unable to serve it directly.</p>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>5</span></div>
+</section>
+
+<!-- 6 THE THREE ROLES -->
+<section class="slide">
+  <div class="kicker">Part 2 · Halqa</div>
+  <h1>Definition and the four roles</h1>
+  <p><b>Halqa is the infrastructure layer for committees.</b> Members continue transacting with each other; the platform operates the system around them. Halqa is never the borrower, never the lender, never the counterparty. Its four roles:</p>
+  <table>
+    <tr><th style="width:17%">Role</th><th style="width:56%">Functions</th><th>Status</th></tr>
+    <tr><td><b>1 · The Ledger</b></td><td>Double-entry record of every obligation, payment, deposit, and payout in integer paisa · gives members legal existence as creditors · append-only audit trail.</td><td><span class="tag tb">BUILT</span></td></tr>
+    <tr><td><b>2 · The Conductor</b></td><td>Runs and enforces the committee: schedules rounds, sequences turns, holds payment deadlines, applies holdbacks and progressive penalties, resolves defaults through the recovery waterfall, and administers the rehabilitation path · the automated referee that never forgets or plays favourites.</td><td><span class="tag tb">BUILT</span></td></tr>
+    <tr><td><b>3 · The Treasury</b></td><td>Custody of collections in segregated bank escrow · placement of idle balances into approved instruments (money-market, income funds, gold-linked, equity ETFs) · netting, liquidity ladder, buffers, daily reconciliation · payout execution against the calendar.</td><td><span class="tag tlb">LICENCE+BANK</span></td></tr>
+    <tr><td><b>4 · The Credit Bureau</b></td><td>Reliability scoring updated by every payment · credit-weighted turn ordering · exportable credit passport per member · host reputation records · reporting rail into eCIB, DataCheck, Tasdeeq.</td><td><span class="tag tb">BUILT</span> <span style="font-size:8pt;color:#9a8a63">(bureau reporting</span> <span class="tag tl">LICENCE</span><span style="font-size:8pt;color:#9a8a63">)</span></td></tr>
+  </table>
+  <div class="box">
+    <p style="margin:0"><b style="color:#8a6a15">Division of function:</b> members remain each other's credit source — preserving the 0% economics. The partner bank provides account custody, fund management (Mudarib), and payment rails. Halqa operates the ledger, the treasury logic, and the credit bureau between them.</p>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>6</span></div>
+</section>
+
+<!-- 7 ENGINES — GROUPED FAMILIES -->
+<section class="slide">
+  <div class="kicker">Part 3 · Earning Engines</div>
+  <h1>The composable engine — five families of levers</h1>
+  <p>The profit engine is a set of independent levers grouped into five families. The host switches any combination on at creation; none is mandatory; an unconfigured circle is a plain rotation. Every active lever is disclosed to members before joining.</p>
+  <table style="font-size:8.4pt">
+    <tr><th style="width:20%">Family</th><th style="width:52%">Levers and function</th><th>Status</th></tr>
+    <tr><td><b>A · Yield</b><br/>generate the profit pool</td><td><b>Float placement</b> — idle pool placed in an Islamic money-market fund. <b>Deposit remuneration</b> — security deposits earn on the same basis. <b>Group allocation</b> — a host-set slice of the pool invested into a dated scheme.</td><td><span class="tag tlb">L+B</span></td></tr>
+    <tr><td><b>B · Distribution</b><br/>split the pool fairly</td><td><b>Capital-days basis</b> — profit split by amount × days committed. <b>Patience weighting</b> — weight rises 1.0×→2.0× by position. <b>Pooled dividend</b> — a round dividend shared evenly rather than to one position.</td><td><span class="tag tb">BUILT</span></td></tr>
+    <tr><td><b>C · Behavioural</b><br/>reward conduct</td><td><b>Early-payment boost</b> — 1.25× weight for consistently early payers. <b>Clean-streak bonus</b> — +5% float profit per consecutive clean round, capped +50%.</td><td><span class="tag tb">BUILT</span></td></tr>
+    <tr><td><b>D · Liquidity pricing</b><br/>price time</td><td><b>Early-access fee</b> — position 1 pays 10% of pool declining to zero; 90% to waiting members, 10% platform.</td><td><span class="tag tb">BUILT</span></td></tr>
+    <tr><td><b>E · Compounding</b><br/>extend the earning period</td><td><b>Delayed distribution</b> — a settle-window before release, lengthening earning time. <b>Profit recycling</b> — realised profit re-committed into the next round's float.</td><td><span class="tag tb">BUILT</span></td></tr>
+  </table>
+  <p style="font-size:8.4pt;color:#9a8a63">Families A and E create and extend the pool; B, C and D govern how it is shared and how early liquidity is priced. A previously available prize-draw lever was removed on Shariah grounds.</p>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>7</span></div>
+</section>
+
+<!-- 8 ENGINE MATHEMATICS -->
+<section class="slide">
+  <div class="kicker">Part 3 · Earning Engines</div>
+  <h1>The mathematics — every lever, named</h1>
+  <div class="cols">
+    <div>
+      <h3>Family A — Yield</h3>
+      <div class="fname">Float placement / Deposit remuneration</div>
+      <span class="formula">profit = principal × rate × days / 365</span>
+      <div class="fname">Group allocation</div>
+      <span class="formula">allocatedCapitalDays = capitalDays × allocationBps / 10000</span>
+      <span class="formula">productive = allocated × (10000 − reserveBps) / 10000</span>
+      <h3>Family B — Distribution</h3>
+      <div class="fname">Capital-days basis (the fairness measure)</div>
+      <span class="formula">capitalDaysᵢ = Σ_round contribution × n × daysInvested</span>
+      <span class="formula">shareᵢ = weightᵢ / Σ weight</span>
+      <div class="fname">Patience weighting</div>
+      <span class="formula">w(k) = 1 + (k−1)/(n−1)   [1.0× … 2.0×]</span>
+      <div class="fname">Pooled dividend</div>
+      <span class="formula">dividendᵢ = roundDividend / n</span>
+    </div>
+    <div>
+      <h3>Family C — Behavioural</h3>
+      <div class="fname">Early-payment boost</div>
+      <span class="formula">boost = 1.25 if earlyCount × 4 ≥ paidCount × 3</span>
+      <div class="fname">Clean-streak bonus</div>
+      <span class="formula">streak = min(0.05 × cleanRounds, 0.50)</span>
+      <h3>Family D — Liquidity pricing</h3>
+      <div class="fname">Early-access fee</div>
+      <span class="formula">fee(k) = 0.10 × (n−k)/(n−1)   [90% → members]</span>
+      <h3>Family E — Compounding</h3>
+      <div class="fname">Delayed distribution / Profit recycling</div>
+      <span class="formula">days += delayDays ;  nextPool += realisedProfit</span>
+      <h3>Combined member profit</h3>
+      <span class="formula">weightᵢ = capitalDaysᵢ × w(kᵢ) × boostᵢ</span>
+      <span class="formula">memberProfitᵢ = pool × (1 + streak) × shareᵢ</span>
+      <p style="font-size:8pt;color:#9a8a63;margin-top:1.5mm">All arithmetic in integer paisa; every formula locked as an automated test.</p>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>8</span></div>
+</section>
+
+<!-- 9 ESTIMATED RETURNS -->
+<section class="slide">
+  <div class="kicker">Part 3 · Earning Engines</div>
+  <h1>Estimated returns by deployment option</h1>
+  <div class="cols">
+    <div>
+      <div class="fig"><svg viewBox="0 0 460 150" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="10" fill="#3a352c">
+        <text x="8" y="14" fill="#a97c1e">Indicative annual rate by deployment instrument (dated)</text>
+        <text x="150" y="42" text-anchor="end">Money-market fund</text><rect x="158" y="32" width="173" height="12" fill="#e3cf94"/><text x="337" y="42">10.8%</text>
+        <text x="150" y="66" text-anchor="end">Islamic income fund</text><rect x="158" y="56" width="194" height="12" fill="#e3cf94"/><text x="358" y="66">12.1%</text>
+        <text x="150" y="90" text-anchor="end">Gold-linked fund</text><rect x="158" y="80" width="240" height="12" fill="#b8912f"/><text x="404" y="90">~15.0%</text>
+        <text x="150" y="114" text-anchor="end">Equity ETF</text><rect x="158" y="104" width="210" height="12" fill="#e3cf94"/><text x="374" y="114">market-linked</text>
+        <text x="8" y="138" fill="#9a8a63">Rates are indicative and dated; equity and gold move with the market.</text>
+      </svg></div>
+      <div class="fig"><svg viewBox="0 0 460 128" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="10" fill="#3a352c">
+        <text x="8" y="14" fill="#a97c1e">Best-member annual figure by configuration (Rs)</text>
+        <text x="150" y="42" text-anchor="end">Plain rotation</text><rect x="158" y="32" width="3" height="12" fill="#e3cf94"/><text x="167" y="42">0</text>
+        <text x="150" y="66" text-anchor="end">Pooled Shariah config</text><rect x="158" y="56" width="115" height="12" fill="#e3cf94"/><text x="279" y="66">~6,300</text>
+        <text x="150" y="90" text-anchor="end">Full configuration</text><rect x="158" y="80" width="285" height="12" fill="#b8912f"/><text x="330" y="90" fill="#fffdf5" font-weight="bold">~15,600</text>
+        <line x1="395" y1="76" x2="395" y2="96" stroke="#8a6a15" stroke-dasharray="3,2"/>
+        <text x="158" y="114" fill="#9a8a63">−30% rate-shock floor ~Rs 13,000 (transfer component rate-invariant).</text>
+      </svg></div>
+    </div>
+    <div>
+      <h2>Illustration on the reference pool</h2>
+      <p style="font-size:9pt">Reference circle: 12 members, Rs 11,667/month, pool Rs 140,004, 70% coverage. One round's idle pool placed for ~24 days:</p>
+      <table style="font-size:8.6pt">
+        <tr><th>Instrument</th><th>Indicative</th><th>~24-day placement</th></tr>
+        <tr><td>Money-market</td><td>10.8%</td><td>~Rs 994</td></tr>
+        <tr><td>Income fund</td><td>12.1%</td><td>~Rs 1,114</td></tr>
+        <tr><td>Gold-linked</td><td>~15.0%</td><td>~Rs 1,381</td></tr>
+      </table>
+      <p style="font-size:8.6pt;color:#9a8a63">Per-round float profit on the pool, before the distribution levers allocate it across members. Deposits earn in parallel over the full cycle, which is why the composed best-member annual figure reaches ~Rs 15,600.</p>
+      <div class="box" style="margin-top:1.5mm"><p style="margin:0;font-size:8.6pt"><b style="color:#8a6a15">Optionality is the design:</b> the same platform serves a pure record-keeping rotation and a fully-configured circle, riba-free in both.</p></div>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>9</span></div>
+</section>
+
+<!-- 10 TURN MARKET -->
+<section class="slide">
+  <div class="kicker">Part 4 · Turn Market</div>
+  <h1>Buying and selling turns at a premium <span class="tag tb">BUILT</span></h1>
+  <div class="cols">
+    <div>
+      <h2>Mechanics</h2>
+      <ul>
+        <li>A member lists an upcoming payout position at an asking premium.</li>
+        <li>Constraint: 0 ≤ premium ≤ 50% of the payout — desperation pricing structurally excluded.</li>
+        <li>Bids must exceed the standing floor (highest open bid, else the ask).</li>
+        <li>Settlement is atomic: position swap, premium transfer, and platform fee in one transaction.</li>
+        <li>The buyer pays the seller directly — value remains inside the circle.</li>
+        <li>Platform fee: <b>10% of the premium</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Function and constraints</h2>
+      <ul>
+        <li>Prices the committee's time-value openly, replacing informal position-swapping by favour or pressure.</li>
+        <li>Implied cost of acceleration is a fraction of informal lending rates; the counterparty is a fellow member, not a lender.</li>
+        <li>Reliability scores unaffected — trading a position is a preference, not a breach.</li>
+        <li>Group visibility and consent are structural; no trade occurs privately.</li>
+        <li><b>Labelling rule:</b> circles carrying Shariah-compliant engine labels permit zero-premium swaps only; premium trading operates in configurations that carry no such label.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>10</span></div>
+</section>
+
+<!-- 11 INVESTMENTS OVERVIEW -->
+<section class="slide">
+  <div class="kicker">Part 5 · Vault and Investments</div>
+  <h1>The investment layer <span class="tag tb">BUILT</span> <span style="font-size:10pt;color:#9a8a63">(live deployment</span> <span class="tag tlb">LICENCE+BANK</span><span style="font-size:10pt;color:#9a8a63">)</span></h1>
+  <p>Two surfaces draw on the same instrument set. The <b>Vault</b> is the member's personal savings and investment account. The <b>Terminal</b> lists the dated-rate schemes into which both committee float and vault balances are placed. All placement is Mudarabah-based; the platform's share is 5% of profit on withdrawal, never principal.</p>
+  <div class="cols">
+    <div>
+      <h2>Vault — personal facility</h2>
+      <ul>
+        <li>Allocation across four sleeves in whole percentages summing to 100.</li>
+        <li>Blended accrual rate = Σ(shareᵢ × rateᵢ); blended risk score shown live.</li>
+        <li>Payout parking, top-ups from Rs 100, full-sweep withdrawal.</li>
+        <li>Growth projection: conservative / expected / optimistic paths, monthly compounding, asymmetric downside on the crypto sleeve.</li>
+        <li>Per-sleeve risk score (/10), volatility range, exit liquidity in days.</li>
+        <li>Money map: states the custody location of every rupee at each stage.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Terminal — scheme catalogue</h2>
+      <ul>
+        <li>Dated indicative rates with source and as-of date on every scheme.</li>
+        <li>Cadence-to-tenor filtering: only instruments that settle within the circle's period are offered.</li>
+        <li>Committee float and security deposits placed here under the treasury logic (Part 7).</li>
+        <li>The same catalogue backs both the vault sleeves and the circle engines.</li>
+      </ul>
+      <div class="box" style="margin-top:2mm">
+        <p style="margin:0;font-size:8.8pt"><b style="color:#8a6a15">Non-custodial position:</b> Halqa never holds units or cash. Escrow is at the bank; units are at the fund trustee; Halqa instructs within member-signed mandates.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>11</span></div>
+</section>
+
+<!-- 12 THE SLEEVES EXPLAINED -->
+<section class="slide">
+  <div class="kicker">Part 5 · Vault and Investments</div>
+  <h1>The four sleeves, explained</h1>
+  <table>
+    <tr><th style="width:14%">Sleeve</th><th style="width:30%">Instrument and meaning</th><th style="width:30%">Purpose</th><th>Liquidity and rule</th></tr>
+    <tr><td><b>Money-market</b></td><td>Units of an Islamic money-market fund (short government-backed ijarah and placements).</td><td>Capital stability; the default float sleeve. Rate resets with the market; principal does not swing.</td><td>T+1</td></tr>
+    <tr><td><b>Income / ETF</b></td><td>Islamic income funds (sukuk, screened instruments) and exchange-traded fund exposure — a listed basket of securities tracking an index, bought and sold as one unit.</td><td>Higher yield and market-linked growth for members accepting movement in exchange for return.</td><td>T+1 to T+2</td></tr>
+    <tr><td><b>Gold-linked</b></td><td>Fund units tracking the gold price. A <b>hedge</b> — a position held because it moves opposite to a risk already carried: when the rupee weakens, rupee gold typically rises.</td><td>Protects savings against rupee depreciation and inflation, the risk every saver already carries. It can fall in calm years — a hedge, not a guarantee.</td><td>~T+3 · permitted only where circle period ≥ 10 days, liquidation scheduled ahead of each payout</td></tr>
+    <tr><td><b>Crypto</b></td><td>A digital-asset basket. <b>Explicitly non-Shariah and high-risk.</b></td><td>Offered only in the personal vault for members who insist; requires a recorded risk acknowledgement.</td><td>Variable · <b>structurally excluded from committees</b> — no circle can ever touch it</td></tr>
+  </table>
+  <div class="box">
+    <p style="margin:0"><b style="color:#8a6a15">Auto-cover:</b> a missed committee installment is settled automatically from the member's own vault balance before any penalty escalation — the vault doubles as the member's personal default buffer (Part 8).</p>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>12</span></div>
+</section>
+
+<!-- 13 TREASURY ACCOUNTS -->
+<section class="slide">
+  <div class="kicker">Part 6 · Treasury and Custody</div>
+  <h1>Account architecture and collections <span class="tag tlb">LICENCE+BANK</span></h1>
+  <div class="cols">
+    <div>
+      <h2>Physical accounts</h2>
+      <table>
+        <tr><th>Account</th><th>Purpose</th></tr>
+        <tr><td><b>Omnibus client-money escrow</b></td><td>Holds all member funds; trust status; members' beneficial ownership; bankruptcy-remote from Halqa.</td></tr>
+        <tr><td><b>Investment settlement</b></td><td>Cash legs of fund purchases and redemptions, separated from payout-ready funds.</td></tr>
+        <tr><td><b>Operating (Halqa)</b></td><td>Platform fees and late-payment revenue; strictly outside the client-money perimeter.</td></tr>
+      </table>
+      <h2>Custody position</h2>
+      <p>Halqa instructs within member-signed mandates limited to named schemes and members' registered accounts. Client money never appears on Halqa's balance sheet. The deposit-taker is the licensed bank.</p>
+    </div>
+    <div>
+      <h2>Collections — virtual IBAN per circle</h2>
+      <p>Each committee receives its own virtual IBAN under the escrow. Pakistani IBAN format: <b>PK + 2 check digits + 4-character bank code + 16-digit account number</b> (24 characters). Inflows arrive pre-tagged by circle; reconciliation is automatic.</p>
+      <h2>Payment rails</h2>
+      <table>
+        <tr><th>Rail</th><th>Use</th></tr>
+        <tr><td><b>Raast</b></td><td>P2P disbursement · Request-to-Pay collection · Alias directory (pay-to-phone).</td></tr>
+        <tr><td><b>1Link</b></td><td>IBFT disbursement · 1Bill presentment: an installment payable in any bank application or over the counter.</td></tr>
+        <tr><td><b>Mobile wallets</b></td><td>Cash-in endpoints for the unbanked segment.</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>13</span></div>
+</section>
+
+<!-- 14 TREASURY DEPLOYMENT -->
+<section class="slide">
+  <div class="kicker">Part 6 · Treasury and Custody</div>
+  <h1>Deployment and controls <span class="tag tlb">LICENCE+BANK</span></h1>
+  <div class="cols">
+    <div>
+      <h2>Deployment path</h2>
+      <ul>
+        <li><b>Daily netting engine:</b> all circles' purchase and redemption demand aggregated into one order per fund per day — pooled execution, minimal transaction drag.</li>
+        <li>Execution through <b>AMC institutional accounts</b> via order API, or <b>CDC Emlaak</b> (multi-AMC distribution platform: one integration, several fund houses).</li>
+        <li>Fund units held by the fund trustee (<b>CDC</b>); cash by the bank; instructions by Halqa — three separated parties.</li>
+        <li><b>Per-circle unit ownership in the ledger:</b> pooled execution, segregated attribution — one circle's gold gain cannot leak into another; one circle's redemption cannot touch another's principal.</li>
+        <li>Daily <b>NAV feed</b> supplies the dated rates displayed in-application.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Controls</h2>
+      <table>
+        <tr><th>Control</th><th>Rule</th></tr>
+        <tr><td><b>Liquidity ladder</b></td><td>Instrument liquidity ≤ circle period − 7 days; nothing may be bought that cannot be sold before the payout it funds.</td></tr>
+        <tr><td><b>Buffers</b></td><td>15% payout buffer and 10% liquidity reserve held liquid regardless of placement.</td></tr>
+        <tr><td><b>Settlement discipline</b></td><td>Money-market T+1; gold T+3 with liquidation scheduled ahead of each payout.</td></tr>
+        <tr><td><b>Reconciliation</b></td><td>Daily diff of the bank statement feed (webhook or MT940/CAMT.053) against the ledger; any unexplained break freezes new placements.</td></tr>
+      </table>
+      <p style="font-size:8.8pt;color:#9a8a63">Treasury position in one line: member money is either in escrow, in a short-settlement approved instrument, or en route to a payout — and every rupee is reconstructable from the ledger at any moment.</p>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>14</span></div>
+</section>
+
+<!-- 15 DEFAULT — PRE-ENTRY + COLLATERAL -->
+<section class="slide">
+  <div class="kicker">Part 7 · Default Protection (1 of 3)</div>
+  <h1>Admission controls and collateral <span class="tag tb">BUILT</span></h1>
+  <div class="cols">
+    <div>
+      <h2>Pre-entry gates</h2>
+      <table style="font-size:8.2pt">
+        <tr><th>Control</th><th>Mechanism</th></tr>
+        <tr><td><b>Risk-score ceiling</b></td><td>Host sets a target risk score; the circle's configuration is held within it.</td></tr>
+        <tr><td><b>Reliability gate</b></td><td>Admission requires standing; every payment updates the member score.</td></tr>
+        <tr><td><b>Exposure by standing</b></td><td>No fixed newcomer ceiling; a less-proven member's exposure is sized by score and a larger graduated deposit.</td></tr>
+        <tr><td><b>Credit-weighted ordering</b></td><td>Highest-scored members take the highest-exposure early turns — adverse-selection control.</td></tr>
+        <tr><td><b>Guarantor</b></td><td>Optional co-signer required to join, at host discretion.</td></tr>
+        <tr><td><b>Promissory note</b></td><td>Optional recorded undertaking captured at join.</td></tr>
+        <tr><td><b>Auto-debit mandate</b></td><td>Optional standing instruction against the member's account.</td></tr>
+      </table>
+    </div>
+    <div>
+      <h2>Collateral and reserves</h2>
+      <table style="font-size:8.2pt">
+        <tr><th>Control</th><th>Mechanism</th></tr>
+        <tr><td><b>Graduated deposit</b></td><td>Deposit = remaining dues × coverage. Coverage = base (30–90%, default 70%) × (n−k)/(n−1), adjusted ±10–15 pts by credit standing, capped base+5%. Position 1 posts most; last posts zero.</td></tr>
+        <tr><td><b>Dynamic deposit</b></td><td>Deposit sizing recomputed as standing changes through the cycle.</td></tr>
+        <tr><td><b>Profit-as-collateral</b></td><td>Accrued profit held against obligations until the member is clear.</td></tr>
+        <tr><td><b>Payout buffer</b></td><td>15% of pool kept liquid regardless of placement.</td></tr>
+        <tr><td><b>Liquidity reserve</b></td><td>10% reserve against timing shocks.</td></tr>
+        <tr><td><b>Insurance reserve</b></td><td>Optional reserve provision per policy.</td></tr>
+        <tr><td><b>Safety Fund</b></td><td>Optional slot-fee pool (0.5–3%) guaranteeing a member's payout up to its balance; the circle's own money, remainder returned.</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>15</span></div>
+</section>
+
+<!-- 16 DEFAULT — IN-CYCLE + POST -->
+<section class="slide">
+  <div class="kicker">Part 7 · Default Protection (2 of 3)</div>
+  <h1>In-cycle enforcement and post-default resolution <span class="tag tb">BUILT</span></h1>
+  <div class="cols">
+    <div>
+      <h2>In-cycle</h2>
+      <table style="font-size:8.2pt">
+        <tr><th>Control</th><th>Mechanism</th></tr>
+        <tr><td><b>Payout holdback</b></td><td>A payout releases only when the member's obligations are current; configurable release after N clean payments.</td></tr>
+        <tr><td><b>Vault auto-cover</b></td><td>A missed installment settles from the member's own vault balance before escalation.</td></tr>
+        <tr><td><b>Smart nudges</b></td><td>Automated reminders ahead of due dates.</td></tr>
+        <tr><td><b>Peer nudges</b></td><td>Group-visible prompts engaging social pressure.</td></tr>
+        <tr><td><b>Anomaly monitoring</b></td><td>Payment-pattern surveillance across circles.</td></tr>
+        <tr><td><b>Delayed distribution</b></td><td>Profit held a set window, keeping members engaged to cycle end.</td></tr>
+      </table>
+    </div>
+    <div>
+      <h2>Post-default</h2>
+      <table style="font-size:8.2pt">
+        <tr><th>Control</th><th>Mechanism</th></tr>
+        <tr><td><b>Progressive late fees</b></td><td>2% / 5% / 10% of installment by lateness tier — <b>platform revenue</b>; reliability score deltas −10 / −20 / −40.</td></tr>
+        <tr><td><b>Feature lock</b></td><td>Platform features locked on default until cured.</td></tr>
+        <tr><td><b>Deposit forfeiture</b></td><td>Account lock; the defaulter's deposit forfeits into the recovery pool for affected members.</td></tr>
+        <tr><td><b>Recovery waterfall</b></td><td>Forfeited collateral and Safety Fund applied to make the group whole in priority order.</td></tr>
+        <tr><td><b>Post-receipt penalty</b></td><td>Additional score penalty where a member defaults after collecting.</td></tr>
+        <tr><td><b>Rehabilitation cooldown</b></td><td>Structured return path after a defined cooldown; default is recoverable-from.</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>16</span></div>
+</section>
+
+<!-- 17 SIMULATION -->
+<section class="slide">
+  <div class="kicker">Part 7 · Default Protection (3 of 3) — Validation</div>
+  <h1>Agent-based simulation of calendar 2025 <span class="tag tb">BUILT</span></h1>
+  <div class="cols">
+    <div>
+      <h2>Method</h2>
+      <ul>
+        <li><b>120,000 agents · 10,441 committees</b> on the real 2025 calendar: Ramadan, both Eids, school-fee seasons, monsoon flooding.</li>
+        <li><b>Dual-arm, decision-paired randomness:</b> identical agents live the identical year twice — paper arm and platform arm — same incomes, shocks, and temptations. Only the platform differs; outcome differences are causal.</li>
+        <li><b>Deterministic seed:</b> every figure reproduces exactly on re-run; the simulation executes in continuous integration.</li>
+      </ul>
+      <h2>Seasonality</h2>
+      <p>Both arms stress at Eid and peak during the floods — monthly default peak 376 (paper, July) against 173 (platform, August). The platform curve is lower in every month; the widest gap is early-cycle, where credit-weighted ordering concentrates reliable members in exposed turns.</p>
+    </div>
+    <div>
+      <div class="fig"><svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="10" fill="#3a352c">
+        <text x="8" y="14" fill="#a97c1e">Results — paper arm vs platform arm</text>
+        <text x="170" y="40" text-anchor="end">Post-payout defaults</text>
+        <rect x="178" y="30" width="200" height="8" fill="#e3cf94"/><text x="384" y="38">2.48%</text>
+        <rect x="178" y="40" width="80" height="8" fill="#b8912f"/><text x="264" y="48">0.99%</text>
+        <text x="170" y="76" text-anchor="end">Recovery on default</text>
+        <rect x="178" y="66" width="2" height="8" fill="#e3cf94"/><text x="186" y="74">0%</text>
+        <rect x="178" y="76" width="226" height="8" fill="#b8912f"/><text x="410" y="84">75.3%</text>
+        <text x="170" y="112" text-anchor="end">On-time payments</text>
+        <rect x="178" y="102" width="220" height="8" fill="#e3cf94"/><text x="404" y="110">91.5%</text>
+        <rect x="178" y="112" width="226" height="8" fill="#b8912f"/><text x="410" y="120">94.0%</text>
+        <text x="170" y="148" text-anchor="end">Over-committed members</text>
+        <rect x="178" y="138" width="200" height="8" fill="#e3cf94"/><text x="384" y="146">10.4%</text>
+        <rect x="178" y="148" width="18" height="8" fill="#b8912f"/><text x="202" y="156">0.94%</text>
+        <rect x="178" y="172" width="10" height="8" fill="#e3cf94"/><text x="193" y="180">paper arm</text>
+        <rect x="280" y="172" width="10" height="8" fill="#b8912f"/><text x="295" y="180">platform arm</text>
+        <text x="8" y="197" fill="#9a8a63">Member engine yield across the simulated cohort: ~Rs 69.7M.</text>
+      </svg></div>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>17</span></div>
+</section>
+
+<!-- 18 COMPETITIVE -->
+<section class="slide">
+  <div class="kicker">Part 8 · Competitive Landscape</div>
+  <h1>The field</h1>
+  <table>
+    <tr><th style="width:17%">Player</th><th style="width:40%">Model</th><th>Assessment</th></tr>
+    <tr><td><b>Register applications</b><br/>Kameti.pk, iKAMETI, Circlys</td><td>Digital record books for existing circles.</td><td>No custody, no protection stack, no earning function, no credit output. Not at scale.</td></tr>
+    <tr><td><b>Oraan</b></td><td>600,000+ savers; SECP NBFC licence (2023). Pools strangers, takes custody, underwrites default risk on its own book, charges members tiered management fees — highest for early positions.</td><td>The category's credibility precedent. The management fee is the revenue; social collateral is replaced by company underwriting and a recovery team.</td></tr>
+    <tr><td><b>Halqa</b></td><td>Existing social circles retained; the composable engine returns float profit to members; the early-access fee redistributes 90% to members; default risk carried by collateral and the protection stack; channel economics — institutions pay for deposits and data.</td><td>A different structural bet: preserve the social layer, monetise the by-products.</td></tr>
+  </table>
+  <h2>International reference points</h2>
+  <ul>
+    <li><b>Money Fellows (Egypt)</b> — 8.5M+ users, profitable: the model at scale in a directly comparable economy.</li>
+    <li><b>India's chit funds</b> — the regulated end-state: licensed operators, capped commissions, statutory deposits.</li>
+    <li><b>Esusu (US)</b> — a billion-dollar valuation built on the informal-payment credit-data layer alone.</li>
+  </ul>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>18</span></div>
+</section>
+
+<!-- 19 APP FEATURES -->
+<section class="slide">
+  <div class="kicker">Part 9 · Application</div>
+  <h1>Member-facing features <span class="tag tb">BUILT</span></h1>
+  <table style="font-size:8.8pt">
+    <tr><th style="width:24%">Feature</th><th>Function</th></tr>
+    <tr><td><b>Committee lifecycle</b></td><td>Create, invite by code, join, pay, collect; goal-tagged circles (Hajj, fees, wedding, home).</td></tr>
+    <tr><td><b>Range</b></td><td>Periods 1–365 days; membership 3–150 (intervals ≤ 30 days above 30 members); daily circles run as plain rotations with engines disabled and the constraint stated.</td></tr>
+    <tr><td><b>In-committee chat and notices</b></td><td>Member-to-member communication and committee updates inside each circle.</td></tr>
+    <tr><td><b>Rafa assistant</b></td><td>Typo-tolerant retrieval (bounded edit-distance matching), romanised-Urdu synonym handling, conversational context, guided first-circle walkthrough.</td></tr>
+    <tr><td><b>Urdu interface</b></td><td>One-tap language switch with full right-to-left layout.</td></tr>
+    <tr><td><b>Real-time updates</b></td><td>Payment and payout events pushed over WebSocket; notification centre.</td></tr>
+    <tr><td><b>Credit passport</b></td><td>Exportable, verifiable repayment history per member.</td></tr>
+    <tr><td><b>Host reputation card</b></td><td>Public record of a host's completed circles and conduct.</td></tr>
+    <tr><td><b>Vault, terminal, turn market</b></td><td>Part 5 facilities integrated in the same application.</td></tr>
+    <tr><td><b>Distribution</b></td><td>Installable PWA; native Android and iOS builds (Capacitor).</td></tr>
+  </table>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>19</span></div>
+</section>
+
+<!-- 20 TECH REGISTER -->
+<section class="slide">
+  <div class="kicker">Part 9 · Technology</div>
+  <h1>Technology register <span class="tag tb">BUILT</span></h1>
+  <table style="font-size:8.4pt">
+    <tr><th style="width:21%">Component</th><th style="width:37%">Function</th><th>Significance</th></tr>
+    <tr><td><b>TypeScript 5.8</b></td><td>Statically typed codebase, API and interface</td><td>Type errors in money paths caught at compile time.</td></tr>
+    <tr><td><b>Node.js / Express</b></td><td>API runtime and routing</td><td>One language across the stack.</td></tr>
+    <tr><td><b>PostgreSQL 17</b></td><td>ACID relational store</td><td>Transactional integrity for all financial state.</td></tr>
+    <tr><td><b>Prisma</b></td><td>Schema-as-code ORM</td><td>Versioned data model; typed queries; atomic multi-leg transactions.</td></tr>
+    <tr><td><b>Double-entry ledger (in-house)</b></td><td>Every movement one debit + credit in integer paisa (BigInt)</td><td>Money conserved by construction; no floating-point drift; balances derived.</td></tr>
+    <tr><td><b>Idempotency keys</b></td><td>Exactly-once money operations</td><td>A duplicated request cannot double-post a payment.</td></tr>
+    <tr><td><b>JWT + bcrypt</b></td><td>Sessions and credential hashing</td><td>Passwords never stored readable.</td></tr>
+    <tr><td><b>Zod</b></td><td>Runtime input validation</td><td>Every request checked against declared schemas before logic runs.</td></tr>
+    <tr><td><b>socket.io</b></td><td>WebSocket channel</td><td>Live payment and payout events without polling.</td></tr>
+    <tr><td><b>pino</b></td><td>Structured JSON logging</td><td>Production observability per request.</td></tr>
+    <tr><td><b>React 18 + Vite</b></td><td>Interface and build tooling</td><td>Code-split pages for low-end devices.</td></tr>
+    <tr><td><b>vitest · fast-check · supertest</b></td><td>Unit, property-based, and HTTP testing</td><td>Engine outputs locked as assertions; randomised edge-case search; 271 integration checks.</td></tr>
+    <tr><td><b>GitHub Actions</b></td><td>Continuous integration</td><td>Regressions cannot land silently.</td></tr>
+    <tr><td><b>Deterministic agent-based simulation</b></td><td>Seeded, reproducible population model</td><td>The validation instrument behind every protection claim.</td></tr>
+  </table>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>20</span></div>
+</section>
+
+<!-- 21 BUSINESS MODEL -->
+<section class="slide">
+  <div class="kicker">Part 10 · Business Model</div>
+  <h1>Revenue register</h1>
+  <div class="cols">
+    <div>
+      <table style="font-size:8.4pt">
+        <tr><th>Line</th><th>Rate</th><th>Payer</th><th>Status</th></tr>
+        <tr><td><b>Deposit-mobilisation commission</b></td><td>~1.25%/yr on average balances</td><td>Bank</td><td><span class="tag tlb">L+B</span></td></tr>
+        <tr><td><b>Service fee</b></td><td>Rs 49/member/month; hosts free</td><td>Member</td><td><span class="tag tb">BUILT</span></td></tr>
+        <tr><td><b>Late-payment fees</b></td><td>2% / 5% / 10% of installment by tier</td><td>Late member</td><td><span class="tag tb">BUILT</span></td></tr>
+        <tr><td><b>Early-access fee share</b></td><td>10% of fee (90% to members)</td><td>Optional flow</td><td><span class="tag tb">BUILT</span></td></tr>
+        <tr><td><b>Turn-market fee</b></td><td>10% of premium</td><td>Optional flow</td><td><span class="tag tb">BUILT</span></td></tr>
+        <tr><td><b>Vault profit share</b></td><td>5% of profit; never principal</td><td>Optional flow</td><td><span class="tag tb">BUILT</span></td></tr>
+        <tr><td><b>Receivables origination + servicing</b></td><td>1–1.5% + 0.5%/yr</td><td>Institution</td><td><span class="tag tlb">L+B</span></td></tr>
+        <tr><td><b>Fund distribution trail</b></td><td>~0.5%/yr on placed AUM</td><td>AMC</td><td><span class="tag tl">LICENCE</span></td></tr>
+        <tr><td><b>Takaful distribution</b></td><td>15–20% of contribution</td><td>Insurer</td><td><span class="tag tl">LICENCE</span></td></tr>
+        <tr><td><b>Credit-data services</b></td><td>Per inquiry</td><td>Institution</td><td><span class="tag tl">LICENCE</span></td></tr>
+      </table>
+      <p style="font-size:8.6pt;color:#9a8a63">Majority institution-paid. The member's mandatory cost is the service fee; other member-side lines attach to optional flows or to breach of schedule.</p>
+    </div>
+    <div>
+      <div class="fig"><svg viewBox="0 0 460 160" xmlns="http://www.w3.org/2000/svg" font-family="Georgia" font-size="10" fill="#3a352c">
+        <text x="8" y="14" fill="#a97c1e">Monthly revenue at scale (Rs crore)</text>
+        <text x="130" y="46" text-anchor="end">250,000 members</text><rect x="138" y="35" width="42" height="13" fill="#e3cf94"/><text x="186" y="46">~4.5</text>
+        <text x="130" y="76" text-anchor="end">1,000,000 members</text><rect x="138" y="65" width="160" height="13" fill="#e3cf94"/><text x="304" y="76">~17</text>
+        <text x="130" y="106" text-anchor="end">2,000,000 members</text><rect x="138" y="95" width="357" height="13" fill="#b8912f"/><text x="360" y="106" fill="#fffdf5" font-weight="bold">~38</text>
+        <text x="8" y="136" fill="#9a8a63">Zero-opt-in floor at 250,000 members: ~Rs 2.4 crore/month —</text>
+        <text x="8" y="150" fill="#9a8a63">service fee plus commission on balances alone; no engine participation assumed.</text>
+      </svg></div>
+      <h2>Balance-sheet contribution</h2>
+      <p style="font-size:9.3pt">~Rs 45B in balances at 1M members — approximately 6% of the microfinance sector's deposit base; 15–25% deposit growth for a single institution; granular, scheduled, and pre-scored.</p>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>21</span></div>
+</section>
+
+<!-- 22 DEMANDS ON THE BANK -->
+<section class="slide">
+  <div class="kicker">Part 11 · Demands (1 of 3)</div>
+  <h1>From the partner bank <span class="tag tlb">LICENCE+BANK</span></h1>
+  <table style="font-size:8.1pt">
+    <tr><th style="width:30%">Item</th><th>Purpose</th></tr>
+    <tr><td><b>Escrow suite (4 accounts)</b></td><td>Client-money omnibus (trust status, bankruptcy-remote), investment settlement, charity/penalty routing, operating — segregated custody and clean audit.</td></tr>
+    <tr><td><b>Virtual IBAN range</b></td><td>One PK-format virtual IBAN per committee, unlimited issuance, zero per-IBAN fees, auto-tagged inflow reporting.</td></tr>
+    <tr><td><b>Statement / event feed</b></td><td>Intraday webhook of credits and debits, virtual IBAN on every line; fallback MT940/CAMT.053. Feeds daily reconciliation.</td></tr>
+    <tr><td><b>Cutoffs and settlement SLAs</b></td><td>Published daily cutoff for same-day fund orders; payout instructions executed within banking hours; written remedies.</td></tr>
+    <tr><td><b>Sandbox / UAT environment</b></td><td>Full test environment with fake money and a certification checklist before go-live.</td></tr>
+    <tr><td><b>Raast sponsorship</b></td><td>Access to Raast P2P (disbursement), Request-to-Pay (collection), and the Alias directory.</td></tr>
+    <tr><td><b>Auto-debit / standing instruction execution</b></td><td>Execution of digitally-captured SI mandates; same-day reject reporting with reason codes.</td></tr>
+    <tr><td><b>Digital KYC acceptance</b></td><td>Acceptance of NADRA-verified digital onboarding under tiered Asaan-style limits — no branch visit for a small member.</td></tr>
+    <tr><td><b>Deposit-mobilisation agreement</b></td><td>~1.25%/yr on average daily balances, paid monthly, no clawback on churn, annual review only.</td></tr>
+    <tr><td><b>Profit on escrow balances</b></td><td>Idle escrow earns the bank's declared Islamic deposit rate before fund placement; declared monthly.</td></tr>
+    <tr><td><b>Intraday liquidity backstop</b></td><td>Small committed intraday facility to bridge redemption-to-payout timing gaps; never overnight, never member credit.</td></tr>
+    <tr><td><b>Bank Shariah board sign-off</b></td><td>The partner's own Shariah committee certifies the escrow and placement structure.</td></tr>
+    <tr><td><b>Agent network access</b></td><td>Cash-in/out for unbanked members via 1Bill presentment at agent counters.</td></tr>
+    <tr><td><b>Dispute and error resolution</b></td><td>Written procedure with timelines and provisional-credit rules for mispostings, duplicates, failed payouts.</td></tr>
+    <tr><td><b>Data-sharing and confidentiality</b></td><td>Bank sees aggregate program data, never member-level behavioural IP; we receive account-status webhooks.</td></tr>
+    <tr><td><b>Non-exclusivity</b></td><td>Multi-bank future preserved; a second escrow bank as concentration hedge.</td></tr>
+    <tr><td><b>Uptime SLA + relationship contact</b></td><td>API availability commitment with maintenance windows; a named human for settlement exceptions.</td></tr>
+    <tr><td><b>Co-branded trust assets</b></td><td>Permission to state "collections held in escrow at [Bank]" in-application and in material.</td></tr>
+  </table>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>22</span></div>
+</section>
+
+<!-- 23 DEMANDS ON OTHER INSTITUTIONS -->
+<section class="slide">
+  <div class="kicker">Part 11 · Demands (2 of 3)</div>
+  <h1>From other institutions and regulators</h1>
+  <div class="cols">
+    <div>
+      <h3>Asset management <span class="tag tl">LICENCE</span></h3>
+      <table style="font-size:8pt">
+        <tr><th>Item</th><th>Purpose</th></tr>
+        <tr><td><b>Institutional share class, zero loads</b></td><td>No front/back load; management fee as published; trail contracted.</td></tr>
+        <tr><td><b>T+0/T+1 redemption, published cutoff</b></td><td>Money the treasury calendar can rely on.</td></tr>
+        <tr><td><b>Order + NAV API (or CDC Emlaak)</b></td><td>Machine purchase/redemption; daily rates in-app.</td></tr>
+        <tr><td><b>Daily unit-holding statements</b></td><td>Nightly reconciliation to the per-circle registry.</td></tr>
+        <tr><td><b>Capacity + gold T+3 terms</b></td><td>Absorption comfort; gold liquidity stated.</td></tr>
+      </table>
+      <h3>Identity and screening <span class="tag tl">LICENCE</span></h3>
+      <table style="font-size:8pt">
+        <tr><th>Item</th><th>Purpose</th></tr>
+        <tr><td><b>NADRA Verisys / BioVerisys</b></td><td>CNIC and biometric verification.</td></tr>
+        <tr><td><b>KYC/AML SaaS (Shufti Pro)</b></td><td>Document, face, sanctions and PEP screening.</td></tr>
+      </table>
+      <h3>Credit bureaus <span class="tag tl">LICENCE</span></h3>
+      <table style="font-size:8pt">
+        <tr><th>Item</th><th>Purpose</th></tr>
+        <tr><td><b>eCIB reporting membership</b></td><td>Monthly batch reporting in SBP layout.</td></tr>
+        <tr><td><b>DataCheck + Tasdeeq</b></td><td>Scoring and API inquiry; Halqa attributed as furnisher.</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Insurance and communications <span class="tag tl">LICENCE</span> <span class="tag tl">PARTNER</span></h3>
+      <table style="font-size:8pt">
+        <tr><th>Item</th><th>Purpose</th></tr>
+        <tr><td><b>Group credit takaful treaty</b></td><td>Auto-enrolment to a free-cover limit; 15–20% distribution share; operator Shariah certificate.</td></tr>
+        <tr><td><b>WhatsApp BSP (Infobip / Gupshup)</b></td><td>Templated reminders, invites, receipts.</td></tr>
+        <tr><td><b>SMS mask "HALQA"</b></td><td>Branded sender for OTPs and feature-phone nudges.</td></tr>
+      </table>
+      <h3>Regulatory and assurance <span class="tag tl">LICENCE</span></h3>
+      <table style="font-size:8pt">
+        <tr><th>Item</th><th>Purpose</th></tr>
+        <tr><td><b>SECP NBFC licence</b></td><td>Authorisation for arranging and servicing; Oraan precedent.</td></tr>
+        <tr><td><b>SECP Regulatory Sandbox</b></td><td>Supervised custody pilot before full licensing.</td></tr>
+        <tr><td><b>Retained Shariah advisor + annual audit</b></td><td>Certification of structures, fees, penalty routing, labelling.</td></tr>
+        <tr><td><b>Statutory auditor (QCR-rated)</b></td><td>Corporate and client-money assurance.</td></tr>
+      </table>
+      <h3>Production infrastructure <span class="tag tl">LICENCE</span></h3>
+      <table style="font-size:8pt">
+        <tr><th>Item</th><th>Purpose</th></tr>
+        <tr><td><b>Pakistan-resident hosting; managed Postgres (PITR)</b></td><td>Data residency; durable ledger.</td></tr>
+        <tr><td><b>KMS/HSM; Cloudflare WAF; Sentry/Grafana</b></td><td>Key custody; DDoS; observability.</td></tr>
+        <tr><td><b>External pen-test firm</b></td><td>The report every vendor-risk team demands.</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>23</span></div>
+</section>
+
+<!-- 24 UNDERTAKINGS WE BRING -->
+<section class="slide">
+  <div class="kicker">Part 11 · Demands (3 of 3)</div>
+  <h1>Undertakings we bring — the obligations we hold ourselves to <span class="tag tl">LICENCE</span></h1>
+  <div class="cols">
+    <div>
+      <h3>Cybersecurity</h3>
+      <ul style="font-size:8.2pt">
+        <li>ISO 27001-aligned information-security management system.</li>
+        <li>TLS 1.2+ in transit; AES-256 at rest on data and backups.</li>
+        <li>KMS/HSM-held keys with rotation; role-based access with admin MFA.</li>
+        <li>Secure SDLC: mandatory review, dependency scanning, CI-blocking checks.</li>
+        <li>Annual penetration test with evidenced remediation.</li>
+        <li>Incident-response plan with regulator and member notification clocks.</li>
+      </ul>
+      <h3>Record-keeping and continuity</h3>
+      <ul style="font-size:8.2pt">
+        <li>Append-only ledger with write-once (WORM) backup tier.</li>
+        <li>Retention: 10 years books (Companies Act 2017); 5+ years CDD (AML Act 2010).</li>
+        <li>Point-in-time-recovery backups with tested restores.</li>
+        <li>Disaster recovery: RPO ≤ 15 minutes, RTO ≤ 4 hours; annual failover drill.</li>
+        <li>Data classification and privacy program (PECA 2016 aligned).</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Anti-money-laundering (FMU reporting entity)</h3>
+      <ul style="font-size:8.2pt">
+        <li>Board-approved AML/CFT program under the AML Act 2010.</li>
+        <li>Appointed Compliance Officer / MLRO.</li>
+        <li>Tiered KYC / CDD / EDD by member value and role.</li>
+        <li>Screening against UNSC and NACTA proscribed lists plus PEPs.</li>
+        <li>Transaction monitoring calibrated to committee behaviour (velocity, structuring, payer-mismatch) to avoid false-positive flooding.</li>
+        <li>STR/CTR filing to the FMU via goAML within prescribed timelines.</li>
+        <li>Annual AML training and independent AML audit.</li>
+      </ul>
+      <h3>Governance and financial</h3>
+      <ul style="font-size:8.2pt">
+        <li>Fit-and-proper sponsors and directors; SECP clearance files.</li>
+        <li>Minimum equity capital per the licence category.</li>
+        <li>Separated compliance and internal-audit functions.</li>
+        <li>Consumer-protection framework: plain disclosure, complaint handling, grievance officer, pre-consent fee display.</li>
+        <li>Statutory audit plus specific client-money segregation assurance.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>24</span></div>
+</section>
+
+<!-- 25 BUILD INVENTORY -->
+<section class="slide">
+  <div class="kicker">Part 12 · Build Inventory</div>
+  <h1>Precisely: what works today, and what is a built panel awaiting deployment</h1>
+  <p style="font-size:9pt">Today the platform <b>records and computes</b> — it does not hold or move money. The interfaces, engines and logic for the money side are fully built and tested; making them live is the partnership, not more engineering.</p>
+  <div class="cols" style="gap:6mm">
+    <div>
+      <h3 style="color:#3d6b3d">Fully functional today <span class="tag tb">BUILT</span></h3>
+      <p style="font-size:8pt;color:#9a8a63;margin:0 0 1.5mm">Works end to end, no external account required — members transact outside, Halqa records.</p>
+      <ul style="font-size:8.2pt">
+        <li><b>Ledger &amp; audit:</b> double-entry paisa ledger, append-only audit trail</li>
+        <li><b>Lifecycle:</b> create, invite, join, record payment, collect, complete, roll over</li>
+        <li><b>Conductor:</b> round scheduling, turn ordering, deadline enforcement, penalties, holdback logic, recovery waterfall bookkeeping, rehabilitation</li>
+        <li><b>Scoring:</b> reliability score, credit-weighted / ballot / host-assigned ordering</li>
+        <li><b>Turn marketplace:</b> list / bid / buy, premium bounds, fee recorded on the ledger</li>
+        <li><b>Credit Passport</b> export (signed, shareable); host reputation card</li>
+        <li><b>Engine figures</b> computed and displayed as <b>indicative</b> (no placement)</li>
+        <li><b>Experience:</b> in-committee chat, Rafa assistant, Urdu RTL, notifications, PWA + native builds</li>
+        <li><b>Proof:</b> 120k-agent simulation, 271 integration tests, property tests, CI, scoped error boundaries</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color:#9b4a2e">Panel + logic built — live money on partnership <span class="tag tlb">LICENCE+BANK</span></h3>
+      <p style="font-size:8pt;color:#9a8a63;margin:0 0 1.5mm">The screen, the maths and the rules exist and are tested; what is missing is the account, the custody and the real transfer.</p>
+      <ul style="font-size:8.2pt">
+        <li><b>Vault device:</b> allocation sizing, blended-rate maths, projections, risk model, money map are built — <b>but there are no real balances or fund accounts;</b> actual holding and real yield need escrow + AMC</li>
+        <li><b>Earning engines:</b> float, deposit and allocation are <b>computed as indicative</b> today; real fund placement earning actual profit needs escrow + AMC</li>
+        <li><b>Investment terminal:</b> dated-rate catalogue and cadence-to-tenor filter built; <b>actual buying/redeeming</b> needs the AMC order API</li>
+        <li><b>Treasury logic:</b> netting, liquidity ladder, buffers, reconciliation design built; <b>live escrow custody and payout disbursement</b> need the bank + rails</li>
+        <li><b>Auto-cover:</b> logic built; real settlement from a real vault balance needs custody</li>
+        <li><b>Payouts &amp; collections:</b> recorded as references today; <b>real movement</b> via Raast / 1Link / virtual IBAN needs the bank</li>
+        <li><b>Identity &amp; credit rail:</b> bank-KYC panel (CNIC + IBAN) built; <b>live NADRA verification and eCIB / bureau reporting</b> need the licence</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>25</span></div>
+</section>
+
+<!-- 26 DELIVERY STATUS -->
+<section class="slide">
+  <div class="kicker">Part 13 · Delivery Status</div>
+  <h1>What is built, and what activates on partnership</h1>
+  <div class="cols">
+    <div>
+      <h2>Operational today <span class="tag tb">BUILT</span></h2>
+      <ul>
+        <li>Full committee platform: lifecycle, ledger, scoring, ordering.</li>
+        <li>The composable earning engine — all five families of levers, host-configurable.</li>
+        <li>Complete default-protection stack: admission gates, graduated collateral, in-cycle enforcement, post-default recovery.</li>
+        <li>Vault and investment terminal: allocation, projections, risk model.</li>
+        <li>Turn market with atomic settlement.</li>
+        <li>Credit passport and host reputation records.</li>
+        <li>Urdu interface, assistant, in-committee chat, real-time channel, mobile builds.</li>
+        <li>120,000-agent validation simulation; 271-assertion test suite; continuous integration.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Activates on partnership <span class="tag tlb">LICENCE+BANK</span></h2>
+      <ul>
+        <li>Escrow custody and virtual IBAN collections.</li>
+        <li>Live fund placement: float, deposits, allocation, vault sleeves.</li>
+        <li>Auto-debit mandates and Raast Request-to-Pay.</li>
+        <li>Deposit-mobilisation, receivables, trail, takaful, and data lines.</li>
+        <li>Bureau reporting of repayment histories.</li>
+      </ul>
+      <div class="box">
+        <p style="margin:0">The engineering is complete and tested; the partnership activates deployment. Integration, not construction.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>Halqa — Partner Briefing</span><span>26</span></div>
+</section>
+
+</body>
+</html>

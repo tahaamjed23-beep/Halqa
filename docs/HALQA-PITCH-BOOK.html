@@ -1,0 +1,322 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Halqa Pitch Book</title>
+<style>
+  @page { size: A4 landscape; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: #16281f; }
+  .slide { width: 297mm; height: 209mm; padding: 16mm 20mm; page-break-after: always; position: relative; display: flex; flex-direction: column; }
+  .slide:last-child { page-break-after: avoid; }
+  .num { position: absolute; bottom: 8mm; right: 12mm; font-size: 9pt; color: #7a8f85; }
+  .brand { position: absolute; bottom: 8mm; left: 20mm; font-size: 9pt; color: #1c6349; letter-spacing: 2px; }
+  .eyebrow { font-size: 10pt; letter-spacing: 3px; text-transform: uppercase; color: #1c6349; margin-bottom: 4mm; }
+  h1 { font-size: 30pt; color: #0e2a1e; line-height: 1.15; margin-bottom: 6mm; }
+  h2 { font-size: 13pt; color: #1c6349; margin: 5mm 0 2mm; }
+  p, li { font-size: 11pt; line-height: 1.5; }
+  ul { padding-left: 6mm; }
+  li { margin: 1.2mm 0; }
+  .cols { display: flex; gap: 10mm; flex: 1; }
+  .col { flex: 1; }
+  .big { font-size: 26pt; color: #1c6349; font-weight: bold; }
+  .stat { margin-bottom: 4mm; }
+  .stat small { display: block; font-size: 9.5pt; color: #4a5f55; }
+  table { border-collapse: collapse; width: 100%; margin: 3mm 0; }
+  td, th { border: 1px solid #b9cfc5; padding: 2mm 3mm; font-size: 9.5pt; text-align: left; vertical-align: top; }
+  th { background: #eaf3ee; color: #0e2a1e; }
+  .bar { background: #1c6349; height: 5mm; display: inline-block; vertical-align: middle; }
+  .bar.light { background: #8fb8a8; }
+  .barrow { display: flex; align-items: center; gap: 3mm; margin: 1.6mm 0; font-size: 9.5pt; }
+  .barrow span:first-child { width: 46mm; }
+  .callout { background: #eaf3ee; border-left: 3mm solid #1c6349; padding: 4mm 5mm; margin: 4mm 0; font-size: 11pt; }
+  .warn { color: #8a5a00; font-size: 9pt; }
+  .cover { justify-content: center; background: #0e2a1e; color: #f2f7f4; }
+  .cover h1 { color: #fff; font-size: 44pt; }
+  .cover .eyebrow { color: #8fd0b4; }
+  .cover p { color: #cfe3d9; font-size: 13pt; max-width: 180mm; }
+</style></head><body>
+
+<section class="slide cover">
+  <div class="eyebrow">Pitch book &middot; confidential &middot; July 2026</div>
+  <h1>HALQA</h1>
+  <p style="font-size:16pt;color:#fff;margin-bottom:6mm">The committee, made safe and rewarding.</p>
+  <p>Pakistan already runs its own savings instrument. Halqa digitises it without ever holding the money, protects it with eleven coded safeguards, puts every idle rupee to work, and turns years of quiet discipline into credit histories that lenders can finally read.</p>
+  <p style="margin-top:10mm;font-size:10pt;color:#8fd0b4">Prepared by the founder. Figures are checked against the cited public sources. No return in this document is guaranteed.</p>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">The problem</div>
+  <h1>Half the country runs a savings machine with three fatal flaws</h1>
+  <div class="cols">
+    <div class="col">
+      <h2>1. Fragile</h2>
+      <p>One member collects the pot and vanishes, and the group recovers <b>0%</b>. Karachi, 2022: the Sidra Humaid case. <b>Rs 420M</b> lost across <b>117 WhatsApp groups</b> that kept no written records at all (Dawn, Express Tribune, Geo).</p>
+      <h2>2. Unrewarding</h2>
+      <p>Money sits idle between pay-in and payout, every round, in every circle, earning nothing while double-digit inflation eats it. A paper committee is melting ice.</p>
+      <h2>3. Invisible</h2>
+      <p>Twelve years of flawless payments builds <b>zero credit history</b>. All that discipline evaporates the day the circle ends.</p>
+    </div>
+    <div class="col">
+      <div class="callout">The committee is not broken. It lacks infrastructure. Every failure traces back to a missing layer: enforcement without custody, yield on the idle days, or a record a lender can read.</div>
+      <div class="stat"><span class="big">~41%</span><small>of Pakistanis have participated in a committee (Oraan research, TechCrunch)</small></div>
+      <div class="stat"><span class="big">~US$5B</span><small>rotates through committees every year</small></div>
+      <div class="stat"><span class="big">0%</span><small>recovered when a paper committee defaults</small></div>
+    </div>
+  </div>
+  <div class="brand">HALQA</div><div class="num">2</div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">The market</div>
+  <h1>25 to 30 million active committee members, and almost no infrastructure serving them</h1>
+  <div class="cols">
+    <div class="col">
+      <table>
+        <tr><th>Sizing pyramid (derived from stated inputs)</th><th>Figure</th></tr>
+        <tr><td>Adults (18+)</td><td>~140M</td></tr>
+        <tr><td>Have ever joined a committee (41%)</td><td><b>~57M</b></td></tr>
+        <tr><td>Currently active</td><td><b>~25-30M</b></td></tr>
+        <tr><td>Implied average installment (consistent with the $5B flow)</td><td>Rs 4,000-4,700/mo</td></tr>
+        <tr><td>Households touched</td><td>~15-18M of 35M</td></tr>
+      </table>
+      <p class="warn">The numbers check each other: participation, average installment and the annual flow all triangulate. We derive our market size rather than assert it.</p>
+    </div>
+    <div class="col">
+      <h2>The inclusion gap (Global Findex 2025)</h2>
+      <div class="barrow"><span>Global account ownership</span><span class="bar" style="width:79mm"></span><span>79%</span></div>
+      <div class="barrow"><span>South Asia</span><span class="bar" style="width:78mm"></span><span>78%</span></div>
+      <div class="barrow"><span>Pakistan (roughly 1 in 5)</span><span class="bar light" style="width:21mm"></span><span>~21%</span></div>
+      <p style="margin-top:3mm">Pakistan is one of eight countries holding over half of the world's 1.3 billion unbanked adults. <b>More than 100M adults are credit-invisible</b> (eCIB covers about 12M borrowers). Women's phone ownership is 24% against men's 89%, which is why distribution here has to run through hosts and assisted onboarding rather than app-store downloads.</p>
+    </div>
+  </div>
+  <div class="brand">HALQA</div><div class="num">3</div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">Category proof</div>
+  <h1>The risks an investor would normally price in have already been retired elsewhere</h1>
+  <table>
+    <tr><th>Question</th><th>Answered by</th><th>Verified fact</th></tr>
+    <tr><td>"Will Pakistanis use committee apps?"</td><td><b>Oraan (Karachi)</b></td><td><b>600,000+ savers</b> by their own published claim (oraan.com and Play Store, July 2026), SECP-registered, plans from Rs 1,000/month</td></tr>
+    <tr><td>"Is the licence obtainable?"</td><td><b>Oraan</b></td><td>SECP NBFC licence SECP/LRD/107/OFSPL/2023. The path has been walked.</td></tr>
+    <tr><td>"Does the model work in an economy like ours?"</td><td><b>Money Fellows (Egypt)</b></td><td>Digitised the gam'eya to <b>8.5M+ users</b> and $1.5B+ in transactions, profitable in Egypt, on $60M+ raised (verified July 2026)</td></tr>
+    <tr><td>"Is the credit-data layer valuable on its own?"</td><td><b>Esusu (USA)</b></td><td>Reports informal payments to credit bureaus and reached a <b>$1B valuation</b> in 2022 (verified July 2026)</td></tr>
+    <tr><td>"Is there a regulated endgame?"</td><td><b>India</b></td><td>The Chit Funds Act 1982 governs a legal committee industry worth billions of dollars, run by licensed foremen</td></tr>
+    <tr><td>"Will big tech crush it?"</td><td><b>Indonesia</b></td><td>Gojek acquired the arisan platform Mapan in 2017. Community-finance networks tend to get bought rather than rebuilt.</td></tr>
+  </table>
+  <div class="callout">No market anywhere has produced the full stack of yield, protection, credit identity and receivables in one platform. That gap is the opportunity, and Halqa has already built the software for it.</div>
+  <div class="brand">HALQA</div><div class="num">4</div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">The product</div>
+  <h1>The same loop people trust, with a spine</h1>
+  <div class="cols">
+    <div class="col">
+      <p style="margin-bottom:3mm"><b>Rule one: we record, we never hold.</b> Members pay each other directly over Raast, wallets or cash, and record the reference. Halqa enforces schedules, collateral, scores and consequences on an integer-paisa, double-entry ledger. There is no pot to steal, so the Sidra class of fraud is structurally impossible here, and no custody licence is needed to operate today.</p>
+      <h2>What paper can never add</h2>
+      <ul>
+        <li><b>Protection.</b> Deposits sized to each member's exposure (the host sets 30-90%), payout holdbacks, reliability scores, capped stakes for newcomers, and an optional member-funded Safety Fund.</li>
+        <li><b>Profit.</b> Idle days and collateral earn on disclosed Islamic instruments, automatically.</li>
+        <li><b>Reputation.</b> A signed, independently verifiable Credit Passport for each member, and a bank-grade receivables statement for each circle.</li>
+        <li><b>Honesty.</b> Halal engines carry a halal label. The one conventional lever is marked "not Shariah-reviewed" on every screen it touches. The word "guaranteed" appears nowhere in the product.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h2>Built and verified today</h2>
+      <ul>
+        <li>Full committee lifecycle across five configurable tiers, with live circles from Rs 50k to Rs 500k pots</li>
+        <li>Personal halal savings vault with four yield tiers, plus auto-cover self-insurance</li>
+        <li>A turn marketplace: free swaps everywhere, premium trades in the conventional tiers only</li>
+        <li>One-tap Urdu with full right-to-left layout; installs to the phone like a native app</li>
+        <li>An in-app assistant with a guided tutorial and an honest FAQ of about 120 topics</li>
+        <li><b>25 unit and 283 end-to-end automated checks</b>, including simulated attacks, run clean twice in a row</li>
+      </ul>
+      <div class="callout">Stage 1 needs no licence: it earns modestly, builds trust, and accrues data. Stage 2 (the SECP NBFC licence plus a bank partner) switches the same ledger over to real custody. That switch is wiring work, since every design decision is already made.</div>
+    </div>
+  </div>
+  <div class="brand">HALQA</div><div class="num">5</div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">How members earn</div>
+  <h1>Two honest sources: profit that is created, and patience that is priced</h1>
+  <div class="cols">
+    <div class="col">
+      <h2>Created (halal-labelled)</h2>
+      <ul>
+        <li><b>Float sweep.</b> Every idle day between pay-in and payout earns at the Islamic money-market rate, computed per payment, per day.</li>
+        <li><b>Earning collateral.</b> Security deposits sit in Mudarabah placements for the whole cycle. The protection pays its own participants, and raising coverage makes a circle safer and richer at the same time.</li>
+        <li><b>Patience tilt.</b> Cycle profit splits by capital-days with a position weight rising from 1.0 to 2.0, so the late turns that fund the circle finally earn a term premium.</li>
+        <li><b>Behaviour rewards.</b> Consistent early payers carry a 1.25x weight, funded by the extra float their own early money creates. A fully punctual circle earns yield step-ups for everyone.</li>
+      </ul>
+      <h2>Moved (labelled not Shariah-reviewed)</h2>
+      <ul><li><b>Early-turn fee.</b> Capped at 10%, declining to zero by the last turn, redistributed entirely to the waiting members. Halqa keeps none of it.</li></ul>
+    </div>
+    <div class="col">
+      <h2>Reference circle: 12 members, Rs 140,004 pot</h2>
+      <div class="stat"><span class="big">≈ Rs 15,600</span><small>best member's annual bonus with the full engine, computed by the engine itself and locked as a test; the floor under a 30% rate cut is about Rs 13,000</small></div>
+      <div class="stat"><span class="big">≈ Rs 56,000</span><small>real profit created per circle per year, from money that previously earned nothing</small></div>
+      <div class="stat"><span class="big">100%</span><small>of principal returned, always: deposits, savings and contributions. Profit is shared. Principal is sacred.</small></div>
+      <p class="warn">All rates are dated and disclosed in the app. Every figure is computed at indicative rates and labelled as never guaranteed. An automated test enforces that total bonuses equal the real profit created.</p>
+    </div>
+  </div>
+  <div class="brand">HALQA</div><div class="num">6</div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">Risk engine</div>
+  <h1>Eleven coded safeguards against the one moment that kills committees</h1>
+  <div class="cols">
+    <div class="col">
+      <p>The dangerous moment is the post-payout default: collect the pot, then stop paying. The safeguards fire in this order:</p>
+      <ul style="font-size:10pt">
+        <li>Reliability score gates (550 to join, 700 to host), updated on every payment event</li>
+        <li>A first-circle cap of Rs 25,000 per installment until one clean completed cycle</li>
+        <li>Credit-weighted ordering, which places trusted members in the high-exposure early turns</li>
+        <li>Graduated deposits: coverage% of remaining dues, host-set between 30 and 90%</li>
+        <li>A 15% payout holdback, released as the recipient keeps paying cleanly</li>
+        <li>Reminders, peer nudges, and a calibrated grace window whose length is never disclosed</li>
+        <li>Flat progressive penalties that go to charity or to the never-late members, never to Halqa</li>
+        <li>Vault auto-cover, where a member's own savings settle her own missed installment</li>
+        <li>An optional Safety Fund guaranteeing payouts up to the fund's recorded balance</li>
+        <li>Ban plus collateral forfeiture, with a priced rehabilitation path back</li>
+        <li>After licensing: bank balance checks, direct debit mandates, and eCIB reporting</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h2>Measured in a full-year simulation</h2>
+      <p style="font-size:10pt;margin-bottom:2mm">120,000 agents in 10,441 committees lived calendar 2025 month by month: Ramadan, both Eids, school-fee season, the monsoon floods, wedding season, and the actual SBP rate path. The same population lived the year twice, once as paper committees and once inside Halqa, with every random event identical across both runs, so the differences below are attributable to the safeguards. The run is deterministic and can be reproduced exactly.</p>
+      <table>
+        <tr><th>Metric</th><th>Paper</th><th>Halqa</th></tr>
+        <tr><td>Post-payout defaults</td><td>2.48%</td><td><b>0.99%</b></td></tr>
+        <tr><td>Recovery on default</td><td>0%</td><td><b>75.3%</b></td></tr>
+        <tr><td>On-time payments</td><td>91.5%</td><td>94.0%</td></tr>
+        <tr><td>Worst segment (over-committed members)</td><td>10.4%</td><td><b>0.94%</b></td></tr>
+        <tr><td>Wedding-goal funds completed</td><td>84.0%</td><td>86.1%</td></tr>
+      </table>
+      <p class="warn">This is a calibrated model rather than a backtest, because no real committee-ledger dataset exists anywhere. The pilot's purpose is to replace the model with our own ledger. The headline claims are locked as automated tests.</p>
+    </div>
+  </div>
+  <div class="brand">HALQA</div><div class="num">7</div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">Business model</div>
+  <h1>The channel model: institutions pay us, the member pays Rs 49</h1>
+  <div class="cols">
+    <div class="col">
+      <p style="margin-bottom:3mm">Halqa takes no share of member profit. The licensed bank is the Mudarib upstream at its standard split, exactly as in any Islamic account. We are the channel, and channels are paid by the institutions they feed:</p>
+      <table>
+        <tr><th>Line</th><th>Payer</th><th>Rate</th></tr>
+        <tr><td>Deposit-mobilisation commission</td><td><b>Bank</b></td><td>~1.25%/yr on balances</td></tr>
+        <tr><td>Circle service fee</td><td>Member</td><td>Rs 49/mo, host free; live before licensing</td></tr>
+        <tr><td>Optional-flow processing</td><td>Opt-in users</td><td>15% of early-fee flows; 10% of slot fees; 10% turn-market</td></tr>
+        <tr><td>Receivables origination and servicing</td><td><b>Lenders</b></td><td>1-1.5% plus 0.5%/yr</td></tr>
+        <tr><td>AMC trail, takaful commission, data</td><td><b>AMC / takaful / lenders</b></td><td>~0.5%/yr; 15-20%; Rs 75 per check</td></tr>
+      </table>
+      <p class="warn">Untouchable: 0% of principal, 0% of the member's profit share, and penalties go to charity. The institutions pay us; the auntie pays forty-nine rupees.</p>
+    </div>
+    <div class="col">
+      <h2>Revenue at scale (after licensing)</h2>
+      <div class="barrow"><span>250k members (Rs 11B)</span><span class="bar" style="width:14mm"></span><span><b>~Rs 4.5 cr/mo</b></span></div>
+      <div class="barrow"><span>1M members (Rs 45B)</span><span class="bar" style="width:55mm"></span><span><b>~Rs 17 cr/mo</b></span></div>
+      <div class="barrow"><span>2M members (Rs 100B)</span><span class="bar" style="width:120mm"></span><span><b>~Rs 38 cr/mo</b></span></div>
+      <p style="margin-top:3mm;font-size:10pt">Most of this is institution-paid and recurring, and most of the mix does not move with interest rates. We carry no lending risk: no bad-loan line, no capital-adequacy burden, no cost of funds.</p>
+      <div class="callout" style="font-size:10pt">Winning about 4% of the currently active committee population builds the one-million-member business. The market needs equipping; it does not need to be created.</div>
+    </div>
+  </div>
+  <div class="brand">HALQA</div><div class="num">8</div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">The institutional prize</div>
+  <h1>What a bank actually buys from us</h1>
+  <div class="cols">
+    <div class="col">
+      <ul>
+        <li><b>Granular, sticky deposits.</b> Thousands of small, habitual savers behave like the current-and-savings money banks fight over, and they cure the deposit-concentration problem. Rs 1B of balances leaves the bank roughly Rs 35M a year in net spread after paying our commission.</li>
+        <li><b>A new asset class: committee receivables.</b> Short-dated, self-amortizing inflow streams backed by behavioural collateral, delivered with schedules, per-payer reliability scores and collateral data. Financeable today; securitizable at scale.</li>
+        <li><b>Underwriting data for the credit-invisible.</b> eCIB covers about 12M borrowers, while more than 100M adults have no file at all. Every completed cycle mints verified repayment history that cannot be bought anywhere else. Esusu built a billion-dollar company in the US on this layer alone.</li>
+      </ul>
+      <div class="callout" style="font-size:10.5pt">The same Rs 45B of balances is 0.15% of the banking sector, about 6% of the entire MFB sector, and over 60% of a single mid-size MFB. We pitch the tier where we change the institution's year.</div>
+    </div>
+    <div class="col">
+      <h2>Whose needle we move (deposits, Rs B)</h2>
+      <div class="barrow"><span>Banking sector</span><span class="bar light" style="width:120mm"></span><span>~30,000</span></div>
+      <div class="barrow"><span>MFB sector (all)</span><span class="bar light" style="width:29mm"></span><span>733</span></div>
+      <div class="barrow"><span>One mid-size MFB</span><span class="bar light" style="width:3mm"></span><span>~70</span></div>
+      <div class="barrow"><span><b>Halqa at 1M members</b></span><span class="bar" style="width:1.8mm"></span><span><b>45</b></span></div>
+      <p style="font-size:10pt;margin-top:3mm">After licensing, the same partner adds enforcement teeth: minimum-balance capacity checks before large circles, Raast direct-debit mandates, post-dated-cheque instruments for early turns under s.489-F, eCIB default reporting, and takaful cover for tragic defaults. Wilful defaults stay uninsured on purpose.</p>
+    </div>
+  </div>
+  <div class="brand">HALQA</div><div class="num">9</div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">Competition</div>
+  <h1>Mapped honestly, and structurally differentiated</h1>
+  <table>
+    <tr><th></th><th>Paper kameti</th><th>Oraan (600k+)</th><th>Wallets (21M/18M MAU)</th><th>Register apps</th><th><b>Halqa</b></th></tr>
+    <tr><td>Trust and distribution</td><td>native</td><td>brand</td><td>massive</td><td>thin</td><td><b>host-led; inherits each circle's own trust</b></td></tr>
+    <tr><td>Enforcement and collateral</td><td>none</td><td>own-book guarantee</td><td>none</td><td>none</td><td><b>eleven coded safeguards</b></td></tr>
+    <tr><td>Yield on idle money</td><td>none</td><td>none</td><td>none</td><td>none</td><td><b>float, earning deposits, patience tilt</b></td></tr>
+    <tr><td>Credit identity</td><td>none</td><td>none</td><td>none</td><td>none</td><td><b>Passport now, eCIB path at licence</b></td></tr>
+    <tr><td>Receivables and bank products</td><td>none</td><td>none</td><td>none</td><td>none</td><td><b>packs, financing, a securitization path</b></td></tr>
+    <tr><td>Price to member</td><td>free</td><td>~Rs 1,000/mo plans</td><td>free features</td><td>free</td><td><b>Rs 49/mo</b></td></tr>
+  </table>
+  <div class="cols" style="margin-top:3mm">
+    <div class="col"><p><b>Oraan's 600,000 savers are our best evidence.</b> They proved mass adoption and the licence path with our exact demographic. Their flat-fee, stranger-matched model cannot add yield without cannibalising its own fee, and it carries default risk on its own book because matching strangers discards the circle's social collateral.</p></div>
+    <div class="col"><p><b>The moat is assurance rather than screens:</b> integer-paisa double-entry, 283 automated end-to-end checks, paired-population simulations, and per-feature Shariah honesty. Screens can be copied in weeks. Assurance takes months of judgment, and it is the part a bank's due diligence actually audits.</p></div>
+  </div>
+  <div class="brand">HALQA</div><div class="num">10</div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">Go-to-market</div>
+  <h1>The organiser auntie is the distribution</h1>
+  <div class="cols">
+    <div class="col">
+      <ul>
+        <li><b>The keystone.</b> Pakistan has roughly 2-3M active committee organisers. One demonstration over chai brings in 6 to 20 pre-trusted members with their circle intact. Acquisition cost is a relationship rather than a media budget, and the host never pays.</li>
+        <li><b>Referral discipline.</b> Rs 250 per referred member, paid only when that member completes a first full cycle, funded from our own revenue. Growth spending buys finished circles rather than downloads.</li>
+        <li><b>Segment order.</b> Home-business women first (the best payment discipline in our data), then office circles, then the bazaar daily committees that no digital player serves, then professional circles with Rs 500k pots, and eventually diaspora members funding family committees through the $30B remittance corridor.</li>
+        <li><b>Urdu-first, assisted onboarding</b>, built for households where the member often does not own the phone she uses.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h2>Stages</h2>
+      <table>
+        <tr><th>Stage</th><th>What happens</th><th>Revenue</th></tr>
+        <tr><td><b>Now</b> (record-only)</td><td>host-led growth, service fees live, data accruing, zero custody risk</td><td>modest and recurring</td></tr>
+        <tr><td><b>Licence + MFB partner</b></td><td>custody, real yield, balance checks, funded Safety Funds, eCIB in shadow mode</td><td>the channel and processing lines switch on</td></tr>
+        <tr><td><b>Scale</b></td><td>receivables financing and securitization, data licensing, white-label rails, takaful, payroll and diaspora channels</td><td>majority institution-paid</td></tr>
+      </table>
+      <div class="callout" style="font-size:10.5pt">Every Stage-2 system is already specified to the checklist level: custody and reconciliation, KYC and eCIB, collections and takaful, production security, treasury, AML. A yes converts to wiring work, because the design decisions are made.</div>
+    </div>
+  </div>
+  <div class="brand">HALQA</div><div class="num">11</div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">Why this wins</div>
+  <h1>The honest close</h1>
+  <div class="cols">
+    <div class="col">
+      <h2>What exists today</h2>
+      <ul>
+        <li>A finished, working platform rather than a deck: the full lifecycle, the earning engines, the protection stack, the vault, the marketplace, Urdu, and phone installation</li>
+        <li><b>25 unit and 283 end-to-end automated checks</b>, including simulated attacks. The system is audit-grade by construction, and your technical adviser is welcome under the hood.</li>
+        <li>A 120,000-agent simulation of the real 2025 calendar, with its claims locked as tests</li>
+        <li>A verified market: 25-30M active members, Oraan's 600,000 proving adoption, the wallets proving the rails, and a walked licence path</li>
+      </ul>
+      <h2>What the raise buys</h2>
+      <ul><li>The SECP licence workstream, the MFB custody partnership, the pilot cohort that replaces our model with our ledger, and compliance and growth hires around the founder</li></ul>
+    </div>
+    <div class="col">
+      <div class="callout" style="font-size:12pt">We record, we never hold, so there is no pot to steal. The institutions pay us, and the member pays forty-nine rupees. Principal is sacred, profit is shared, and the one conventional lever carries an honest label. Every completed cycle mints the one asset nobody can copy: proof that an invisible saver keeps her word.</div>
+      <p style="margin-top:5mm"><b>The ask:</b> partnership and capital to convert a proven market, a finished system and a walked regulatory path into Pakistan's committee infrastructure, before someone else assembles the pieces.</p>
+    </div>
+  </div>
+  <div class="brand">HALQA</div><div class="num">12</div>
+</section>
+
+</body></html>

@@ -1,0 +1,34 @@
+HALQA iPHONE / APPLE BUILD
+
+Important:
+Apple iOS apps must be built and signed on a Mac with Xcode.
+This Windows PC can prepare the Halqa mobile project, but it cannot create the final iPhone App Store build.
+
+On a Mac:
+
+1. Copy this full folder to the Mac:
+   D:\HALQA SIGMA APP
+
+2. Open Terminal inside:
+   halqa-web
+
+3. Run:
+   npm install
+   npm run mobile:ios:add
+   npm run mobile:sync
+   npm run mobile:ios:open
+
+4. Xcode opens the iOS project.
+
+5. In Xcode:
+   - Set Apple Developer Team
+   - Set bundle id: com.kayani.halqa
+   - Archive
+   - Upload to App Store Connect
+
+Current app name:
+Halqa
+
+Current app id:
+com.kayani.halqa
+

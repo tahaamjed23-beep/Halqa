@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# Fast gate: typecheck + unit tests + build for both packages. No database
+# required (the DB-backed integration suite runs separately against a live
+# Postgres). This is the check that must be green before merge.
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: API - install
+        working-directory: halqa-api
+        run: npm ci
+      - name: API - typecheck
+        working-directory: halqa-api
+        run: npx tsc -p tsconfig.json --noEmit
+      - name: API - unit tests
+        working-directory: halqa-api
+        run: npx vitest run
+
+      - name: Web - install
+        working-directory: halqa-web
+        run: npm ci
+      - name: Web - typecheck
+        working-directory: halqa-web
+        run: npx tsc -b
+      - name: Web - build
+        working-directory: halqa-web
+        run: npx vite build

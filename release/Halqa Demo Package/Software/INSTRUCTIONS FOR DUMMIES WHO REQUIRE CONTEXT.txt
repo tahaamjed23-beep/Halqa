@@ -1,0 +1,747 @@
+================================================================================
+INSTRUCTIONS FOR DUMMIES WHO REQUIRE CONTEXT
+HALQA — build-from-zero master specification
+Company: Kayani Solutions   |   Product/App: Halqa
+Market: Pakistan (PKR)      |   Date: 2026-07-04
+Author of brief: Claude (senior-engineer framing, honesty-first, no fluff)
+Audience: Codex / any coding agent or dev building this app from NOTHING.
+================================================================================
+
+HOW TO READ THIS FILE
+  This is the single source of truth. It assumes you are starting from an empty
+  folder and building the entire product. Everything the owner has decided is in
+  PART 0 (LOCKED DECISIONS). If any later section contradicts PART 0, PART 0
+  wins. Build in the order of PART 20. Do not skip PART 19 (legal) — it defines
+  what you are allowed to ship.
+
+--------------------------------------------------------------------------------
+PART 0 — HARD RULES + LOCKED DECISIONS (owner-confirmed 2026-07-04)
+--------------------------------------------------------------------------------
+HARD RULES
+  H1 NEVER touch "D:\money maker\" or "C:\Users\pc\OneDrive\Desktop\money maker\"
+     (owner's separate PSX quant platform). Off-limits forever.
+  H2 Build the new product under "D:\HALQA SIGMA APP\" (this folder). You MAY
+     copy/reuse working pieces (auth, socket chat) from the old prototype at
+     "D:\halqa app\" to save time, but the money/lifecycle CORE is rebuilt clean
+     per this spec — the old one is structurally broken (see PART 18 note).
+  H3 Money is SIMULATED until a licensed bank/partner exists (PART 19). Build the
+     full ledger and all money logic now; do NOT connect real fund custody yet.
+  H4 This is not legal advice. Owner will present the finished ledger to a bank
+     (see D2). Until then we ship STAGE 1 (record-keeping ledger, no custody).
+  H5 All money stored as INTEGER PAISA (1 PKR = 100 paisa). Never floats.
+
+LOCKED DECISIONS (map to the 8 questions the owner answered)
+  D1 (Stage 1 first?) YES. Ship the pure ledger first: the app RECORDS committees
+     and computes everything, money moves on members' own rails (Raast/JazzCash/
+     Easypaisa) outside the app until a custody partner exists.
+  D2 (Lawyer/partner?) Owner will TRY, no guarantee. Plan: build the ledger, then
+     present to a bank. So: no real custody in v1; design so a partner can plug
+     in later without rework (PART 19 Stage 2 seam).
+  D3 (First-time-host limits?) NONE. Any user with creditScore >= 700 (the
+     default; every new user starts at 700) can host immediately. Only global cap
+     stays: max 5 ACTIVE hosted committees per user. No smaller-N training wheels,
+     no forced last-turn for new hosts. (This DEPRECATES the old "admin approves
+     organizers" flow — hosting is now open + score-gated. See PART 5 note.)
+  D4 (Solvency method?) Use what is safe and standard in Pakistani committees:
+     CREDIT-WEIGHTED TURN ORDER (default, free) + REFUNDABLE SECURITY DEPOSIT for
+     early receivers. No bank-balance reading (infeasible — PART 8).
+  D5 (Reinvest cap + schemes?) LOW RISK ONLY for now. Cap reinvestRatio r <= 0.25.
+     Allowed schemes v1: T-Bills, government/National-Savings certificates, and
+     money-market (incl. Islamic) funds. No equity/high-risk funds yet.
+  D6 (Voting?) NO VOTING. Only group CHAT. Distribution mode (SHARE vs COMPOUND)
+     is set by the HOST at creation and LOCKED. Members may LEAVE only after they
+     have (a) cleared all dues AND (b) completed a full cycle; leaving/abandoning
+     before that = BAN (PART 6).
+  D7 (KYC depth?) MAX SELF-SERVE authentication that needs NO deal with any
+     entity (no NADRA Verisys, no bank): phone OTP + email verify + CNIC number +
+     CNIC image OCR + selfie liveness + face-match + device binding + duplicate
+     detection. Honest caveat: this is strong DETERRENCE, not legally-verified
+     identity (only NADRA can confirm a CNIC truly belongs to a person). Upgrade
+     to NADRA Verisys when a partner exists (PART 9).
+  D8 (Brand?) Company = "Kayani Solutions". Product/app = "Halqa". Use these in
+     UI, store listing, domain, package ids (e.g. com.kayanisolutions.halqa).
+
+--------------------------------------------------------------------------------
+PART 1 — WHAT HALQA IS (plain English)
+--------------------------------------------------------------------------------
+A committee (ROSCA / ballot committee / BC) is a Pakistani savings tradition:
+N people each pay a fixed amount every period; each period one member takes the
+pot; rotate until everyone has received once = one CYCLE. Zero interest, pure
+rotating savings. Huge in Pakistan, mostly run on paper/WhatsApp, plagued by
+fraud (organizer absconds) and default (someone takes an early pot then stops).
+
+Halqa keeps that and adds THE POOL-IN-INVESTMENT SYSTEM: the HOST diverts a set
+percentage (r, <=25%) of each period's pot into a low-risk investment instead of
+handing the whole pot to the turn-holder. The turn-holder gets the rest now; the
+reinvested slice earns yield and is paid out or rolled forward per the host's
+locked distribution mode.
+
+Differentiators vs every other committee app:
+  1. Idle committee money EARNS yield instead of sitting dead.
+  2. A credit score + solvency system that attacks the #1 fear: default/fraud.
+  3. A turn marketplace with real price discovery (time value of money).
+  4. An in-app investment terminal surfacing real Pakistani low-risk schemes.
+
+--------------------------------------------------------------------------------
+PART 2 — GLOSSARY (use these EXACT terms in code + UI)
+--------------------------------------------------------------------------------
+Committee  A group ("Halqa"/circle). One Host, many Members.
+Host       Creator. Any user with score>=700 & <5 active hosted committees.
+Member     Participant; pays each period, receives one payout per cycle.
+Period     Recurring interval between payouts (days, host-set).
+Round      One period instance; exactly one recipient (turn-holder).
+Turn/Position  Member's slot in the payout order (1..N).
+Pool/Pot(G)    Sum collected in a period = N * contribution.
+Reinvest ratio r  % of pool diverted to investment (0..0.25).
+Payout     What the turn-holder receives = (1-r)*G.
+Cycle      One full rotation (N rounds); everyone received once.
+Scheme     A low-risk investment instrument (T-Bill, MM fund, NSC), admin-curated.
+Investment A deployed slice of pooled money into a Scheme, with accrual.
+Distribution  Host-locked choice: SHARE (pay profit out) or COMPOUND (roll it).
+Credit score  300..850 int per user; new user = 700 (the DEFAULT).
+Solvency   Anti-default protection: credit-weighted order + security deposit.
+Ledger     Append-only record of every paisa movement; balances are derived.
+DEV cut    Kayani Solutions fee: 5% of realized profit per cycle; 10% of any
+           turn-sale premium.
+Ban        Account lock for abandoning a committee before a clean full cycle.
+
+--------------------------------------------------------------------------------
+PART 3 — TECH STACK & PROJECT SETUP (from zero)
+--------------------------------------------------------------------------------
+RECOMMENDED STACK (proven, matches team knowledge, production-ready):
+  Backend : Node 22 + TypeScript, Express 4, Prisma 5, PostgreSQL (NOT SQLite —
+            we need concurrency + real deploy), Socket.io, Zod validation,
+            bcryptjs, jsonwebtoken, node-cron (or BullMQ if scale demands).
+  Frontend: React 18 + TypeScript + Vite, TailwindCSS v4, recharts (graphs),
+            socket.io-client, lucide-react icons. State-based routing is fine for
+            MVP; adopt a router if it grows.
+  Mobile  : Capacitor (wrap the web build to Android). iOS later.
+  Infra   : Postgres + backend on Railway (or Render/Fly.io); frontend on Vercel
+            or Netlify (owner has both connected). Object storage (KYC images) on
+            Cloudflare R2 / S3-compatible, private buckets, signed URLs.
+ALTERNATES: Fastify instead of Express (faster, stricter) — optional. Drizzle
+  instead of Prisma if you prefer SQL-first — optional. Keep Postgres regardless.
+
+RUNTIME NOTE (this machine): no system Node. Portable Node v22 at
+  C:\Users\pc\AppData\Local\node-lts\node-v22.16.0-win-x64
+  Prepend to PATH every shell:
+  $env:PATH = "C:\Users\pc\AppData\Local\node-lts\node-v22.16.0-win-x64;" + $env:PATH
+  npm cache is redirected to D:\npm-cache (C: drive is full).
+
+FOLDER LAYOUT (create fresh):
+  D:\HALQA SIGMA APP\
+    halqa-api\        (backend)
+      src\{routes,middleware,services,jobs,socket,db,utils}\  prisma\  tests\
+    halqa-web\        (frontend)
+      src\{pages,components\ui,services,hooks}\
+    start-all.bat     (sets PATH, launches api + web in two windows)
+    INSTRUCTIONS FOR DUMMIES WHO REQUIRE CONTEXT.txt   (this file)
+
+SETUP COMMANDS (backend):
+  npm init -y
+  npm i express cors helmet express-rate-limit socket.io jsonwebtoken bcryptjs zod dotenv @prisma/client
+  npm i -D typescript tsx @types/node @types/express @types/cors @types/jsonwebtoken @types/bcryptjs prisma
+  npx prisma init --datasource-provider postgresql
+SETUP COMMANDS (frontend):
+  npm create vite@latest halqa-web -- --template react-ts
+  npm i tailwindcss @tailwindcss/vite recharts socket.io-client lucide-react
+ENV (never commit real secrets): DATABASE_URL, JWT_SECRET (64 random),
+  JWT_REFRESH_SECRET, CLIENT_ORIGIN, PORT, SMS_API_KEY, STORAGE_* , FACE_API_*.
+  Frontend uses VITE_API_URL + VITE_SOCKET_URL (no hardcoded localhost).
+
+--------------------------------------------------------------------------------
+PART 4 — THE MONEY MODEL (exact math — the heart of the product)
+--------------------------------------------------------------------------------
+Symbols: N members; C contribution/period (paisa); r reinvest ratio (0..0.25);
+G pool/period = N*C; i annualized scheme rate (indicative, NOT guaranteed).
+
+4.1 PER ROUND t (t=1..N)
+  Everyone pays C -> gross pool G = N*C into the (simulated) escrow ledger.
+  Reinvest slice: I_t = round(r * G)
+  Turn-holder payout: Pay_t = G - I_t = (1-r)*N*C
+  I_t deployed into the committee's Scheme on the round's payout date.
+
+4.2 OVER ONE CYCLE
+  Total invested principal P_inv = Σ I_t = r*N^2*C
+  Each member's principal share = r*N*C (equals what they "held back" vs a
+  traditional committee). Books balance: paid N*C, received (1-r)*N*C, gap
+  r*N*C sits in the investment.
+
+4.3 PROFIT (simple-interest approx; use real scheme accrual once live)
+  For slice I_t deployed d_t, liquidated L: profit_t = I_t * i * ((L-d_t)/365)
+  Gross cycle profit Π = Σ profit_t
+  DEV fee = round(0.05 * Π);  Net to members Π_net = Π - DEV fee
+  Per member (equal, clean) = Π_net / N. If someone was late/defaulted, weight by
+  paidPrincipalPaisa actually contributed, not headcount.
+
+4.4 WORKED EXAMPLE (ship this as an in-app explainer)
+  N=10, C=10,000 PKR, monthly, r=0.20, i=18%/yr, liquidate end of month 11.
+  G=100,000; I_t=20,000; Pay_t=80,000. P_inv=200,000; each member principal=20,000.
+  Σ months held across slices = 55 -> Π ≈ 20,000*0.18*(55/12) ≈ 16,500.
+  DEV fee=825; Π_net≈15,675; per member ≈ 1,567.
+  HONEST FRAMING for UI: each member gave up liquidity on 20,000 for the cycle to
+  earn ~1,567 (~7.8% on the held-back slice). Modest, real, NOT guaranteed. Early
+  turns are still worth more (cash sooner) — that gap is what the marketplace prices.
+
+4.5 DISTRIBUTION (host-locked, NO member vote — per D6)
+  SHARE:    at cycle end, pay each member principal + their Π_net share.
+  COMPOUND: roll principal + Π_net into the next cycle's investment (committee
+            runs another cycle; members may exit at the cycle boundary — PART 6).
+  TURN-CASHOUT (host toggle): if enabled, a member may take THEIR accrued profit
+            share at their own turn instead of waiting for distribution.
+
+4.6 TURN SALE (marketplace, PART 11)
+  Premium X, 0 <= X <= 0.50*Pay_p. DEV keeps 10% of X; seller nets 90%. X=0 => DEV=0.
+
+4.7 DEV REVENUE (Kayani Solutions): 5% of realized cycle profit + 10% of turn-sale
+  premiums. NOTE: charging these makes you a financial intermediary -> tax +
+  licensing consequences (PART 19). In Stage 1 (no custody) these are RECORDED as
+  receivables in the ledger, not actually collected, until a partner enables real flows.
+
+--------------------------------------------------------------------------------
+PART 5 — HOST CONFIGURATION (set at creation, locked at start)
+--------------------------------------------------------------------------------
+HOST ELIGIBILITY: score >= 700 AND active hosted committees < 5. No other limits
+(D3). Hosting is OPEN — no admin approval step. (The old approval flow is dropped;
+if fraud spikes later, an admin approval toggle can be re-added — keep the seam.)
+
+CADENCE (host picks preset + exact number; store resolved periodDays):
+  VERY_SHORT 7–14 d | SHORT 30–60 d | MID 90–180 d | LONG 240–365 d.
+  Enforce the numeric range per preset. Longer period = more yield runway but
+  longer wait + higher default risk (surface tradeoff in the create wizard).
+
+SIZE + JOIN:
+  memberCap N: [3, 30] (system safety bounds; member count is ALWAYS its own
+    manual field, never derived from cadence).
+  joinPolicy: OPEN_UNTIL_FULL | OPEN_UNTIL_DATE | INVITE_ONLY.
+  joinDeadline?: after it, no new joins even if not full.
+  minMembersToStart: [3, N]. autoStart: bool.
+
+REINVESTMENT: reinvestRatio r in [0, 0.25] (D5). schemeId from curated low-risk
+  catalog only. distributionMode SHARE|COMPOUND (locked). allowTurnCashout bool.
+  allowTurnSale bool.
+
+PAYMENT SCHEDULE (immutable after start — backbone of accurate credit):
+  Host sets per-round contribution DUE DATES (system offers sensible defaults).
+  RULE: a member must have every prior due paid AND the current-round due paid at
+  least 7 DAYS before their own payout date. After START the whole schedule LOCKS;
+  neither host nor member can edit it. Changes require a DEV-approved
+  ScheduleChangeRequest (audited). Dates cannot move to hide lateness.
+
+TURN ORDER (locked at start): RANDOM_BALLOT (default, seeded+logged) |
+  HOST_ASSIGNED | CREDIT_WEIGHTED (higher score = earlier eligibility; the core
+  anti-default lever — D4).
+
+OTHER HOST POWERS: invite (code/link/phone); approve joins (INVITE_ONLY); remove
+  member only while FORMING; nudge unpaid member; deploy/liquidate investment
+  (host only); pin chat announcements; view payment matrix; request schedule
+  change from DEV.
+HOST CANNOT: touch member funds directly, edit locked dates, see bank
+  credentials, exceed 5 active committees, or force a member to stay past a clean
+  cycle exit.
+
+--------------------------------------------------------------------------------
+PART 6 — MEMBERSHIP LIFECYCLE: JOIN, LEAVE, BAN (per D6)
+--------------------------------------------------------------------------------
+MembershipStatus: ACTIVE | EXITED | BANNED | REMOVED.
+
+JOIN: via invite code/link (respect joinPolicy, joinDeadline, cap, JOIN gate in
+  PART 7, and solvency in PART 8). Assigns a turnPosition (per orderMode).
+
+LEAVE (allowed ONLY when clean):
+  A member may exit if AND ONLY IF:
+    (a) they have zero outstanding dues, AND
+    (b) at least one FULL CYCLE has completed (they have received their turn or
+        formally waived it), AND
+    (c) the committee is at a cycle boundary (for COMPOUND multi-cycle groups) or
+        COMPLETED (for single-cycle groups).
+  On grant: status EXITED, no penalty, security deposit refunded, +credit for a
+  clean completion. A single-cycle committee simply COMPLETES and everyone is
+  free — no explicit "leave" needed.
+
+BAN (abandonment before a clean cycle):
+  Triggers: member stops paying past grace with no valid dispute; or attempts to
+  quit mid-cycle; or defaults after receiving a payout.
+  Effects: status BANNED; credit -150 + DEFAULT flag; security deposit FORFEITED
+  to the group to cover the shortfall; account cannot join or host new committees
+  (rehabilitation path optional/off for MVP). All banned events are audited.
+  The group is made whole first from the deposit, then from any accrued
+  investment profit share owed to the defaulter, then flagged as a loss (in Stage
+  1 the app records the shortfall; real recovery needs a custody partner).
+
+WHY THIS DESIGN: it mirrors real committee discipline (you don't get to walk out
+  mid-committee) while giving a fair, clean exit once obligations are met.
+
+--------------------------------------------------------------------------------
+PART 7 — CREDIT SCORE ENGINE (accurate, deterministic, idempotent)
+--------------------------------------------------------------------------------
+Range 300..850. New user = 700. Deterministic point system + hard gates. Every
+change writes a CreditEvent (idempotent) + updates User.creditScore. No random
+drift, no hidden factors.
+
+EVENT DELTAS (one tunable constants file, utils/credit.ts):
+  account_created 0 | solvency_verified +10 (one-time) | installment_on_time +4
+  | installment_early(>=3d) +2 (stacks -> +6) | cycle_completed_clean +25
+  | turn_sale_completed_clean +5 (both parties) | installment_late_1_3d -10
+  | installment_late_4_7d -20 | installment_missed(past grace) -40 + LATE flag
+  | default_after_receipt -150 + DEFAULT flag + BAN | dispute_lost -30.
+  Clamp to [300,850] after each change.
+
+HARD GATES:
+  RECEIVE: must have all prior dues + current-round due paid >=7d before payout,
+    else payout skips to next eligible member and you drop toward the end
+    (configurable). HOST: score>=700 & <5 active. JOIN: score>=550 (below =
+    locked out for MVP). Early positions (1..N/2) require score>=680 when
+    orderMode=CREDIT_WEIGHTED.
+
+ACCURACY:
+  Late/missed computed against the LOCKED schedule only (unambiguous because
+  dates are immutable). A cron job evaluates each round at dueDate, dueDate+grace,
+  and payoutDate-7d and writes deltas. Idempotency: unique (userId, roundId,
+  checkpoint) so re-runs never double-score. No manual "simulate" button in prod
+  (keep any dev-only simulator behind NODE_ENV !== 'production').
+
+--------------------------------------------------------------------------------
+PART 8 — ANTI-DEFAULT / SOLVENCY (D4: what's safe + standard in Pakistan)
+--------------------------------------------------------------------------------
+BLUNT REALITY: you CANNOT read a stranger's bank balance in Pakistan — there is
+no open-banking / account-information API for unlicensed third parties, and "Cash
+App" doesn't operate here (rails are Raast, JazzCash, Easypaisa, SadaPay,
+NayaPay, bank transfer). So a literal "verify they hold 70%" is infeasible now.
+We achieve the SAME goal (kill default incentive) with two mechanisms that need
+no bank access and match how real committees already manage trust:
+
+  MECHANISM 1 — CREDIT-WEIGHTED TURN ORDER (default, free, ship first)
+    Unproven/low-score members get LATER turns. By the time they receive, they've
+    already paid most dues, so grab-and-run is impossible. This alone removes most
+    default risk.
+
+  MECHANISM 2 — REFUNDABLE SECURITY DEPOSIT for EARLY receivers
+    A member receiving an early turn posts a refundable deposit sized to their
+    remaining post-payout obligation (suggest 30–70% of remaining dues; later
+    turns post less/none). Held in the escrow ledger; refunded on clean cycle;
+    FORFEITED to the group on default (PART 6).
+    STAGE-1 CAVEAT: with no custody partner yet, the deposit is a RECORDED
+    commitment (member transfers on their own rail; host/app confirms receipt).
+    It becomes a truly held escrow deposit only in Stage 2. Say "recorded", not
+    "secured", in the UI until then.
+
+  OPTIONAL LATER — Guarantor co-sign (a high-score user vouches, -25 if vouchee
+    defaults) and, once a partner exists, a real consented balance/income check.
+
+REFRAME OF THE OWNER'S "70% RULE" (enforceable today): "Early receivers must
+either be proven payers (good score, later-eligible) OR post a refundable
+security deposit covering their remaining dues; and everyone must have all dues
+paid >=7 days before their payout." Same protection, actually buildable.
+
+--------------------------------------------------------------------------------
+PART 9 — KYC / IDENTITY (D7: max self-serve, no entity deals)
+--------------------------------------------------------------------------------
+Goal: strongest identity assurance achievable WITHOUT contracting NADRA/banks.
+Tiered onboarding:
+
+  LEVEL 0 (account): phone number + OTP (via a self-serve SMS API), email +
+    verify link, password (bcrypt, >=8 chars). Device fingerprint stored + bound.
+  LEVEL 1 (identity capture): CNIC number (13 digits, format-validated + unique),
+    upload CNIC front + back images to a PRIVATE bucket (signed URLs only). Run
+    OCR to extract name/number and cross-check the typed CNIC (self-serve OCR API
+    or on-device). Reject mismatches.
+  LEVEL 2 (biometric): selfie + LIVENESS check + FACE MATCH against the CNIC
+    photo (self-serve face API, e.g. AWS Rekognition or an on-device model).
+    Store only match score + status, minimize raw biometric retention.
+  DUPLICATE DETECTION: one CNIC = one account; block re-registration.
+
+Gating: hosting and receiving early turns require LEVEL 2. Joining low-value
+committees may allow LEVEL 1. Set thresholds in config.
+
+HONEST CAVEAT (put in code comments + owner docs): this is strong DETERRENCE, not
+legally-verified identity. Only NADRA Verisys confirms a CNIC is real and belongs
+to the person. Add Verisys (and a bank-grade check) when a partner exists (D2).
+PRIVACY: encrypt documents at rest, private buckets, signed short-lived URLs,
+retention policy, and a clear consent screen. Never put CNIC/biometrics in logs
+or URLs.
+
+--------------------------------------------------------------------------------
+PART 10 — INVESTMENT TERMINAL (D5: low-risk only, r<=25%)
+--------------------------------------------------------------------------------
+WHAT IT IS: a curated, admin-maintained catalog of real Pakistani LOW-RISK
+instruments with indicative rates + projection graphs. A research/comparison
+tool, NOT a live trading terminal, NOT personalized advice. Every screen shows:
+"Indicative only. Returns not guaranteed. Not investment advice."
+
+ALLOWED CATALOG v1 (low risk only):
+  T-Bills (91/182/364-day); National Savings certificates (Behbood, Special
+  Savings, Regular Income, Defence Savings, Pensioners' Benefit); money-market
+  funds incl. Islamic (e.g. Al Meezan, NBP, UBL, HBL money-market funds). NO
+  equity funds, NO high-risk products in v1.
+  Scheme fields: name, slug, category, riskLevel(low only for now), issuer,
+  tenorDays, indicativeRatePct, minAmount, shariahCompliant, isActive, rateAsOf,
+  sourceUrl.
+
+DATA SOURCING (best-first):
+  1. Manual admin curation (SHIP FIRST): enter rates weekly from official sources
+     (savings.gov.pk, SBP T-Bill auction results, MUFAP.com.pk). Reliable, legal,
+     ~30 min/week.
+  2. Scheduled fetch of OFFICIAL published data with human-in-the-loop approval
+     (cron proposes, admin approves). Respect site terms; cache; store rateAsOf +
+     sourceUrl.
+  3. Paid market-data vendor once at scale.
+  Never present numbers as guaranteed; always keep provenance.
+
+GRAPHS (recharts): per-scheme growth curve over the committee's cycle length;
+  2–4 scheme comparison overlay; committee-specific projection (given r, N, C,
+  period) showing projected P_inv, Π, DEV fee, per-member Π_net share as a
+  pessimistic/expected/optimistic BAND (rate ±30%), never a single false line.
+  MEMBERS: full read-only access to all of this. No mutating controls.
+
+CONTROL: ONLY the host deploys/liquidates, only into the committee's chosen
+  low-risk scheme. Enforce in BOTH UI (buttons only if user.id===committee.hostId)
+  AND API (403 otherwise). Every deploy/liquidate writes an audit row visible to
+  all members. Rule: NEVER pay out a round while funds sit in an un-liquidated
+  investment — liquidate first. In Stage 1 deploy/liquidate move SIMULATED ledger
+  balances; real execution waits for the custody partner.
+
+--------------------------------------------------------------------------------
+PART 11 — TURN MARKETPLACE
+--------------------------------------------------------------------------------
+Rules: premium X in [0, 0.5*Pay_p]; DEV keeps 10% of X; seller nets 90%. Buyer
+may be a member OR a non-member (non-member must onboard to the required KYC/
+credit/solvency level and JOIN as they buy). Guardrails: cannot list a received
+turn or with unpaid dues; buyer must clear solvency for the position's remaining
+dues; only if committee.allowTurnSale.
+Listing shows: committee, position, payout, remaining dues, period, seller score,
+premium, and BUYER net cost = remaining dues + X.
+On accept (atomic): swap positions; settle premium (DEV 10% recorded); record
+buyer obligations; +5 credit to both on clean completion; audit. Settle premium
+THROUGH the app ledger; never peer-to-peer outside (fraud + lost fee).
+
+--------------------------------------------------------------------------------
+PART 12 — GROUP CHAT (only collective feature — per D6, no voting)
+--------------------------------------------------------------------------------
+Socket.io. Rooms per committee. MEMBERSHIP CHECK on BOTH join_room AND
+send_message (never trust a raw emit). Persist messages; strip HTML; cap length.
+Frontend: chat tab in committee detail — history load, live new_message, sender
+names, timestamps, auto-scroll, optimistic send, mobile layout, host pinned
+announcements. Optional unread badges via a ChatRead {userId,committeeId,
+lastReadAt} model.
+
+--------------------------------------------------------------------------------
+PART 13 — NOTIFICATIONS
+--------------------------------------------------------------------------------
+Model exists in schema. Surface a bell with unread count + dropdown; mark-read on
+open. Triggers: due-date reminders, late warnings, payout released, turn purchased,
+committee started/completed, ban, schedule-change decisions. Delivery: in-app now;
+push (FCM) after the Capacitor wrap.
+
+--------------------------------------------------------------------------------
+PART 14 — DATA MODEL (full Prisma schema, from scratch; Postgres)
+--------------------------------------------------------------------------------
+NOTE: money fields are BigInt/Int paisa. Enums shown inline; use Prisma enums.
+
+User { id, fullName, phone @unique, email @unique, cnic @unique?, passwordHash,
+  creditScore Int @default(700), role (MEMBER|ADMIN) @default(MEMBER),
+  kycLevel Int @default(0), kycStatus (NONE|PENDING|VERIFIED|REJECTED),
+  isBanned Bool @default(false), banReason?, deviceId?, createdAt }
+  relations: hostedCommittees, memberships, payments, creditEvents, notifications,
+  kyc, chatMessages, sellListings, buyListings, ledgerEntries.
+
+Committee { id, name, hostId->User, status (FORMING|ACTIVE|COMPLETED|CANCELLED)
+  @default(FORMING), memberCap Int, contributionPaisa Int, cadencePreset
+  (VERY_SHORT|SHORT|MID|LONG), periodDays Int, reinvestRatio Float @default(0)
+  [0..0.25], schemeId->Scheme?, distributionMode (SHARE|COMPOUND) @default(SHARE),
+  allowTurnCashout Bool @default(false), allowTurnSale Bool @default(true),
+  orderMode (RANDOM_BALLOT|HOST_ASSIGNED|CREDIT_WEIGHTED) @default(CREDIT_WEIGHTED),
+  joinPolicy (OPEN_UNTIL_FULL|OPEN_UNTIL_DATE|INVITE_ONLY), joinDeadline?,
+  minMembersToStart Int, autoStart Bool @default(false), currentRound Int
+  @default(0), cycleNumber Int @default(1), scheduleLockedAt?, inviteCode @unique,
+  createdAt }
+
+CommitteeMember { id, committeeId, userId, turnPosition Int, hasReceived Bool
+  @default(false), status (ACTIVE|EXITED|BANNED|REMOVED) @default(ACTIVE),
+  paidPrincipalPaisa BigInt @default(0), joinedAt, exitedAt?,
+  @@unique([committeeId,userId]) }
+
+Round { id, committeeId, roundNumber Int, recipientId->User, status
+  (PENDING|COLLECTING|INVESTED|CLOSED) @default(PENDING), dueDate, payoutDate,
+  graceDays Int @default(5), grossPoolPaisa BigInt @default(0), reinvestPaisa
+  BigInt @default(0), payoutPaisa BigInt @default(0) }
+
+Payment { id, roundId, payerId->User, amountPaisa BigInt, dueDate,
+  status (PENDING|PAID|LATE|MISSED) @default(PENDING), paidVia?, txnRef?, paidAt?,
+  createdAt, @@unique([roundId,payerId]) }
+
+LedgerEntry { id, committeeId?, debit String, credit String, amountPaisa BigInt,
+  reason, refType, refId, idempotencyKey @unique, createdAt }  // append-only
+
+SecurityDeposit { id, membershipId->CommitteeMember, amountPaisa BigInt,
+  status (HELD|REFUNDED|FORFEITED) @default(HELD), createdAt, releasedAt? }
+
+Scheme { id, name, slug @unique, category, riskLevel @default("low"), issuer,
+  tenorDays Int, indicativeRatePct Float, minAmountPaisa BigInt, shariahCompliant
+  Bool, isActive Bool @default(true), rateAsOf, sourceUrl }
+
+Investment { id, committeeId, roundId?, schemeId, principalPaisa BigInt,
+  ratePctAtDeploy Float, status (ACTIVE|LIQUIDATED) @default(ACTIVE), deployedAt,
+  liquidatedAt?, realizedProfitPaisa BigInt? }
+
+ExchangeListing { id, committeeId, sellerId->User, position Int, payoutPaisa
+  BigInt, premiumPaisa BigInt @default(0), buyerId->User?, status
+  (OPEN|ACCEPTED|CANCELLED) @default(OPEN), listedAt, acceptedAt? }
+
+CreditEvent { id, userId, committeeId?, roundId?, checkpoint String, delta Int,
+  reason, scoredAt, @@unique([userId,roundId,checkpoint]) }
+
+ChatMessage { id, committeeId, senderId->User, body, pinned Bool @default(false),
+  sentAt }
+ChatRead { id, userId, committeeId, lastReadAt, @@unique([userId,committeeId]) }
+
+Notification { id, userId, type, message, isRead Bool @default(false), createdAt }
+
+KycRecord { id, userId @unique, cnicNumber, cnicFrontUrl, cnicBackUrl, selfieUrl,
+  faceMatchScore Float?, ocrName?, status (PENDING|VERIFIED|REJECTED), verifiedAt? }
+
+ScheduleChangeRequest { id, committeeId, requestedBy->User, payloadJson, status
+  (PENDING|APPROVED|REJECTED) @default(PENDING), reviewedBy?, reviewedAt? }
+
+AuditLog { id, actorId?, action, entityType, entityId, payloadJson, at }  // append-only
+RefreshToken { id, token @unique, userId, expiresAt, createdAt }
+
+--------------------------------------------------------------------------------
+PART 15 — API SURFACE
+--------------------------------------------------------------------------------
+Auth/KYC:
+  POST /auth/register (phone normalized to 03XXXXXXXXXX; email lowercased; trim all)
+  POST /auth/login    POST /auth/refresh    GET /auth/me
+  POST /kyc/otp/send  POST /kyc/otp/verify  POST /kyc/documents  POST /kyc/selfie
+  GET  /kyc/status
+Committees:
+  POST /committees  (host gate: score>=700 & <5 active)
+  POST /committees/:id/start  (lock schedule+order; create rounds + round-1 PENDING payments)
+  POST /committees/:id/join | POST /committees/join  (policy/deadline/cap/solvency)
+  POST /committees/:id/leave  (only if clean + full cycle — PART 6)
+  POST /committees/:id/payout (advance round — PART 16)
+  POST /committees/:id/invest     (host only; deploy r-slice; low-risk scheme)
+  POST /committees/:id/liquidate  (host only; realize profit; DEV 5%; distribute per mode)
+  GET  /committees/:id/investments (read-only, all members)
+  GET  /committees/:id/payment-matrix (host only)
+  POST /committees/:id/nudge/:userId (host only)
+  POST /committees/:id/schedule-change (DEV-approved, audited)
+Payments:
+  POST /payments  (server derives amount from committee.contribution; membership-checked)
+Marketplace:
+  POST /exchange (list; X<=0.5*payout; dues clear; allowTurnSale)
+  POST /exchange/:id/accept (settle premium, DEV 10%, swap, solvency-checked)
+Deposits:
+  POST /deposits  POST /deposits/:id/refund
+Schemes/terminal:
+  GET /schemes  GET /schemes/:id/projection?principal&days&mode  (+ admin CRUD)
+Chat: socket events join_room/get_history/send_message/leave_room (membership-checked).
+ALL money/config/investment/ban endpoints -> write AuditLog. Webhooks (future
+gateways) are JWT-exempt but HMAC-verified + rate-limited.
+
+--------------------------------------------------------------------------------
+PART 16 — STATE MACHINES (implement exactly)
+--------------------------------------------------------------------------------
+COMMITTEE: FORMING --(start)--> ACTIVE --(last payout of final cycle)--> COMPLETED.
+  FORMING --(host cancel)--> CANCELLED. Joining-when-full stays FORMING; only
+  /start -> ACTIVE (locks schedule+order, creates rounds + round-1 PENDING payments).
+
+ROUND: PENDING --(period opens)--> COLLECTING --(host deploy)--> INVESTED
+  --(host liquidate)--> COLLECTING --(payout)--> CLOSED. On payout:
+  (a) mark recipient.hasReceived; (b) committee.currentRound++; (c) next round ->
+  COLLECTING + create its PENDING payments; (d) if no next round: if COMPOUND and
+  members remain, roll into cycleNumber+1 (fresh rounds, allow clean exits at this
+  boundary); else committee COMPLETED, +25 credit to clean members, refund
+  deposits, notify all.
+
+INVESTMENT: ACTIVE --(liquidate)--> LIQUIDATED (profit realized, DEV 5% taken,
+  distributed per host mode). Never pay out with an un-liquidated ACTIVE investment.
+
+PAYMENT: PENDING --(pay on time)--> PAID | --(in grace)--> LATE | --(past grace)-->
+  MISSED. Late/Missed drive credit deltas via the idempotent cron scorer;
+  repeated/again-post-receipt -> BAN path (PART 6).
+
+--------------------------------------------------------------------------------
+PART 17 — SECURITY & ARCHITECTURE PRINCIPLES (senior-dev grade)
+--------------------------------------------------------------------------------
+  - MONEY IS A LEDGER, NOT A COLUMN. Every paisa movement = an append-only
+    LedgerEntry (debit/credit/amount/reason/refs/idempotencyKey). Balances are
+    DERIVED (sum of entries), never mutated in place.
+  - IDEMPOTENCY EVERYWHERE. Every payment/payout/deploy/liquidate/scoring carries
+    an idempotency key; retries are safe.
+  - DETERMINISTIC + AUDITED. No randomness in money math; RANDOM_BALLOT uses a
+    seeded, logged draw (re-verifiable). AuditLog on every state change.
+  - AUTHZ IN TWO PLACES: API is source of truth (role/ownership/membership),
+    UI hides controls. Never trust the client.
+  - INTEGER PAISA everywhere; round explicitly; test that books balance.
+  - SEPARATE SCHEDULER: node-cron/BullMQ worker handles round transitions,
+    late-marking, scoring, accrual snapshots. No time logic in request handlers.
+  - OBSERVABILITY: structured logs, error tracking (Sentry), admin metrics.
+  - TESTS ON MONEY PATHS: unit tests for every PART 4 formula + property test
+    "sum in == sum out + fees" over random committees. This is where bugs cost
+    real money.
+  - SECRETS in env only; rotate; 64-char JWT secret; refresh tokens; rate-limit
+    auth. KYC media encrypted, private, signed URLs, never logged.
+
+--------------------------------------------------------------------------------
+PART 18 — RISK ANALYSIS (brutally honest: why this dies, why it wins)
+--------------------------------------------------------------------------------
+WHY IT COULD FAIL (ranked by lethality):
+  F1 REGULATORY (existential). Collecting public money and investing it can be
+     deposit-taking (SBP) and/or a collective investment scheme (SECP). Unlicensed
+     = shutdown/prosecution risk. Taking profit cuts strengthens the "unlicensed
+     intermediary" case. MITIGATED by Stage 1 (no custody) + a licensed partner
+     for Stage 2 (PART 19).
+  F2 TRUST / SCAM ASSOCIATION. "Committee + someone controls a pooled investment"
+     is the exact shape of Pakistani committee scams. A slick app can look MORE
+     suspicious. MITIGATED by radical transparency, immutable schedule, audit log,
+     strong KYC, host reputation, invite-only launch among real circles.
+  F3 CUSTODY. Holding members' float unlicensed ~ unlicensed EMI; host holding it
+     ~ a fraud tool. MITIGATED by Stage 1 (money moves on members' own rails, app
+     only records) and Stage 2 (licensed custodian holds funds; host only SELECTS
+     schemes, partner EXECUTES).
+  F4 DEFAULT CASCADE + MARKET LOSS. Early receiver stops paying; or the invested
+     slice drops. MITIGATED by credit-weighted order + deposits (PART 8), low-risk
+     only + r<=25% (D5), never paying out on an un-liquidated position, and
+     showing ranges not promises.
+  F5 IMPOSSIBLE PROMISES. Literal bank-balance reads and guaranteed-return graphs
+     can't be delivered and invite misleading-promotion claims. MITIGATED by the
+     reframed solvency (PART 8) and mandatory "not guaranteed / not advice" copy.
+  F6 COLD-START LIQUIDITY. Marketplace needs users. MITIGATED by launching
+     member-only, opening to non-members later.
+  F7 OPERATIONAL BOTTLENECK. "DEV-only date changes" = manual fiduciary load.
+     MITIGATED by immutable-by-design schedules; DEV touches only rare disputes,
+     logged.
+  F8 TAX/AML. Fees are income; flows may need reporting. MITIGATED by an
+     accountant early + AML thresholds + the AuditLog.
+
+WHY IT COULD FLOURISH:
+  W1 Massive TAM — committees are everywhere in Pakistan and almost entirely
+     analog today; digitizing alone is valuable.
+  W2 Real differentiation — yield on idle committee money is genuinely new.
+  W3 The trust layer (credit + solvency + immutable schedule + audit + KYC) is
+     the moat; it attacks the #1 reason people avoid committees.
+  W4 Network effects — hosts import their circles; chat + marketplace add
+     stickiness; good hosts build reputation.
+  W5 Aligned fees — you earn only when users earn/trade; good optics + incentives.
+  W6 Financial-inclusion narrative — pro-saving, pro-yield; attractive to press,
+     grants, and eventually regulators IF done compliantly.
+
+GOOD FACTORS: cultural fit, clear value, defensible moat, viral loop.
+BAD FACTORS: regulatory heat, scam-shape, custody risk, cold-start, tax/AML load,
+infeasible balance-reads (already reframed).
+
+NOTE ON THE OLD PROTOTYPE (D:\halqa app\): its committee lifecycle is broken
+(joining-when-full blocks /start; payout never advances rounds; payments trust
+any caller; socket send_message skips membership check; dead 'assembling'/
+'investing' statuses; money stored as floats). Do NOT port those bugs — this spec
+fixes all of them. Reuse only clean pieces (auth pattern, socket scaffold, UI
+components).
+
+--------------------------------------------------------------------------------
+PART 19 — LEGAL & REGULATORY (Pakistan) — what you may ship, and when
+--------------------------------------------------------------------------------
+NOT legal advice. Owner should retain a PK corporate/securities lawyer before any
+real-money custody. Landscape: SBP (banking, EMI 2019, payment systems / PSD Act);
+SECP (NBFCs, AMCs, Collective Investment Schemes). Committees are grey; adding
+managed investment + fees pushes toward regulated activity. Advertising rules bar
+misleading/guaranteed-return claims; personalized advice needs a licence; AML/CFT
+requires KYC + monitoring + reporting.
+
+STAGED PLAN (owner-confirmed D1/D2):
+  STAGE 1 (NOW — ship this): PURE LEDGER, NO CUSTODY, NO EXECUTION. Members pay
+    each other on their own rails (Raast/JazzCash/Easypaisa); Halqa RECORDS who
+    paid, runs credit + solvency, shows the payment matrix, and SIMULATES the
+    investment terminal + projections. This is (almost certainly) just software —
+    near-zero regulatory risk. Confirm with counsel. Owner then presents this
+    working ledger to a bank (D2).
+  STAGE 2 (after a licensed partner): the bank/AMC/EMI HOLDS funds in escrow and
+    EXECUTES investments under its licence; Halqa is the tech/UX layer under a
+    services agreement; revenue via revenue-share/tech-fee with the partner
+    (cleaner than skimming pooled profit directly). Flip investment + custody from
+    SIMULATED to REAL behind a feature flag — the schema + ledger already support
+    it, so no rework.
+  STAGE 3: consider your own licence only if volume justifies the (heavy) cost.
+UNTIL STAGE 2: build ALL money/investment logic against the SIMULATED ledger; do
+not move or hold real funds; use "recorded"/"tracked" language, never "secured".
+
+--------------------------------------------------------------------------------
+PART 20 — PHASED BUILD PLAN FROM ZERO (each phase ships something usable)
+--------------------------------------------------------------------------------
+Each phase: build API + tests, then UI, then verify end-to-end. Alternates given.
+
+  PHASE 0 — Repo + stack + Postgres + Prisma + env + start-all.bat + CI-lite
+    (lint/typecheck). Alt: docker-compose for local Postgres if native install is
+    painful.
+  PHASE 1 — Auth + self-serve KYC (PART 9): register/login/refresh, OTP, doc
+    upload + OCR, selfie + face match, device binding, duplicate CNIC block.
+    Alt: ship Level 0+1 first, add Level 2 biometric next.
+  PHASE 2 — Committees: create (host gate), invite, join (policy/cap/deadline),
+    membership, FORMING state. Alt: OPEN_UNTIL_FULL only first.
+  PHASE 3 — Lifecycle core + LEDGER: /start (lock schedule+order, create rounds +
+    PENDING payments), /payments (server-derived amount, membership-checked), all
+    via append-only LedgerEntry with idempotency. Property test: books balance.
+  PHASE 4 — Payout advance + cycle completion + CREDIT ENGINE (cron scorer,
+    idempotent) + LEAVE/BAN (PART 6). This makes a full committee actually work
+    end-to-end.
+  PHASE 5 — Solvency (PART 8): credit-weighted order (free) then security deposits
+    (recorded in Stage 1). Alt: guarantor model if deposits deter early users.
+  PHASE 6 — Investment terminal (SIMULATED, low-risk catalog, projection graphs)
+    + host deploy/liquidate + DEV 5% fee recorded. Members read-only. Alt:
+    manual-curated rates first; official-data fetch later.
+  PHASE 7 — Turn marketplace (PART 11) + DEV 10% recorded.
+  PHASE 8 — Group chat (PART 12) with membership-checked sockets.
+  PHASE 9 — Notifications + cron scheduler for round/scoring/reminder automation.
+  PHASE 10 — Frontend polish/redesign: design tokens + shared UI primitives
+    (Card/Button/Input/Badge/Modal/Tab), mobile-first, page-by-page. Alt: adopt a
+    shadcn-style component set to move faster.
+  PHASE 11 — Deploy: Postgres + backend (Railway/Render) + frontend (Vercel/
+    Netlify), env-driven URLs, new secrets, private KYC bucket. Alt: Fly.io.
+  PHASE 12 — Capacitor Android wrap + Play Store (frame as a "committee ledger/
+    tracker" for Stage 1 to ease review). iOS later.
+  PHASE 13 (GATED) — Legal review + licensed partner integration; flip investment
+    + custody from SIMULATED to REAL behind the feature flag. DO NOT reorder
+    before real money — this is the gate.
+
+--------------------------------------------------------------------------------
+PART 21 — ACCEPTANCE TESTS (must pass before calling a phase done)
+--------------------------------------------------------------------------------
+  A1 Lifecycle: create -> members join to cap -> /start -> everyone pays -> payout
+     -> round 2 auto-COLLECTING with fresh PENDING payments -> ... -> final payout
+     -> COMPLETED, +25 credit to clean members, deposits refunded, dashboards show
+     received amounts.
+  A2 Authz: non-member paying a round -> 403. Non-host deploy/liquidate -> 403.
+     Member sees zero investment mutating controls.
+  A3 Credit accuracy: late payment vs locked date -> exact delta once (idempotent
+     on cron re-run). Pay >=7d before payout -> RECEIVE gate passes; miss it ->
+     payout skips.
+  A4 Leave/ban: mid-cycle quit attempt -> blocked or BAN + deposit forfeited +
+     credit -150. Clean post-cycle exit -> EXITED + deposit refunded.
+  A5 Money integrity: property test over random committees — total debits ==
+     total credits; sum paid == sum paid-out + reinvested + fees.
+  A6 Investment (simulated): deploy 20% of a round's pool into a T-Bill scheme;
+     member sees read-only accrual + projection band; liquidate credits ledger,
+     DEV 5% recorded, distribution matches host mode.
+  A7 Marketplace: list turn at premium <=50% payout; buyer passes solvency;
+     accept swaps positions, records DEV 10%, +5 both.
+  A8 KYC: duplicate CNIC blocked; face-match mismatch rejected; hosting requires
+     Level 2.
+
+--------------------------------------------------------------------------------
+PART 22 — WHAT'S LOCKED vs OPEN
+--------------------------------------------------------------------------------
+LOCKED (owner-decided, do not re-litigate): Stage-1 ledger first; open score-gated
+hosting (max 5, no first-timer limits); credit-weighted order + deposits for
+solvency; r<=25% + low-risk schemes only; no voting, chat only; leave-only-after-
+clean-cycle-else-ban; max self-serve KYC (no entity deals); brand Kayani Solutions
+/ Halqa; distribution mode host-set + locked.
+OPEN (decide as you build, sensible defaults given here): exact credit deltas +
+gates (PART 7), deposit sizing % (PART 8), grace days (default 5), KYC gating
+thresholds per action, SMS/OCR/face vendor choice, hosting-approval re-enable
+toggle if fraud appears.
+
+================================================================================
+END. Build in PART 20 order. Keep money SIMULATED until PART 19 Stage 2 is real.
+Never mark a money path "done" without the PART 21/A5 balancing test passing.
+Never promise what the infrastructure can't do. Brand it Halqa by Kayani Solutions.
+================================================================================

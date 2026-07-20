@@ -1,0 +1,12 @@
+{
+  "name": "Halqa — Committee savings",
+  "short_name": "Halqa",
+  "description": "Pakistan's committee (kameti/BC), made safe, halal and rewarding.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f5ef",
+  "theme_color": "#1c6349",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

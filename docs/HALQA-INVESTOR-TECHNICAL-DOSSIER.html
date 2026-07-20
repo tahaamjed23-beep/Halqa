@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Halqa — Investor &amp; Technical Dossier</title>
+<style>
+  @page { size: A4; margin: 20mm 18mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: Georgia, "Times New Roman", serif; color: #1c1c18; font-size: 10.7pt; line-height: 1.5; margin: 0; }
+  h1, h2, h3, h4, .brand, .kicker, th, .chip, .cover-sub { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
+  .cover { height: 257mm; display: flex; flex-direction: column; justify-content: center; page-break-after: always; }
+  .cover .mark { width: 68px; height: 68px; border-radius: 18px; background: linear-gradient(145deg,#f8e8ba,#1c6349); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 34px; font-family: serif; margin-bottom: 26px; }
+  .cover h1 { font-size: 40pt; line-height: 1.03; letter-spacing: -0.02em; margin: 0 0 10px; color: #14332a; }
+  .cover .cover-sub { font-size: 15pt; color: #2f6d55; font-weight: 600; margin: 0 0 26px; }
+  .cover .lede { font-size: 12pt; color: #40403a; max-width: 150mm; }
+  .cover .meta { margin-top: auto; font-family: "Segoe UI", Arial, sans-serif; font-size: 9pt; color: #6a6a62; border-top: 1px solid #d9d4c6; padding-top: 12px; }
+  h1.section { font-size: 20pt; color: #14332a; border-bottom: 2px solid #2f9d78; padding-bottom: 6px; margin: 26px 0 12px; page-break-after: avoid; }
+  h2 { font-size: 13.5pt; color: #1c6349; margin: 20px 0 6px; page-break-after: avoid; }
+  h3 { font-size: 11.5pt; color: #2a2a24; margin: 14px 0 4px; page-break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul, ol { margin: 4px 0 10px; padding-left: 20px; }
+  li { margin: 0 0 4px; }
+  .kicker { font-size: 8.5pt; letter-spacing: 0.12em; text-transform: uppercase; color: #2f9d78; font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 14px; font-size: 9.6pt; }
+  th { background: #14332a; color: #fff; text-align: left; padding: 6px 8px; font-size: 9pt; }
+  td { border-bottom: 1px solid #e4e0d3; padding: 6px 8px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f7f5ee; }
+  .chip { display: inline-block; font-family: "Segoe UI", Arial, sans-serif; font-size: 7.5pt; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
+  .halal { background: #e5f3ec; color: #1d6b47; }
+  .conv { background: #fdeee2; color: #a9522f; }
+  .callout { border-left: 3px solid #2f9d78; background: #f3faf6; padding: 9px 12px; margin: 10px 0; font-size: 10pt; }
+  .warn { border-left: 3px solid #b96f0d; background: #fff9ec; padding: 9px 12px; margin: 10px 0; font-size: 10pt; }
+  .toc { columns: 1; }
+  .toc div { padding: 3px 0; border-bottom: 1px dotted #d9d4c6; font-family: "Segoe UI", Arial, sans-serif; font-size: 10pt; }
+  .toc .n { color: #2f9d78; font-weight: 700; margin-right: 8px; }
+  .section-break { page-break-before: always; }
+  small { color: #6a6a62; }
+  .footnote { font-size: 8.5pt; color: #6a6a62; border-top: 1px solid #e4e0d3; margin-top: 6px; padding-top: 4px; }
+  b, strong { color: #14332a; }
+  .kpi-row { display: flex; gap: 10px; margin: 12px 0; }
+  .kpi { flex: 1; border: 1px solid #d9d4c6; border-radius: 8px; padding: 9px 11px; }
+  .kpi .v { font-size: 15pt; font-weight: 700; color: #14332a; font-family: "Segoe UI", Arial, sans-serif; }
+  .kpi .l { font-size: 8pt; color: #6a6a62; font-family: "Segoe UI", Arial, sans-serif; }
+</style>
+</head>
+<body>
+
+<!-- ===================== COVER ===================== -->
+<section class="cover">
+  <div class="mark">ح</div>
+  <div class="kicker">Investor &amp; Technical Dossier · Confidential</div>
+  <h1>Halqa</h1>
+  <div class="cover-sub">The committee, made honest, halal and rewarding.</div>
+  <p class="lede">A digital rotating-savings platform (ROSCA / committee / BC) for Pakistan that turns the country's most-used informal savings habit into a transparent, reputation-building, profit-earning product — without ever charging members for early access to their own money.</p>
+  <div class="meta">
+    Prepared for prospective investors and technical due-diligence teams · Kayani Solutions<br>
+    Stage 1 (record-only) build · Figures indicative and dated · Not an offer of securities · 2026
+  </div>
+</section>
+
+<!-- ===================== TOC ===================== -->
+<h1 class="section">Contents</h1>
+<div class="toc">
+  <div><span class="n">01</span> Executive summary</div>
+  <div><span class="n">02</span> The problem &amp; the market</div>
+  <div><span class="n">03</span> What Halqa is — the product, A to Z</div>
+  <div><span class="n">04</span> Competitive landscape</div>
+  <div><span class="n">05</span> What makes Halqa unique</div>
+  <div><span class="n">06</span> How every system works</div>
+  <div><span class="n">07</span> How profit is made — the revenue model</div>
+  <div><span class="n">08</span> Worked examples with real numbers</div>
+  <div><span class="n">09</span> Shariah compliance — today and tomorrow</div>
+  <div><span class="n">10</span> Risk, safety &amp; the answers to common concerns</div>
+  <div><span class="n">11</span> Licensing &amp; the regulatory path</div>
+  <div><span class="n">12</span> Technology &amp; architecture</div>
+  <div><span class="n">13</span> Roadmap</div>
+  <div><span class="n">14</span> The investment case</div>
+  <div><span class="n">15</span> Disclaimers &amp; glossary</div>
+</div>
+
+<!-- ===================== 01 ===================== -->
+<h1 class="section section-break">01 · Executive summary</h1>
+<p>Across Pakistan, tens of millions of people save the same way their grandmothers did: in a <b>committee</b> — a group of trusted people who each put in a fixed amount every month, take turns receiving the whole pool, and repeat until everyone has had a turn. It is called a committee, a BC, a kameti, or in the academic literature a <b>ROSCA</b> (rotating savings and credit association). It is simple, social, interest-free, and enormously popular precisely because the formal banking system has never served most Pakistanis well.</p>
+<p>The committee has two structural weaknesses. First, it is <b>fragile</b>: it depends entirely on personal trust, and one member who takes their payout and stops paying can collapse the group and destroy months of everyone's savings. Second, it is <b>unrewarding</b>: the money sitting in the pool between contributions and payouts earns nothing, and the discipline of a member who never misses a payment builds no portable record they can show a landlord, an employer, or a lender.</p>
+<p>Halqa fixes both without changing what people already love. It keeps the committee exactly as it is — contribute, rotate, collect — and adds four things a paper committee can never have:</p>
+<ol>
+  <li><b>Enforcement instead of trust.</b> Security deposits, payout hold-backs, a portable reliability score, and account-level consequences for default make the committee safe even among people who don't know each other well.</li>
+  <li><b>Real, halal profit on idle money.</b> The pool and the deposits sit idle by definition — between the day a member pays and the day someone collects. Halqa puts those idle days to work in disclosed, Shariah-compliant money-market and Mudarabah instruments, and shares the profit with members. Nobody has to make an investment decision for this to happen.</li>
+  <li><b>Portable reputation.</b> Every clean payment builds a reliability score and a shareable, verifiable <b>Credit Passport</b> — a financial identity that follows the member out of the app and into the formal economy.</li>
+  <li><b>Choice, stated honestly.</b> Members choose how their circle earns, from a fully halal engine (Sukoon / Bazaar) to a conventional, higher-yield configuration (Priority / Sigma) that is clearly labelled "not Shariah-reviewed." Halqa never hides the nature of a return behind marketing.</li>
+</ol>
+<div class="kpi-row">
+  <div class="kpi"><div class="v">Rs 16,982</div><div class="l">Best-placed member's modelled annual bonus, 12-woman Rs 140k circle (Sigma, pooled)</div></div>
+  <div class="kpi"><div class="v">7.28%</div><div class="l">Post-payout default rate in a 100,000-member stress simulation</div></div>
+  <div class="kpi"><div class="v">5%</div><div class="l">Halqa's only cut — a Mudarib share of profit, never of savings</div></div>
+</div>
+<p>The business model is clean and aligned: Halqa earns a <b>5% Mudarib (manager's) share of the profit it generates on idle money</b> — never a fee on the member's savings, and never a cut of the member-to-member transfers. If members don't earn, Halqa doesn't earn.</p>
+<p>The category is proven. <b>Oraan</b>, the leading Pakistani digital-committee company, has taken this concept to more than 10,000 savers across 170+ cities, is 84% women, raised US$3.31 million in seed funding in January 2024, and holds a Securities and Exchange Commission of Pakistan (SECP) Non-Banking Finance Company (NBFC) licence. Oraan validated the demand and cleared the regulatory bar. Halqa's thesis is that the next winner competes not on being first, but on <b>product depth</b>: real yield, Shariah optionality, and portable reputation — none of which Oraan leads with.</p>
+<p>This document explains everything a technical or financial reviewer needs: the market and the data behind it; how every mechanism in the product works; exactly how and from where profit is generated, with worked examples; how the product is structured to be halal and how it can go further; the honest risks and the specific measures that address each; the licensing that stands between the current record-only build and holding member funds; and the technology underneath it.</p>
+
+<!-- ===================== 02 ===================== -->
+<h1 class="section section-break">02 · The problem &amp; the market</h1>
+<h2>2.1 Financial exclusion in Pakistan is the backdrop</h2>
+<p>Pakistan is a country of roughly 240 million people with one of the lowest formal financial-inclusion rates in the region. Historically, only around a fifth of adults have held a formal bank or mobile-money account, and the gap for <b>women is severe</b> — by most surveys (World Bank Global Findex; State Bank of Pakistan and Karandaaz national financial-inclusion surveys), the share of women with a formal account has sat in the low teens of a percent for much of the last decade, one of the widest gender gaps in the world. Branchless banking and wallets (JazzCash, EasyPaisa) and the Raast instant-payment rail have improved access, but a large majority of Pakistanis still save and borrow <b>informally</b>.</p>
+<div class="footnote">Sources: World Bank Global Findex; State Bank of Pakistan; Karandaaz Financial Inclusion Survey; Oraan/PICG case study. Figures are indicative and cited to illustrate the scale of the opportunity rather than a precise market model.</div>
+<h2>2.2 The committee is the default savings instrument</h2>
+<p>Into that vacuum steps the committee. For a very large share of Pakistani households, the ROSCA is the <b>primary</b> savings and lump-sum-access mechanism — used to buy appliances, fund a wedding, pay school fees, cover Eid, or start a small business. It requires no bank account, no paperwork, no minimum balance and no interest. It works on social trust and monthly cash. The informal committee economy is estimated to move very large sums annually; Oraan alone has publicly described billions of rupees rotating through its committees, and it is a small formaliser of a vastly larger informal base.</p>
+<div class="callout"><b>Why this matters for an investor:</b> the behaviour already exists at national scale and requires <b>no education</b>. Halqa is not teaching Pakistanis a new habit; it is removing the two things that hold the existing habit back — fragility and zero yield — while adding a reputation asset that unlocks the formal system. The customer-acquisition problem is trust and distribution, not demand creation.</div>
+<h2>2.3 The three failures Halqa targets</h2>
+<table>
+  <tr><th style="width:26%">Failure of the paper committee</th><th style="width:37%">What it costs people</th><th>Halqa's answer</th></tr>
+  <tr><td><b>Default risk</b></td><td>One member defaults after their payout; the group loses months of savings; disputes fracture families and neighbourhoods.</td><td>Graduated security deposits, payout hold-backs, reliability scoring, and account-level bans that make abandonment costly and recoverable.</td></tr>
+  <tr><td><b>Zero yield</b></td><td>Money sits idle in the pool for weeks each round, and in deposits for the whole cycle, earning nothing while inflation erodes it.</td><td>The profit engine — float sweep, Mudarabah deposits, patience tilt, optional vault tiers — earns real, disclosed profit on that idle money.</td></tr>
+  <tr><td><b>No credit identity</b></td><td>A person who has flawlessly run committees for 20 years has no record a bank will recognise.</td><td>A reliability score and a signed, shareable Credit Passport that builds a portable financial identity.</td></tr>
+</table>
+
+<h2>2.4 Sizing the opportunity</h2>
+<p>Market sizing for an informal, cash-based behaviour is inherently imprecise, so we frame it as a funnel rather than a single headline number, and we are explicit about the assumptions.</p>
+<ul>
+  <li><b>Total addressable market (TAM).</b> Pakistan has on the order of 130–140 million adults. Multiple independent surveys find that committees are used by a very large minority of households — conservatively tens of millions of adults participate in at least one committee in a given year. If even 30 million adults each cycle an average of Rs 5,000–10,000 per month through committees, the annual gross flow through the informal committee economy is measured in the <b>trillions of rupees</b>. This is the money that already moves; Halqa does not need to create it.</li>
+  <li><b>Serviceable addressable market (SAM).</b> The realistically reachable segment in the medium term is the smartphone-owning, digitally-onboardable committee participant — a rapidly growing cohort as smartphone penetration and Raast adoption climb. A reasonable working figure is <b>15–25 million</b> adults who could plausibly run a committee through an app within five years.</li>
+  <li><b>Serviceable obtainable market (SOM).</b> Oraan's ~10,000+ savers demonstrate the current early-adopter base for a single player. The near-term obtainable target for a well-distributed entrant is in the <b>hundreds of thousands</b> of active savers, with revenue driven less by headcount than by <b>assets-earning-days</b> (pool float plus vault balances) — the metric that actually monetises.</li>
+</ul>
+<div class="callout"><b>The monetisable metric is not users — it is earning-days.</b> A single member who parks a Rs 120,000 payout in the vault for six months contributes far more revenue than ten members running tiny circles. Halqa's revenue model (Section 7) is built to capture this: it scales with member wealth and balances, not merely with sign-ups. This is why the vault and payout-parking are strategically central, not peripheral.</div>
+<h2>2.5 The digital tipping point — why this is possible now and was not before</h2>
+<p>Three enabling shifts have only recently matured together. First, <b>smartphone penetration</b> has crossed the threshold where a mother running a neighbourhood committee is likely to own a device capable of the app. Second, <b>Raast</b> — the State Bank's instant, free, account-to-account rail — plus the entrenched wallets (JazzCash, EasyPaisa) mean the transfer leg of a committee is now instant and near-costless, so a record-and-transfer model no longer asks members to change how they move money. Third, <b>Oraan's regulatory clearance</b> has established that the SECP will license a committee-based fintech, removing the existential "is this even permitted" question that would have frozen investors five years ago. The behaviour is ancient; the rails to formalise it are new.</p>
+<h2>2.6 Who uses Halqa — personas &amp; real-world use-cases</h2>
+<p>Abstractions do not save money; people do. Four representative members illustrate the demand and the product fit.</p>
+<h3>Ayesha — the neighbourhood organiser (host)</h3>
+<p>Ayesha has run a 12-woman committee on paper for years. She chases payments on WhatsApp, keeps a notebook, and once lost three months of the group's savings when a member vanished after her turn. On Halqa she hosts the same circle, but now the order is locked, deposits and hold-backs protect everyone, reminders go out automatically, and the pool earns a Bazaar bonus that makes her members feel the group is <b>working for them</b>. Her reputation as a reliable host is now visible and portable. She is Halqa's distribution engine: hosts bring their groups.</p>
+<h3>Fatima — the disciplined saver (member)</h3>
+<p>Fatima never misses a payment and always pays early. On paper, that discipline earned her nothing beyond a good name in her lane. On Halqa it earns her the early-bird profit boost, a climbing reliability score, and a Credit Passport she can show when she applies to rent a shop — turning two decades of quiet reliability into a financial asset for the first time.</p>
+<h3>Bilal — the goal saver</h3>
+<p>Bilal is saving for Umrah. He joins a goal circle labelled for exactly that, contributes monthly, and lets his payout park in the vault so it keeps earning until the trip. The goal keeps him committed; the vault turns his waiting time into extra profit; the whole thing costs him nothing beyond his contributions.</p>
+<h3>Sana — the cautious first-timer</h3>
+<p>Sana has never used a formal financial product and is wary of anything that "holds" her money. Halqa's Stage-1 record-only posture is exactly what wins her: she transfers directly to whoever's turn it is, sees every rupee on a ledger, and starts with a small, short circle. Rafa the guide answers her questions in plain Urdu-inflected English. Her first clean cycle converts her from sceptic to advocate.</p>
+
+<!-- ===================== 03 ===================== -->
+<h1 class="section section-break">03 · What Halqa is — the product, A to Z</h1>
+<p>Halqa is a mobile-first web application (with a companion API and database) that lets a group run a committee end-to-end. Below is the full life-cycle a normal user experiences.</p>
+<h2>3.1 Onboarding</h2>
+<p>A person signs up and immediately holds a <b>reliability score of 700</b> — a trusted baseline. Basic identity is enough to join and save; a higher verification tier is required to host or to run larger circles. The onboarding is deliberately light: the barrier to a first committee should be no higher than the barrier to a paper one.</p>
+<h2>3.2 Creating a circle (hosting)</h2>
+<p>A member with a score of 700 or higher can host. The create flow is built around one principle discovered in testing: <b>most people want to save and earn, not to make investment decisions.</b> So the flow leads with the basics (name, members, contribution, period, an optional goal such as Hajj or school fees) and then the single most important choice — <b>how the circle earns</b> — presented as a set of plain-language switches. Everything about actively investing a slice of the pool into a market scheme (risk levels, scheme selection, allocation) is tucked into an <b>optional "Advanced"</b> panel that is off by default, because the profit engine already earns for the group with no such decision.</p>
+<h2>3.3 Joining</h2>
+<p>Members join with an invite code (or an open forming circle). A minimum score of 550 is required to join. Before a circle with any earning engine or fee can start, <b>every member must explicitly accept a consent statement</b> describing exactly how their money will behave — the engine, the tilt, any conventional fee, and the fact that returns are indicative and not guaranteed.</p>
+<h2>3.4 The cycle</h2>
+<p>When the host starts the circle, the turn order locks (by reliability weighting, random ballot, or host assignment), a round schedule is generated, and security deposits are computed per member. Each <b>round</b> (typically one month) everyone contributes; one member collects the pool. A <b>cycle</b> is the full set of rounds — one per member — after which everyone has collected exactly once and the pooled profit is distributed.</p>
+<h2>3.5 Paying and collecting</h2>
+<p>During Stage 1, Halqa is a <b>record-keeper, not a custodian</b>. Members transfer to whoever's turn it is by their own rail (Raast, JazzCash, EasyPaisa, bank transfer, cash) and record the reference in the app. Halqa timestamps it, updates the ledger, adjusts scores, and enforces deposits, hold-backs and penalties. When it is a member's turn, their payout is recorded (less any hold-back or early fee), and — if they choose — parked in their vault to keep earning.</p>
+<h2>3.6 Completion</h2>
+<p>At cycle completion, security-deposit principal returns in full, pooled profit is distributed by the disclosed rules, unused reserve contributions are refunded, late-payment penalties are routed to charity (in the halal tiers) or to the members who never paid late, and every clean member earns a completion bonus to their reliability score. The member walks away with their savings, their share of real profit, a higher score, and a richer Credit Passport.</p>
+
+<h2>3.7 A day in the life of a rupee</h2>
+<p>To make the abstract concrete, follow one Rs 10,000 contribution from a member named Zara through a Bazaar circle. On the 1st, Zara records her payment; Halqa timestamps it, writes a balanced ledger entry (debit Zara's external account, credit the circle's escrow), and — because she paid three days early — awards her +6 to her reliability score and logs her toward the early-bird boost. From the 1st until this round's payout on the 8th, her Rs 10,000 sits in the pool; the float sweep earns the Islamic money-market rate on those seven idle days, and that profit is recorded (net of Halqa's 5% share) into the circle's profit pool. Her security deposit, posted at the start, is separately earning the Mudarabah rate for the whole cycle. When the cycle completes months later, the pooled profit — hers and everyone's idle-money earnings plus the deposit yield — is split by capital-days and tilted toward the later turns; Zara receives her share, her deposit principal back in full, and, having never paid late, a +25 completion bonus and a richer Credit Passport. At no point was Zara charged a fee on her Rs 10,000; every rupee of it, plus a share of real profit it helped create, came back to her or to the group. That is the entire thesis, traced through one contribution.</p>
+
+<!-- ===================== 04 ===================== -->
+<h1 class="section section-break">04 · Competitive landscape</h1>
+<h2>4.1 Oraan — the benchmark incumbent</h2>
+<p>Oraan is the company to beat, and studying it is instructive because it has already answered the two hardest questions: <b>will Pakistanis move committees online</b> (yes), and <b>can the regulatory bar be cleared</b> (yes).</p>
+<table>
+  <tr><th style="width:34%">Oraan — verified facts</th><th>Detail</th></tr>
+  <tr><td>Founded</td><td>2018; women-first positioning</td></tr>
+  <tr><td>Traction</td><td>10,000+ savers, 84% women, 170+ cities</td></tr>
+  <tr><td>Funding</td><td>US$3.31m seed, January 2024 (Zayn Capital, Wavemaker Partners and others)</td></tr>
+  <tr><td>Regulatory</td><td>Operates as an NBFC under SECP licence SECP/LRD/107/OFSPL/2023 (Oraan Financial Services)</td></tr>
+  <tr><td>Product</td><td>Digital committees, 5- or 10-month plans, from Rs 1,000/month; positions itself as facilitator/agent; charges a flat service fee; gold savings; monthly lucky draws; an "Oraan score"</td></tr>
+  <tr><td>Notable</td><td>Does <b>not</b> lead with an investment/yield pitch; the committee itself is the product</td></tr>
+</table>
+<div class="footnote">Sources: oraan.com; Google Play / App Store listings; Dawn (US$3M seed, 2022 and follow-on 2024 coverage); PICG Oraan case study (2024).</div>
+<h2>4.2 Traditional committees, banks and other players</h2>
+<ul>
+  <li><b>Traditional (paper) committees</b> — the real incumbent by volume. Free and trusted, but fragile, yield-less, and reputation-less. Halqa's job is to be worth switching to.</li>
+  <li><b>Banks &amp; Islamic banks</b> — offer savings accounts and Mudarabah deposits, but with friction, minimum balances, and no rotating-lump-sum product. They are a <b>supplier of instruments</b> (the money-market and deposit sleeves Halqa's engine uses), not a committee competitor.</li>
+  <li><b>Wallets (JazzCash, EasyPaisa) &amp; Raast</b> — rails, not products. They make Halqa's record-and-transfer model frictionless; they are complements.</li>
+  <li><b>Other committee apps</b> — several exist regionally, but few combine a genuine halal yield engine with portable reputation.</li>
+</ul>
+<h2>4.3 Head-to-head</h2>
+<table>
+  <tr><th style="width:20%">Dimension</th><th style="width:33%">Oraan</th><th>Halqa</th></tr>
+  <tr><td>Core loop</td><td>Digital committee, facilitated</td><td>Same loop, record-only in Stage 1</td></tr>
+  <tr><td>Revenue</td><td>Flat service fee per committee</td><td>5% Mudarib share of profit on idle money — never a cut of savings</td></tr>
+  <tr><td>Yield story</td><td>Not the headline</td><td><b>Headline.</b> Float sweep + Mudarabah + vault tiers</td></tr>
+  <tr><td>Shariah</td><td>Not positioned as Islamic</td><td>Sukoon/Bazaar explicitly halal; Priority/Sigma labelled conventional</td></tr>
+  <tr><td>Reputation</td><td>In-app score</td><td>Portable, verifiable Credit Passport usable outside the app</td></tr>
+  <tr><td>Regulatory</td><td><b>Licensed NBFC</b></td><td>Not yet licensed — the single biggest gap</td></tr>
+</table>
+<div class="warn"><b>Honest read.</b> Oraan's moat is the licence and a head start. Halqa out-designs it on yield transparency, Shariah optionality and portable reputation — but none of that reaches real members holding real money until Halqa clears the same SECP NBFC bar Oraan already holds. We compete on product depth; being live at scale is contingent on licensing (Section 11).</div>
+
+<!-- ===================== 05 ===================== -->
+<h1 class="section section-break">05 · What makes Halqa unique</h1>
+<h2>5.1 Profit from idle money, not from members</h2>
+<p>The defining idea. Every committee has money sitting idle: the pool waits between the day members pay and the day someone collects, and the security deposits sit for the whole cycle. Halqa's <b>float sweep</b> earns on those idle pool-days in an Islamic money-market sleeve; the deposits earn at a Mudarabah rate. This is real profit created from time that was otherwise wasted — and crucially, it is created <b>without charging early-turn members</b>, which is the riba-trap that ruins the fairness (and the halal status) of traditional chit-fund auctions.</p>
+<h2>5.2 Composable engines, named for the member</h2>
+<p>Rather than force a member to understand jargon, Halqa lets them tick plain switches — "earn on idle money," "patience pays," "monthly gift draw," "early-turn fee" — and derives the named tier automatically (Classic, Sukoon, Bazaar, Priority, Sigma). The member sees the <b>outcome</b> and the Shariah label; the machinery is handled for them.</p>
+<h2>5.3 Portable reputation — the Credit Passport</h2>
+<p>A member's clean history is an <b>asset</b>. Halqa turns it into a signed export — clean completions, on-time percentage, total recorded value — that a landlord, employer or lender can verify without a Halqa account. This is a genuine on-ramp from the informal economy to the formal one, and nothing in the direct competitive set offers it.</p>
+<h2>5.4 Shariah honesty as a feature</h2>
+<p>Halqa refuses to blur the line. Halal returns are labelled halal; the one conventional mechanism (the early-turn fee) is labelled "not Shariah-reviewed" everywhere it appears, and a fully halal alternative is always one tap away. In a market where faith is central, <b>honesty is a moat</b>: it builds the trust that a savings product lives or dies on.</p>
+<h2>5.5 Safety proven by simulation, not slogans</h2>
+<p>Halqa's default-prevention stack is not a marketing claim; it is stress-tested. A 100,000-member Monte-Carlo simulation of the real scoring and enforcement rules (Section 10) quantifies the default rate and the collateral coverage, and surfaces exactly where the residual risk lives — the mark of a system designed by people who expect to be audited.</p>
+
+<h2>5.6 Defensibility — why this is hard to copy</h2>
+<p>A skeptic reasonably asks: if the idea is good, what stops a well-funded incumbent from bolting a yield engine onto their app next quarter? Several things compound into a real moat:</p>
+<ul>
+  <li><b>The engine is not a feature, it is an accounting discipline.</b> Earning real profit on idle pool-days, splitting it fairly by capital-days, tilting it by patience, routing penalties to charity, and keeping every rupee reconstructable on a double-entry ledger — while never charging a saver — is a system that must be correct to the paisa. It took a full test harness (236 checks) to make it trustworthy. Copying the screenshot is easy; copying the correctness is not.</li>
+  <li><b>Shariah honesty is a positioning that cannot be half-adopted.</b> Once a competitor has built its brand on a facilitated flat fee, pivoting to "we now share halal yield and label the conventional lever" is a credibility move that is hard to make convincingly late. Halqa is built on it from day one.</li>
+  <li><b>The Credit Passport creates switching costs.</b> A member's reputation history accrues on the platform where they built it. The longer a member's clean history, the more valuable their Passport, and the less likely they are to restart elsewhere. Reputation is a data moat that deepens with time.</li>
+  <li><b>Aligned economics change the culture.</b> A company that only earns when members earn builds product differently — it optimises for member yield and retention, not for extraction. That alignment is visible to users and hard for a fee-extracting incumbent to imitate without cannibalising its own revenue.</li>
+</ul>
+
+<!-- ===================== 06 ===================== -->
+<h1 class="section section-break">06 · How every system works</h1>
+<p>This section is the technical heart: each mechanism, what it does, and how the money moves. Everything is recorded on a <b>double-entry ledger</b> — every rupee has a debit account and a credit account, so the books always balance and any figure can be reconstructed.</p>
+
+<h2>6.1 The rotating core</h2>
+<p>Contributions for a round are collected into the circle's escrow account (recorded, not held). The turn-holder's payout equals the round's pool, minus any hold-back and any early fee. The schedule and recipient order lock when the circle starts, so no one can quietly reorder turns.</p>
+
+<h2>6.2 Reliability score</h2>
+<p>A 300–850 score, everyone starting at 700. Paying three or more days early is <b>+6</b>; on time is <b>+4</b>; lateness is <b>−10 / −20 / −40</b> by severity; a clean cycle completion is <b>+25</b>; a post-payout default is a severe penalty plus an account restriction. The score gates access (550 to join, 700 to host) and is the backbone of both trust and the Credit Passport.</p>
+
+<h2>6.3 Graduated security deposits</h2>
+<p>Each member posts a recorded deposit sized to their position and remaining obligations — <b>early positions post more</b>, because they owe the most future contributions after collecting their payout. The deposit protects the group against that member's default and, in the earning engines, itself accrues profit at the Mudarabah rate. Principal returns in full at completion.</p>
+
+<h2>6.4 Payout hold-back</h2>
+<p>When a member collects, a small buffer (default 15%) is held back and released after they make a couple of clean follow-up payments. It is a gentle guarantee that early recipients keep paying, and it comes back to the member — it is their money, briefly retained.</p>
+
+<h2>6.5 The enforcement ladder</h2>
+<p>Missing a due date does not immediately trigger the harshest consequences. A member first receives smart reminders; a short, disclosed grace follows the due date during which a fixed penalty and a score reduction apply but the account is not yet restricted; only after that grace does a missed installment escalate to a default, with deposit and hold-back forfeiture and an account ban if it follows a payout. Penalties are fixed bands (2% / 5% / 10%) — <b>never compounding interest</b>. This graduated design keeps honest-but-busy members from being punished as if they were absconders, while still making genuine default costly and recoverable through a disclosed rehabilitation path.</p>
+
+<h2>6.6 The profit engine — the halal floor</h2>
+<h3>Float sweep (the Sukoon base)</h3>
+<p>Every paid contribution earns the Islamic money-market sleeve's rate (indicatively ~10.8%) for the exact number of days it sat in the pool before the round's payout — clamped so a back-dated record can never fabricate profit. Realised at each payout, net of Halqa's 5% Mudarib share, and pooled for the cycle-completion distribution.</p>
+<h3>Deposits that earn (Mudarabah)</h3>
+<p>Security deposits accrue at an Islamic deposit basket's rate (indicatively ~11.2%) across the cycle. In Sukoon the yield is paid to the depositor (their capital, their profit); in Bazaar and Sigma it is pooled into the patience tilt so it flows to the members who carried the circle longest.</p>
+<h3>Patience tilt (Bazaar)</h3>
+<p>At completion, pooled profit is distributed by <b>capital-days</b> — how much each member contributed and for how long — multiplied by a disclosed weight that rises from 1.0× for the first turn to 2.0× for the last. Later turns lent their money to the group longest, so they earn the most. Early turns already received the value of cash sooner; late turns are compensated for waiting. Both are fair, and both are disclosed at consent.</p>
+<h3>Early-bird boost</h3>
+<p>A member who records at least three-quarters of their contributions three or more days early carries a <b>1.25× weight</b> in the profit split. Early money genuinely creates more float profit for the whole group, so the boost is funded by profit the early payer helped generate — a profit-sharing ratio agreed up front, not a charge on anyone. This lever is fully halal and applies across the earning engines.</p>
+<h3>Group staking streak</h3>
+<p>A circle that pays cleanly and on time earns a small float-sweep loyalty bonus (+5% per consecutive clean round, capped at +20%). Disciplined circles have predictable cash-flow, which justifies a slightly better realised placement; a late or missed payment resets the streak. It rewards collective good behaviour with real, additional profit.</p>
+<h3>Profit gift draw (hiba, optional)</h3>
+<p>An opt-in feature on the earning engines: half of a round's net float profit is <b>gifted</b> (a hiba) to one on-time payer, chosen by a deterministic, replay-verifiable draw. Principal is never staked — only profit is gifted — and the feature is flagged as pending formal Shariah-board sign-off.</p>
+
+<h2>6.7 Priority &amp; Sigma — the conventional levers <span class="chip conv">not Shariah-reviewed</span></h2>
+<p>For members who want a bigger, faster bonus and are comfortable with a conventional mechanism, an <b>early-turn fee</b> (capped at 10%) can be switched on. The earliest turn pays the fee out of its own payout; the fee declines to 0% for the last turn, which pays nothing. The fee becomes a dividend for the other members — either paid every round (Priority) or pooled into the completion patience split (Sigma, when combined with the earning engine). Halqa keeps none of it; it is a pure member-to-member transfer. This is the old chit-fund logic made transparent, and because it prices early access to shared money it is labelled "not Shariah-reviewed" everywhere, with Sukoon/Bazaar always offered as the halal alternative.</p>
+
+<h2>6.8 The Sukoon Vault</h2>
+<p>A personal, halal savings pocket. Members can <b>park</b> committee payouts in it (so a lump sum keeps earning instead of sitting idle) and <b>top up</b> any amount from Rs 100. The vault accrues profit per entry and sweeps out in full on demand — principal plus accrued profit, less the 5% Mudarib share on profit only. It offers three <b>yield tiers</b>:</p>
+<table>
+  <tr><th>Vault tier</th><th>Underlying instrument</th><th>Indicative rate</th><th>Character</th></tr>
+  <tr><td>Standard</td><td>Islamic money-market sleeve</td><td>~10.8%</td><td>Lowest volatility <span class="chip halal">halal</span></td></tr>
+  <tr><td>Income</td><td>Islamic income-fund basket</td><td>~12.1%</td><td>Higher yield <span class="chip halal">halal</span></td></tr>
+  <tr><td>Gold-linked</td><td>Gold-linked allocation</td><td>~15.0%</td><td>Inflation hedge <span class="chip halal">halal</span></td></tr>
+</table>
+
+<h2>6.9 Goal circles</h2>
+<p>A committee can carry a purpose — Hajj/Umrah, education, a wedding, a home, a business — with an optional target. The engine is identical; the goal gives the group motivation and Halqa a high-intent, sticky use-case (goal-based saving is a proven demand driver).</p>
+
+<h2>6.10 Turn market</h2>
+<p>Life changes; a member may need cash sooner or be happy to wait. The turn market lets members trade positions. In Classic, Priority and Sigma circles a turn can be sold at a premium (the waiting buyer earns it). In Sukoon and Bazaar, <b>only free swaps</b> are allowed — selling a claim on money for more money is contested under Shariah, so it is simply not offered in the halal tiers. A seller must have paid their current installment first.</p>
+
+<h2>6.11 Credit Passport</h2>
+<p>On demand, a member generates a cryptographically signed export of their verified history — clean completions, on-time percentage, total recorded value, validity window — reachable by a public verification link that needs no Halqa account. It is valid 90 days and re-generatable, turning private good behaviour into a portable, checkable asset.</p>
+
+<h2>6.12 Fairness guarantees the engine enforces</h2>
+<p>Several invariants are not aspirations but properties the code and tests enforce on every cycle:</p>
+<ul>
+  <li><b>Conservation of profit.</b> The sum of every member's net bonus equals exactly the real profit created (float + deposit yield); the fee and premium components net to zero across the group. Money is never invented and never leaks.</li>
+  <li><b>No negative profit distribution.</b> The completion split can never debit a member's principal to pay another's "profit"; a member's profit share is always ≥ 0. (This was a real bug caught early and is now a locked test.)</li>
+  <li><b>Principal is sacred.</b> Deposit principal always returns in full; only its yield is ever pooled or shared.</li>
+  <li><b>Deterministic draws.</b> The prize hiba winner is chosen by a deterministic hash of the round seed, so any member can replay and verify it — there is no hidden randomness the platform could exploit.</li>
+  <li><b>Idempotent money moves.</b> Every payout, dividend, refund and vault sweep carries an idempotency key, so a retried or duplicated request can never double-pay.</li>
+</ul>
+<h2>6.13 What actually happens when someone defaults</h2>
+<p>Because default is the failure mode that destroys paper committees, it is worth tracing precisely. When a member misses beyond the disclosed grace after having received their payout, the system: (1) marks the installment missed and records a recovery case for the outstanding amount; (2) forfeits that member's held security deposit and payout hold-back into the circle's escrow to cover the shortfall to the group; (3) applies the severe score penalty and restricts the account (blocking new joins, hosting and marketplace access); and (4) opens a disclosed rehabilitation path — the member can clear the outstanding amount, fixed penalties and a rehabilitation fee, after which access is restored following a low-risk cool-down. Every step is ledgered. The group is made as whole as the collateral allows, the defaulter faces real and portable consequences, and the door back is never permanently shut — which is both more humane and more effective at recovery than the paper committee's only tool, which is social rupture.</p>
+
+<!-- ===================== 07 ===================== -->
+<h1 class="section section-break">07 · How profit is made — the revenue model</h1>
+<h2>7.1 Two honest sources, and only two</h2>
+<p>Halqa is deliberate about never inventing money. Member returns come from exactly two places:</p>
+<ol>
+  <li><b>Real yield on idle money.</b> The float sweep and Mudarabah deposits earn genuine, variable profit on money that would otherwise sit dead. This is the halal engine, and it is net-positive for the group — it creates value that did not exist before.</li>
+  <li><b>Disclosed member-to-member transfers.</b> The early-turn fee, turn-market premiums, and late-payment penalties move money <b>between members</b> by rules everyone accepted. These are zero-sum across the group; Halqa keeps none of them.</li>
+</ol>
+<h2>7.2 Halqa's revenue: the 5% Mudarib share</h2>
+<p>Halqa's income is a <b>5% Mudarib (manager's) share of the profit it generates</b> on the float sweep and the vault — a classic Mudarabah split where Halqa is the working manager and the members are the capital providers. Halqa takes nothing from members' savings principal and nothing from the member-to-member transfers. The alignment is total: <b>Halqa earns if, and only if, members earn.</b></p>
+<h2>7.3 Illustrative unit economics</h2>
+<p>Consider the reference circle used throughout this document: 12 members contributing Rs 11,667/month (a Rs 140,004 monthly pool) for one year, everyone paying on day one. The engine's realised profit for the group (float sweep net of fee, plus pooled deposit yield) is on the order of <b>Rs 56,700 per cycle</b> at current indicative rates — real profit shared among members — with Halqa's 5% Mudarib share layered on the gross float. Scale that across thousands of concurrent circles, add vault balances (which compound and grow average revenue per user), and the revenue is a function of <b>assets-earning-days under management</b>, not of nickel-and-diming savers. This is a healthier, more defensible model than a flat per-committee fee, because it grows with member wealth rather than with member count alone.</p>
+<div class="callout"><b>Why the model scales gracefully:</b> the marginal cost of an additional earning-day is near zero (it is a ledger entry against a pooled instrument), while the marginal revenue is a fixed share of real yield. Vault top-ups and payout-parking add balances that earn continuously, independent of the committee calendar — a second, always-on revenue line built on the same rails.</div>
+<h2>7.4 A worked revenue model</h2>
+<p>The following is an <b>illustrative</b> steady-state model, chosen to show the mechanics rather than to forecast. Assume a cohort of 100,000 active savers, an average committee contribution of Rs 8,000/month, an average vault balance of Rs 40,000 per active saver, a blended realised yield of ~11% on earning balances, and Halqa's 5% Mudarib share of that yield.</p>
+<table>
+  <tr><th>Line</th><th>Assumption</th><th>Indicative annual figure</th></tr>
+  <tr><td>Average pool float under management</td><td>100k savers × ~Rs 8k × float fraction of the month</td><td>Order of Rs 2–4 bn of earning float at any time</td></tr>
+  <tr><td>Average vault balances</td><td>100k × Rs 40k (a fraction actively parked)</td><td>Order of Rs 1–2 bn of earning balances</td></tr>
+  <tr><td>Blended earning balances</td><td>Float + deposits + vault</td><td>~Rs 4–6 bn</td></tr>
+  <tr><td>Gross yield generated for members</td><td>~11% on earning balances</td><td>~Rs 440–660 m of real member profit</td></tr>
+  <tr><td><b>Halqa revenue (5% Mudarib share)</b></td><td>5% of gross yield</td><td><b>~Rs 22–33 m</b></td></tr>
+</table>
+<p>The point of the model is not the exact figure — it is the <b>shape</b>. Revenue is a straightforward, auditable percentage of a real, member-visible profit pool; it grows as balances grow (deeper engagement, larger circles, more vault parking), and it does so without ever raising a fee on a saver. A flat-fee competitor must add members to add revenue; Halqa also grows by deepening the relationship with existing members, which is both cheaper and stickier. Layer on optional, disclosed lines — Priority/Sigma circles (where Halqa still takes only the engine's Mudarib share, not the member-to-member fee), Credit-Passport verification partnerships, and future premium tiers — and the model has multiple, aligned expansion paths.</p>
+<h2>7.5 Cost structure &amp; margin logic</h2>
+<p>The cost base is characteristic of a software-and-rails business, not a lender: engineering and product, compliance and licensing (front-loaded), cloud infrastructure, and member support (materially reduced by the Rafa assistant and the self-service design). There is no cost of funds and no credit-loss line in the traditional sense, because Halqa does not lend — it shares the yield on members' own money. Once the licensing is cleared and the instruments are live, the incremental margin on each additional earning-rupee-day is very high, which is what makes the Mudarib-share model attractive at scale.</p>
+
+<!-- ===================== 08 ===================== -->
+<h1 class="section section-break">08 · Worked examples with real numbers</h1>
+<p>Every figure below is produced by the engine's own verified test suite (integer-exact arithmetic, day-one payers), not by marketing arithmetic — if the engine changes, the tests fail before the numbers can go stale.</p>
+<h2>8.1 The tier ladder — 12 women, Rs 140,004 pool, one year</h2>
+<p>The best-placed member's modelled <b>annual bonus</b>, by configuration:</p>
+<table>
+  <tr><th>Configuration</th><th>Best member's annual bonus</th><th>Shariah</th></tr>
+  <tr><td>Classic (no engine)</td><td>Rs 0</td><td><span class="chip halal">halal</span></td></tr>
+  <tr><td>Sukoon (earn on idle money)</td><td>~Rs 5,700</td><td><span class="chip halal">halal</span></td></tr>
+  <tr><td>Bazaar (Sukoon + patience tilt)</td><td>~Rs 7,649</td><td><span class="chip halal">halal</span></td></tr>
+  <tr><td>Priority (10% early fee only)</td><td>~Rs 7,637</td><td><span class="chip conv">conventional</span></td></tr>
+  <tr><td>Sigma — monthly dividends</td><td>~Rs 15,285</td><td><span class="chip conv">conventional</span></td></tr>
+  <tr><td><b>Sigma — pooled dividends</b></td><td><b>Rs 16,982</b></td><td><span class="chip conv">conventional</span></td></tr>
+</table>
+<h2>8.2 Per-position economics (Sigma, pooled)</h2>
+<p>The bonus is <b>net</b> of the fee a member pays on their own turn. Early positions pay for early cash; late positions are paid for waiting:</p>
+<table>
+  <tr><th>Position</th><th>Net annual bonus</th><th>Interpretation</th></tr>
+  <tr><td>#1 (earliest)</td><td>−Rs 6,181</td><td>Pays the fee for going first — but receives the Rs 140k payout first (liquidity value)</td></tr>
+  <tr><td>#6 (middle)</td><td>~Rs 4,099</td><td>Near the fee break-even; mostly the real engine profit</td></tr>
+  <tr><td>#12 (last)</td><td>Rs 16,982</td><td>Pays no fee, earns the most patience-weighted profit — the reward for waiting</td></tr>
+</table>
+<p><b>Conservation check:</b> across the whole group, the net bonus equals exactly the real profit created by the engine (float + deposit yield). The fee portion is a pure internal transfer — honestly zero-sum. And the fee is hard-capped at 10% in the code itself, so the growth from Bazaar's ~Rs 6,300 to Sigma's Rs 16,982 comes entirely from <b>stacking real levers</b> (float, pooled deposit yield, patience tilt, routing dividends through the tilt), never from a higher charge.</p>
+<h2>8.3 The vault multiplier</h2>
+<p>A member who receives a large payout and <b>parks</b> it in the vault for the remainder of the year, rather than letting it sit idle, adds materially to their return. On a payout in the range of Rs 126,000 parked for the balance of a year at the standard rate, the accrued profit can exceed <b>Rs 11,000</b> — on money that would otherwise have earned nothing. Choosing the income or gold tier raises that further, at disclosed higher volatility.</p>
+<div class="warn"><b>Being real about these numbers.</b> They assume the disciplined case — everyone pays on day one, current dated rates (money-market ~10.8%, Mudarabah ~11.2%, income ~12.1%, gold ~15.0%), and the stated tier. Lazy payers shrink the float and their own weight; that is by design and disclosed. Every figure is indicative, tied to dated instruments, and never guaranteed.</div>
+
+<!-- ===================== 09 ===================== -->
+<h1 class="section section-break">09 · Shariah compliance — today and tomorrow</h1>
+<h2>9.1 The principle</h2>
+<p>The line Halqa draws is simple: <b>halal returns come from real assets and real time — never from charging someone for early access to shared money.</b> Traditional chit-fund auctions violate this by letting early takers effectively pay interest to later ones; Halqa's halal engines earn only on genuinely idle money and never price the turns.</p>
+<h2>9.2 What is halal in the product today</h2>
+<ul>
+  <li><b>Float sweep &amp; Mudarabah deposits (Sukoon/Bazaar).</b> Profit is variable, comes from real Shariah-compliant instruments, and is shared by a Mudarabah ratio. There is no guaranteed, fixed, interest-like return.</li>
+  <li><b>Patience tilt (Bazaar).</b> A disclosed profit-sharing ratio agreed before the circle starts — not a charge on anyone.</li>
+  <li><b>Early-bird boost.</b> A profit-sharing weight funded by profit the early payer helped create.</li>
+  <li><b>Late-penalty routing.</b> In the halal tiers, penalties are <b>donated to charity</b> at completion — a penalty may discipline, but under Shariah it may not enrich the lender or the platform. This is the correct fiqh treatment, implemented in code.</li>
+  <li><b>Free-swap turn market.</b> The halal tiers allow only cost-free position swaps, avoiding the contested sale of a monetary claim for more money.</li>
+</ul>
+<h2>9.3 What is honestly labelled conventional</h2>
+<p>The <b>early-turn fee</b> (Priority/Sigma) prices early access and is therefore <b>not Shariah-reviewed</b>. Halqa does not hide this: it is labelled at the tier picker, in the consent text, and on the committee page, and a fully halal alternative is always one tap away. Members who want maximum yield can choose it with eyes open; members who want a fully halal circle never have to.</p>
+<h2>9.4 How Halqa can go further</h2>
+<ul>
+  <li>Engage a formal <b>Shariah advisory board</b> to review and issue a fatwa on the Sukoon/Bazaar engines, the hiba prize-draw framing, and the deposit-yield pooling.</li>
+  <li>Offer a <b>strictly halal-only mode</b> that hides the conventional Priority/Sigma levers entirely for institutions or members who require it.</li>
+  <li>Publish the underlying instruments' Shariah certifications and the board's rulings in-app for full transparency.</li>
+  <li>Structure the platform's own take explicitly as a disclosed Mudarib share, with the ratio published.</li>
+</ul>
+
+<!-- ===================== 10 ===================== -->
+<h1 class="section section-break">10 · Risk, safety &amp; the answers to common concerns</h1>
+<h2>10.1 The 100,000-member stress simulation</h2>
+<p>Halqa's default-prevention design is validated by a seeded Monte-Carlo model that runs 100,000 members with randomised behaviour through the <b>exact documented scoring and enforcement rules</b> (not a marketing model). Under a deliberately harsh assumption — a 15% "shaky" sub-population and randomly assigned turn positions — the outcomes are:</p>
+<table>
+  <tr><th>Outcome</th><th>Share of members</th></tr>
+  <tr><td>Clean completions (never late)</td><td>54.6%</td></tr>
+  <tr><td>Completed with at least one late payment</td><td>34.5%</td></tr>
+  <tr><td>Pre-payout dropouts</td><td>3.6%</td></tr>
+  <tr><td><b>Post-payout defaulters (banned, collateral forfeited)</b></td><td><b>7.28%</b></td></tr>
+</table>
+<h3>The key finding — and the honest caveat</h3>
+<p>The forfeited security deposit plus the 15% hold-back <b>fully covers roughly 59%</b> of the worst-case defaults (a member who absconds immediately after their payout). The residual is the inherent early-default risk that every committee carries — but note two things: a <b>traditional paper committee covers 0%</b> of it, and Halqa's default credit-weighted ordering deliberately assigns the low-coverage early positions to the most reliable members, so the real-world figure is better than this conservative, position-randomised simulation implies. That lever has since been pulled: early-position deposit coverage is now sized at <b>90% of remaining dues (capped at 95%)</b>, and the Pakistan-calibrated simulation shows <b>90.4% of defaulted exposure recovered</b> with <b>70% of defaults fully collateralised</b>.</p>
+<h2>10.2 Common concerns, answered plainly</h2>
+<table>
+  <tr><th style="width:30%">Concern</th><th>Halqa's measure</th></tr>
+  <tr><td>"Is this a scam / Ponzi?"</td><td>No pooled central fund to abscond with in Stage 1; every rupee on an inspectable double-entry ledger; no guaranteed-return promises; rules enforced by code, not by trust in a stranger.</td></tr>
+  <tr><td>"Will someone take the pot and run?"</td><td>Graduated deposits + payout hold-backs + account bans + a recovery path make post-payout default costly and recoverable; the simulation quantifies exactly how much is covered.</td></tr>
+  <tr><td>"Is my money held safely?"</td><td>In Stage 1 Halqa holds nothing — members transfer directly and Halqa records. Custody only begins after the licensing in Section 11.</td></tr>
+  <tr><td>"Is the profit guaranteed?"</td><td>No — and the product says so everywhere. Returns are indicative, variable, tied to dated instruments.</td></tr>
+  <tr><td>"Is it halal?"</td><td>The Sukoon/Bazaar engines are built halal; the conventional fee is labelled and optional (Section 9).</td></tr>
+  <tr><td>"What about my privacy?"</td><td>Payment status is shared inside a committee (that is how accountability works); personal data is not sold; the Passport is shared only when the member chooses.</td></tr>
+</table>
+<h2>10.3 Platform &amp; operational risk controls</h2>
+<ul>
+  <li><b>Double-entry ledger</b> — every movement balances; figures are reconstructable and auditable.</li>
+  <li><b>Idempotency keys</b> on every money-moving operation — no double-payouts or double-charges on ret/replay.</li>
+  <li><b>Rate limiting, authentication, and input validation</b> across the API surface.</li>
+  <li><b>Deterministic, replay-verifiable draws</b> for the prize hiba — no hidden randomness.</li>
+  <li><b>A comprehensive automated test suite</b> (Section 12) that fails the build if any money-path invariant regresses.</li>
+</ul>
+
+<h2>10.4 Scenario walk-throughs</h2>
+<p>Three concrete failure scenarios and how the system responds:</p>
+<h3>Scenario A — the early recipient absconds</h3>
+<p>A member in position #2 of a 12-person circle collects a large payout and stops paying. This is the worst case: they owe ten more contributions. Their forfeited deposit (sized larger precisely because early positions owe more) plus the 15% hold-back cover a substantial part of the shortfall; the remainder becomes a recovery case against a now-banned account whose reputation is damaged across the entire platform. In the paper equivalent, the group simply loses the money and the organiser eats the dispute. The shipped coverage raise (early-position deposits sized at 90% of remaining dues, capped at 95%) closes most of the residual gap, and credit-weighted ordering — the default — puts position #2 in the hands of a high-reliability member in the first place.</p>
+<h3>Scenario B — the chronically late payer</h3>
+<p>A member repeatedly pays a few days late. The graduated ladder handles this proportionately: reminders first, then fixed (non-compounding) penalties and score reductions during the disclosed grace, with the harshest consequences reserved for genuine default. The member's score drifts down, gently steering behaviour, while the penalties they incur ultimately flow to charity (halal tiers) or to the members who never paid late — so lateness never enriches the platform and good behaviour is rewarded.</p>
+<h3>Scenario C — a dispute over "who paid what"</h3>
+<p>In a paper committee this is a he-said-she-said that can end friendships. On Halqa every contribution, payout, deposit, penalty and refund is a timestamped, reason-coded, double-entry ledger record with a payment reference. The truth is not a memory or a notebook; it is a reconstructable balance. Disputes collapse into facts.</p>
+<h2>10.5 What we deliberately do not do</h2>
+<ul>
+  <li><b>We do not promise guaranteed returns.</b> Any such promise would be both false and, for the halal engine, a riba red flag.</li>
+  <li><b>We do not lend at interest.</b> There is no credit product and no cost-of-funds; Halqa shares yield on members' own money.</li>
+  <li><b>We do not hold funds in Stage 1.</b> Custody is gated behind the licence, by design.</li>
+  <li><b>We do not blur Shariah status.</b> The one conventional lever is labelled everywhere it appears.</li>
+</ul>
+
+<!-- ===================== 11 ===================== -->
+<h1 class="section section-break">11 · Licensing &amp; the regulatory path</h1>
+<h2>11.1 The Stage-1 boundary</h2>
+<p>Halqa today is deliberately a <b>record-only</b> platform: it tracks, scores and enforces, but it does not take custody of or invest members' actual money. This is a conscious legal posture — it lets the product, the engines and the trust model be built and proven <b>before</b> the regulatory perimeter is crossed, and it keeps the language honest ("recorded/tracked," never "secured/held").</p>
+<h2>11.2 The bar to cross</h2>
+<p>To hold and deploy member funds — to actually run the float sweep and vault with real money rather than in simulation — Halqa must operate under an SECP framework, most naturally an <b>NBFC licence</b> of the kind Oraan already holds (Oraan Financial Services, SECP/LRD/107/OFSPL/2023). That path is real, and Oraan's clearance of it proves it is achievable for a committee-based fintech. Depending on the exact structure, relevant regimes include NBFC/investment-adviser rules, the digital-lending and fund-management frameworks, and — for the halal instruments — the SECP's Islamic-finance and (from 1 July 2026) ESG fund frameworks.</p>
+<div class="callout"><b>For investors:</b> licensing is the primary gating milestone and the single largest use of a raise. It is a known, walked path — not open-ended research. The product, engines, safety model and reputation layer are being built to be <b>license-ready</b>, so that the capital and time go into the regulatory process and partner integrations rather than into re-architecting.</div>
+<h2>11.3 Partner rails (built, currently hidden)</h2>
+<p>A bank-custody and guaranteed-payout rail has been engineered against a production-shaped sandbox and is currently feature-flagged off in the interface (to keep the Stage-1 boundary and the messaging clean). It can be re-enabled the moment a licensed custody partner and the regulatory posture are in place — the integration surface already exists.</p>
+
+<!-- ===================== 12 ===================== -->
+<h1 class="section section-break">12 · Technology &amp; architecture</h1>
+<h2>12.1 Stack</h2>
+<ul>
+  <li><b>Front end:</b> a mobile-first single-page web application (React + TypeScript, built with Vite), designed for low-end devices and the realities of Pakistani mobile data.</li>
+  <li><b>Back end:</b> a TypeScript API (Express) with a typed data layer (Prisma) over a PostgreSQL database.</li>
+  <li><b>Real-time:</b> committee chat and live updates over web-sockets.</li>
+  <li><b>Correctness:</b> all money is handled as integer <b>paisa</b> with big-integer arithmetic — no floating-point rounding can ever leak or fabricate value.</li>
+</ul>
+<h2>12.2 The ledger</h2>
+<p>Every financial event writes a balanced double-entry record with a reason code, reference type/id, and an idempotency key. Balances (escrow, deposit reserves, guarantee pools, vaults, platform fees, charity) are always derivable by summing the ledger, so the system is auditable by construction and no figure is a mystery.</p>
+<h2>12.3 Testing &amp; CI</h2>
+<p>The engines are covered by a substantial automated suite — <b>17 unit/property tests and 219 end-to-end integration checks</b> — that exercises the full life-cycle (create, join, consent, pay, invest, liquidate, payout, completion, default, recovery, vault, turn market) and asserts money-path invariants such as "the group's net bonus equals the real profit created" and "no engine circle ever pays negative member profit." The suite is re-run-safe (verified twice back-to-back) and a continuous-integration pipeline runs type-checking, unit tests and a production build on every change. The promise that the reference circle reaches a Rs 15,000 maximum bonus is itself a locked test — the build fails if a change breaks it.</p>
+<h2>12.4 Resilience &amp; observability</h2>
+<ul>
+  <li>Structured request logging (one line per request, with latency and status).</li>
+  <li>A health endpoint that verifies database connectivity.</li>
+  <li>An application-level error boundary on the front end.</li>
+  <li>A scheduled delinquency job that walks obligations, sends graduated reminders, and applies penalties and defaults on time.</li>
+</ul>
+<h2>12.5 The Rafa assistant</h2>
+<p>An in-app 3D guide bot answers members' questions from a curated knowledge base (keyword-matched over a large synonym set, so it handles far more phrasings than it has hand-written entries) and runs a real-time, page-aware walkthrough that follows the user around the app. It lowers the support burden and the onboarding friction that kills savings-app retention.</p>
+
+<h2>12.6 The metrics that matter</h2>
+<p>Halqa is instrumented to be run by the numbers that actually predict a savings platform's health — not vanity downloads. The core dashboard tracks:</p>
+<ul>
+  <li><b>Assets-earning-days under management</b> — the true monetisation base: pool float plus deposits plus vault balances, weighted by the days they earn. Revenue is a fixed share of this, so it is the single most important number.</li>
+  <li><b>Cycle-completion rate</b> — the share of circles that finish cleanly. This is the trust and retention proxy; a healthy figure is the strongest signal the safety stack works in the wild.</li>
+  <li><b>Default rate and collateral-coverage ratio</b> — tracked live and benchmarked against the 7.28% / 59% simulation baseline, so any drift is caught early.</li>
+  <li><b>On-time payment rate and average reliability score</b> — leading indicators of circle health, and the raw material of the Credit Passport's value.</li>
+  <li><b>Vault adoption and average parked balance</b> — the second, always-on revenue line; growth here means deepening member relationships and rising revenue-per-user.</li>
+  <li><b>Host activation and host-to-member fan-out</b> — the distribution engine: how many members each activated host brings, and how many of those become hosts themselves.</li>
+  <li><b>Support-deflection by Rafa</b> — the share of member questions resolved by the assistant, a direct lever on the cost-to-serve.</li>
+</ul>
+<p>Because everything sits on a double-entry ledger, these metrics are not estimated from event logs — they are <b>derived from the books</b>, which means they are auditable and hard to fudge, both for internal decision-making and for a future regulator or investor's due-diligence team.</p>
+
+<!-- ===================== 13 ===================== -->
+<h1 class="section section-break">13 · Roadmap</h1>
+<table>
+  <tr><th style="width:20%">Horizon</th><th>Focus</th></tr>
+  <tr><td><b>Now (Stage 1)</b></td><td>Record-only platform; engines, safety stack, vault, reputation, Rafa — proven in simulation and tests. Design partner pilots.</td></tr>
+  <tr><td><b>Licensing</b></td><td>SECP NBFC application and Shariah-board engagement; move from simulated yield to real deployment under custody.</td></tr>
+  <tr><td><b>Scale features</b></td><td>Re-enable the bank-custody/guarantee rail; graduated first-circle caps for unproven members (shipped); vault-as-safety-net auto-cover (shipped); goal-circle marketing (Hajj, fees, wedding).</td></tr>
+  <tr><td><b>Growth</b></td><td>Referral loyalty pool funded from the Mudarib share; gold and income vault adoption; Credit-Passport partnerships with lenders/landlords; regional expansion of the ROSCA model.</td></tr>
+</table>
+
+<!-- ===================== 14 ===================== -->
+<h1 class="section section-break">14 · The investment case</h1>
+<h2>14.1 Why now</h2>
+<p>Three tailwinds converge: a huge, un-yielding informal committee market; a proven digital-committee category (Oraan) that has de-risked demand and licensing; and a payments infrastructure (Raast, wallets) that finally makes record-and-transfer frictionless. The window is to build the <b>product-depth winner</b> — the one that adds yield, Shariah honesty and portable reputation — before the category consolidates.</p>
+<h2>14.2 Why Halqa</h2>
+<ul>
+  <li><b>A better revenue model:</b> a Mudarib share of real yield that grows with member wealth, plus an always-on vault revenue line — versus a flat per-committee fee.</li>
+  <li><b>Differentiation the incumbent doesn't lead with:</b> halal yield, Shariah optionality, and a portable Credit Passport.</li>
+  <li><b>Engineering discipline:</b> a double-entry ledger, integer money, 236 automated checks, and a stress-tested safety model — built license-ready.</li>
+  <li><b>Total alignment:</b> Halqa earns only when members earn, and never touches savings principal or member-to-member transfers.</li>
+</ul>
+<h2>14.3 The primary use of funds</h2>
+<p>Licensing (the SECP NBFC process and Shariah-board engagement), custody-partner integration, and distribution/trust-building for member acquisition. The product itself is deliberately advanced so that capital funds the regulated go-live, not a rebuild.</p>
+<div class="callout"><b>The one-line thesis.</b> Pakistanis already run committees at national scale. Halqa makes that habit safe, rewarding and reputation-building — earning only a share of the real profit it creates on money that was sitting idle — and the path to holding real funds is the same licence a funded competitor already holds.</div>
+<h2>14.4 Go-to-market &amp; distribution</h2>
+<p>Committees are inherently viral: a host recruits a group. Halqa's acquisition strategy therefore centres on <b>hosts, not individuals</b>. Win one trusted organiser and you win their circle of 6–20 members; delight those members and several become hosts of their own. The specific levers:</p>
+<ul>
+  <li><b>Host enablement.</b> Make hosting dramatically easier than the paper equivalent — automatic reminders, locked schedules, dispute-proof ledgers, and a visible reputation that rewards good hosts. The host's pain (chasing payments, absorbing defaults) is Halqa's wedge.</li>
+  <li><b>Trust-first onboarding.</b> The Stage-1 record-only posture and Rafa's plain-language guidance are explicitly designed to convert the cautious first-timer, who is the majority. The first clean cycle is the conversion event.</li>
+  <li><b>Community &amp; faith channels.</b> Women's networks, workplace groups, and faith-community savings drives (Hajj/Umrah goal circles) are natural, high-trust acquisition surfaces — the same channels through which paper committees already spread.</li>
+  <li><b>Reputation as a flywheel.</b> The Credit Passport gives members a reason to keep their history on Halqa specifically, and a reason to bring their financial life into the app, increasing balances and therefore revenue.</li>
+</ul>
+<h2>14.5 Execution posture</h2>
+<p>The product is built to be <b>boringly reliable</b> where it matters (money paths, ledger integrity, test coverage) and delightful where it drives retention (Rafa, the vault, the reputation layer). The engineering choices — integer money, double-entry accounting, a large re-run-safe test suite, CI gating, feature-flagged infrastructure — are the choices of a team that expects a regulator and a due-diligence engineer to look under the hood. Capital is intended to fund the regulated go-live and distribution, not a rebuild, because the hard technical and design problems are being solved first, deliberately, in the record-only stage.</p>
+<h2>14.6 Investor FAQ</h2>
+<h3>"Isn't this just Oraan?"</h3>
+<p>No. Oraan proved the category and holds the licence — genuine advantages we respect and must match on regulation. But Oraan leads with the committee as a facilitated service and a flat fee; Halqa leads with <b>real halal yield on idle money</b>, an aligned Mudarib-share revenue model, Shariah optionality stated honestly, and a <b>portable Credit Passport</b> — none of which Oraan foregrounds. We compete on product depth and monetisation shape.</p>
+<h3>"How do you make money without charging savers?"</h3>
+<p>By taking a 5% manager's (Mudarib) share of the <b>real profit</b> the engine and vault generate on money that was idle — never a cut of principal, never a cut of the member-to-member transfers. If members earn, we earn; if they do not, we do not. Revenue scales with earning balances (Section 7).</p>
+<h3>"What is the single biggest risk?"</h3>
+<p><b>Regulatory timing.</b> Holding and investing member funds requires the SECP NBFC licence (Section 11). It is a walked, known path — a funded competitor already holds it — but it is the gating milestone and the primary use of a raise. Everything else (product, engines, safety, reputation) is being built license-ready so the capital funds the process, not a pivot.</p>
+<h3>"What stops a member taking the pot and running?"</h3>
+<p>A layered stack — graduated deposits, payout hold-backs, credit-weighted ordering, account bans, and a recovery path — quantified by a 100,000-member stress simulation that shows a 7.28% post-payout default rate with meaningful collateral coverage, versus zero protection in a paper committee. The residual early-default gap is identified with a specified fix on the roadmap.</p>
+<h3>"Is the yield real or a gimmick?"</h3>
+<p>Real. It is profit on genuinely idle money placed in disclosed, dated Islamic money-market, income and Mudarabah instruments, net of a transparent 5% share. It is variable and never guaranteed, and the product says so everywhere. The numbers in Section 8 are produced by the engine's own locked test suite, not by a marketing spreadsheet.</p>
+<h3>"Why will people trust it?"</h3>
+<p>Because it does not ask them to trust it blindly. In Stage 1 it holds nothing, shows every rupee on an inspectable ledger, labels the one conventional mechanism honestly, and refuses to promise guaranteed returns. In a savings market, that restraint is the differentiator.</p>
+
+<h2>14.7 In closing</h2>
+<p>The most durable businesses are usually not those that invent a new behaviour, but those that take a universal, deeply-rooted behaviour and remove its friction while keeping its soul. The committee is such a behaviour: hundreds of millions of people across the Muslim world and South Asia already trust it, use it, and depend on it — not because a bank told them to, but because it fits how communities actually save. Its only flaws are that it is fragile and unrewarding, and that the discipline it demands earns its participants no lasting credit. Halqa removes exactly those flaws — and no more. It does not financialise the committee into something unrecognisable; it does not dangle guaranteed returns; it does not quietly take a cut of people's savings. It makes the committee safe enough to run among near-strangers, rewarding enough that the idle money finally works for its owners, and legible enough that a lifetime of quiet reliability becomes a portable financial identity. It earns its keep only by taking a modest, disclosed share of the real profit it creates — profit that would otherwise never have existed. The demand is proven, the category is de-risked, the regulatory path is walked, and the product is built by a team that expects to be audited to the paisa. What remains is to clear the licence, connect the custody, and put this in the hands of the people who have been running committees, faithfully and unrewarded, all along.</p>
+
+<!-- ===================== 15 ===================== -->
+<h1 class="section section-break">15 · Disclaimers &amp; glossary</h1>
+<h2>15.1 Disclaimers</h2>
+<p>This document is an informational and technical overview prepared for prospective investors and due-diligence teams. It is <b>not</b> an offer or solicitation to buy or sell any security, nor investment, legal, tax or Shariah advice. All financial figures are <b>indicative</b>, are tied to dated instruments and modelled assumptions (day-one payment behaviour, current scheme rates), and are <b>not guaranteed</b>; actual returns will differ. The platform is currently a Stage-1 record-only system and does not take custody of or invest members' funds; holding and deploying member funds is contingent on the regulatory licensing described in Section 11. Shariah characterisations reflect the product's design intent and are pending formal Shariah-board review. Third-party facts about Oraan and the market are drawn from public sources believed reliable (company websites, press, regulatory records, and financial-inclusion surveys) and are cited for illustration.</p>
+<h2>15.2 Glossary</h2>
+<table>
+  <tr><th style="width:24%">Term</th><th>Meaning</th></tr>
+  <tr><td>ROSCA / committee / BC / kameti</td><td>A rotating savings group: fixed periodic contributions, one member collects the pool each period, until all have collected.</td></tr>
+  <tr><td>Float sweep</td><td>Earning real profit on the pool during the days it sits idle between contribution and payout.</td></tr>
+  <tr><td>Mudarabah</td><td>An Islamic profit-sharing partnership between a capital provider and a working manager (the Mudarib).</td></tr>
+  <tr><td>Mudarib share</td><td>The manager's agreed cut of the <b>profit</b> (here, Halqa's 5%) — never a cut of principal.</td></tr>
+  <tr><td>Patience tilt</td><td>Distributing pooled profit with a disclosed bias toward later turns, who lent the group their money longest.</td></tr>
+  <tr><td>Hiba</td><td>A gift; used for the optional prize draw, where only profit (never principal) is gifted.</td></tr>
+  <tr><td>Riba</td><td>Interest/usury — a fixed, guaranteed charge on a loan; forbidden in Islam and avoided by the halal engines.</td></tr>
+  <tr><td>Capital-days</td><td>Amount contributed × the number of days it stayed in the circle — the fair basis for splitting profit.</td></tr>
+  <tr><td>Credit Passport</td><td>A signed, shareable, verifiable export of a member's committee history.</td></tr>
+  <tr><td>Sukoon / Bazaar / Priority / Sigma</td><td>Named earning tiers: Sukoon (earn), Bazaar (earn + patience), Priority (conventional fee), Sigma (all levers).</td></tr>
+  <tr><td>NBFC</td><td>Non-Banking Finance Company — the SECP licence class under which a committee-based fintech can hold and manage member funds.</td></tr>
+</table>
+<p class="footnote">Halqa · Kayani Solutions · Investor &amp; Technical Dossier · Confidential · Stage-1 record-only build · Figures indicative and not guaranteed · 2026</p>
+
+</body>
+</html>
