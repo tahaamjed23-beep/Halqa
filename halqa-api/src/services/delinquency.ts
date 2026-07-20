@@ -2,8 +2,9 @@ import { prisma } from '../db';
 import { audit, ledger } from '../lib/audit';
 import { clampScore } from '../lib/money';
 import { settleContribution } from '../lib/settlement';
+import { runAutoDebit } from '../lib/auto-debit';
 
-export type DelinquencySummary={checked:number;late:number;missed:number;postReceiptDefaults:number;autoCovered:number};
+export type DelinquencySummary={checked:number;late:number;missed:number;postReceiptDefaults:number;autoCovered:number;autoDebited:number};
 
 // Net vault balance from the ledger (principal only — accrued profit is
 // realised at sweep time and is never spent before it exists).
@@ -16,6 +17,11 @@ async function vaultBalance(userId:string):Promise<bigint>{
 }
 
 export async function evaluateDelinquencies(now=new Date()):Promise<DelinquencySummary>{
+  // Auto-collect first: members with a standing mandate have their due
+  // installment pulled before any reminder, penalty or escalation runs — so an
+  // opted-in member is never nudged or punished for something the system was
+  // going to collect anyway.
+  const autoDebit = await runAutoDebit(now);
   const reminderWindow = new Date(now.getTime() + 3 * 86_400_000);
   const upcoming = await prisma.payment.findMany({ where: { status: 'PENDING', reminderLevel: 0, dueDate: { gte: now, lte: reminderWindow }, round: { status: 'COLLECTING' } }, include: { round: { include: { committee: true } } } });
   for (const payment of upcoming) {
@@ -54,7 +60,7 @@ export async function evaluateDelinquencies(now=new Date()):Promise<DelinquencyS
     where:{status:{in:['PENDING','LATE']},dueDate:{lt:now},round:{status:'COLLECTING'}},
     include:{round:{include:{committee:true}},payer:true},
   });
-  const summary:DelinquencySummary={checked:obligations.length,late:0,missed:0,postReceiptDefaults:0,autoCovered};
+  const summary:DelinquencySummary={checked:obligations.length,late:0,missed:0,postReceiptDefaults:0,autoCovered,autoDebited:autoDebit.collected};
   for(const payment of obligations){
     const daysLate=Math.max(1,Math.ceil((now.getTime()-payment.dueDate.getTime())/86_400_000));
     const membership=await prisma.committeeMember.findUnique({where:{committeeId_userId:{committeeId:payment.round.committeeId,userId:payment.payerId}},include:{securityDeposits:true}});

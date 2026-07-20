@@ -263,6 +263,14 @@ model CommitteeMember {
   paidPrincipalPaisa BigInt @default(0)
   joinedAt DateTime @default(now())
   exitedAt DateTime?
+  // Standing auto-debit mandate (auto-collect). The member's own consent to
+  // have each due installment collected automatically on the deadline. The
+  // mandate lives in the app (software consent); execution routes through the
+  // provider layer — sandbox settles instantly, a live rail pulls via the
+  // aggregator. Halqa never holds the money; it only schedules the pull.
+  autoDebitEnabled Boolean @default(false)
+  autoDebitRail String?
+  autoDebitMandateAt DateTime?
   securityDeposits SecurityDeposit[]
   protectionCommitment ProtectionCommitment?
   payoutHoldbacks PayoutHoldback[]

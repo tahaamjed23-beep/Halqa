@@ -17,7 +17,7 @@ const login=async identity=>(await request('/auth/login',{method:'POST',body:{id
 const health=await request('/health'); check('record-only health marker',health.stage==='record-only-prototype');
 const [sana,ayesha,bilal]=await Promise.all(['sana','ayesha','bilal'].map(login));
 await prisma.user.updateMany({where:{username:'bilal'},data:{creditScore:640}}); // pin precondition: repeated runs raise his score past 700
-await prisma.committee.updateMany({where:{host:{username:{in:['sana','ayesha']}},status:{in:['FORMING','ACTIVE']},OR:[{name:{startsWith:'Lifecycle '}},{name:{startsWith:'Soneri Rail '}},{name:{startsWith:'Bazaar '}},{name:{startsWith:'Priority '}},{name:{startsWith:'Sigma '}},{name:{startsWith:'Swap '}},{name:{startsWith:'Cover '}},{name:{startsWith:'Newbie '}},{name:{startsWith:'Safety '}},{name:{startsWith:'Protection QA'}},{name:{startsWith:'Bad '}}]},data:{status:'CANCELLED'}}); // clear stale test circles so the 5-hosted cap never trips
+await prisma.committee.updateMany({where:{host:{username:{in:['sana','ayesha']}},status:{in:['FORMING','ACTIVE']},OR:[{name:{startsWith:'Lifecycle '}},{name:{startsWith:'Soneri Rail '}},{name:{startsWith:'Bazaar '}},{name:{startsWith:'Priority '}},{name:{startsWith:'Sigma '}},{name:{startsWith:'Swap '}},{name:{startsWith:'Cover '}},{name:{startsWith:'Newbie '}},{name:{startsWith:'Safety '}},{name:{startsWith:'Protection QA'}},{name:{startsWith:'Bad '}},{name:{startsWith:'Autopay '}}]},data:{status:'CANCELLED'}}); // clear stale test circles so the 5-hosted cap never trips
 // Referral trigger: bilal is marked as referred by ayesha BEFORE any circle
 // completes this run; the once-ever bonus ledgers on his first completion.
 const [ayeshaRow,bilalRow]=await Promise.all([prisma.user.findUniqueOrThrow({where:{username:'ayesha'}}),prisma.user.findUniqueOrThrow({where:{username:'bilal'}})]);
@@ -361,6 +361,31 @@ check('vault balance reduced by exactly the installment',bilalVault.balancePaisa
 const latePenalty=await prisma.ledgerEntry.findFirst({where:{reason:'PROGRESSIVE_LATE_PENALTY_RECORDED',refId:coveredPayment.id}});
 check('late adjustment still applied (auto-cover softens escalation, not fairness)',!!latePenalty&&latePenalty.amountPaisa>0n);
 await request('/vault/auto-cover',{token:bilal,method:'POST',body:{enabled:false}}); // restore default for re-runs
+
+// ---- Auto-collect (standing auto-debit mandate): a mandated installment is pulled automatically on the due date ----
+const sanaId=(await prisma.user.findUniqueOrThrow({where:{username:'sana'}})).id; // free sana's host slots — earlier test circles are done being asserted
+await prisma.committee.updateMany({where:{hostId:sanaId,status:{in:['ACTIVE','FORMING']}},data:{status:'CANCELLED'}});
+const autopay=await request('/committees',{token:sana,method:'POST',expect:201,body:{name:`Autopay ${Date.now()}`,memberCap:3,contributionPaisa:'1500000',cadencePreset:'SHORT',periodDays:30,minMembersToStart:3,reinvestRatio:0,orderMode:'HOST_ASSIGNED',joinPolicy:'INVITE_ONLY'}});
+await request('/committees/join',{token:ayesha,method:'POST',expect:201,body:{inviteCode:autopay.inviteCode}});
+await request('/committees/join',{token:bilal,method:'POST',expect:201,body:{inviteCode:autopay.inviteCode}});
+await request(`/committees/${autopay.id}/start`,{token:sana,method:'POST',body:{}});
+const ap=await request(`/committees/${autopay.id}`,{token:sana});
+const apRound=ap.rounds.find(r=>r.roundNumber===1);
+const apTokenById=new Map(ap.members.map(m=>[m.userId,{sana,ayesha,bilal}[m.user.username]]));
+const apTarget=apRound.payments.find(p=>p.payerId!==apRound.recipientId).payerId; // a payer who is not the recipient
+const mandate=await request(`/committees/${autopay.id}/autopay`,{token:apTokenById.get(apTarget),method:'POST',body:{enabled:true,rail:'RAAST'}});
+check('auto-debit mandate persists with a timestamp',mandate.autoDebitEnabled===true&&mandate.autoDebitRail==='RAAST'&&!!mandate.autoDebitMandateAt);
+const apReload=await request(`/committees/${autopay.id}`,{token:sana});
+check('mandate visible on the member record',apReload.members.find(m=>m.userId===apTarget).autoDebitEnabled===true);
+await prisma.payment.updateMany({where:{roundId:apRound.id,payerId:apTarget},data:{dueDate:new Date(Date.now()-86_400_000)}}); // bring it due
+const apRun=await request('/protection/delinquency/run',{token:sana,method:'POST',body:{}});
+check('delinquency pass auto-collected the mandated installment',apRun.autoDebited>=1,`autoDebited=${apRun.autoDebited}`);
+const apPaid=await prisma.payment.findUnique({where:{roundId_payerId:{roundId:apRound.id,payerId:apTarget}}});
+check('mandated installment settled automatically via the chosen rail',apPaid.status==='PAID'&&apPaid.paidVia==='RAAST',`status=${apPaid.status} via=${apPaid.paidVia}`);
+const apOther=apRound.payments.find(p=>p.payerId!==apTarget&&p.payerId!==apRound.recipientId);
+if(apOther){const otherPaid=await prisma.payment.findUnique({where:{roundId_payerId:{roundId:apRound.id,payerId:apOther.payerId}}});check('auto-debit never touches a member who did not opt in',otherPaid.status==='PENDING',`other=${otherPaid.status}`);}
+const revoked=await request(`/committees/${autopay.id}/autopay`,{token:apTokenById.get(apTarget),method:'POST',body:{enabled:false}});
+check('auto-debit mandate can be revoked',revoked.autoDebitEnabled===false);
 
 // ---- Security barrier: weak-password rejection + per-account lockout ----
 if(!RELAXED){

@@ -33,6 +33,7 @@ const includeDetail = {
   floatScheme: { select: { name: true, indicativeRatePct: true, shariahCompliant: true } },
   depositScheme: { select: { name: true, indicativeRatePct: true, shariahCompliant: true } },
   members: { where: { status: 'ACTIVE' as const }, include: { user: { select: { id: true, fullName: true, username: true, creditScore: true, kycLevel: true } } }, orderBy: { turnPosition: 'asc' as const } },
+  // (auto-debit mandate fields ride along on each member via the default select)
   rounds: { include: { recipient: { select: { id: true, fullName: true } }, payments: { include: { payer: { select: { id: true, fullName: true } } } }, investments: { include: { scheme: true } } }, orderBy: { roundNumber: 'asc' as const } },
 } satisfies Prisma.CommitteeInclude;
 
@@ -794,6 +795,28 @@ router.post('/:id/leave', async (req, res, next) => {
       await audit(tx, req.auth!.userId, 'MEMBER_EXITED', 'Committee', committee.id, {});
     });
     res.json({ message: 'You have exited the committee' });
+  } catch (error) { next(error); }
+});
+
+// Auto-collect mandate: the member turns standing auto-debit on or off for
+// this circle and picks the rail. Enabling records a timestamped consent (the
+// mandate); the nightly auto-debit pass then pulls each due installment via the
+// provider layer. No money is held by Halqa — this only schedules the pull.
+router.post('/:id/autopay', async (req, res, next) => {
+  try {
+    const input = z.object({ enabled: z.boolean(), rail: z.enum(['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER', 'CASH']).optional() }).parse(req.body);
+    const membership = await assertMember(req.params.id, req.auth!.userId);
+    const updated = await prisma.$transaction(async tx => {
+      const row = await tx.committeeMember.update({
+        where: { id: membership.id },
+        data: input.enabled
+          ? { autoDebitEnabled: true, autoDebitRail: input.rail ?? membership.autoDebitRail ?? 'RAAST', autoDebitMandateAt: new Date() }
+          : { autoDebitEnabled: false },
+      });
+      await audit(tx, req.auth!.userId, input.enabled ? 'AUTOPAY_MANDATE_GRANTED' : 'AUTOPAY_MANDATE_REVOKED', 'Committee', req.params.id, { rail: row.autoDebitRail });
+      return row;
+    });
+    res.json({ autoDebitEnabled: updated.autoDebitEnabled, autoDebitRail: updated.autoDebitRail, autoDebitMandateAt: updated.autoDebitMandateAt });
   } catch (error) { next(error); }
 });
 
