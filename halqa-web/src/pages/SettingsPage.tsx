@@ -1,0 +1,116 @@
+import { useEffect, useState } from 'react';
+import { Bell, ChevronRight, CreditCard, Fingerprint, Globe, HelpCircle, Megaphone, Scale, ShieldCheck, UserCog } from 'lucide-react';
+import { api } from '../api';
+import type { User } from '../types';
+import { Field } from '../components/ui';
+import LegalFooter, { LegalDocModal } from '../components/LegalFooter';
+import { LEGAL_DOCS, TERMS_VERSION, type DocId } from '../legal/content';
+import { useLang } from '../lib/i18n';
+
+// The Settings hub — the sectioned "gear" screen every payment app has.
+// Sections: Sign in & security · Account preferences · Data privacy ·
+// Advertising data · Notifications · Payments · Legal & policies · Help.
+
+type SectionId = 'security' | 'account' | 'privacy' | 'ads' | 'notifications' | 'payments' | 'legal' | 'help';
+
+const pref = {
+  get: (k: string, fallback: string) => localStorage.getItem(`halqa.pref.${k}`) ?? fallback,
+  set: (k: string, v: string) => localStorage.setItem(`halqa.pref.${k}`, v),
+};
+
+function ChangePassword() {
+  const [current, setCurrent] = useState(''); const [next, setNext] = useState(''); const [busy, setBusy] = useState(false); const [done, setDone] = useState(false); const [error, setError] = useState('');
+  const submit = async () => { setBusy(true); setError(''); setDone(false); try { await api('/auth/change-password', { method: 'POST', body: JSON.stringify({ currentPassword: current, newPassword: next }) }); setDone(true); setCurrent(''); setNext(''); } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); } };
+  return <div className="settings-block">
+    <div className="form-grid"><Field label="Current password"><input className="field" type="password" autoComplete="current-password" value={current} onChange={e => setCurrent(e.target.value)} /></Field><Field label="New password (min 8, letters + numbers)"><input className="field" type="password" autoComplete="new-password" value={next} onChange={e => setNext(e.target.value)} /></Field></div>
+    {done && <div className="commitment-ok" style={{ marginTop: 10 }}><ShieldCheck /><div><b>Password updated</b><p>Every other session was signed out.</p></div></div>}
+    {error && <div className="error-box">{error}</div>}
+    <div className="form-actions"><button className="primary" disabled={busy || !current || next.length < 8} onClick={submit}>{busy ? 'Updating…' : 'Update password'}</button></div>
+  </div>;
+}
+
+function Toggle({ label, hint, checked, onChange, disabled }: { label: string; hint: string; checked: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
+  return <label className="settings-toggle"><input type="checkbox" checked={checked} disabled={disabled} onChange={e => onChange(e.target.checked)} /><span><b>{label}</b><small>{hint}</small></span></label>;
+}
+
+export default function SettingsPage({ user }: { user: User }) {
+  const [open, setOpen] = useState<SectionId | null>(null);
+  const [doc, setDoc] = useState<DocId | null>(null);
+  const [lang, setLang] = useLang();
+  const [consent, setConsent] = useState<boolean | null>(null);
+  const [consentBusy, setConsentBusy] = useState(false);
+  const [notif, setNotif] = useState({ reminders: pref.get('notif.reminders', 'on') === 'on', rounds: pref.get('notif.rounds', 'on') === 'on', marketing: pref.get('notif.marketing', 'off') === 'on' });
+  const [rail, setRail] = useState(pref.get('payments.rail', 'RAAST'));
+  useEffect(() => { void api<{ dataConsent: boolean }>('/profile/consent').then(d => setConsent(d.dataConsent)).catch(() => setConsent(null)); }, []);
+  const saveConsent = async (value: boolean) => { setConsentBusy(true); try { await api('/profile/consent', { method: 'PATCH', body: JSON.stringify({ dataConsent: value }) }); setConsent(value); } catch { /* keep previous */ } finally { setConsentBusy(false); } };
+  const setN = (k: keyof typeof notif, v: boolean) => { setNotif({ ...notif, [k]: v }); pref.set(`notif.${k}`, v ? 'on' : 'off'); };
+
+  const sections: { id: SectionId; icon: JSX.Element; title: string; sub: string }[] = [
+    { id: 'security', icon: <Fingerprint />, title: 'Sign in & security', sub: 'Password, sessions, account protection' },
+    { id: 'account', icon: <UserCog />, title: 'Account preferences', sub: 'Identity on file, language, display' },
+    { id: 'privacy', icon: <ShieldCheck />, title: 'Data privacy', sub: 'What Halqa shares, your controls, your data' },
+    { id: 'ads', icon: <Megaphone />, title: 'Advertising data', sub: 'Goal-intent sharing and ad choices' },
+    { id: 'notifications', icon: <Bell />, title: 'Notifications', sub: 'Reminders, round updates, marketing' },
+    { id: 'payments', icon: <CreditCard />, title: 'Payments', sub: 'Preferred rail, fees, payment history' },
+    { id: 'legal', icon: <Scale />, title: 'Legal & policies', sub: 'User Agreement, Privacy, Fees, Community' },
+    { id: 'help', icon: <HelpCircle />, title: 'Help & about', sub: 'Support, security reports, version' },
+  ];
+
+  return <div className="page narrow enter">
+    <div className="page-head"><div><span className="eyebrow">Account center</span><h1>Settings</h1><p>Everything about your account, your data, and your choices — in one place.</p></div></div>
+    <div className="settings-list">
+      {sections.map(s => <section key={s.id} className={`panel settings-section ${open === s.id ? 'open' : ''}`}>
+        <button className="settings-row" onClick={() => setOpen(open === s.id ? null : s.id)}>{s.icon}<span className="settings-row-text"><b>{s.title}</b><small>{s.sub}</small></span><ChevronRight className={`chev ${open === s.id ? 'down' : ''}`} /></button>
+        {open === s.id && <div className="settings-body">
+          {s.id === 'security' && <>
+            <ChangePassword />
+            <div className="info-stack"><div><span>Two-step verification</span><b>Coming with WhatsApp OTP</b></div><div><span>Failed sign-in lockout</span><b>On — locks after repeated failures</b></div><div><span>Sessions</span><b>Changing your password signs out all other devices</b></div></div>
+          </>}
+          {s.id === 'account' && <>
+            <div className="info-stack">
+              <div><span>Full name</span><b>{user.fullName}</b></div>
+              <div><span>Username</span><b>@{user.username}</b></div>
+              <div><span>Mobile</span><b>{user.phone}</b></div>
+              <div><span>Email</span><b>{user.email}</b></div>
+              <div><span>CNIC</span><b>{user.cnic ? `•••••••••${user.cnic.slice(-4)} · verified identity on file` : 'Not on file — add it to rank higher in turn order'}</b></div>
+            </div>
+            <div className="settings-block"><Toggle label={lang === 'en' ? 'اردو interface' : 'English interface'} hint="Switch the app language." checked={lang === 'ur'} onChange={v => setLang(v ? 'ur' : 'en')} /></div>
+            <p className="muted" style={{ fontSize: 12 }}>Name, phone, email or CNIC wrong? Contact support@halqa.pk with proof of identity — identity fields are audit-locked and can't be self-edited once circles are running.</p>
+          </>}
+          {s.id === 'privacy' && <>
+            <Toggle label="Share my goal interest with relevant partners" hint="Only your name, number, city and goal category — never your ledger, score, CNIC or circle history. Off means nothing is ever shared. You can change this any time." checked={consent === true} disabled={consent === null || consentBusy} onChange={saveConsent} />
+            <div className="info-stack"><div><span>Your ledger & score</span><b>Never sold, never shared with partners</b></div><div><span>Other members see</span><b>Name, reliability, payment status in shared circles only</b></div><div><span>Download my data</span><b>Generate a Credit Passport from Profile, or email privacy@halqa.pk</b></div><div><span>Delete my account</span><b>Email privacy@halqa.pk — honoured after active circles settle</b></div></div>
+            <button className="text-action" onClick={() => setDoc('privacy')}>Read the full Privacy Policy</button>
+          </>}
+          {s.id === 'ads' && <>
+            <Toggle label="Goal-intent sharing (the only 'advertising data' we use)" hint="This is the same switch as Data privacy — one consent, one switch, no dark patterns. Sponsored content, if ever shown, will be labelled." checked={consent === true} disabled={consent === null || consentBusy} onChange={saveConsent} />
+            <div className="info-stack"><div><span>Third-party ad trackers</span><b>None in the app</b></div><div><span>Your CNIC & ledger</span><b>Never available to advertisers</b></div></div>
+            <button className="text-action" onClick={() => setDoc('ads')}>Read Advertising & Ad Choices</button>
+          </>}
+          {s.id === 'notifications' && <>
+            <Toggle label="Payment reminders" hint="Due-date nudges for your installments." checked={notif.reminders} onChange={v => setN('reminders', v)} />
+            <Toggle label="Round updates" hint="Payout releases, round openings, circle milestones." checked={notif.rounds} onChange={v => setN('rounds', v)} />
+            <Toggle label="News & offers from Halqa" hint="Off by default. Product news only — we don't spam." checked={notif.marketing} onChange={v => setN('marketing', v)} />
+            <p className="muted" style={{ fontSize: 12 }}>Preferences apply on this device. Critical security alerts are always delivered.</p>
+          </>}
+          {s.id === 'payments' && <>
+            <Field label="Preferred payment rail" hint="Pre-selected when you record a payment.">
+              <div className="rail-grid">{['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER', 'CASH'].map(r => <button key={r} className={`rail-chip ${rail === r ? 'on' : ''}`} onClick={() => { setRail(r); pref.set('payments.rail', r); }}>{r.replace('_', ' ')}</button>)}</div>
+            </Field>
+            <div className="info-stack"><div><span>Digital confirmations</span><b>Sandbox mode — clearly marked until live rails switch on</b></div><div><span>Fees Halqa charges</span><b>Only what's in the Fees & Payments Policy</b></div><div><span>Payment history</span><b>Profile → Recorded installments</b></div></div>
+            <button className="text-action" onClick={() => setDoc('fees')}>Read Fees & Payments Policy</button>
+          </>}
+          {s.id === 'legal' && <>
+            <div className="legal-links">{(Object.keys(LEGAL_DOCS) as DocId[]).map(id => <button key={id} className="settings-row slim" onClick={() => setDoc(id)}><Scale size={16} /><span className="settings-row-text"><b>{LEGAL_DOCS[id].title}</b><small>{LEGAL_DOCS[id].updated}</small></span><ChevronRight className="chev" /></button>)}</div>
+            <p className="muted" style={{ fontSize: 12 }}>You accepted version {TERMS_VERSION} at signup; acceptance is recorded with a timestamp.</p>
+          </>}
+          {s.id === 'help' && <>
+            <div className="info-stack"><div><span>Support</span><b>support@halqa.pk · replies within 2 working days</b></div><div><span>Security reports</span><b>security@halqa.pk</b></div><div><span>App</span><b>Halqa web · {TERMS_VERSION.split('-')[0]}</b></div><div><span><Globe size={12} style={{ verticalAlign: 'middle' }} /> Region</span><b>Pakistan · Asia/Karachi</b></div></div>
+          </>}
+        </div>}
+      </section>)}
+    </div>
+    <LegalFooter />
+    {doc && <LegalDocModal doc={doc} onClose={() => setDoc(null)} />}
+  </div>;
+}

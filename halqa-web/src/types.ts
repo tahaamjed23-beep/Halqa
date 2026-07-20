@@ -1,4 +1,4 @@
-export type User={id:string;fullName:string;username:string;phone:string;email:string;creditScore:number;role:'MEMBER'|'ADMIN';kycLevel:number;kycStatus:string;paymentStreak:number;averageRating:number;ratingCount:number;isBanned?:boolean;defaultFlag?:boolean;banReason?:string;cooldownUntil?:string;bankVerifiedAt?:string;bankVerifyRef?:string};
+export type User={id:string;fullName:string;username:string;phone:string;email:string;cnic?:string|null;creditScore:number;role:'MEMBER'|'ADMIN';kycLevel:number;kycStatus:string;paymentStreak:number;averageRating:number;ratingCount:number;isBanned?:boolean;defaultFlag?:boolean;banReason?:string;cooldownUntil?:string;bankVerifiedAt?:string;bankVerifyRef?:string};
 export type Partner={name:string;shortCode:string;sandbox:boolean;custodyEnabled?:boolean;kycEnabled?:boolean;raastEnabled?:boolean};
 export type Scheme={id:string;slug:string;name:string;category:string;issuer:string;tenorDays:number;indicativeRatePct:number;minAmountPaisa:string;shariahCompliant:boolean;rateAsOf:string;sourceUrl:string;riskLevel:string;riskScore:number;liquidityDays:number;volatilityBps:number;creditRiskBps:number;regulatoryStatus:string;eligibilityNotes?:string};
 export type Member={id:string;userId:string;turnPosition:number;hasReceived:boolean;status?:string;user:{id:string;fullName:string;username:string;creditScore:number;kycLevel:number}};
@@ -11,4 +11,4 @@ export type RiskAssessment={modelVersion:string;score:number;band:'LOW'|'MEDIUM'
 export type RiskProjection={principalPaisa:string;days:number;downsideProfitPaisa:string;expectedProfitPaisa:string;upsideProfitPaisa:string;stressLossPaisa:string;riskScore:number;band:string;modelVersion:string};
 export type Summary={balancePaisa:string;totalRecordedPaisa:string;totalInvestmentProfitPaisa:string;activeCommittees:number;hostedCommittees:number;nextInstallment:null|{dueAt:string;amountPaisa:string;committee:{id:string;name:string}};nextPayout:null|{payoutAt:string;amountPaisa:string;committee:{id:string;name:string};roundNumber:number}};
 export type Notice={id:string;type:string;message:string;isRead:boolean;createdAt:string};
-export type Page='home'|'circles'|'market'|'terminal'|'vault'|'profile'|'create';
+export type Page='home'|'circles'|'market'|'terminal'|'vault'|'profile'|'create'|'settings';

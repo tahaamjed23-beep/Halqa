@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Bell, CircleDollarSign, Home, Landmark, Languages, LogOut, PiggyBank, Users, Wallet } from 'lucide-react';
+import { Bell, CircleDollarSign, Home, Landmark, Languages, LogOut, PiggyBank, Settings, Users, Wallet } from 'lucide-react';
 import { api } from '../api';
 import type { Notice, Page, User } from '../types';
 import { Logo } from '../components/ui';
@@ -15,8 +15,10 @@ export default function Shell({user,page,setPage,onLogout,children}:{user:User;p
   const unread=notices.filter(notice=>!notice.isRead).length;
   // Simple mode (Kazi pivot) shows only the "just lend and pay" surfaces —
   // Market/Terminal/Vault stay in the code, hidden from the nav.
-  const fullNav:[Page,string,ReactNode][]=[['home',t('nav_home',lang),<Home key="1"/>],['circles',t('nav_circles',lang),<Users key="2"/>],['market',t('nav_market',lang),<CircleDollarSign key="3"/>],['terminal',t('nav_terminal',lang),<Landmark key="4"/>],['vault',t('nav_vault',lang),<PiggyBank key="6"/>],['profile',t('nav_profile',lang),<Wallet key="5"/>]];
-  const nav=SIMPLE_MODE?fullNav.filter(([id])=>['home','circles','profile'].includes(id)):fullNav;
+  const fullNav:[Page,string,ReactNode][]=[['home',t('nav_home',lang),<Home key="1"/>],['circles',t('nav_circles',lang),<Users key="2"/>],['market',t('nav_market',lang),<CircleDollarSign key="3"/>],['terminal',t('nav_terminal',lang),<Landmark key="4"/>],['vault',t('nav_vault',lang),<PiggyBank key="6"/>],['profile',t('nav_profile',lang),<Wallet key="5"/>],['settings',lang==='ur'?'ترتیبات':'Settings',<Settings key="7"/>]];
+  // Simple mode keeps the turn marketplace (buy/sell positions — even across
+  // circles) alongside the core surfaces; only the investment layer stays hidden.
+  const nav=SIMPLE_MODE?fullNav.filter(([id])=>['home','circles','market','profile','settings'].includes(id)):fullNav;
   const openNotices=()=>{setShow(!show);if(unread)void api('/notifications/read-all',{method:'PATCH'}).then(()=>setNotices(items=>items.map(item=>({...item,isRead:true}))))};
 
   return (
@@ -40,7 +42,6 @@ export default function Shell({user,page,setPage,onLogout,children}:{user:User;p
           </nav>
         </div>
         <div className="sidebar-bottom">
-          <div className="halqa-pulse"><i/><div><strong>Halqa Pulse</strong><span>{unread ? `${unread} ${t('updates_waiting',lang)}` : t('everything_current',lang)}</span></div></div>
           <div className="sidebar-actions">
             <div className="notice-wrap">
               <button className={`action-btn ${show?'active':''}`} onClick={openNotices}>

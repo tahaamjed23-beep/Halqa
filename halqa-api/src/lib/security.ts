@@ -7,7 +7,8 @@ import { prisma } from '../db';
 // is observing (that would turn the audit log into a denial-of-service lever).
 export type SecurityEventType =
   | 'REGISTER' | 'LOGIN_OK' | 'LOGIN_FAIL' | 'ACCOUNT_LOCKED'
-  | 'PASSWORD_CHANGED' | 'TOKEN_REFRESH' | 'TOKEN_REUSE_REVOKED' | 'LOGOUT';
+  | 'PASSWORD_CHANGED' | 'TOKEN_REFRESH' | 'TOKEN_REUSE_REVOKED' | 'LOGOUT'
+  | 'TOS_ACCEPTED';
 
 // Prefer the real client IP behind a proxy, but never trust a forwarded header
 // blindly for anything but logging (it is attacker-settable).

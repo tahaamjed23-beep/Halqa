@@ -8,7 +8,7 @@ import { createHash } from 'node:crypto';
 
 const router = Router();
 const cleanPhone = (v: string) => v.replace(/\s+/g, '').replace(/^\+92/, '0');
-const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, createdAt: true } as const;
+const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, createdAt: true } as const;
 const credentials = z.object({ identity: z.string().trim().min(1), password: z.string().min(8).max(128) });
 const tokenHash=(token:string)=>createHash('sha256').update(token).digest('hex');
 // Passwords must mix letters and digits. 8-char floor is enforced by the zod
@@ -34,23 +34,32 @@ router.post('/register', async (req, res, next) => {
       fullName: z.string().trim().min(2).max(80), username: z.string().trim().min(3).max(30),
       phone: z.string().trim().min(11).max(15), email: z.string().trim().email(), password: z.string().trim().min(8).max(128),
       referredBy: z.string().trim().min(3).max(30).optional(),
+      // KYC-grade identity at signup (payment-app standard). CNIC optional at
+      // the API so older clients keep working; the web form requires it.
+      cnic: z.string().trim().regex(/^\d{13}$/, 'CNIC must be exactly 13 digits').optional(),
+      // Version of the User Agreement / Privacy Policy shown at signup; its
+      // acceptance is recorded in the security log as legal evidence.
+      termsVersion: z.string().trim().max(20).optional(),
     }).parse(req.body);
     if (!relaxed() && !passwordStrongEnough(body.password)) return res.status(400).json({ error: 'Password must contain both letters and numbers' });
     const username = body.username.trim().toLowerCase();
     const email = body.email.trim().toLowerCase();
     const phone = cleanPhone(body.phone);
-    const exists = await prisma.user.findFirst({ where: { OR: [{ username }, { email }, { phone }] } });
-    if (exists) return res.status(409).json({ error: 'Username, email, or phone already exists' });
+    const exists = await prisma.user.findFirst({ where: { OR: [{ username }, { email }, { phone }, ...(body.cnic ? [{ cnic: body.cnic }] : [])] } });
+    if (exists) return res.status(409).json({ error: 'Username, email, phone, or CNIC already exists' });
     // Referral loyalty: an existing member's username can be named at signup;
     // the referrer earns a bonus (funded from Halqa's own Mudarib share) when
     // this member completes their first clean cycle. Invalid codes are ignored
     // silently — a typo must never block a signup.
     const referrer = body.referredBy ? await prisma.user.findUnique({ where: { username: body.referredBy.toLowerCase() } }) : null;
-    const user = await prisma.user.create({ data: { fullName: body.fullName.trim(), username, email, phone, passwordHash: await bcrypt.hash(body.password, 12), referredById: referrer?.id ?? null }, select: publicUser });
+    const user = await prisma.user.create({ data: { fullName: body.fullName.trim(), username, email, phone, cnic: body.cnic ?? null, passwordHash: await bcrypt.hash(body.password, 12), referredById: referrer?.id ?? null }, select: publicUser });
     const payload = { userId: user.id, role: user.role };
     const refreshToken = signRefresh(payload);
     await prisma.refreshToken.create({ data: { tokenHash: tokenHash(refreshToken), userId: user.id, familyId: newFamilyId(), expiresAt: new Date(Date.now() + 30 * 86400000) } });
     await logSecurity(req, 'REGISTER', { userId: user.id, identity: username });
+    // Timestamped acceptance of the User Agreement + Privacy Policy shown at
+    // signup — the record a court asks for when a member claims "I never agreed".
+    if (body.termsVersion) await logSecurity(req, 'TOS_ACCEPTED', { userId: user.id, identity: username, detail: `version ${body.termsVersion}` });
     res.status(201).json({ user, accessToken: signAccess(payload), refreshToken });
   } catch (error) { next(error); }
 });
@@ -129,7 +138,10 @@ router.get('/me', requireAuth, async (req, res) => {
 // password" gap; revokes every refresh token so stolen sessions die with it.
 router.post('/change-password', requireAuth, async (req, res, next) => {
   try {
-    const body = z.object({ currentPassword: z.string().min(8).max(128), newPassword: z.string().min(8).max(128) }).parse(req.body);
+    // The CURRENT password is only compared, never validated — a member whose
+    // legacy password is short must still be able to change it. Only the NEW
+    // password carries the length/strength rules.
+    const body = z.object({ currentPassword: z.string().min(1).max(128), newPassword: z.string().min(8).max(128) }).parse(req.body);
     const user = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId } });
     if (!(await bcrypt.compare(body.currentPassword.trim(), user.passwordHash))) return res.status(401).json({ error: 'Current password is incorrect' });
     if (body.currentPassword.trim() === body.newPassword.trim()) return res.status(400).json({ error: 'The new password must be different' });

@@ -15,6 +15,7 @@ const VaultPage=lazy(()=>import('./pages/VaultPage'));
 const CreateCirclePage=lazy(()=>import('./pages/CreateCirclePage'));
 const CommitteePage=lazy(()=>import('./pages/CommitteePage'));
 const RafaBot=lazy(()=>import('./components/RafaBot'));
+const SettingsPage=lazy(()=>import('./pages/SettingsPage'));
 
 export default function App(){
   const [user,setUser]=useState<User|null>(null);
@@ -31,8 +32,9 @@ export default function App(){
   // guide/chat failure can never blank the whole application.
   const rafa=(p:Page)=><ErrorBoundary scoped label="Rafa"><RafaBot page={p} setPage={next=>{setCommitteeId(null);setPage(next)}}/></ErrorBoundary>;
   if(committeeId)return <Suspense fallback={<PageLoader/>}><ErrorBoundary resetKey={committeeId} label="Committee"><CommitteePage id={committeeId} user={user} onBack={()=>setCommitteeId(null)}/></ErrorBoundary>{rafa('circles')}</Suspense>;
-  // In simple mode the investment surfaces are hidden; coerce any stale route to home.
-  const view=SIMPLE_MODE&&['market','terminal','vault'].includes(page)?'home':page;
+  // In simple mode the investment surfaces are hidden; coerce any stale route
+  // to home. The turn marketplace stays live in simple mode.
+  const view=SIMPLE_MODE&&['terminal','vault'].includes(page)?'home':page;
   return <Shell user={user} page={view} setPage={setPage} onLogout={()=>{tokens.clear();setUser(null)}}>
     <ErrorBoundary resetKey={view} label="This page">
     <Suspense fallback={<PageLoader/>}>
@@ -43,6 +45,7 @@ export default function App(){
       {view==='vault'&&<VaultPage/>}
       {view==='profile'&&<ProfilePage user={user}/>}
       {view==='create'&&<CreateCirclePage user={user} done={setCommitteeId} cancel={()=>setPage('home')}/>}
+      {view==='settings'&&<SettingsPage user={user}/>}
     </Suspense>
     </ErrorBoundary>
   </Shell>

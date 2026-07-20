@@ -606,3 +606,44 @@ h1,h2,h3{font-weight:640}
 .scoped-error{margin:12px 0;padding:16px 18px;border:1px solid #e0cd90;border-radius:16px;background:#fdf8ea;color:#7a5c12}
 .scoped-error b{display:block;font-size:13px;color:#8a6a15}
 .scoped-error p{font-size:11px;color:#9a8a63;margin:4px 0 10px}
+
+/* ===== Settings hub (payment-app style sectioned screen) ===== */
+.settings-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.settings-section{padding:0;overflow:hidden}
+.settings-row{display:flex;align-items:center;gap:14px;width:100%;padding:16px 18px;background:none;border:none;cursor:pointer;text-align:left;color:inherit;font:inherit}
+.settings-row svg{flex:none;color:#b08d2f}
+.settings-row-text{flex:1;display:flex;flex-direction:column;gap:2px}
+.settings-row-text b{font-size:14px}
+.settings-row-text small{font-size:11.5px;color:#9a8a63}
+.settings-row .chev{color:#c9bb90;transition:transform .18s}
+.settings-row .chev.down{transform:rotate(90deg)}
+.settings-row.slim{padding:10px 12px;border:1px solid #efe8d2;border-radius:12px;margin-bottom:8px}
+.settings-body{padding:0 18px 18px;border-top:1px solid #f2ecd9;display:flex;flex-direction:column;gap:12px}
+.settings-block{margin-top:8px}
+.settings-toggle{display:flex;gap:12px;align-items:flex-start;padding:10px 0;cursor:pointer}
+.settings-toggle input{margin-top:3px;accent-color:#b08d2f}
+.settings-toggle b{display:block;font-size:13.5px}
+.settings-toggle small{display:block;font-size:11.5px;color:#9a8a63;margin-top:2px;line-height:1.5}
+.rail-grid{display:flex;flex-wrap:wrap;gap:8px}
+.rail-chip{padding:8px 14px;border-radius:20px;border:1px solid #e2d7b8;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#6d6547}
+.rail-chip.on{background:#b08d2f;border-color:#b08d2f;color:#fff}
+.legal-links{display:flex;flex-direction:column}
+
+/* ===== Corporate footer + legal document reader ===== */
+.legal-footer{margin:26px auto 8px;max-width:680px;text-align:center;padding:0 12px}
+.legal-footer nav{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px}
+.footer-link{background:none;border:none;padding:2px;font-size:11.5px;color:#8a815f;cursor:pointer}
+.footer-link:hover{color:#b08d2f;text-decoration:underline}
+.footer-info{font-size:11.5px;color:#9a8a63;margin:8px auto 0;max-width:480px;line-height:1.55}
+.footer-brand{display:block;margin-top:8px;font-size:11px;font-weight:700;color:#a79e79}
+.legal-modal{max-width:720px;width:min(94vw,720px);max-height:86vh;display:flex;flex-direction:column}
+.legal-body{overflow-y:auto;padding-right:6px;text-align:left}
+.legal-updated{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#8a815f}
+.legal-intro{font-size:13px;line-height:1.7;color:#4c4630;border-left:3px solid #d9c26a;padding-left:12px}
+.legal-body h3{font-size:13.5px;margin:18px 0 6px;color:#232014}
+.legal-body p{font-size:12.5px;line-height:1.75;color:#55503a;margin:6px 0}
+
+/* ===== Signup terms acceptance ===== */
+.tos-check{display:flex;gap:10px;align-items:flex-start;margin:4px 0 10px;font-size:12px;line-height:1.6;color:#6d6547;text-align:left}
+.tos-check input{margin-top:3px;accent-color:#b08d2f}
+.inline-link{background:none;border:none;padding:0;font:inherit;font-weight:700;color:#b08d2f;cursor:pointer;text-decoration:underline}
