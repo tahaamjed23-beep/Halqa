@@ -647,3 +647,41 @@ h1,h2,h3{font-weight:640}
 .tos-check{display:flex;gap:10px;align-items:flex-start;margin:4px 0 10px;font-size:12px;line-height:1.6;color:#6d6547;text-align:left}
 .tos-check input{margin-top:3px;accent-color:#b08d2f}
 .inline-link{background:none;border:none;padding:0;font:inherit;font-weight:700;color:#b08d2f;cursor:pointer;text-decoration:underline}
+
+/* ===== Gateway-style checkout sheet ===== */
+.modal.checkout{max-width:440px}
+.checkout-title{display:flex;align-items:center;gap:10px}
+.secure-chip{font-size:10.5px;font-weight:700;letter-spacing:.4px;color:#3f7d4e;background:#eef7f0;border:1px solid #cfe6d5;border-radius:12px;padding:3px 9px}
+.checkout-summary{display:flex;justify-content:space-between;align-items:stretch;gap:12px;border:1px solid #efe8d2;border-radius:14px;padding:14px 16px;background:#fdfbf4}
+.checkout-lines{display:flex;flex-direction:column;gap:8px}
+.checkout-lines span{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:#8a815f}
+.checkout-lines b{font-size:13px}
+.fee-zero{color:#3f7d4e}
+.checkout-amount{text-align:right;display:flex;flex-direction:column;justify-content:center}
+.checkout-amount span{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:#8a815f}
+.checkout-amount strong{font-size:22px;color:#232014}
+.rail-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:12px}
+.rail-card{position:relative;display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid #e7dfc6;border-radius:12px;background:#fff;cursor:pointer;font:inherit}
+.rail-card i{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:10px;font-weight:800;color:#fff;flex:none}
+.rail-card b{font-size:12px}
+.rail-card.on{border-color:#b08d2f;box-shadow:0 0 0 2px rgba(176,141,47,.15)}
+.rail-card .tick{position:absolute;top:6px;right:8px;font-size:11px;color:#b08d2f;font-weight:800}
+.checkout-pay{margin-top:4px;font-size:14.5px}
+.checkout-foot{font-size:11px;color:#8a815f;line-height:1.6;margin:10px 0 0;text-align:center}
+.checkout-processing{display:flex;flex-direction:column;align-items:center;gap:10px;padding:38px 12px}
+.checkout-processing b{font-size:15px}
+.checkout-processing span{font-size:12px;color:#8a815f}
+.pay-spinner{width:44px;height:44px;border-radius:50%;border:4px solid #efe8d2;border-top-color:#b08d2f;animation:halqa-spin .9s linear infinite}
+@keyframes halqa-spin{to{transform:rotate(360deg)}}
+.checkout-receipt{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:6px}
+.receipt-badge{width:54px;height:54px;border-radius:50%;background:#eef7f0;border:2px solid #7dbb8b;color:#3f7d4e;font-size:26px;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+.receipt-badge.pending{background:#fdf6e3;border-color:#d9c26a;color:#8a6a15}
+.checkout-receipt h3{margin:4px 0 2px;font-size:17px}
+.receipt-amount{font-size:26px;font-weight:800;color:#232014;margin-bottom:12px}
+.receipt-rows{width:100%;border:1px solid #efe8d2;border-radius:14px;padding:4px 14px;margin-bottom:12px;text-align:left}
+.receipt-rows>div{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed #f0ead6}
+.receipt-rows>div:last-child{border-bottom:none}
+.receipt-rows span{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#8a815f}
+.receipt-rows b{font-size:12.5px;text-align:right}
+.receipt-rows b.paid{color:#3f7d4e}
+.receipt-rows b.mono{font-family:ui-monospace,Consolas,monospace;font-size:11.5px}

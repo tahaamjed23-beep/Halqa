@@ -115,8 +115,10 @@ export default function CreateCirclePage({user,done,cancel}:{user:User;done:(id:
   <div className="policy-toggles compact">
     <label><input type="checkbox" checked={earn} onChange={e=>{const on=e.target.checked;setEarn(on);if(!on)setPatience(false)}}/><span><b>Group float engine</b><small>Money waiting between rounds earns for the circle and flows back into payouts.</small></span></label>
     <label><input type="checkbox" checked={earlyFeeOn} onChange={e=>setEarlyFeeOn(e.target.checked)}/><span><b>Early-turn fee ({effectiveFeePct}%)</b><small>Turn 1 pays the most, the last turn pays nothing and collects the dividend — the first-turn/last-turn difference, priced fairly.</small></span></label>
-    <label><input type="checkbox" checked={safetyFund} onChange={e=>setSafetyFund(e.target.checked)}/><span><b>Safety fund ({slotFeePct}% per round)</b><small>A small slot fee builds the circle's own fund; it tops up a payout if someone falls short.</small></span></label>
   </div>
+  {/* The safety fund is deliberately absent here: a "fund" implies pooled money,
+      and the simple product holds nothing. It returns at the bank-partner stage
+      where a licensed partner can genuinely hold it. */}
   <p className="field-note" style={{fontSize:12,opacity:0.8}}>Late fees are standard: 2% / 5% / 10% by lateness tier. After start, a future turn can be listed on the Market and sold at a premium — even to buyers outside this circle.</p></section>}
 
   {/* PROFIT ENGINE — the primary "how it earns" choice, front and centre */}
