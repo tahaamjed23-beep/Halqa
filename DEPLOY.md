@@ -1,5 +1,11 @@
 # HALQA — DEPLOY RUNBOOK
-### Status: cloud database is LIVE (Supabase, schema + seed pushed 2026-07-20). What remains is ~15 minutes of clicks.
+### Status: **LIVE ON THE INTERNET since 2026-07-20.**
+- **Web:** https://halqa-seven.vercel.app (Vercel project `halqa`)
+- **API:** https://halqa-api-delta.vercel.app (Vercel project `halqa-api`, serverless; delinquency sweep = Vercel Cron daily 02:00 UTC; committee chat offline on serverless by design)
+- DB: Supabase pooler port 6543 + pgbouncer=true. All secrets in Vercel encrypted env vars + gitignored `.env.*` staging files.
+- The Render path below is kept only as a fallback if we ever need websockets/chat on a long-lived server.
+
+> Open risks (chairman's call, on record): DB password from the chat leak is still active — rotate before real users; demo seed (taha/halqa123) still in prod DB — wipe before real users.
 
 ## Already done
 - ✅ Supabase Postgres live at project `lvxvncbflhlzsmvhgphq` (Singapore) — full schema + seed (5 demo users, 30 schemes)
