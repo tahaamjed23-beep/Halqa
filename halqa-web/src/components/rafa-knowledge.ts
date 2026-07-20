@@ -7,6 +7,8 @@
 // can offer suggestions. Everything here mirrors what the app actually does —
 // if a mechanic changes, update the matching entry so Rafa never lies.
 
+import { SIMPLE_MODE } from '../config';
+
 export type RafaEntry = { id: string; cat: string; q: string; a: string; k: string[]; go?: string };
 
 export const RAFA_CATEGORIES = ['Basics', 'Joining & hosting', 'Profit & bonus', 'Safety & defaults', 'Vault & savings', 'Turn market', 'Account'] as const;
@@ -70,7 +72,8 @@ export const RAFA_KB: RafaEntry[] = [
   { id: 'kyc', cat: 'Account', q: 'What is KYC / verification?', a: "KYC is identity verification. A basic account can join and save. Higher verification unlocks hosting and larger circles. You only verify what's needed for what you want to do.", k: ['kyc', 'verification', 'verify identity', 'verify account', 'identity', 'cnic', 'level 2', 'verify me'] },
   { id: 'passport', cat: 'Account', q: 'What is the Credit Passport?', a: "A signed export of your verified committee history — clean completions, on-time percentage, total recorded. Share the link with a landlord, employer or lender and they can confirm it without a Halqa account. It's valid 90 days.", k: ['passport', 'credit passport', 'export history', 'prove history', 'reference', 'proof of savings', 'credit report'], go: 'profile' },
   { id: 'reminders', cat: 'Account', q: 'Will I get payment reminders?', a: "Yes. Smart reminders reach you before each deadline and after, so you never miss a payment by accident. Members can also send each other private, rate-limited nudges. You'll see them under the bell / Halqa Pulse.", k: ['reminders', 'notifications', 'will i be reminded', 'alerts', 'nudge', 'deadline reminder', 'notify'] },
-  { id: 'how-pay', cat: 'Account', q: 'How do I record a payment?', a: "When your installment is due, open the circle's Payments tab and tap 'Record installment'. You pick the rail you used (Raast, JazzCash, EasyPaisa, transfer, cash) and paste the reference. Halqa logs it — you pay the recipient directly.", k: ['how to pay', 'record payment', 'make payment', 'pay installment', 'how do i pay', 'submit payment', 'log payment', 'raast'] },
+  { id: 'how-pay', cat: 'Account', q: 'How do I record a payment?', a: "When your installment is due, open the circle's Payments tab and tap 'Record installment'. Digital rails (Raast, JazzCash, EasyPaisa) have a one-tap Pay now; for cash or bank transfer you paste the reference. Halqa logs it — you pay the recipient directly. Tip: switch on Auto-pay and you never have to remember again.", k: ['how to pay', 'record payment', 'make payment', 'pay installment', 'how do i pay', 'submit payment', 'log payment', 'raast'] },
+  { id: 'autopay', cat: 'Safety & defaults', q: 'What is auto-pay?', a: "A standing instruction, per circle: flip 'Auto-pay my installment' on the Payments tab, pick your rail, and every round is collected automatically on the due date — no reminders, no accidental late fees. Halqa never holds your money; it only schedules the transfer. You can switch it off any time.", k: ['auto pay', 'autopay', 'auto collect', 'automatic installment', 'mandate', 'collect automatically', 'standing instruction', 'auto debit', 'never miss'] },
   { id: 'chat', cat: 'Account', q: 'Can I talk to my committee?', a: "Yes — every circle has a members-only chat under the Chat tab, so you can coordinate, remind and celebrate together. It's verified members only.", k: ['chat', 'message committee', 'talk to members', 'group chat', 'contact members', 'committee chat'] },
   { id: 'navigate', cat: 'Account', q: 'How do I get around the app?', a: "The left menu (or bottom bar on mobile) has Dashboard, Circles, Market, Terminal and Profile. Dashboard is your overview, Circles is your committees, Market is turn trading, Terminal explores schemes, and Profile holds your score, vault and passport.", k: ['navigate', 'get around', 'menu', 'where is', 'find', 'how to navigate', 'sections', 'tabs', 'lost', 'where do i'] },
   { id: 'terminal', cat: 'Account', q: 'What is the Terminal?', a: "The Terminal is where you explore every investment scheme with its dated rate, risk and liquidity, and build a transparent sample allocation. It's for understanding where profit comes from — nothing is invested from there.", k: ['terminal', 'what is terminal', 'schemes', 'investments', 'scheme list', 'explore schemes', 'investment options'], go: 'terminal' },
@@ -202,6 +205,8 @@ export function matchRafa(query: string): { entry: RafaEntry; score: number } | 
   let best: RafaEntry | null = null;
   let bestScore = 0;
   for (const entry of RAFA_KB) {
+    // Simple mode hides the investment layer, so Rafa must not answer with it.
+    if (SIMPLE_MODE && (entry.cat === 'Vault & savings' || entry.cat === 'Profit & bonus')) continue;
     let score = 0;
     for (const kw of entry.k) {
       const kTokens = tokensOf(kw);
@@ -218,7 +223,14 @@ export function matchRafa(query: string): { entry: RafaEntry; score: number } | 
 }
 
 // A few high-value questions surfaced as tappable chips when the chat opens.
-export const RAFA_STARTERS: string[] = [
+export const RAFA_STARTERS: string[] = SIMPLE_MODE ? [
+  'What is Halqa?',
+  'How do I join a committee?',
+  'How do I pay my installment?',
+  'What is auto-pay?',
+  'What happens if I pay late?',
+  'Can I sell my turn?',
+] : [
   'What is Halqa?',
   'Where does the bonus money come from?',
   'How do I join a committee?',

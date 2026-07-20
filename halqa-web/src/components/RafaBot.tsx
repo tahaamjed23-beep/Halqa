@@ -3,6 +3,7 @@ import { Send, Sparkles, X } from 'lucide-react';
 import type { Page } from '../types';
 import { RAFA_STARTERS, matchRafa } from './rafa-knowledge';
 import type { HalqaAction } from '../lib/events';
+import { SIMPLE_MODE } from '../config';
 
 // Rafa — Halqa's little guide bot. A floating animated mascot that (1) answers
 // questions from a curated knowledge base and (2) runs a real-time walkthrough
@@ -107,10 +108,13 @@ type Msg = { from: 'rafa' | 'you'; text: string; go?: Page };
 const TOUR: Partial<Record<Page, { title: string; body: string; cta?: { label: string; page: Page } }>> = {
   home: { title: "You're on the Dashboard", body: 'This is home base — your next installment, your next payout and all your circles at a glance. Shall we look at your committees?', cta: { label: 'Open Circles →', page: 'circles' } },
   circles: { title: "These are your Circles", body: "Every committee you host or joined shows here. Tap Create to host a new one, or paste an invite code to join a friend's.", cta: { label: 'Create a circle →', page: 'create' } },
-  create: { title: 'Building a circle', body: "Set members, contribution and period. Pick a Low / Medium / High risk level — I auto-choose the best scheme — then tick the profit levers and I'll name your tier. The early fee is always capped at 10%." },
-  market: { title: 'The Turn Market', body: 'Need cash sooner, or happy to wait and earn? Members trade turns here. Halal circles (Earn / Earn & Share) allow free swaps only.' },
+  create: SIMPLE_MODE
+    ? { title: 'Building a circle', body: 'Set the name, members, amount, period and a goal — then share the invite code. The engine switches are optional; the defaults are fine.' }
+    : { title: 'Building a circle', body: "Set members, contribution and period. Pick a Low / Medium / High risk level — I auto-choose the best scheme — then tick the profit levers and I'll name your tier. The early fee is always capped at 10%." },
+  market: { title: 'The Turn Market', body: SIMPLE_MODE ? 'Need your payout sooner? Members auction future turns here at a premium — you can even buy a turn in another circle.' : 'Need cash sooner, or happy to wait and earn? Members trade turns here. Halal circles (Earn / Earn & Share) allow free swaps only.' },
   terminal: { title: 'The Scheme Terminal', body: 'Explore every investment scheme with its dated rate, risk and liquidity. This is where your bonus profit actually comes from.' },
-  profile: { title: 'Your Profile', body: 'Your reliability score, the Vault (save any amount and earn), and your shareable Credit Passport all live here.' },
+  profile: { title: 'Your Profile', body: SIMPLE_MODE ? 'Your reliability score, payment history and your shareable Credit Passport all live here. Settings has your privacy and auto-pay controls.' : 'Your reliability score, the Vault (save any amount and earn), and your shareable Credit Passport all live here.' },
+  settings: { title: 'Settings', body: 'Security, privacy, notifications, payment preferences and every policy — all in one place. The data-sharing switch is yours alone to flip.' },
 };
 
 export default function RafaBot({ page, setPage }: { page: Page; setPage: (page: Page) => void }) {
@@ -197,7 +201,9 @@ export default function RafaBot({ page, setPage }: { page: Page; setPage: (page:
         if (r.ok) { const d = await r.json() as { answer?: string }; if (d.answer) { say(d.answer); return; } }
       } catch { /* fall through to the honest KB fallback */ }
     }
-    say("I'm not sure about that one yet — I know committees, joining & hosting, the profit engines and the 10% fee, safety & defaults, the vault, the turn market and your account. Try one of those, or tap a suggestion below.");
+    say(SIMPLE_MODE
+      ? "I'm not sure about that one yet — I know committees, joining & hosting, payments & auto-pay, safety & defaults, the turn market and your account. Try one of those, or tap a suggestion below."
+      : "I'm not sure about that one yet — I know committees, joining & hosting, the profit engines and the 10% fee, safety & defaults, the vault, the turn market and your account. Try one of those, or tap a suggestion below.");
   };
 
   const tip = TOUR[page];
