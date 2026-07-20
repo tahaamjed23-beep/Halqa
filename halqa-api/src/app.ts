@@ -63,6 +63,20 @@ app.get('/api/health', async (_req, res) => {
   const db = await prisma.$queryRaw`SELECT 1`.then(() => 'ok').catch(() => 'down');
   res.status(db === 'ok' ? 200 : 503).json({ status: db === 'ok' ? 'ok' : 'degraded', db, stage: 'record-only-prototype', uptimeSec: Math.round((Date.now() - bootedAt) / 1000), at: new Date().toISOString() });
 });
+// Vercel Cron entry for the delinquency sweep (reminders, penalties,
+// escalation). On serverless there is no long-lived scheduler, so the platform
+// cron calls this instead, authenticated with the CRON_SECRET env var that
+// Vercel sends as a bearer token. 404s when no secret is configured (e.g. the
+// long-lived server, where node-cron owns the sweep).
+app.get('/api/cron/delinquency', async (req, res, next) => {
+  try {
+    const secret = process.env.CRON_SECRET;
+    if (!secret) return res.status(404).json({ error: 'Route not found' });
+    if (req.headers.authorization !== `Bearer ${secret}`) return res.status(401).json({ error: 'Unauthorized' });
+    const { evaluateDelinquencies } = await import('./services/delinquency');
+    res.json(await evaluateDelinquencies());
+  } catch (error) { next(error); }
+});
 // Public Credit Passport verification: a lender/landlord/employer holding a
 // member's passport token confirms it here without any Halqa account.
 app.get('/api/verify/:token', rateLimit({ windowMs: 15 * 60_000, limit: 60 }), (req, res) => {
