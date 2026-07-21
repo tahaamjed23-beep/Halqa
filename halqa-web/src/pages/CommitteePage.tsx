@@ -65,32 +65,42 @@ function StatementImport({committeeId,reload}:{committeeId:string;reload:()=>Pro
 // processing → receipt), modelled on how Safepay/PayFast present a charge.
 // Sandbox settles instantly behind the same UI a live rail will use.
 const RAILS:[string,string,string,string][]=[["RAAST","Raast","RA","#0e7d72"],["JAZZCASH","JazzCash","JC","#c8102e"],["EASYPAISA","Easypaisa","EP","#3f9c35"],["BANK_TRANSFER","Bank transfer","BK","#5b6472"],["CASH","Cash","₨","#b08d2f"]];
+type LinkedMethod={id:string;rail:string;accountNo:string;label:string;preferred:boolean};
 function PaymentModal({round,committee,user,amountPaisa,close,done}:{round:Round;committee:Committee;user:User;amountPaisa:string;close:()=>void;done:()=>Promise<void>}){
   const [via,setVia]=useState('RAAST');const [wallet,setWallet]=useState(user.phone||'');const [reference,setReference]=useState('');const [error,setError]=useState('');
-  const [step,setStep]=useState<'select'|'processing'|'receipt'>('select');const [receipt,setReceipt]=useState<{ref:string;at:Date;rail:string;live:boolean}|null>(null);const [copied,setCopied]=useState(false);
+  const [step,setStep]=useState<'select'|'processing'|'receipt'|'failed'>('select');const [receipt,setReceipt]=useState<{ref:string;at:Date;rail:string;live:boolean}|null>(null);const [copied,setCopied]=useState(false);
+  const [methods,setMethods]=useState<LinkedMethod[]>([]);const [methodId,setMethodId]=useState('');const [saveMethod,setSaveMethod]=useState(false);
+  useEffect(()=>{void api<{methods:LinkedMethod[]}>('/profile/payment-methods').then(d=>{setMethods(d.methods);const pref=d.methods.find(m=>m.preferred);if(pref){setMethodId(pref.id);setVia(pref.rail)}}).catch(()=>setMethods([]))},[]);
   const digital=via==='RAAST'||via==='JAZZCASH'||via==='EASYPAISA';const wallets=via==='JAZZCASH'||via==='EASYPAISA';
   const railMeta=RAILS.find(r=>r[0]===via)!;
+  const chooseMethod=(m:LinkedMethod)=>{setMethodId(m.id);setVia(m.rail)};
+  const chooseRail=(id:string)=>{setMethodId('');setVia(id)};
+  const afterSuccess=()=>{if(saveMethod&&wallets&&!methodId)void api('/profile/payment-methods',{method:'POST',body:JSON.stringify({rail:via,accountNo:wallet.replace(/\D/g,''),preferred:true})}).catch(()=>{})};
   const payNow=async()=>{setStep('processing');setError('');const started=Date.now();try{
     const r=await api<{settled:boolean;payment?:{txnRef?:string};instruction?:{instruction:string;reference?:string}}>('/payments/initiate',{method:'POST',body:JSON.stringify({roundId:round.id,rail:via,idempotencyKey:key()})});
     emitHalqaAction('PAY_INSTALLMENT');
     await new Promise(resolve=>setTimeout(resolve,Math.max(0,1400-(Date.now()-started)))); // let the processing state read as real work, never a flicker
+    afterSuccess();
     if(r.settled){setReceipt({ref:r.payment?.txnRef||r.instruction?.reference||'—',at:new Date(),rail:railMeta[1],live:false});setStep('receipt')}
     else{setReceipt({ref:r.instruction?.reference||'—',at:new Date(),rail:railMeta[1],live:true});setStep('receipt')}
-  }catch(reason){setError((reason as Error).message);setStep('select')}};
+  }catch(reason){setError((reason as Error).message);setStep('failed')}};
   const record=async()=>{setStep('processing');setError('');const started=Date.now();try{
     await api('/payments',{method:'POST',body:JSON.stringify({roundId:round.id,paidVia:via,txnRef:reference,idempotencyKey:key()})});
     emitHalqaAction('PAY_INSTALLMENT');
     await new Promise(resolve=>setTimeout(resolve,Math.max(0,1100-(Date.now()-started))));
     setReceipt({ref:reference,at:new Date(),rail:railMeta[1],live:false});setStep('receipt');
-  }catch(reason){setError((reason as Error).message);setStep('select')}};
+  }catch(reason){setError((reason as Error).message);setStep('failed')}};
   const copyRef=async()=>{try{await navigator.clipboard.writeText(receipt?.ref||'');setCopied(true);setTimeout(()=>setCopied(false),1500)}catch{/* clipboard unavailable */}};
   return <div className="modal-backdrop"><section className="modal checkout">
     <div className="modal-head"><div className="checkout-title"><h2>Checkout</h2><span className="secure-chip">🔒 Encrypted</span></div>{step!=='processing'&&<button onClick={step==='receipt'?()=>void done():close}><X/></button>}</div>
     {step==='select'&&<>
       <div className="checkout-summary"><div className="checkout-lines"><div><span>{committee.name}</span><b>Round {round.roundNumber} installment</b></div><div><span>Service fee</span><b className="fee-zero">Rs 0 — members never pay Halqa</b></div></div><div className="checkout-amount"><span>Total</span><strong>{money(amountPaisa)}</strong></div></div>
-      <span className="eyebrow" style={{display:'block',margin:'12px 0 6px'}}>Pay with</span>
-      <div className="rail-cards">{RAILS.map(([id,label,mono,color])=><button key={id} type="button" className={`rail-card ${via===id?'on':''}`} onClick={()=>setVia(id)}><i style={{background:color}}>{mono}</i><b>{label}</b>{via===id&&<span className="tick">✓</span>}</button>)}</div>
-      {wallets&&<Field label={`${railMeta[1]} wallet number`}><input className="field" inputMode="tel" value={wallet} onChange={e=>setWallet(e.target.value)} placeholder="03XXXXXXXXX"/></Field>}
+      {methods.length>0&&<><span className="eyebrow" style={{display:'block',margin:'12px 0 6px'}}>Your linked methods</span>
+      <div className="method-list">{methods.map(m=>{const meta=RAILS.find(r=>r[0]===m.rail);return <button key={m.id} type="button" className={`method-row ${methodId===m.id?'on':''}`} onClick={()=>chooseMethod(m)}><i className="method-radio"/><i className="method-logo" style={{background:meta?.[3]||'#5b6472'}}>{meta?.[2]||'PM'}</i><span className="method-text"><b>{m.label}</b><small className="mono">{m.accountNo}</small></span>{m.preferred&&<span className="pref-chip">Preferred</span>}</button>})}</div></>}
+      <span className="eyebrow" style={{display:'block',margin:'12px 0 6px'}}>{methods.length?'Or pay another way':'Pay with'}</span>
+      <div className="rail-cards">{RAILS.map(([id,label,mono,color])=><button key={id} type="button" className={`rail-card ${via===id&&!methodId?'on':''}`} onClick={()=>chooseRail(id)}><i style={{background:color}}>{mono}</i><b>{label}</b>{via===id&&!methodId&&<span className="tick">✓</span>}</button>)}</div>
+      {wallets&&!methodId&&<><Field label={`${railMeta[1]} wallet number`}><input className="field" inputMode="tel" value={wallet} onChange={e=>setWallet(e.target.value)} placeholder="03XXXXXXXXX"/></Field>
+      <label className="tos-check" style={{margin:'2px 0 8px'}}><input type="checkbox" checked={saveMethod} onChange={e=>setSaveMethod(e.target.checked)}/><span>Save this as my preferred way to pay</span></label></>}
       {via==='BANK_TRANSFER'&&<div className="warning-box">Send the transfer to the recipient directly from your banking app, then enter the transaction reference below.</div>}
       {via==='CASH'&&<div className="warning-box">Hand the cash to the recipient or host, then enter the receipt or slip number below.</div>}
       {!digital&&<Field label="Transaction reference"><input className="field" value={reference} onChange={e=>setReference(e.target.value)} placeholder="e.g. slip no. 739204"/></Field>}
@@ -101,6 +111,15 @@ function PaymentModal({round,committee,user,amountPaisa,close,done}:{round:Round
       <p className="checkout-foot">Halqa never holds your money — it moves member to member and Halqa records it. {digital?'Digital rails run in sandbox until live credentials connect: this confirmation is instant and no real money moves.':''}</p>
     </>}
     {step==='processing'&&<div className="checkout-processing"><i className="pay-spinner"/><b>Contacting {railMeta[1]}…</b><span>Confirming your installment — don't close this window.</span></div>}
+    {step==='failed'&&<div className="checkout-failed">
+      <div className="failed-badge">!</div>
+      <h3>Oops</h3>
+      <p className="failed-sub">Something went wrong.<br/>Please try again.</p>
+      {error&&<div className="failed-reason">{error}</div>}
+      <button type="button" className="failed-cancel" onClick={close}>Cancel <X size={16}/></button>
+      <button type="button" className="primary full failed-retry" onClick={()=>{setStep('select');setError('')}}>Try again →</button>
+      <p className="checkout-foot">Nothing was recorded — your installment is untouched until a payment confirms.</p>
+    </div>}
     {step==='receipt'&&receipt&&<div className="checkout-receipt">
       <div className={`receipt-badge ${receipt.live?'pending':''}`}>{receipt.live?'⏳':'✓'}</div>
       <h3>{receipt.live?'Payment initiated':'Payment confirmed'}</h3>

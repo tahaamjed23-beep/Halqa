@@ -135,6 +135,12 @@ model User {
   cnic String? @unique
   passwordHash String
   dataConsent Boolean @default(false)
+  // Linked payment methods (wallet / Raast / bank), stored as a small JSON
+  // array [{id,rail,accountNo,label,preferred}]. These are the member's OWN
+  // account identifiers for receiving and auto-debit — Halqa stores pointers,
+  // never balances, and never card numbers (cards only ever enter a licensed
+  // aggregator's hosted page, per the no-custody rule).
+  paymentMethodsJson Json?
   failedLogins Int @default(0)
   lockUntil DateTime?
   creditScore Int @default(700)

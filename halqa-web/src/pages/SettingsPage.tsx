@@ -33,6 +33,45 @@ function Toggle({ label, hint, checked, onChange, disabled }: { label: string; h
   return <label className="settings-toggle"><input type="checkbox" checked={checked} disabled={disabled} onChange={e => onChange(e.target.checked)} /><span><b>{label}</b><small>{hint}</small></span></label>;
 }
 
+// Linked payment methods — wallet / Raast / bank identifiers the member saves
+// once and reuses at checkout and for auto-pay. Pointers only; never balances,
+// never card numbers.
+type LinkedMethod = { id: string; rail: string; accountNo: string; label: string; preferred: boolean };
+const RAIL_META: Record<string, { name: string; mono: string; color: string }> = {
+  RAAST: { name: 'Raast', mono: 'RA', color: '#0e7d72' }, JAZZCASH: { name: 'JazzCash', mono: 'JC', color: '#c8102e' },
+  EASYPAISA: { name: 'Easypaisa', mono: 'EP', color: '#3f9c35' }, BANK_TRANSFER: { name: 'Bank account', mono: 'BK', color: '#5b6472' },
+};
+function LinkedMethodsManager() {
+  const [methods, setMethods] = useState<LinkedMethod[]>([]);
+  const [adding, setAdding] = useState(false); const [rail, setRail] = useState('RAAST'); const [accountNo, setAccountNo] = useState(''); const [busy, setBusy] = useState(false); const [error, setError] = useState('');
+  const load = () => api<{ methods: LinkedMethod[] }>('/profile/payment-methods').then(d => setMethods(d.methods)).catch(() => {});
+  useEffect(() => { void load(); }, []);
+  const add = async () => { setBusy(true); setError(''); try { await api('/profile/payment-methods', { method: 'POST', body: JSON.stringify({ rail, accountNo: accountNo.replace(/\s+/g, '') }) }); setAdding(false); setAccountNo(''); await load(); } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); } };
+  const prefer = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}/preferred`, { method: 'POST' }); setMethods(d.methods); } catch { /* refresh next open */ } };
+  const remove = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}`, { method: 'DELETE' }); setMethods(d.methods); } catch { /* refresh next open */ } };
+  return <div className="settings-block">
+    <span className="eyebrow" style={{ display: 'block', marginBottom: 6 }}>Linked payment methods</span>
+    <div className="method-list">
+      {methods.map(m => { const meta = RAIL_META[m.rail] || RAIL_META.BANK_TRANSFER; return <div key={m.id} className={`method-row static ${m.preferred ? 'on' : ''}`}>
+        <i className="method-logo" style={{ background: meta.color }}>{meta.mono}</i>
+        <span className="method-text"><b>{m.label}</b><small className="mono">{m.accountNo}</small></span>
+        {m.preferred ? <span className="pref-chip">Preferred</span> : <button className="text-action slim-action" onClick={() => void prefer(m.id)}>Make preferred</button>}
+        <button className="text-action slim-action danger" onClick={() => void remove(m.id)}>Remove</button>
+      </div>; })}
+      {!methods.length && !adding && <p className="muted" style={{ fontSize: 12.5 }}>Nothing linked yet. Link your wallet or Raast ID once — checkout pre-fills it and auto-pay can use it.</p>}
+    </div>
+    {adding ? <div className="add-method">
+      <div className="rail-grid">{Object.keys(RAIL_META).map(r => <button key={r} className={`rail-chip ${rail === r ? 'on' : ''}`} onClick={() => setRail(r)}>{RAIL_META[r].name}</button>)}</div>
+      <Field label={rail === 'BANK_TRANSFER' ? 'IBAN' : rail === 'RAAST' ? 'Raast ID (your mobile number)' : `${RAIL_META[rail].name} wallet number`}>
+        <input className="field" value={accountNo} onChange={e => setAccountNo(e.target.value)} placeholder={rail === 'BANK_TRANSFER' ? 'PK36XXXX0000123456789012' : '03XXXXXXXXX'} />
+      </Field>
+      {error && <div className="error-box">{error}</div>}
+      <div className="form-actions"><button className="secondary" onClick={() => { setAdding(false); setError(''); }}>Cancel</button><button className="primary" disabled={busy || accountNo.replace(/\s+/g, '').length < 11} onClick={add}>{busy ? 'Linking…' : 'Link method'}</button></div>
+      <p className="muted" style={{ fontSize: 11.5 }}>Halqa stores the identifier only — never balances, never cards. Cards will be entered on the licensed payment partner's own secure page when live rails switch on.</p>
+    </div> : <button className="secondary" style={{ marginTop: 8, padding: '9px 14px', borderRadius: 12, fontSize: 12.5, fontWeight: 700 }} onClick={() => setAdding(true)}>+ Link a wallet or account</button>}
+  </div>;
+}
+
 export default function SettingsPage({ user }: { user: User }) {
   const [open, setOpen] = useState<SectionId | null>(null);
   const [doc, setDoc] = useState<DocId | null>(null);
@@ -94,7 +133,8 @@ export default function SettingsPage({ user }: { user: User }) {
             <p className="muted" style={{ fontSize: 12 }}>Preferences apply on this device. Critical security alerts are always delivered.</p>
           </>}
           {s.id === 'payments' && <>
-            <Field label="Preferred payment rail" hint="Pre-selected when you record a payment.">
+            <LinkedMethodsManager />
+            <Field label="Fallback rail" hint="Used when none of your linked methods fits.">
               <div className="rail-grid">{['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER', 'CASH'].map(r => <button key={r} className={`rail-chip ${rail === r ? 'on' : ''}`} onClick={() => { setRail(r); pref.set('payments.rail', r); }}>{r.replace('_', ' ')}</button>)}</div>
             </Field>
             <div className="info-stack"><div><span>Digital confirmations</span><b>Sandbox mode — clearly marked until live rails switch on</b></div><div><span>Fees Halqa charges</span><b>Only what's in the Fees & Payments Policy</b></div><div><span>Payment history</span><b>Profile → Recorded installments</b></div></div>
