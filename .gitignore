@@ -9,3 +9,6 @@ dist/
 .DS_Store
 halqa-web/android/
 halqa-web/ios/
+
+# Internal master context — never commit (frank notes + credential pointers)
+yessir.md

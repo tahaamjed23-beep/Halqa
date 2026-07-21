@@ -864,3 +864,35 @@ h1,h2,h3{font-weight:640}
 .linked-preview .method-logo{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;flex-shrink:0}
 .linked-preview b{display:block;font-size:14px;color:#2b230e}
 .linked-preview small{color:#7a6d3f;font-size:12px}
+
+/* Linked-account cards (SadaPay-style): bank-branded gradient cards with a
+   logo tile, grouped/masked number, holder line and badge chips; the action
+   strip sits inside the card under a soft divider. */
+.acct-list{display:flex;flex-direction:column;gap:12px}
+.acct-card{border-radius:18px;padding:16px 18px;color:#fff;box-shadow:0 10px 24px rgba(20,16,4,.16);position:relative;overflow:hidden}
+.acct-card::after{content:'';position:absolute;right:-46px;top:-46px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none}
+.acct-card-top{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+.acct-card-top>b{font-size:13.5px;letter-spacing:.2px}
+.acct-card-logo{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:10.5px;letter-spacing:.5px;flex:none}
+.acct-badges{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.acct-badge{font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:.5px;padding:3px 8px;border-radius:10px;background:rgba(255,255,255,.16);white-space:nowrap}
+.acct-badge.ok{background:rgba(255,255,255,.24)}
+.acct-badge.warn{background:rgba(0,0,0,.26)}
+.acct-badge.gold{background:linear-gradient(135deg,#caa53a,#8a6d16)}
+.acct-card-no{font-size:17px;letter-spacing:2.4px;margin:16px 0 12px;font-weight:600;position:relative;z-index:1;word-break:break-all}
+.acct-card-holder{display:flex;flex-direction:column;gap:1px;position:relative;z-index:1}
+.acct-card-holder span{font-size:9.5px;letter-spacing:1.2px;text-transform:uppercase;opacity:.75;font-weight:700}
+.acct-card-holder b{font-size:13.5px}
+.acct-card-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.2);position:relative;z-index:1}
+.acct-card-actions .card-action{background:rgba(255,255,255,.15);border:none;color:#fff;font:inherit;font-size:11px;font-weight:700;padding:5px 10px;border-radius:9px;cursor:pointer}
+.acct-card-actions .card-action:hover{background:rgba(255,255,255,.26)}
+.acct-card-actions .card-action:disabled{opacity:.5;cursor:default}
+.acct-card-actions .card-action.danger{background:rgba(0,0,0,.24)}
+.otp-strip{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}
+.otp-strip .otp-in{width:96px;padding:5px 9px;font-size:12.5px;border:none;border-radius:9px;background:rgba(255,255,255,.92);color:#2b230e;letter-spacing:2px}
+.otp-strip .otp-dev{font-size:10.5px;opacity:.85}
+.bank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(102px,1fr));gap:8px}
+.bank-tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1.5px solid #e7dfc6;border-radius:12px;background:#fff;cursor:pointer;font:inherit}
+.bank-tile i{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-style:normal;font-weight:800;font-size:10.5px}
+.bank-tile span{font-size:10.5px;font-weight:700;color:#5d5638;text-align:center;line-height:1.15}
+.bank-tile.on{border-color:#b08d2f;box-shadow:0 0 0 2px rgba(176,141,47,.13)}

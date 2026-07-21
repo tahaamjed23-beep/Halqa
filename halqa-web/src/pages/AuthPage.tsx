@@ -5,6 +5,7 @@ import type { User } from '../types';
 import { HalqaOrb, Logo } from '../components/ui';
 import PhoneInput from '../components/PhoneInput';
 import LegalFooter, { LegalDocModal } from '../components/LegalFooter';
+import { AccountCard, PK_BANKS, RAIL_META, formatEntry } from '../components/LinkedAccounts';
 import { TERMS_VERSION, type DocId } from '../legal/content';
 
 // Onboarding is one question per screen (the pattern every Pakistani wallet
@@ -14,8 +15,6 @@ import { TERMS_VERSION, type DocId } from '../legal/content';
 // auto-collection is how every circle collects, so the account it pulls from
 // is linked the moment the account is made (changeable later in Profile).
 const REG_STEPS = ['phone', 'name', 'email', 'cnic', 'account', 'password', 'review'] as const;
-const RAILS: [string, string][] = [['RAAST', 'Raast'], ['JAZZCASH', 'JazzCash'], ['EASYPAISA', 'Easypaisa'], ['BANK_TRANSFER', 'Bank account']];
-const PK_BANKS = ['HBL', 'Meezan Bank', 'UBL', 'MCB', 'Allied Bank', 'Bank Alfalah', 'Standard Chartered', 'Faysal Bank', 'Bank Al Habib', 'Askari Bank', 'JS Bank', 'Soneri Bank', 'SadaPay', 'NayaPay', 'Other'];
 type RegStep = typeof REG_STEPS[number];
 
 export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
@@ -58,14 +57,14 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
       <input className="field big-field mono" inputMode="numeric" autoFocus maxLength={13} placeholder="3520212345671" value={form.cnic} onChange={e=>setForm({...form,cnic:e.target.value.replace(/\D/g,'')})}/>
       <div className="onboard-note"><b>Identity check</b><span>Your CNIC is recorded now and verified against NADRA when live verification activates. It is never shown to other members.</span></div></>;
     case 'account':return <><h2>Link your collection account</h2><p>Every circle collects automatically from this account on each due date — that's how Halqa keeps circles safe. A one-time code confirms the link and you get a WhatsApp receipt for every collection. Change it any time in Profile.</p>
-      <div className="rail-grid" style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:12}}>{RAILS.map(([id,label])=><button type="button" key={id} className={form.rail===id?'primary':'secondary'} style={{padding:'8px 14px',borderRadius:10,fontSize:12.5}} onClick={()=>setForm({...form,rail:id})}>{label}</button>)}</div>
+      <div className="rail-grid" style={{marginBottom:12}}>{Object.keys(RAIL_META).map(id=><button type="button" key={id} className={`rail-chip ${form.rail===id?'on':''}`} onClick={()=>setForm({...form,rail:id})}><i className="chip-logo" style={{background:RAIL_META[id].color}}>{RAIL_META[id].mono}</i>{RAIL_META[id].name}</button>)}</div>
+      {form.rail==='BANK_TRANSFER'&&<><label className="onboard-field-label">Your bank</label>
+        <div className="bank-grid" style={{marginBottom:12}}>{PK_BANKS.map(b=><button type="button" key={b.name} className={`bank-tile ${form.bankName===b.name?'on':''}`} onClick={()=>setForm({...form,bankName:b.name})}><i style={{background:`linear-gradient(135deg, ${b.color}, ${b.dark})`}}>{b.mono}</i><span>{b.name}</span></button>)}</div></>}
       <label className="onboard-field-label">Account holder name</label>
       <input className="field" autoFocus autoComplete="name" placeholder="Exactly as printed on the account" value={form.accountTitle} onChange={e=>setForm({...form,accountTitle:e.target.value})}/>
-      {form.rail==='BANK_TRANSFER'&&<><label className="onboard-field-label">Bank</label>
-        <select className="field" value={form.bankName} onChange={e=>setForm({...form,bankName:e.target.value})}>{PK_BANKS.map(b=><option key={b} value={b}>{b}</option>)}</select></>}
       <label className="onboard-field-label">{form.rail==='BANK_TRANSFER'?'IBAN':form.rail==='RAAST'?'Raast ID (mobile number)':'Wallet number'}</label>
-      <input className="field mono" inputMode={form.rail==='BANK_TRANSFER'?'text':'numeric'} placeholder={form.rail==='BANK_TRANSFER'?'PK36 XXXX 0000 1234 5678 9012':'03XX XXXXXXX'} value={form.accountNo} onChange={e=>setForm({...form,accountNo:e.target.value})}/>
-      <div className="linked-preview"><div className="method-logo" style={{background:'linear-gradient(135deg,#caa53a,#8a6d16)'}}>{(form.rail==='BANK_TRANSFER'?form.bankName:RAILS.find(([id])=>id===form.rail)?.[1]||'').slice(0,2).toUpperCase()}</div><div><b>{form.accountTitle||'Account holder'}</b><small className="mono">{form.rail==='BANK_TRANSFER'?form.bankName+' · ':''}{form.accountNo.replace(/\s+/g,'')?('•'.repeat(Math.max(0,form.accountNo.replace(/\s+/g,'').length-4))+form.accountNo.replace(/\s+/g,'').slice(-4)):'—'}</small></div></div>
+      <input className="field mono" inputMode={form.rail==='BANK_TRANSFER'?'text':'numeric'} placeholder={form.rail==='BANK_TRANSFER'?'PK36 SONE 0000 1234 5678 9012':'03XX XXXXXXX'} value={form.accountNo} onChange={e=>setForm({...form,accountNo:formatEntry(form.rail,e.target.value)})}/>
+      <div style={{margin:'12px 0'}}><AccountCard draft rail={form.rail} bankName={form.rail==='BANK_TRANSFER'?form.bankName:undefined} accountTitle={form.accountTitle} accountNo={form.accountNo}/></div>
       <div className="onboard-note"><b>Unconfigurable by design</b><span>Auto-collection is standard on every circle — no manual payments to remember, no missed installments. Halqa stores the identifier only, never balances or cards.</span></div></>;
     case 'password':return <><h2>Create a password</h2><p>At least 8 characters with letters and numbers.</p>
       <input className="field big-field" type="password" autoFocus autoComplete="new-password" placeholder="Password" value={form.regPassword} onChange={e=>setForm({...form,regPassword:e.target.value})}/>

@@ -5,7 +5,7 @@ import { emitHalqaAction } from '../lib/events';
 import type { Partner, User } from '../types';
 import { Field, ScoreRing } from '../components/ui';
 import { SHOW_BANK_RAIL, SHOW_HOST_ELIGIBILITY, SIMPLE_MODE } from '../config';
-import { LinkedMethodsManager } from './SettingsPage';
+import { LinkedAccountsManager } from '../components/LinkedAccounts';
 
 type BankKycResult={kycLevel:number;kycStatus:string;bankVerifiedAt:string;bankVerifyRef:string;partner:string;sandbox?:boolean};
 
@@ -82,7 +82,7 @@ function AutoPayPanel({user}:{user:User}){
   if(!joined.length)return null;
   return <section className="panel"><div className="panel-head"><div><span className="eyebrow">Never miss a round</span><h2>Auto-pay</h2><p>Each circle you're in, one switch. The installment is collected automatically on the due date — Halqa schedules it, never holds it.</p></div><CreditCard/></div>
   <div className="policy-toggles compact">{joined.map(c=>{const m=mine(c)!;return <label key={c.id}><input type="checkbox" disabled={busy===c.id} checked={!!m.autoDebitEnabled} onChange={e=>toggle(c,e.target.checked)}/><span><b>{c.name}{m.autoDebitEnabled?` · ${m.autoDebitRail||'RAAST'}`:''}</b><small>{m.autoDebitEnabled?'On — collected automatically each round.':'Off — pay manually from the circle.'}</small></span></label>})}</div>
-  <LinkedMethodsManager/></section>;
+  <LinkedAccountsManager/></section>;
 }
 
 type CreditEvent={id:string;reason:string;scoredAt:string;delta:number};

@@ -26,8 +26,20 @@ async function request<T>(path:string,init:RequestInit,retried:boolean):Promise<
   return data as T;
 }
 export const api=<T>(path:string,init:RequestInit={})=>request<T>(path,init,false);
-// Warm the serverless function the instant the app JS loads, so the first real
-// call (login / dashboard) doesn't eat a cold start. Fire-and-forget.
-try{fetch(`${BASE}/health`).catch(()=>{})}catch{/* SSR / no fetch */}
+// Keep the serverless function warm. A cold Vercel function + cross-region
+// Supabase pooler is the real cause of the "super slow" first action, and it
+// re-freezes after a few idle minutes — so a one-shot ping at load isn't
+// enough. We ping /health (a) at load, (b) every 4 minutes while the tab is
+// open, and (c) the instant the tab regains focus (the classic "came back and
+// it's slow" case). Vercel Hobby cron is daily-only, so this client-side
+// warmer is what actually protects an active session. Fire-and-forget, and
+// paused while the tab is hidden so we never ping in the background forever.
+const warm=()=>{try{fetch(`${BASE}/health`,{cache:'no-store'}).catch(()=>{})}catch{/* SSR / no fetch */}};
+warm();
+if(typeof window!=='undefined'){
+  let lastWarm=Date.now();
+  setInterval(()=>{if(document.visibilityState==='visible'){warm();lastWarm=Date.now()}},4*60_000);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-lastWarm>60_000){warm();lastWarm=Date.now()}});
+}
 export const money=(paisa:string|number|bigint=0)=>new Intl.NumberFormat('en-PK',{style:'currency',currency:'PKR',maximumFractionDigits:0}).format(Number(paisa)/100);
 export const key=()=>crypto.randomUUID();

@@ -1,0 +1,20 @@
+# Normalise line endings so Windows checkouts stop spamming CRLF/LF warnings on
+# every `git add`. Text files are stored LF in the repo; binaries are left alone.
+* text=auto eol=lf
+
+# Explicit binary types (never touched by EOL normalisation)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+
+# Windows-only helper scripts keep CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf

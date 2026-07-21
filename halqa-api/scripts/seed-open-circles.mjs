@@ -46,10 +46,22 @@ const OPEN = [
   { name: 'Clifton Hajj Savers', cap: 12, rs: 15000, days: 30, goalType: 'HAJJ', goalName: 'Hajj 2027' },
   { name: 'DHA School Fees', cap: 6, rs: 8000, days: 30, goalType: 'EDUCATION', goalName: 'Term fees' },
   { name: 'Johar Wedding Circle', cap: 15, rs: 6000, days: 30, goalType: 'WEDDING', goalName: 'Shaadi bachat' },
+  { name: 'Model Town Teachers', cap: 10, rs: 4000, days: 30, goalType: 'EDUCATION', goalName: 'Staff bachat' },
+  { name: 'Anarkali Traders', cap: 8, rs: 20000, days: 15, goalType: 'BUSINESS', goalName: 'Seasonal stock' },
+  { name: 'F-10 Umrah Circle', cap: 12, rs: 12000, days: 30, goalType: 'HAJJ', goalName: 'Umrah together' },
+  { name: 'Bahria Home Builders', cap: 20, rs: 25000, days: 45, goalType: 'HOME', goalName: 'Construction fund' },
+  { name: 'Hayatabad Doctors', cap: 6, rs: 15000, days: 30, goalType: 'CUSTOM', goalName: 'Clinic upgrade' },
+  { name: 'Satellite Town Tailors', cap: 10, rs: 3000, days: 15, goalType: 'BUSINESS', goalName: 'Machine fund' },
+  { name: 'Gulberg Jahez Circle', cap: 12, rs: 8000, days: 30, goalType: 'WEDDING', goalName: 'Beti ki shaadi' },
+  { name: 'Cantt Daily Wagers', cap: 8, rs: 2000, days: 7, goalType: 'CUSTOM', goalName: 'Weekly bachat' },
+  { name: 'North Nazimabad Aunties', cap: 14, rs: 5000, days: 30, goalType: 'HOME', goalName: 'Ghar ka saman' },
 ];
 
 const hosts = [];
-for (const [full, un] of [['Rabia Khan', `rabia_${uniq}`], ['Imran Sheikh', `imran_${uniq}`], ['Fatima Malik', `fatima_${uniq}`]]) hosts.push(await makeUser(full, un));
+for (const [full, un] of [
+  ['Rabia Khan', `rabia_${uniq}`], ['Imran Sheikh', `imran_${uniq}`], ['Fatima Malik', `fatima_${uniq}`],
+  ['Usman Qureshi', `usman_${uniq}`], ['Khadija Iqbal', `khadija_${uniq}`], ['Salman Baig', `salman_${uniq}`],
+]) hosts.push(await makeUser(full, un));
 
 console.log('\n— Opening discoverable circles —');
 for (let i = 0; i < OPEN.length; i++) {
