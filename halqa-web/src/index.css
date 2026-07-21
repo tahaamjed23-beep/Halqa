@@ -791,3 +791,23 @@ h1,h2,h3{font-weight:640}
 .stat-band>div{background:#fff;border:1px solid #efe8d2;border-radius:16px;padding:18px 16px;text-align:center}
 .stat-band strong{display:block;font-size:24px;color:#b08d2f;letter-spacing:-.3px}
 .stat-band span{display:block;font-size:11px;color:#8a815f;line-height:1.5;margin-top:5px}
+
+/* ===== International phone input ===== */
+.phone-input{position:relative;margin-bottom:12px}
+.phone-row{display:flex;gap:8px}
+.country-btn{display:flex;align-items:center;gap:6px;padding:0 12px;height:46px;border:1px solid #e2d7b8;border-radius:12px;background:#fff;cursor:pointer;font:inherit;flex:none}
+.country-btn .flag{font-size:18px;line-height:1}
+.country-btn .dial{font-size:13.5px;font-weight:700;color:#4c4630}
+.country-btn svg{color:#b08d2f;transition:transform .18s}
+.country-btn svg.rot{transform:rotate(180deg)}
+.phone-num{flex:1;margin:0}
+.country-menu{position:absolute;top:52px;left:0;z-index:40;width:min(340px,90vw);background:#fff;border:1px solid #e7dfc6;border-radius:14px;box-shadow:0 12px 40px rgba(35,32,20,.18);overflow:hidden}
+.country-search{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #f2ecd9;color:#8a815f}
+.country-search input{border:none;outline:none;font:inherit;font-size:13px;width:100%;background:none}
+.country-list{max-height:240px;overflow-y:auto}
+.country-opt{display:flex;align-items:center;gap:10px;width:100%;padding:9px 14px;border:none;background:none;cursor:pointer;font:inherit;text-align:left}
+.country-opt:hover{background:#faf6e9}
+.country-opt.on{background:#fdf6e3}
+.country-opt .flag{font-size:17px}
+.country-opt .cname{flex:1;font-size:13px;color:#232014}
+.country-opt .cdial{font-size:12.5px;font-weight:700;color:#8a815f}

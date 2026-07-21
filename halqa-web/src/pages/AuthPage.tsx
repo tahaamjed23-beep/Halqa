@@ -3,6 +3,7 @@ import { ChevronLeft } from 'lucide-react';
 import { api, tokens } from '../api';
 import type { User } from '../types';
 import { HalqaOrb, Logo } from '../components/ui';
+import PhoneInput from '../components/PhoneInput';
 import LegalFooter, { LegalDocModal } from '../components/LegalFooter';
 import { TERMS_VERSION, type DocId } from '../legal/content';
 
@@ -21,7 +22,9 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const [doc,setDoc]=useState<DocId|null>(null);
   const [error,setError]=useState('');const [busy,setBusy]=useState(false);
   const stepIndex=REG_STEPS.indexOf(step);
-  const phoneOk=/^03\d{9}$/.test(form.phone.replace(/\D/g,''));
+  // International: +92 wants a 3XXXXXXXXX national part (10 digits); other
+  // dial codes just need a plausible 7–14 digit number.
+  const phoneOk=form.phone.startsWith('+92')?/^\+923\d{9}$/.test(form.phone):/^\+\d{8,15}$/.test(form.phone);
   const nameOk=form.fullName.trim().length>=3&&form.username.trim().length>=3;
   const emailOk=/.+@.+\..+/.test(form.email);
   const cnicOk=form.cnic.length===13;
@@ -35,7 +38,7 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
 
   const stepBody=()=>{switch(step){
     case 'phone':return <><h2>What's your mobile number?</h2><p>Your number is your identity on Halqa — invites, reminders and payments all reach you here.</p>
-      <input className="field big-field" inputMode="tel" autoFocus maxLength={11} placeholder="03XX XXXXXXX" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value.replace(/[^\d]/g,'')})}/></>;
+      <PhoneInput value={form.phone} onChange={v=>setForm({...form,phone:v})} autoFocus/></>;
     case 'name':return <><h2>Your name, as on your CNIC</h2><p>Circles run on real names — it's how members know exactly who they're trusting.</p>
       <input className="field big-field" autoFocus autoComplete="name" placeholder="Full name" value={form.fullName} onChange={e=>setForm({...form,fullName:e.target.value})}/>
       <input className="field" placeholder="Pick a username" autoComplete="username" value={form.username} onChange={e=>setForm({...form,username:e.target.value.toLowerCase().replace(/[^a-z0-9_.]/g,'')})}/></>;
@@ -64,13 +67,13 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
     {mode==='login'?<>
       <h2>Welcome back</h2><p>Sign in with your mobile number and password.</p>
       <form onSubmit={login}>
-        <input className="field" inputMode="tel" autoCapitalize="none" placeholder="Mobile number" value={form.identity} onChange={e=>setForm({...form,identity:e.target.value})}/>
+        <PhoneInput value={form.identity} onChange={v=>setForm({...form,identity:v})}/>
         <input className="field" type="password" placeholder="Password" autoComplete="current-password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})}/>
         {error&&<div className="error-box">{error}</div>}
-        <button className="primary" disabled={busy}>{busy?'Please wait…':'Sign in'}</button>
+        <button className="primary" disabled={busy||form.identity.length<8||form.password.length<4}>{busy?'Please wait…':'Sign in'}</button>
       </form>
       <button className="text-action" onClick={()=>{setMode('register');setStep('phone');setError('')}}>New to Halqa? Create account</button>
-      <div className="demo-note"><b>Demo</b><span>sana / halqa123</span></div>
+      <div className="demo-note"><b>Demo</b><span>🇵🇰 +92 300 1234567 · halqa123</span></div>
     </>:<>
       <div className="onboard-top">
         <button type="button" className="onboard-back" onClick={back}><ChevronLeft size={18}/></button>
