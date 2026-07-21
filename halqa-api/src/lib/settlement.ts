@@ -1,6 +1,7 @@
 import type { Committee, Payment, Prisma, Round } from '@prisma/client';
 import { audit, ledger } from './audit';
 import { clampScore } from './money';
+import { debitReceiptText, queueWhatsApp } from './whatsapp';
 
 // Single settlement path for a contribution, shared by the member-recorded
 // payment route and partner statement matching so both produce identical
@@ -88,5 +89,8 @@ export async function settleContribution(tx: Prisma.TransactionClient, args: {
     });
   }
   await audit(tx, actorId, 'PAYMENT_RECORDED', 'Payment', row.id, { paidVia, txnRef, amountPaisa: row.amountPaisa.toString(), penaltyPaisa: penaltyPaisa.toString(), stage: 'RECORD_ONLY' });
+  // Every debit of a member's money produces a WhatsApp receipt (queued in the
+  // same transaction; a gateway dispatcher sends it once a provider connects).
+  await queueWhatsApp(tx, { userId: payerId, kind: 'DEBIT_RECEIPT', refType: 'Payment', refId: row.id, text: debitReceiptText({ committeeName: round.committee.name, roundNumber: round.roundNumber, amountPaisa: row.amountPaisa, rail: paidVia, txnRef, paymentId: row.id, penaltyPaisa }) });
   return row;
 }

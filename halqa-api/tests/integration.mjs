@@ -367,6 +367,8 @@ const releaseEntry=await prisma.ledgerEntry.findFirst({where:{reason:'VAULT_AUTO
 check('vault release ledgered before settlement',!!releaseEntry&&releaseEntry.amountPaisa===2000000n&&releaseEntry.debit===`user:${bilalCoverId}:vault`);
 const bilalVault=await request('/vault',{token:bilal});
 check('vault balance reduced by exactly the installment',bilalVault.balancePaisa==='500000',`balance=${bilalVault.balancePaisa}`);
+const waReceipt=await prisma.notification.findFirst({where:{userId:bilalCoverId,type:'WHATSAPP_RECEIPT',message:{contains:'RCPT-'}},orderBy:{createdAt:'desc'}});
+check('every debit queues a WhatsApp receipt with a receipt number',!!waReceipt&&waReceipt.message.includes('collected'));
 const latePenalty=await prisma.ledgerEntry.findFirst({where:{reason:'PROGRESSIVE_LATE_PENALTY_RECORDED',refId:coveredPayment.id}});
 check('late adjustment still applied (auto-cover softens escalation, not fairness)',!!latePenalty&&latePenalty.amountPaisa>0n);
 await request('/vault/auto-cover',{token:bilal,method:'POST',body:{enabled:false}}); // restore default for re-runs
@@ -482,6 +484,10 @@ const flCircle=await request('/committees',{token:flHost,method:'POST',expect:20
 check('forward-liability gate persisted at creation',flCircle.riskPolicyJson?.forwardLiabilityGateEnabled===true,JSON.stringify(flCircle.riskPolicyJson?.forwardLiabilityGateEnabled));
 await request('/committees/join',{token:sana,method:'POST',expect:201,body:{inviteCode:flCircle.inviteCode}});
 await request('/committees/join',{token:bilal,method:'POST',expect:201,body:{inviteCode:flCircle.inviteCode}});
+// The PG contract is SHOWN before joining: a prospective (non-member) reader
+// can fetch the drafted text for a forming circle.
+const flPgPreview=await request(`/agreements/text?doc=MUTUAL_PG&committeeId=${flCircle.id}`,{token:newbieTok});
+check('the mutual guarantee is drafted and readable BEFORE joining',flPgPreview.text.includes('NOT TO HALQA')&&flPgPreview.text.includes('GUARANTEE'));
 // Joining auto-signed the mutual member-to-member guarantee — the paper each
 // member holds against every other before the circle can start.
 const flPg=await request(`/agreements/status?committeeId=${flCircle.id}`,{token:sana});
@@ -498,6 +504,10 @@ check('autopay mandate is on by default at join',flMember?.autoDebitEnabled===tr
 
 // ---- Salary-linked account: designated method earns the disclosed fee reduction ----
 const salMethod=await request('/profile/payment-methods',{token:bilal,method:'POST',expect:201,body:{rail:'BANK_TRANSFER',accountNo:`PK36SALA${String(flStamp).slice(-12)}`,label:'Salary IBAN'}});
+check('linking a method sends the mandate OTP on the WhatsApp rail',salMethod.otpSent===true&&/^\d{6}$/.test(salMethod.devCode||''));
+await request(`/profile/payment-methods/${salMethod.method.id}/verify`,{token:bilal,method:'POST',expect:400,body:{code:'000000'}});
+const salVerify=await request(`/profile/payment-methods/${salMethod.method.id}/verify`,{token:bilal,method:'POST',body:{code:salMethod.devCode}});
+check('the correct OTP marks the mandate method verified',salVerify.methods.some(m=>m.id===salMethod.method.id&&m.verified===true));
 const salSet=await request(`/profile/payment-methods/${salMethod.method.id}/salary`,{token:bilal,method:'POST',body:{enabled:true}});
 check('salary account designation persists with the method reference',salSet.salaryAccountLinked===true&&salSet.salaryAccountRef===salMethod.method.id);
 const salMe=await request('/auth/me',{token:bilal});

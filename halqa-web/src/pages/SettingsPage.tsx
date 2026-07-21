@@ -36,7 +36,7 @@ function Toggle({ label, hint, checked, onChange, disabled }: { label: string; h
 // Linked payment methods — wallet / Raast / bank identifiers the member saves
 // once and reuses at checkout and for auto-pay. Pointers only; never balances,
 // never card numbers.
-type LinkedMethod = { id: string; rail: string; accountNo: string; label: string; preferred: boolean };
+type LinkedMethod = { id: string; rail: string; accountNo: string; label: string; preferred: boolean; verified?: boolean };
 const RAIL_META: Record<string, { name: string; mono: string; color: string }> = {
   RAAST: { name: 'Raast', mono: 'RA', color: '#0e7d72' }, JAZZCASH: { name: 'JazzCash', mono: 'JC', color: '#c8102e' },
   EASYPAISA: { name: 'Easypaisa', mono: 'EP', color: '#3f9c35' }, BANK_TRANSFER: { name: 'Bank account', mono: 'BK', color: '#5b6472' },
@@ -54,16 +54,22 @@ export function LinkedMethodsManager() {
   const prefer = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}/preferred`, { method: 'POST' }); setMethods(d.methods); } catch { /* refresh next open */ } };
   const remove = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}`, { method: 'DELETE' }); setMethods(d.methods); if (id === salaryRef) setSalaryRef(null); } catch { /* refresh next open */ } };
   const markSalary = async (id: string, enabled: boolean) => { try { const d = await api<{ salaryAccountLinked: boolean; salaryAccountRef: string | null }>(`/profile/payment-methods/${id}/salary`, { method: 'POST', body: JSON.stringify({ enabled }) }); setSalaryRef(d.salaryAccountLinked ? d.salaryAccountRef : null); } catch { /* refresh next open */ } };
+  const [otpFor, setOtpFor] = useState(''); const [otpCode, setOtpCode] = useState(''); const [otpError, setOtpError] = useState('');
+  const verify = async (id: string) => { setOtpError(''); try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}/verify`, { method: 'POST', body: JSON.stringify({ code: otpCode.trim() }) }); setMethods(d.methods); setOtpFor(''); setOtpCode(''); } catch (reason) { setOtpError((reason as Error).message); } };
   return <div className="settings-block">
     <span className="eyebrow" style={{ display: 'block', marginBottom: 6 }}>Linked payment methods</span>
     <div className="method-list">
       {methods.map(m => { const meta = RAIL_META[m.rail] || RAIL_META.BANK_TRANSFER; return <div key={m.id} className={`method-row static ${m.preferred ? 'on' : ''}`}>
         <i className="method-logo" style={{ background: meta.color }}>{meta.mono}</i>
-        <span className="method-text"><b>{m.label}</b><small className="mono">{m.accountNo}{m.id === salaryRef ? ' · 💼 Salary account — 20% off early/slot fees' : ''}</small></span>
+        <span className="method-text"><b>{m.label}{m.verified ? ' ✓' : ''}</b><small className="mono">{m.accountNo}{m.id === salaryRef ? ' · 💼 Salary account — 20% off early/slot fees' : ''}{!m.verified ? ' · code sent on WhatsApp' : ''}</small></span>
+        {!m.verified && (otpFor === m.id
+          ? <span style={{ display: 'inline-flex', gap: 4 }}><input className="field" style={{ width: 92, padding: '4px 8px', fontSize: 12.5 }} inputMode="numeric" maxLength={6} placeholder="6-digit code" value={otpCode} onChange={e => setOtpCode(e.target.value.replace(/\D/g, ''))} /><button className="text-action slim-action" disabled={otpCode.length !== 6} onClick={() => void verify(m.id)}>Confirm</button></span>
+          : <button className="text-action slim-action" onClick={() => { setOtpFor(m.id); setOtpCode(''); setOtpError(''); }}>Enter code</button>)}
         {m.preferred ? <span className="pref-chip">Preferred</span> : <button className="text-action slim-action" onClick={() => void prefer(m.id)}>Make preferred</button>}
         {m.id === salaryRef ? <button className="text-action slim-action" onClick={() => void markSalary(m.id, false)}>Unset salary</button> : <button className="text-action slim-action" onClick={() => void markSalary(m.id, true)}>Salary account</button>}
         <button className="text-action slim-action danger" onClick={() => void remove(m.id)}>Remove</button>
       </div>; })}
+      {otpError && <div className="error-box">{otpError}</div>}
       {!methods.length && !adding && <p className="muted" style={{ fontSize: 12.5 }}>Nothing linked yet. Link your wallet or Raast ID once — checkout pre-fills it and auto-pay can use it.</p>}
     </div>
     {adding ? <div className="add-method">

@@ -39,8 +39,11 @@ router.get('/text', async (req, res, next) => {
     if (doc === 'MUTUAL_PG') {
       const committeeId = typeof req.query.committeeId === 'string' ? req.query.committeeId : '';
       if (!committeeId) return res.status(400).json({ error: 'committeeId is required for the mutual guarantee text' });
-      await assertMember(committeeId, req.auth!.userId);
-      const committee = await prisma.committee.findUniqueOrThrow({ where: { id: committeeId } });
+      const committee = await prisma.committee.findUnique({ where: { id: committeeId } });
+      if (!committee) return res.status(404).json({ error: 'Committee not found' });
+      // Members read the guarantee they signed; PROSPECTIVE members read it
+      // before joining a forming circle — the contract is shown, not sprung.
+      if (committee.status !== 'FORMING') await assertMember(committeeId, req.auth!.userId);
       const text = mutualPgText(committee.name, committee.contributionPaisa, committee.memberCap, committee.cycleNumber);
       return res.json({ doc, version: MUTUAL_PG_VERSION, text, textHash: hashText(text) });
     }

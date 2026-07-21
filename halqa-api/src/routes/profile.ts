@@ -1,10 +1,12 @@
 import { Router } from 'express';
+import { createHash, randomInt } from 'node:crypto';
 import { z } from 'zod';
 import { prisma } from '../db';
 import { requireAuth } from '../lib/auth';
 import { reputationFor } from '../lib/reputation';
 import { issuePassport } from '../lib/passport';
 import { audit } from '../lib/audit';
+import { queueWhatsApp } from '../lib/whatsapp';
 
 const router = Router();
 router.use(requireAuth);
@@ -69,7 +71,8 @@ router.patch('/consent', async (req, res, next) => {
 // used to prefill checkout and to power the auto-debit mandate. Pointers only:
 // no balances, no card numbers (cards belong on the licensed aggregator's
 // hosted page, never here). Stored as a small JSON array on the user.
-type LinkedMethod = { id: string; rail: string; accountNo: string; label: string; preferred: boolean };
+type LinkedMethod = { id: string; rail: string; accountNo: string; label: string; preferred: boolean; verified?: boolean };
+const otpHash = (code: string) => createHash('sha256').update(code).digest('hex');
 const methodsOf = (raw: unknown): LinkedMethod[] => (Array.isArray(raw) ? raw as LinkedMethod[] : []);
 const maskAccount = (value: string) => value.length <= 4 ? value : `${'•'.repeat(Math.max(0, value.length - 4))}${value.slice(-4)}`;
 const publicMethod = (m: LinkedMethod) => ({ ...m, accountNo: maskAccount(m.accountNo) });
@@ -97,9 +100,37 @@ router.post('/payment-methods', async (req, res, next) => {
       preferred: input.preferred ?? existing.length === 0, // the first link becomes preferred automatically
     };
     const next_ = method.preferred ? existing.map(m => ({ ...m, preferred: false })) : existing;
-    await prisma.user.update({ where: { id: req.auth!.userId }, data: { paymentMethodsJson: [...next_, method] } });
-    await audit(prisma, req.auth!.userId, 'PAYMENT_METHOD_LINKED', 'User', req.auth!.userId, { rail: method.rail, label: method.label });
-    res.status(201).json({ method: publicMethod(method) });
+    // Mandate OTP: linking an account that auto-collection will pull from is
+    // confirmed with a one-time code, delivered on the WhatsApp rail (in-app
+    // inbox stands in until the gateway partner connects). Hash + expiry live
+    // in the security event log; the method shows unverified until confirmed.
+    const otp = String(randomInt(100000, 1000000));
+    const expiresAt = Date.now() + 10 * 60_000;
+    await prisma.$transaction(async tx => {
+      await tx.user.update({ where: { id: req.auth!.userId }, data: { paymentMethodsJson: [...next_, method] } });
+      await tx.securityEvent.create({ data: { type: 'WA_MANDATE_OTP', userId: req.auth!.userId, detail: JSON.stringify({ methodId: method.id, codeHash: otpHash(otp), expiresAt }) } });
+      await queueWhatsApp(tx, { userId: req.auth!.userId, kind: 'MANDATE_OTP', refType: 'User', refId: req.auth!.userId, text: `Halqa: your auto-collection mandate code for ${method.label} is ${otp}. It expires in 10 minutes. Never share it.` });
+      await audit(tx, req.auth!.userId, 'PAYMENT_METHOD_LINKED', 'User', req.auth!.userId, { rail: method.rail, label: method.label });
+    });
+    res.status(201).json({ method: publicMethod(method), otpSent: true, ...(process.env.NODE_ENV !== 'production' ? { devCode: otp } : {}) });
+  } catch (error) { next(error); }
+});
+
+// Confirm the mandate OTP for a linked method. Marks the method verified —
+// the state the live rail will require before a real pull runs.
+router.post('/payment-methods/:id/verify', async (req, res, next) => {
+  try {
+    const { code } = z.object({ code: z.string().trim().regex(/^\d{6}$/, 'Enter the 6-digit code') }).parse(req.body);
+    const event = await prisma.securityEvent.findFirst({ where: { type: 'WA_MANDATE_OTP', userId: req.auth!.userId }, orderBy: { createdAt: 'desc' } });
+    const detail = event?.detail ? JSON.parse(event.detail) as { methodId: string; codeHash: string; expiresAt: number } : null;
+    if (!detail || detail.methodId !== req.params.id) return res.status(404).json({ error: 'No pending code for this method — re-link it to get a fresh one' });
+    if (Date.now() > detail.expiresAt) return res.status(410).json({ error: 'The code expired — re-link the method to get a fresh one' });
+    if (otpHash(code) !== detail.codeHash) return res.status(400).json({ error: 'Incorrect code' });
+    const u = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { paymentMethodsJson: true } });
+    const updated = methodsOf(u.paymentMethodsJson).map(m => m.id === req.params.id ? { ...m, verified: true } : m);
+    await prisma.user.update({ where: { id: req.auth!.userId }, data: { paymentMethodsJson: updated } });
+    await audit(prisma, req.auth!.userId, 'PAYMENT_METHOD_VERIFIED', 'User', req.auth!.userId, { methodId: req.params.id });
+    res.json({ methods: updated.map(publicMethod) });
   } catch (error) { next(error); }
 });
 
