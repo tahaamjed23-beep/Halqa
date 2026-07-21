@@ -184,6 +184,7 @@ model User {
   bids ExchangeBid[]
   guaranteesGiven ProtectionCommitment[] @relation("Guarantor")
   recoveryCases RecoveryCase[]
+  committeeWaitlists CommitteeWaitlist[]
 }
 
 model Committee {
@@ -264,6 +265,20 @@ model Committee {
   riskConsents RiskConsent[]
   payoutHoldbacks PayoutHoldback[]
   recoveryCases RecoveryCase[]
+  waitlist CommitteeWaitlist[]
+}
+
+model CommitteeWaitlist {
+  id String @id @default(cuid())
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  preferredPosition Int?
+  status String @default("WAITING")
+  createdAt DateTime @default(now())
+  @@unique([committeeId,userId])
+  @@index([committeeId,status])
 }
 
 model CommitteeMember {

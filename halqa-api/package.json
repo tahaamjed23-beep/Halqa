@@ -9,6 +9,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
+    "demo:investor": "tsx scripts/seed-investor-demo.ts",
     "test": "vitest run",
     "simulate": "tsx scripts/simulate_radical.ts"
   },

@@ -37,6 +37,39 @@ const includeDetail = {
   rounds: { include: { recipient: { select: { id: true, fullName: true } }, payments: { include: { payer: { select: { id: true, fullName: true } } } }, investments: { include: { scheme: true } } }, orderBy: { roundNumber: 'asc' as const } },
 } satisfies Prisma.CommitteeInclude;
 
+type HealthMember = { user: { creditScore: number } };
+type HealthPayment = { payerId: string; status: string; paidAt: Date | null; dueDate: Date };
+type HealthRound = { payments: HealthPayment[] };
+type HealthRecovery = { userId: string; status: string };
+
+function committeeCreditHealth(members: HealthMember[], rounds: HealthRound[], recoveries: HealthRecovery[]) {
+  const payments = rounds.flatMap(round => round.payments);
+  const defaultingMembers = new Set([
+    ...payments.filter(payment => payment.status === 'MISSED').map(payment => payment.payerId),
+    ...recoveries.filter(item => ['OPEN', 'PAYMENT_RECORDED'].includes(item.status)).map(item => item.userId),
+  ]);
+  const latePayments = payments.filter(payment => payment.status === 'LATE' || Boolean(payment.paidAt && payment.paidAt > payment.dueDate)).length;
+  const earlyPayments = payments.filter(payment => Boolean(payment.paidAt && payment.paidAt < payment.dueDate)).length;
+  const settledPayments = payments.filter(payment => payment.status !== 'PENDING').length;
+  const averageCreditScore = members.length ? Math.round(members.reduce((sum, member) => sum + member.user.creditScore, 0) / members.length) : 700;
+  const paymentQualityPct = settledPayments ? Math.max(0, Math.round((settledPayments - latePayments - defaultingMembers.size) / settledPayments * 100)) : 100;
+  const grade = defaultingMembers.size ? 'WATCH' : averageCreditScore >= 750 && latePayments === 0 ? 'EXCELLENT' : averageCreditScore >= 700 ? 'STRONG' : averageCreditScore >= 650 ? 'FAIR' : 'WATCH';
+  return { averageCreditScore, grade, defaults: defaultingMembers.size, latePayments, earlyPayments, settledPayments, paymentQualityPct };
+}
+
+function committeeEngineLabels(committee: { orderMode: string; tier: string; earlyFeeBps: number; payoutGuaranteed: boolean; reinvestRatio: number; scheme: { name: string } | null; allowTurnSale: boolean }) {
+  const labels: string[] = [];
+  if (committee.orderMode === 'CREDIT_WEIGHTED') labels.push('Credit-weighted ordering');
+  else if (committee.orderMode === 'RANDOM_BALLOT') labels.push('Random ballot');
+  else labels.push('Host-assigned ordering');
+  if (committee.earlyFeeBps > 0) labels.push(`Early-turn fee spectrum ${(committee.earlyFeeBps / 100).toFixed(1)}%→0%`);
+  if (committee.tier !== 'CLASSIC') labels.push(`${committee.tier[0]}${committee.tier.slice(1).toLowerCase()} earning engine`);
+  if (committee.reinvestRatio > 0 && committee.scheme) labels.push(`${Math.round(committee.reinvestRatio * 100)}% ${committee.scheme.name} allocation`);
+  if (committee.payoutGuaranteed) labels.push('Safety Fund');
+  if (committee.allowTurnSale) labels.push('Turn exchange');
+  return labels;
+}
+
 router.get('/', async (req, res) => {
   const rows = await prisma.committee.findMany({
     where: { OR: [{ hostId: req.auth!.userId }, { members: { some: { userId: req.auth!.userId, status: 'ACTIVE' } } }, { status: 'FORMING', listedPublicly: true }] },
@@ -44,6 +77,52 @@ router.get('/', async (req, res) => {
     orderBy: { createdAt: 'desc' },
   });
   res.json(rows);
+});
+
+// Public discovery is intentionally separate from the member dashboard. It
+// returns only circles the viewer has not joined, with every currently
+// available position and an honest projected payout timeline.
+router.get('/discover', async (req, res) => {
+  const rows = await prisma.committee.findMany({
+    where: {
+      listedPublicly: true,
+      status: { in: ['FORMING', 'ACTIVE', 'COMPLETED'] },
+      hostId: { not: req.auth!.userId },
+      members: { none: { userId: req.auth!.userId, status: 'ACTIVE' } },
+    },
+    include: {
+      host: { select: { id: true, fullName: true, creditScore: true } },
+      scheme: { select: { name: true, riskScore: true, indicativeRatePct: true } },
+      members: { where: { status: 'ACTIVE' }, include: { user: { select: { creditScore: true } } }, orderBy: { turnPosition: 'asc' } },
+      rounds: { include: { payments: { select: { payerId: true, status: true, paidAt: true, dueDate: true } } }, orderBy: { roundNumber: 'asc' } },
+      recoveryCases: { select: { userId: true, status: true } },
+      waitlist: { where: { userId: req.auth!.userId, status: 'WAITING' }, select: { id: true, preferredPosition: true } },
+    },
+    orderBy: [{ status: 'asc' }, { createdAt: 'desc' }],
+  });
+  const day = 86_400_000;
+  res.json(rows.map(committee => {
+    const openNow = committee.status === 'FORMING' && committee.members.length < committee.memberCap && committee.joinPolicy !== 'INVITE_ONLY';
+    const occupied = new Set(committee.members.map(member => member.turnPosition));
+    const latestPayout = committee.rounds.reduce((latest, round) => Math.max(latest, round.payoutDate.getTime()), Date.now());
+    const projectedCycleStart = openNow ? Date.now() + 7 * day : latestPayout + committee.periodDays * day;
+    const availablePositions = Array.from({ length: committee.memberCap }, (_, index) => index + 1)
+      .filter(position => !openNow || !occupied.has(position))
+      .map(position => ({
+        position,
+        expectedPayoutAt: new Date(projectedCycleStart + position * committee.periodDays * day + 7 * day),
+        indicative: committee.orderMode !== 'HOST_ASSIGNED',
+      }));
+    return {
+      id: committee.id, name: committee.name, mode: committee.mode, status: committee.status,
+      availability: openNow ? 'OPEN' : 'WAIT_NEXT_CYCLE', memberCount: committee.members.length, memberCap: committee.memberCap,
+      contributionPaisa: committee.contributionPaisa, periodDays: committee.periodDays, cycleNumber: committee.cycleNumber,
+      orderMode: committee.orderMode, secure: committee.orderMode === 'CREDIT_WEIGHTED', riskScore: committee.riskScore, riskBand: committee.riskBand,
+      host: committee.host, scheme: committee.scheme, availablePositions,
+      projectedCycleStart: new Date(projectedCycleStart), creditHealth: committeeCreditHealth(committee.members, committee.rounds, committee.recoveryCases),
+      engines: committeeEngineLabels(committee), waitlisted: committee.waitlist.length > 0,
+    };
+  }));
 });
 
 // Pre-join trust surface: resolve an invite code to the circle's terms and the
@@ -214,6 +293,31 @@ router.post('/join', async (req, res, next) => {
     return joinCommittee(committee.id, req, res, next);
   } catch (error) { next(error); }
 });
+router.post('/:id/join-public', async (req, res, next) => {
+  try {
+    const committee = await prisma.committee.findUnique({ where: { id: req.params.id }, select: { listedPublicly: true, joinPolicy: true } });
+    if (!committee || !committee.listedPublicly || committee.joinPolicy === 'INVITE_ONLY') return res.status(403).json({ error: 'This circle is invite-only' });
+    return joinCommittee(req.params.id, req, res, next);
+  } catch (error) { next(error); }
+});
+
+router.post('/:id/waitlist', async (req, res, next) => {
+  try {
+    const input = z.object({ preferredPosition: z.number().int().min(1).max(150).nullable().optional() }).parse(req.body ?? {});
+    const committee = await prisma.committee.findUnique({ where: { id: req.params.id }, include: { members: { where: { userId: req.auth!.userId, status: 'ACTIVE' }, select: { id: true } } } });
+    if (!committee || !committee.listedPublicly || committee.status === 'CANCELLED') return res.status(404).json({ error: 'Discoverable circle not found' });
+    if (committee.members.length) return res.status(409).json({ error: 'You are already in this circle' });
+    if (input.preferredPosition && input.preferredPosition > committee.memberCap) return res.status(400).json({ error: 'Preferred turn exceeds this circle capacity' });
+    const row = await prisma.committeeWaitlist.upsert({
+      where: { committeeId_userId: { committeeId: committee.id, userId: req.auth!.userId } },
+      create: { committeeId: committee.id, userId: req.auth!.userId, preferredPosition: input.preferredPosition ?? null },
+      update: { status: 'WAITING', preferredPosition: input.preferredPosition ?? null },
+    });
+    await prisma.notification.create({ data: { userId: committee.hostId, type: 'CYCLE_WAITLIST', message: `A member joined the waitlist for ${committee.name}${input.preferredPosition ? `, preferring turn ${input.preferredPosition}` : ''}.` } });
+    await audit(prisma, req.auth!.userId, 'CYCLE_WAITLIST_JOINED', 'Committee', committee.id, { preferredPosition: input.preferredPosition ?? null });
+    res.status(201).json(row);
+  } catch (error) { next(error); }
+});
 router.post('/:id/join', (req, res, next) => joinCommittee(req.params.id, req, res, next));
 async function joinCommittee(committeeId: string, req: Request, res: Response, next: NextFunction) {
   try {
@@ -295,6 +399,8 @@ router.post('/:id/start', async (req, res, next) => {
     const verified = (m: (typeof members)[number]) => (m.user.cnic ? 1 : 0);
     const orderedReal = committee.orderMode === 'CREDIT_WEIGHTED'
       ? [...members].sort((a,b) => verified(b) - verified(a) || b.user.creditScore - a.user.creditScore || a.joinedAt.getTime() - b.joinedAt.getTime())
+      : committee.orderMode === 'RANDOM_BALLOT'
+      ? members.map(member => ({ member, key: crypto.randomUUID() })).sort((a, b) => a.key.localeCompare(b.key)).map(item => item.member)
       : members;
     // Halqa's sponsor seats take the FIRST turns (host's creation choice): Halqa
     // collects early and pays its share over the rest of the cycle, minimising
@@ -810,14 +916,13 @@ router.post('/:id/leave', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-// Host toggles whether this forming circle is publicly discoverable. Flipping
-// it off hides it from the "Discover circles" list immediately; invite-code
-// joining still works either way.
+// Host toggles discovery at any lifecycle stage. Forming circles advertise
+// open seats; active/completed circles advertise the next-cycle waitlist.
 router.post('/:id/listing', async (req, res, next) => {
   try {
     const { listed } = z.object({ listed: z.boolean() }).parse(req.body);
     const committee = await assertHost(req.params.id, req.auth!.userId);
-    if (committee.status !== 'FORMING') return res.status(409).json({ error: 'Only forming circles can be listed or hidden' });
+    if (committee.status === 'CANCELLED') return res.status(409).json({ error: 'Cancelled circles cannot be listed' });
     await prisma.committee.update({ where: { id: committee.id }, data: { listedPublicly: listed } });
     await audit(prisma, req.auth!.userId, listed ? 'CIRCLE_LISTED' : 'CIRCLE_HIDDEN', 'Committee', committee.id, {});
     res.json({ listedPublicly: listed });

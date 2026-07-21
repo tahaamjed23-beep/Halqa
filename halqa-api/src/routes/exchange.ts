@@ -17,8 +17,11 @@ router.get('/', async (req, res) => {
       committee: {
         select: {
           id: true, name: true, mode: true, contributionPaisa: true, periodDays: true, currentRound: true,
-          members: { where: { status: 'ACTIVE' }, select: { userId: true } },
-          rounds: { select: { roundNumber: true, payoutDate: true, payoutPaisa: true }, orderBy: { roundNumber: 'asc' } },
+          orderMode: true, tier: true, earlyFeeBps: true, payoutGuaranteed: true, reinvestRatio: true, allowTurnSale: true,
+          riskScore: true, riskBand: true, scheme: { select: { name: true } },
+          members: { where: { status: 'ACTIVE' }, select: { userId: true, user: { select: { creditScore: true } } } },
+          rounds: { select: { roundNumber: true, payoutDate: true, payoutPaisa: true, payments: { select: { payerId: true, status: true, paidAt: true, dueDate: true } } }, orderBy: { roundNumber: 'asc' } },
+          recoveryCases: { select: { userId: true, status: true } },
         },
       },
       bids: { where: { status: 'OPEN' }, include: { bidder: { select: { id: true, fullName: true, creditScore: true } } } },
@@ -29,6 +32,22 @@ router.get('/', async (req, res) => {
     const targetRound = listing.committee.rounds.find(round => round.roundNumber === listing.position);
     const remainingRounds = Math.max(0, listing.committee.rounds.length - listing.committee.currentRound + 1);
     const remainingDuesPaisa = listing.committee.contributionPaisa * BigInt(remainingRounds);
+    const payments = listing.committee.rounds.flatMap(round => round.payments);
+    const defaultingMembers = new Set([
+      ...payments.filter(payment => payment.status === 'MISSED').map(payment => payment.payerId),
+      ...listing.committee.recoveryCases.filter(item => ['OPEN', 'PAYMENT_RECORDED'].includes(item.status)).map(item => item.userId),
+    ]);
+    const latePayments = payments.filter(payment => payment.status === 'LATE' || Boolean(payment.paidAt && payment.paidAt > payment.dueDate)).length;
+    const earlyPayments = payments.filter(payment => Boolean(payment.paidAt && payment.paidAt < payment.dueDate)).length;
+    const averageCreditScore = listing.committee.members.length ? Math.round(listing.committee.members.reduce((sum, member) => sum + member.user.creditScore, 0) / listing.committee.members.length) : 700;
+    const engines = [
+      listing.committee.orderMode === 'CREDIT_WEIGHTED' ? 'Credit-weighted ordering' : listing.committee.orderMode === 'RANDOM_BALLOT' ? 'Random ballot' : 'Host-assigned ordering',
+      listing.committee.earlyFeeBps > 0 ? `Early-turn fee spectrum ${(listing.committee.earlyFeeBps / 100).toFixed(1)}%→0%` : null,
+      listing.committee.tier !== 'CLASSIC' ? `${listing.committee.tier[0]}${listing.committee.tier.slice(1).toLowerCase()} earning engine` : null,
+      listing.committee.reinvestRatio > 0 && listing.committee.scheme ? `${Math.round(listing.committee.reinvestRatio * 100)}% ${listing.committee.scheme.name} allocation` : null,
+      listing.committee.payoutGuaranteed ? 'Safety Fund' : null,
+      listing.committee.allowTurnSale ? 'Turn exchange' : null,
+    ].filter((label): label is string => Boolean(label));
     return {
       ...listing,
       payoutPaisa: targetRound?.payoutPaisa ?? listing.payoutPaisa,
@@ -37,6 +56,9 @@ router.get('/', async (req, res) => {
       buyerNetCostPaisa: listing.premiumPaisa,
       buyerScope: 'INSIDE',
       totalTurns: listing.committee.members.length,
+      secure: listing.committee.orderMode === 'CREDIT_WEIGHTED',
+      creditHealth: { averageCreditScore, defaults: defaultingMembers.size, latePayments, earlyPayments, grade: defaultingMembers.size ? 'WATCH' : averageCreditScore >= 750 && latePayments === 0 ? 'EXCELLENT' : averageCreditScore >= 700 ? 'STRONG' : averageCreditScore >= 650 ? 'FAIR' : 'WATCH' },
+      engines,
     };
   }));
 });

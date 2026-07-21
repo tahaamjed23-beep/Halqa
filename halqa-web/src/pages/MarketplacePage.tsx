@@ -3,9 +3,10 @@ import { CalendarDays, Plus, ShieldCheck, Users, Gavel } from 'lucide-react';
 import { api, key, money, tokens } from '../api';
 import type { Committee, User } from '../types';
 import { Empty, Field } from '../components/ui';
+import { SHOW_INVESTOR_BRIEFING_FEATURES } from '../config';
 
 type Bid = { id: string; bidderId: string; premiumPaisa: string; status: string; bidder: { id: string; fullName: string; creditScore: number } };
-type Listing = { id: string; position: number; payoutPaisa: string; premiumPaisa: string; payoutDate?: string; remainingDuesPaisa: string; buyerNetCostPaisa: string; buyerScope: 'INSIDE' | 'OUTSIDE'; totalTurns?: number; seller: { id: string; fullName: string; creditScore: number; kycLevel: number }; committee: { id: string; name: string; mode: string; currentRound: number; periodDays: number }; bids?: Bid[] };
+type Listing = { id: string; position: number; payoutPaisa: string; premiumPaisa: string; payoutDate?: string; remainingDuesPaisa: string; buyerNetCostPaisa: string; buyerScope: 'INSIDE' | 'OUTSIDE'; totalTurns?: number; secure:boolean;creditHealth:{averageCreditScore:number;grade:'EXCELLENT'|'STRONG'|'FAIR'|'WATCH';defaults:number;latePayments:number;earlyPayments:number};engines:string[]; seller: { id: string; fullName: string; creditScore: number; kycLevel: number }; committee: { id: string; name: string; mode: string; currentRound: number; periodDays: number }; bids?: Bid[] };
 
 export default function MarketplacePage({ user }: { user: User }) {
   const [rows, setRows] = useState<Listing[]>([]);
@@ -59,6 +60,7 @@ export default function MarketplacePage({ user }: { user: User }) {
                 <span className={`scope scope-${listing.buyerScope.toLowerCase()}`}>
                   <Users />Inside-circle swap
                 </span>
+                {SHOW_INVESTOR_BRIEFING_FEATURES&&listing.secure&&<span className="secure-chip"><ShieldCheck/>Secure</span>}
                 <h3>{listing.committee.name}</h3>
                 <p>Seller {listing.seller.fullName} · score {listing.seller.creditScore}</p>
               </div>
@@ -76,6 +78,8 @@ export default function MarketplacePage({ user }: { user: User }) {
                 <CalendarDays />Expected payout {new Date(listing.payoutDate).toLocaleDateString()}
               </div>
             )}
+
+            {SHOW_INVESTOR_BRIEFING_FEATURES&&<><div className="market-credit-card"><div><span>Committee credit</span><b>{listing.creditHealth.averageCreditScore}</b><small className={`health-${listing.creditHealth.grade.toLowerCase()}`}>{listing.creditHealth.grade}</small></div><div className="credit-evidence"><span><b>{listing.creditHealth.defaults}</b> defaults</span><span><b>{listing.creditHealth.latePayments}</b> late</span><span><b>{listing.creditHealth.earlyPayments}</b> early</span></div></div><div className="engine-tags">{listing.engines.map(engine=><span key={engine}>{engine}</span>)}</div></>}
 
             {listing.seller.id === user.id ? (
               <div className="own-listing">
