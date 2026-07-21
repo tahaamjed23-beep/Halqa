@@ -770,3 +770,24 @@ h1,h2,h3{font-weight:640}
 .factor-pill.down{background:#fbeeea;border-color:#ecd2c7;color:#b3563a}
 .factor-rows b{display:block;font-size:13px}
 .factor-rows small{display:block;font-size:11.5px;color:#9a8a63}
+
+/* ===== Punch-list batch ===== */
+.logo-link{background:none;border:none;padding:0;cursor:pointer;text-align:left}
+.lang-btn{font-size:13px;font-weight:800;letter-spacing:.3px}
+.your-payout{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1.5px solid #e0cd90;background:linear-gradient(135deg,#fdf8ea,#fbf3d9);border-radius:14px;padding:12px 16px;margin-bottom:12px}
+.your-payout span{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:#8a6a15}
+.your-payout b{display:block;font-size:20px;color:#232014;margin:2px 0}
+.your-payout small{display:block;font-size:11px;color:#9a8a63}
+.your-payout i{font-style:normal;font-size:18px;font-weight:800;color:#b08d2f;background:#fff;border:1.5px solid #e0cd90;border-radius:12px;padding:8px 12px}
+.spectrum-preview{display:flex;align-items:flex-end;gap:5px;height:64px;margin:10px 0 4px}
+.spectrum-preview>div{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
+.spectrum-preview i{width:100%;max-width:22px;background:linear-gradient(180deg,#d9c26a,#b08d2f);border-radius:5px 5px 2px 2px;display:block}
+.spectrum-preview span{font-size:9px;color:#a79e79;margin-top:2px}
+.chip-logo{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:6px;color:#fff;font-style:normal;font-size:8px;font-weight:800;margin-right:6px;vertical-align:-4px}
+.about-hero{text-align:center;padding:26px 14px 6px}
+.about-hero h1{font-size:30px;line-height:1.25;margin:10px 0}
+.about-hero p{max-width:640px;margin:0 auto;font-size:13.5px;line-height:1.8;color:#6d6547}
+.stat-band{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0}
+.stat-band>div{background:#fff;border:1px solid #efe8d2;border-radius:16px;padding:18px 16px;text-align:center}
+.stat-band strong{display:block;font-size:24px;color:#b08d2f;letter-spacing:-.3px}
+.stat-band span{display:block;font-size:11px;color:#8a815f;line-height:1.5;margin-top:5px}

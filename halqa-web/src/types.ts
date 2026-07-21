@@ -11,4 +11,4 @@ export type RiskAssessment={modelVersion:string;score:number;band:'LOW'|'MEDIUM'
 export type RiskProjection={principalPaisa:string;days:number;downsideProfitPaisa:string;expectedProfitPaisa:string;upsideProfitPaisa:string;stressLossPaisa:string;riskScore:number;band:string;modelVersion:string};
 export type Summary={balancePaisa:string;totalRecordedPaisa:string;totalInvestmentProfitPaisa:string;activeCommittees:number;hostedCommittees:number;nextInstallment:null|{dueAt:string;amountPaisa:string;committee:{id:string;name:string}};nextPayout:null|{payoutAt:string;amountPaisa:string;committee:{id:string;name:string};roundNumber:number}};
 export type Notice={id:string;type:string;message:string;isRead:boolean;createdAt:string};
-export type Page='home'|'circles'|'market'|'terminal'|'vault'|'profile'|'create'|'settings'|'credit';
+export type Page='home'|'circles'|'market'|'terminal'|'vault'|'profile'|'create'|'settings'|'credit'|'about';

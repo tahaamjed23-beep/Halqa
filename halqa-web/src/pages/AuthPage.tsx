@@ -16,7 +16,7 @@ type RegStep = typeof REG_STEPS[number];
 export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const [mode,setMode]=useState<'login'|'register'>('login');
   const [step,setStep]=useState<RegStep>('phone');
-  const [form,setForm]=useState({identity:'sana',password:'halqa123',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:''});
+  const [form,setForm]=useState({identity:'',password:'',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:''});
   const [agreed,setAgreed]=useState(false);
   const [doc,setDoc]=useState<DocId|null>(null);
   const [error,setError]=useState('');const [busy,setBusy]=useState(false);
@@ -58,13 +58,13 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
       <label className="tos-check"><input type="checkbox" checked={agreed} onChange={e=>setAgreed(e.target.checked)}/><span>I have read and agree to the <button type="button" className="inline-link" onClick={()=>setDoc('agreement')}>User Agreement</button> and <button type="button" className="inline-link" onClick={()=>setDoc('privacy')}>Privacy Policy</button>, including the <button type="button" className="inline-link" onClick={()=>setDoc('fees')}>Fees & Payments Policy</button>.</span></label></>;
   }};
 
-  return <main className="auth-layout"><section className="auth-story"><Logo/><div className="auth-copy"><HalqaOrb/><span className="eyebrow">Pakistan's transparent savings network</span><h1>Save together.<br/>Grow with clarity.</h1><p>Locked schedules, visible turns, auto-pay, and a payment record that follows you — the committee you trust, finally written down.</p></div><small>Stage 1 · Record-only prototype · No money held</small></section>
+  return <main className="auth-layout"><section className="auth-story"><Logo/><div className="auth-copy"><HalqaOrb/><span className="eyebrow">Pakistan's transparent savings network</span><h1>Save together.<br/>Grow with clarity.</h1><p>Locked schedules, visible turns, auto-pay, and a payment record that follows you — the committee you trust, finally written down.</p></div></section>
   <section className="auth-form"><div className="auth-card">
     <div className="mobile-logo"><Logo/></div>
     {mode==='login'?<>
-      <h2>Welcome back</h2><p>Sign in using username, phone or email.</p>
+      <h2>Welcome back</h2><p>Sign in with your mobile number and password.</p>
       <form onSubmit={login}>
-        <input className="field" placeholder="Username, phone or email" value={form.identity} onChange={e=>setForm({...form,identity:e.target.value})}/>
+        <input className="field" inputMode="tel" autoCapitalize="none" placeholder="Mobile number" value={form.identity} onChange={e=>setForm({...form,identity:e.target.value})}/>
         <input className="field" type="password" placeholder="Password" autoComplete="current-password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})}/>
         {error&&<div className="error-box">{error}</div>}
         <button className="primary" disabled={busy}>{busy?'Please wait…':'Sign in'}</button>

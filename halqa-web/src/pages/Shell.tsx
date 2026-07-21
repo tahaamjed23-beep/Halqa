@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Bell, CircleDollarSign, Home, Landmark, Languages, LogOut, PiggyBank, Settings, Users, Wallet } from 'lucide-react';
+import { Bell, CircleDollarSign, Home, Landmark, LogOut, PiggyBank, Settings, Users, Wallet } from 'lucide-react';
 import { api } from '../api';
 import type { Notice, Page, User } from '../types';
 import { Logo } from '../components/ui';
@@ -25,7 +25,7 @@ export default function Shell({user,page,setPage,onLogout,children}:{user:User;p
     <div className="app-shell sidebar-layout">
       <aside className="sidebar">
         <div className="sidebar-top">
-          <Logo/>
+          <button className="logo-link" onClick={()=>setPage('about')} title="About Halqa"><Logo/></button>
           <div className="account-box">
             <div className="account-avatar">{user.fullName.charAt(0)}</div>
             <div className="account-meta">
@@ -50,8 +50,8 @@ export default function Shell({user,page,setPage,onLogout,children}:{user:User;p
               </button>
               {show&&<aside className="notice-panel">{notices.length?notices.map(notice=><article key={notice.id}><b>{notice.type.replaceAll('_',' ')}</b><p>{notice.message}</p></article>):<p className="muted">No updates</p>}</aside>}
             </div>
-            <button className="action-btn" title={lang==='en'?'اردو میں دیکھیں':'Switch to English'} onClick={()=>setLang(lang==='en'?'ur':'en')}><Languages size={20}/></button>
-            <button className="action-btn" onClick={onLogout}><LogOut size={20}/></button>
+            <button className="action-btn lang-btn" title={lang==='en'?'اردو میں دیکھیں':'Switch to English'} onClick={()=>setLang(lang==='en'?'ur':'en')}>{lang==='en'?'اردو':'EN'}</button>
+            <button className="action-btn" onClick={()=>{if(window.confirm(lang==='ur'?'کیا آپ واقعی سائن آؤٹ کرنا چاہتے ہیں؟':'Are you sure you want to sign out?'))onLogout()}}><LogOut size={20}/></button>
           </div>
         </div>
       </aside>

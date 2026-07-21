@@ -110,7 +110,10 @@ router.post('/', async (req, res, next) => {
     const host = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId } });
     if (host.isBanned) return res.status(403).json({ error: 'Restricted accounts cannot host committees' });
     if (host.creditScore < 700) return res.status(403).json({ error: 'A credit score of 700 or higher is required to host' });
-    if (host.kycLevel < 2 && process.env.NODE_ENV === 'production') return res.status(403).json({ error: 'Level 2 identity verification is required to host' });
+    // Hosting a RECORDED circle needs identity on file (CNIC), not bank KYC —
+    // Level 2 (bank verification) gates only bank-custody circles below. This
+    // was a launch blocker: every real signup starts at Level 1.
+    if (host.kycLevel < 1 && process.env.NODE_ENV === 'production') return res.status(403).json({ error: 'Identity verification is required to host' });
     // Custody uses the bank partner; the Safety Fund (guaranteed payouts funded
     // by a per-round slot fee) works in EITHER mode — recorded (the fund is
     // tracked on the ledger, guaranteed up to its recorded balance) or, at

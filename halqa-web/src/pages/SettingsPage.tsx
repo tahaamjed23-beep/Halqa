@@ -135,7 +135,7 @@ export default function SettingsPage({ user }: { user: User }) {
           {s.id === 'payments' && <>
             <LinkedMethodsManager />
             <Field label="Fallback rail" hint="Used when none of your linked methods fits.">
-              <div className="rail-grid">{['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER', 'CASH'].map(r => <button key={r} className={`rail-chip ${rail === r ? 'on' : ''}`} onClick={() => { setRail(r); pref.set('payments.rail', r); }}>{r.replace('_', ' ')}</button>)}</div>
+              <div className="rail-grid">{['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER', 'CASH'].map(r => { const meta = RAIL_META[r]; return <button key={r} className={`rail-chip ${rail === r ? 'on' : ''}`} onClick={() => { setRail(r); pref.set('payments.rail', r); }}>{meta && <i className="chip-logo" style={{ background: meta.color }}>{meta.mono}</i>}{meta ? meta.name : 'Cash'}</button>; })}</div>
             </Field>
             <div className="info-stack"><div><span>Digital confirmations</span><b>Sandbox mode — clearly marked until live rails switch on</b></div><div><span>Fees Halqa charges</span><b>Only what's in the Fees & Payments Policy</b></div><div><span>Payment history</span><b>Profile → Recorded installments</b></div></div>
             <button className="text-action" onClick={() => setDoc('fees')}>Read Fees & Payments Policy</button>

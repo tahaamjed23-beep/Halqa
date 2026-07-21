@@ -60,10 +60,33 @@ export const LEGAL_DOCS: Record<DocId, LegalDoc> = {
         '12.1. This Agreement is governed by the laws of the Islamic Republic of Pakistan.',
         '12.2. Any dispute arising out of or relating to this Agreement or the Services shall first be raised with our support channel and, failing amicable resolution within 30 days, referred to binding arbitration in Islamabad under the Arbitration Act, 1940, by a sole arbitrator appointed by mutual consent. Courts in Islamabad shall have exclusive supervisory jurisdiction.',
         '12.3. You agree to bring claims only in your individual capacity, not as a claimant or class member in any purported class or representative proceeding, to the extent permitted by law.' ] },
-      { h: '13. General', p: [
-        '13.1. We may amend this Agreement by posting a revised version with a new effective date; material changes will be notified in-product. Continued use after the effective date is acceptance.',
-        '13.2. If any provision is held unenforceable, the remainder stays in effect. Our failure to enforce a provision is not a waiver. You may not assign this Agreement; we may assign it to an affiliate or successor.',
-        '13.3. This Agreement, with the incorporated policies, is the entire agreement between you and Halqa regarding the Services.' ] },
+      { h: '13. Amendments to this Agreement', p: [
+        '13.1. We may amend this Agreement by posting a revised version with a new effective date; material changes will be notified in-product no fewer than seven (7) days before they take effect, except where a change is required by law or is necessary to address an urgent security matter, in which case it may take effect immediately.',
+        '13.2. Continued use of the Services after the effective date of a revised Agreement constitutes acceptance of the revision. If you do not agree to a revision, your sole remedy is to stop using the Services and close your account in accordance with Section 11.',
+        '13.3. No oral statement, marketing material, or customer-support communication modifies this Agreement. Only a written revision posted under this Section, or a written instrument signed by an authorised officer of Halqa, can amend it.' ] },
+      { h: '14. Severability and waiver', p: [
+        '14.1. If any provision of this Agreement is held by a court or arbitral tribunal of competent jurisdiction to be invalid, illegal, or unenforceable, that provision shall be enforced to the maximum extent permissible, and the validity, legality, and enforceability of the remaining provisions shall not in any way be affected or impaired.',
+        '14.2. The parties shall replace any severed provision with a valid provision that most closely approximates the economic and practical intent of the severed provision.',
+        '14.3. No failure or delay by Halqa in exercising any right, power, or remedy under this Agreement shall operate as a waiver of that right, power, or remedy, nor shall any single or partial exercise preclude any further exercise. A waiver is effective only if given in writing.' ] },
+      { h: '15. Assignment', p: [
+        '15.1. You may not assign, delegate, or transfer this Agreement, or any of your rights or obligations under it, in whole or in part, without our prior written consent; any attempted assignment in violation of this Section is void.',
+        '15.2. Halqa may assign this Agreement, in whole or in part, without your consent to any affiliate, or in connection with any merger, acquisition, corporate reorganisation, or sale of all or substantially all of its assets, provided the assignee assumes Halqa’s obligations under this Agreement.' ] },
+      { h: '16. Force majeure', p: [
+        '16.1. Halqa shall not be liable for any failure or delay in performance to the extent caused by events beyond its reasonable control, including acts of God, flood, earthquake, epidemic, war, terrorism, civil unrest, labour disputes, governmental action, power or telecommunication failures, failures of payment schemes or banking infrastructure, or failures of third-party hosting providers.',
+        '16.2. During a force majeure event, Halqa’s obligations are suspended to the extent affected; Halqa will use commercially reasonable efforts to resume performance and to preserve the integrity of the ledger and your records.' ] },
+      { h: '17. Notices and communications', p: [
+        '17.1. You consent to receive notices, disclosures, and communications from Halqa electronically — in-product, by push notification, by SMS or messaging service to your registered mobile number, or by email to your registered address — and agree that electronic delivery satisfies any legal requirement of written notice.',
+        '17.2. Notices to Halqa must be sent through the in-product support channel or to the contact address published in the Help section, and are deemed received on the next business day.',
+        '17.3. It is your responsibility to keep your contact details current; a notice delivered to the details on file is effective even if no longer monitored by you.' ] },
+      { h: '18. Survival', p: [
+        '18.1. Sections concerning records as evidence, fees accrued, intellectual property, disclaimers, limitation of liability, indemnity, governing law and dispute resolution, and this Section survive any suspension, termination, or closure of your account, together with any provision that by its nature should survive.',
+        '18.2. Ledger entries, audit records, and acceptance records may be retained after account closure as described in the Privacy Policy, including where retention is required for legal, regulatory, or dispute-resolution purposes.' ] },
+      { h: '19. Interpretation', p: [
+        '19.1. Headings are for convenience only and do not affect interpretation. The words "including", "for example", and similar expressions are illustrative and do not limit the preceding words.',
+        '19.2. This Agreement is drafted and executed in English; any translation is provided for convenience only and the English text prevails in the event of conflict.',
+        '19.3. Nothing in this Agreement creates any partnership, joint venture, agency, employment, or franchise relationship between you and Halqa, or between Halqa and any Circle.' ] },
+      { h: '20. Entire agreement', p: [
+        '20.1. This Agreement, together with the Privacy Policy, Cookie Policy, Community Policies, Advertising & Ad Choices Policy, and Fees & Payments Policy, each as amended from time to time, constitutes the entire agreement between you and Halqa with respect to the Services and supersedes all prior or contemporaneous understandings, agreements, representations, and warranties, whether written or oral, with respect to the Services.' ] },
     ],
   },
   privacy: {

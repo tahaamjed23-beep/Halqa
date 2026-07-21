@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BadgeCheck, ChevronLeft, ShieldCheck, TrendingUp } from 'lucide-react';
+import { ChevronLeft, ShieldCheck, TrendingUp } from 'lucide-react';
 import { api, money } from '../api';
 import type { User } from '../types';
 import { ScoreRing } from '../components/ui';
@@ -51,20 +51,15 @@ export default function CreditPage({user,back}:{user:User;back:()=>void}){
       <div className="trend-bars">{trend.map((p,i)=><div key={i} className="trend-bar" title={`${p.score}`}><i style={{height:`${Math.max(8,(p.score-min)/(max-min||1)*100)}%`,background:i===trend.length-1?'#b08d2f':'#e2d7b8'}}/><span>{i===trend.length-1?'Now':''}</span></div>)}</div>
     </section>
 
-    <div className="detail-grid">
-      <section className="panel"><div className="panel-head"><div><span className="eyebrow">Score factors</span><h2>What's driving it</h2></div></div>
-        <div className="factor-rows">
-          <div><i className="factor-pill up">{positives}</i><span><b>Positive events</b><small>On-time rounds, clean completions, streaks</small></span></div>
-          <div><i className="factor-pill down">{negatives}</i><span><b>Negative events</b><small>Late or missed installments and penalties</small></span></div>
-          <div><i className="factor-pill">{user.kycLevel}</i><span><b>Identity level</b><small>CNIC on file ranks you ahead for early turns</small></span></div>
-        </div>
-      </section>
-      <section className="panel"><div className="panel-head"><div><span className="eyebrow">Take it with you</span><h2>Credit Passport</h2></div><BadgeCheck/></div>
-        <p className="muted" style={{fontSize:12.5,lineHeight:1.7}}>Your record is portable: generate a signed Credit Passport from your Profile and share one link with a landlord, employer or lender — they verify it without a Halqa account. Only you can create it; nobody can look you up.</p>
-      </section>
-    </div>
+    <section className="panel"><div className="panel-head"><div><span className="eyebrow">Score factors</span><h2>Factors</h2></div></div>
+      <div className="factor-rows">
+        <div><i className="factor-pill up">{positives}</i><span><b>Positive events</b><small>On-time rounds, clean completions, streaks</small></span></div>
+        <div><i className="factor-pill down">{negatives}</i><span><b>Negative events</b><small>Late or missed installments and penalties</small></span></div>
+        <div><i className="factor-pill">{user.kycLevel}</i><span><b>Identity level</b><small>CNIC on file ranks you ahead for early turns</small></span></div>
+      </div>
+    </section>
 
-    <section className="panel"><div className="panel-head"><div><span className="eyebrow">Recent events</span><h2>The record itself</h2></div></div>
+    <section className="panel"><div className="panel-head"><div><span className="eyebrow">History</span><h2>Recent events</h2></div></div>
       <div className="history-list">{events.slice(0,10).map(e=><article key={e.id}><div><b>{e.reason}</b><span>{new Date(e.scoredAt).toLocaleDateString()}</span></div><strong className={e.delta>=0?'profit':'loss'}>{e.delta>0?'+':''}{e.delta}</strong></article>)}{!events.length&&<p className="muted">No score events yet.</p>}</div>
     </section>
   </div>;

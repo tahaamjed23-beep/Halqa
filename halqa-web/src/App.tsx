@@ -17,6 +17,7 @@ const CommitteePage=lazy(()=>import('./pages/CommitteePage'));
 const RafaBot=lazy(()=>import('./components/RafaBot'));
 const SettingsPage=lazy(()=>import('./pages/SettingsPage'));
 const CreditPage=lazy(()=>import('./pages/CreditPage'));
+const AboutPage=lazy(()=>import('./pages/AboutPage'));
 
 export default function App(){
   const [user,setUser]=useState<User|null>(null);
@@ -46,6 +47,7 @@ export default function App(){
       {view==='vault'&&<VaultPage/>}
       {view==='profile'&&<ProfilePage user={user} openCredit={()=>setPage('credit')}/>}
       {view==='credit'&&<CreditPage user={user} back={()=>setPage('profile')}/>}
+      {view==='about'&&<AboutPage/>}
       {view==='create'&&<CreateCirclePage user={user} done={setCommitteeId} cancel={()=>setPage('home')}/>}
       {view==='settings'&&<SettingsPage user={user}/>}
     </Suspense>
