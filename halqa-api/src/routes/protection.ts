@@ -4,6 +4,7 @@ import { prisma } from '../db';
 import { requireAuth } from '../lib/auth';
 import { assertHost, assertMember } from '../lib/guards';
 import { audit, ledger } from '../lib/audit';
+import { assessForwardLiability, type SecurityPolicy } from '../lib/forward-liability';
 import { evaluateDelinquencies } from '../services/delinquency';
 
 const router = Router();
@@ -33,29 +34,52 @@ router.get('/committee/:id', async (req, res, next) => {
     });
     const now = Date.now();
     const activeRound = committee.rounds.find(round => round.status === 'COLLECTING' || round.status === 'INVESTED');
+    const totalRounds = committee.rounds.length;
+    const securityPolicy = policyOf(committee.riskPolicyJson) as SecurityPolicy;
     const matrix = committee.members.map(member => {
       const payment = activeRound?.payments.find(item => item.payerId === member.userId);
       const remainingDues = committee.contributionPaisa * BigInt(Math.max(0, committee.memberCap - committee.currentRound));
       const heldDeposit = member.securityDeposits.filter(item => item.status === 'HELD').reduce((sum, item) => sum + item.amountPaisa + item.accruedYieldPaisa, 0n);
       const heldPayout = member.payoutHoldbacks.filter(item => item.status === 'HELD').reduce((sum, item) => sum + item.amountPaisa, 0n);
+      // Forward-liability preview for this member's OWN turn: security they must
+      // hold against the installments still owed after they take the pot. Shown
+      // for every position so a host can see, before payout, exactly where the
+      // early-turn exposure sits and whether it is covered.
+      const commitmentVerified = Boolean(member.protectionCommitment?.verifiedByHostAt);
+      const memberRound = committee.rounds.find(round => round.roundNumber === member.turnPosition);
+      const potPaisa = memberRound?.payoutPaisa ?? committee.contributionPaisa * BigInt(committee.members.length);
+      const security = assessForwardLiability({
+        contributionPaisa: committee.contributionPaisa, roundNumber: member.turnPosition, totalRounds,
+        payoutPaisa: potPaisa > 0n ? potPaisa : committee.contributionPaisa, bufferHoldbackPaisa: 0n, defaultReleasePayments: 2,
+        depositCoverageBps: committee.depositCoverageBps,
+        posted: { heldDepositPaisa: heldDeposit, heldHoldbackPaisa: heldPayout, commitmentVerified },
+        policy: securityPolicy,
+      });
       return {
         membershipId: member.id, user: member.user, turnPosition: member.turnPosition, hasReceived: member.hasReceived, status: member.status,
         currentPayment: payment ? { id: payment.id, status: payment.status, dueDate: payment.dueDate, penaltyPaisa: payment.penaltyPaisa } : null,
         daysToDeadline: payment ? Math.ceil((payment.dueDate.getTime() - now) / 86_400_000) : null,
         remainingDuesPaisa: remainingDues, heldDepositPaisa: heldDeposit, heldPayoutPaisa: heldPayout,
-        commitment: member.protectionCommitment,
+        commitment: member.protectionCommitment, commitmentVerified,
         defaultImpactPaisa: remainingDues + heldDeposit + heldPayout,
+        forwardLiabilityPaisa: security.forwardLiabilityPaisa, securityCoverageBps: security.coverageBps,
+        requiredSecurityPaisa: security.requiredSecurityPaisa, postedSecurityPaisa: security.postedSecurityPaisa,
+        securityShortfallPaisa: security.securityShortfallPaisa, securitySatisfied: security.satisfied, securityGateActive: security.enabled,
       };
     });
     res.json({
       committeeId: committee.id, policy: policyOf(committee.riskPolicyJson), payoutBufferBps: committee.payoutBufferBps,
+      forwardLiabilityGateEnabled: securityPolicy.forwardLiabilityGateEnabled === true,
       latePenaltyBps: committee.latePenaltyBps, activeRound: activeRound ? { id: activeRound.id, roundNumber: activeRound.roundNumber, dueDate: activeRound.dueDate, payoutDate: activeRound.payoutDate } : null,
       openRecoveryCases: committee.recoveryCases.length, matrix,
       partnerGates: [
         { key: 'AUTO_DEBIT', label: 'Raast/JazzCash auto-debit', status: 'PARTNER_REQUIRED' },
-        { key: 'CREDIT_BUREAU', label: 'Licensed credit-bureau reporting', status: 'LEGAL_AND_PARTNER_REQUIRED' },
+        // Roadmap (ghost protocol 07): defaults follow the CNIC into the
+        // national credit system, so a Halqa defaulter can't borrow anywhere.
+        { key: 'CREDIT_BUREAU', label: 'TASDEEQ / DataCheck bureau reporting — defaults recorded against the CNIC', status: 'PARTNER_AGREEMENT_REQUIRED' },
+        { key: 'ECIB', label: 'SBP eCIB reporting via partner institution', status: 'LEGAL_AND_PARTNER_REQUIRED' },
         { key: 'DEFAULT_INSURANCE', label: 'Licensed default insurance', status: 'INSURER_REQUIRED' },
-        { key: 'PAYROLL', label: 'Employer payroll deduction', status: 'EMPLOYER_REQUIRED' },
+        { key: 'PAYROLL', label: 'Employer payroll deduction (salary-linked collection)', status: 'EMPLOYER_REQUIRED' },
       ],
     });
   } catch (error) { next(error); }

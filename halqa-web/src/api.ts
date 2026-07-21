@@ -18,7 +18,10 @@ async function request<T>(path:string,init:RequestInit,retried:boolean):Promise<
     tokens.clear();
   }
   if(response.status===204)return undefined as T;
-  const data=await response.json().catch(()=>({})) as {error?:string};
+  const data=await response.json().catch(()=>({})) as {error?:string;code?:string};
+  // The weekly undertaking lapsed mid-session: any money action returns 428
+  // and the signing overlay re-opens itself before the member retries.
+  if(response.status===428&&data.code==='UNDERTAKING_REQUIRED')window.dispatchEvent(new CustomEvent('halqa:undertaking-required'));
   if(!response.ok)throw new Error(data.error||`Request failed (${response.status})`);
   return data as T;
 }

@@ -8,7 +8,7 @@ import { createHash } from 'node:crypto';
 
 const router = Router();
 const cleanPhone = (v: string) => v.replace(/\s+/g, '').replace(/^\+92/, '0');
-const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, createdAt: true } as const;
+const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, createdAt: true } as const;
 const credentials = z.object({ identity: z.string().trim().min(1), password: z.string().min(8).max(128) });
 const tokenHash=(token:string)=>createHash('sha256').update(token).digest('hex');
 // Passwords must mix letters and digits. 8-char floor is enforced by the zod

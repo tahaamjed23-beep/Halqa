@@ -30,7 +30,20 @@ export async function evaluateDelinquencies(now=new Date()):Promise<DelinquencyS
     const days = Math.max(0, Math.ceil((payment.dueDate.getTime() - now.getTime()) / 86_400_000));
     await prisma.$transaction(async tx => {
       const claimed = await tx.payment.updateMany({ where: { id: payment.id, reminderLevel: 0 }, data: { reminderLevel: 1 } });
-      if (claimed.count) await tx.notification.create({ data: { userId: payment.payerId, type: 'PAYMENT_COUNTDOWN', message: `${days} day(s) remain to record your ${payment.round.committee.name} installment. Missing it can reduce your score, lock Halqa features, and put deposits or payout holdbacks at risk.` } });
+      if (claimed.count) await tx.notification.create({ data: { userId: payment.payerId, type: 'PAYMENT_COUNTDOWN', message: `${days} day(s) remain to record your ${payment.round.committee.name} installment. Keep the balance available in your linked account — auto-collection runs on the due date. Missing it can reduce your score, lock Halqa features, and put deposits or payout holdbacks at risk.` } });
+    });
+  }
+  // Balance check the day before the pull: autopay members get a final
+  // reminder to keep the installment amount available, so the mandate never
+  // fails for an avoidable reason. reminderLevel 1→2 makes this once-only;
+  // the late path already writes level 2+ so there is no collision.
+  const dayBefore = new Date(now.getTime() + 86_400_000);
+  const imminent = await prisma.payment.findMany({ where: { status: 'PENDING', reminderLevel: 1, dueDate: { gte: now, lte: dayBefore }, round: { status: 'COLLECTING' } }, include: { round: { include: { committee: true } } } });
+  for (const payment of imminent) {
+    const membership = await prisma.committeeMember.findUnique({ where: { committeeId_userId: { committeeId: payment.round.committeeId, userId: payment.payerId } }, select: { autoDebitEnabled: true } });
+    await prisma.$transaction(async tx => {
+      const claimed = await tx.payment.updateMany({ where: { id: payment.id, reminderLevel: 1 }, data: { reminderLevel: 2 } });
+      if (claimed.count) await tx.notification.create({ data: { userId: payment.payerId, type: 'BALANCE_CHECK', message: membership?.autoDebitEnabled ? `${payment.round.committee.name}: auto-collection of Rs ${(Number(payment.amountPaisa) / 100).toLocaleString('en-PK')} runs tomorrow. Make sure the balance is available in your linked account.` : `${payment.round.committee.name}: your installment of Rs ${(Number(payment.amountPaisa) / 100).toLocaleString('en-PK')} is due tomorrow.` } });
     });
   }
   // Vault auto-cover (opt-in): before an overdue installment is punished or
@@ -99,6 +112,12 @@ export async function evaluateDelinquencies(now=new Date()):Promise<DelinquencyS
         }
         await tx.notification.create({data:{userId:payment.payerId,type:postReceiptDefault?'ACCOUNT_RESTRICTED':missed?'PAYMENT_MISSED':'PAYMENT_LATE',message:postReceiptDefault?'Your account is restricted after a post-payout default. Clear all dues to begin rehabilitation.':missed?`Your ${payment.round.committee.name} installment passed its grace period.`:`Your ${payment.round.committee.name} installment is ${daysLate} day(s) late.`}});
         await audit(tx,null,'DELINQUENCY_CHECKPOINT','Payment',payment.id,{stage,daysLate,delta,at:now.toISOString()});
+        // Bureau feed: every missed/defaulted installment queues a CNIC-linked
+        // record for export to licensed credit bureaus (TASDEEQ/DataCheck, and
+        // eCIB via a partner institution) once the data-provider linkage is
+        // live — consent is clause 5 of the signed member undertaking. The
+        // reliability-score damage above applies regardless of the grace window.
+        if(missed||postReceiptDefault)await audit(tx,null,'BUREAU_IMPACT_QUEUED','Payment',payment.id,{userId:payment.payerId,stage,daysLate,amountPaisa:payment.amountPaisa.toString(),at:now.toISOString()});
       }
     });
     if(postReceiptDefault)summary.postReceiptDefaults++;else if(missed)summary.missed++;else summary.late++;

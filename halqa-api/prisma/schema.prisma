@@ -154,6 +154,12 @@ model User {
   deviceId String?
   bankVerifiedAt DateTime?
   bankVerifyRef String?
+  // Salary-linked account: the member marks one linked method as the account
+  // their salary lands in. Auto-collection from a salary account is the most
+  // certain collection there is (Money Fellows model), so it earns a disclosed
+  // 20% reduction on early/slot fees at payout.
+  salaryAccountLinked Boolean @default(false)
+  salaryAccountRef String?
   vaultParkingEnabled Boolean @default(false)
   vaultTier String @default("STANDARD")
   vaultAutoCover Boolean @default(false)
@@ -185,6 +191,7 @@ model User {
   guaranteesGiven ProtectionCommitment[] @relation("Guarantor")
   recoveryCases RecoveryCase[]
   committeeWaitlists CommitteeWaitlist[]
+  agreementSignatures AgreementSignature[]
 }
 
 model Committee {
@@ -266,6 +273,7 @@ model Committee {
   payoutHoldbacks PayoutHoldback[]
   recoveryCases RecoveryCase[]
   waitlist CommitteeWaitlist[]
+  agreementSignatures AgreementSignature[]
 }
 
 model CommitteeWaitlist {
@@ -664,6 +672,35 @@ model RefreshToken {
   expiresAt DateTime
   createdAt DateTime @default(now())
   @@index([familyId])
+}
+
+// E-signed legal instruments (ETO 2002). Two document types today:
+// PLATFORM_UNDERTAKING — the master weekly-renewed undertaking every account
+// signs (promissory obligation, acceleration, auto-collect + bureau consent,
+// arbitration/summary-procedure consent). MUTUAL_PG — the member-to-member
+// cross-guarantee recorded per committee at join, so the members (never Halqa)
+// hold enforceable paper against a defaulter. Rows are append-only: each
+// renewal or re-join adds a row; the newest unexpired row is the live one.
+model AgreementSignature {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  committeeId String?
+  committee Committee? @relation(fields:[committeeId], references:[id], onDelete:Cascade)
+  docType String
+  version Int
+  textHash String
+  // Adopted digital signature: the member types their full legal name (must
+  // match the account name) and may also draw a signature; the drawing is
+  // stored as a small PNG data-URL. Together with textHash + ip + timestamp
+  // this is the evidence pack for the e-signature under ETO 2002.
+  signedName String?
+  signatureData String?
+  signedAt DateTime @default(now())
+  expiresAt DateTime?
+  ip String?
+  @@index([userId,docType,signedAt])
+  @@index([committeeId,docType])
 }
 
 // Append-only forensic trail of security-relevant events. Never updated or

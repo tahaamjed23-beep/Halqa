@@ -5,14 +5,18 @@ import { requireAuth } from '../lib/auth';
 import { assertMember } from '../lib/guards';
 import { settleContribution } from '../lib/settlement';
 import { initiatePayment, type Rail } from '../lib/payment-provider';
+import { requireFreshUndertaking } from '../lib/agreements';
 
 const router = Router();
 router.use(requireAuth);
+// Recording money movements requires a live weekly undertaking (the 428 tells
+// the web client to open the signing overlay). Read endpoints stay open.
+const undertakingGate = requireFreshUndertaking(prisma);
 
 // One-tap pay through the rail integration layer. In sandbox this initiates
 // and auto-confirms the installment in a single call; when a rail is live it
 // returns the payment instruction and awaits the provider's confirmation.
-router.post('/initiate', async (req, res, next) => {
+router.post('/initiate', undertakingGate, async (req, res, next) => {
   try {
     const input = z.object({
       roundId: z.string(), rail: z.enum(['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER', 'CASH']),
@@ -36,7 +40,7 @@ router.get('/mine', async (req, res) => {
   res.json(await prisma.payment.findMany({ where: { payerId: req.auth!.userId }, include: { round: { include: { committee: { select: { id: true, name: true } } } } }, orderBy: { dueDate: 'desc' } }));
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', undertakingGate, async (req, res, next) => {
   try {
     const input = z.object({
       roundId: z.string(), paidVia: z.enum(['RAAST','JAZZCASH','EASYPAISA','BANK_TRANSFER','CASH']),

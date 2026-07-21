@@ -43,19 +43,25 @@ const RAIL_META: Record<string, { name: string; mono: string; color: string }> =
 };
 export function LinkedMethodsManager() {
   const [methods, setMethods] = useState<LinkedMethod[]>([]);
+  const [salaryRef, setSalaryRef] = useState<string | null>(null);
   const [adding, setAdding] = useState(false); const [rail, setRail] = useState('RAAST'); const [accountNo, setAccountNo] = useState(''); const [busy, setBusy] = useState(false); const [error, setError] = useState('');
-  const load = () => api<{ methods: LinkedMethod[] }>('/profile/payment-methods').then(d => setMethods(d.methods)).catch(() => {});
+  const load = () => Promise.all([
+    api<{ methods: LinkedMethod[] }>('/profile/payment-methods').then(d => setMethods(d.methods)),
+    api<{ salaryAccountLinked: boolean; salaryAccountRef: string | null }>('/auth/me').then(d => setSalaryRef(d.salaryAccountLinked ? d.salaryAccountRef : null)).catch(() => {}),
+  ]).catch(() => {});
   useEffect(() => { void load(); }, []);
   const add = async () => { setBusy(true); setError(''); try { await api('/profile/payment-methods', { method: 'POST', body: JSON.stringify({ rail, accountNo: accountNo.replace(/\s+/g, '') }) }); setAdding(false); setAccountNo(''); await load(); } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); } };
   const prefer = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}/preferred`, { method: 'POST' }); setMethods(d.methods); } catch { /* refresh next open */ } };
-  const remove = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}`, { method: 'DELETE' }); setMethods(d.methods); } catch { /* refresh next open */ } };
+  const remove = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}`, { method: 'DELETE' }); setMethods(d.methods); if (id === salaryRef) setSalaryRef(null); } catch { /* refresh next open */ } };
+  const markSalary = async (id: string, enabled: boolean) => { try { const d = await api<{ salaryAccountLinked: boolean; salaryAccountRef: string | null }>(`/profile/payment-methods/${id}/salary`, { method: 'POST', body: JSON.stringify({ enabled }) }); setSalaryRef(d.salaryAccountLinked ? d.salaryAccountRef : null); } catch { /* refresh next open */ } };
   return <div className="settings-block">
     <span className="eyebrow" style={{ display: 'block', marginBottom: 6 }}>Linked payment methods</span>
     <div className="method-list">
       {methods.map(m => { const meta = RAIL_META[m.rail] || RAIL_META.BANK_TRANSFER; return <div key={m.id} className={`method-row static ${m.preferred ? 'on' : ''}`}>
         <i className="method-logo" style={{ background: meta.color }}>{meta.mono}</i>
-        <span className="method-text"><b>{m.label}</b><small className="mono">{m.accountNo}</small></span>
+        <span className="method-text"><b>{m.label}</b><small className="mono">{m.accountNo}{m.id === salaryRef ? ' · 💼 Salary account — 20% off early/slot fees' : ''}</small></span>
         {m.preferred ? <span className="pref-chip">Preferred</span> : <button className="text-action slim-action" onClick={() => void prefer(m.id)}>Make preferred</button>}
+        {m.id === salaryRef ? <button className="text-action slim-action" onClick={() => void markSalary(m.id, false)}>Unset salary</button> : <button className="text-action slim-action" onClick={() => void markSalary(m.id, true)}>Salary account</button>}
         <button className="text-action slim-action danger" onClick={() => void remove(m.id)}>Remove</button>
       </div>; })}
       {!methods.length && !adding && <p className="muted" style={{ fontSize: 12.5 }}>Nothing linked yet. Link your wallet or Raast ID once — checkout pre-fills it and auto-pay can use it.</p>}

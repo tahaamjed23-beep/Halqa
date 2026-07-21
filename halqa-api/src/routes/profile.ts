@@ -114,6 +114,23 @@ router.post('/payment-methods/:id/preferred', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+// Salary-linked account (Money Fellows model): the member designates one
+// linked method as the account their salary lands in. Auto-collection from a
+// salary account is the most certain collection there is, so it earns a
+// disclosed 20% reduction on the early/slot fees at payout. Consent is clause
+// 4 of the signed undertaking; the flag is togglable any time.
+router.post('/payment-methods/:id/salary', async (req, res, next) => {
+  try {
+    const { enabled } = z.object({ enabled: z.boolean().default(true) }).parse(req.body ?? {});
+    const u = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { paymentMethodsJson: true } });
+    const method = methodsOf(u.paymentMethodsJson).find(m => m.id === req.params.id);
+    if (!method) return res.status(404).json({ error: 'Linked method not found' });
+    const updated = await prisma.user.update({ where: { id: req.auth!.userId }, data: { salaryAccountLinked: enabled, salaryAccountRef: enabled ? method.id : null }, select: { salaryAccountLinked: true, salaryAccountRef: true } });
+    await audit(prisma, req.auth!.userId, 'SALARY_ACCOUNT_SET', 'User', req.auth!.userId, { enabled, methodRail: method.rail });
+    res.json(updated);
+  } catch (error) { next(error); }
+});
+
 router.delete('/payment-methods/:id', async (req, res, next) => {
   try {
     const u = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { paymentMethodsJson: true } });
@@ -122,7 +139,8 @@ router.delete('/payment-methods/:id', async (req, res, next) => {
     if (!target) return res.status(404).json({ error: 'Linked method not found' });
     let remaining = methods.filter(m => m.id !== req.params.id);
     if (target.preferred && remaining.length) remaining = remaining.map((m, i) => ({ ...m, preferred: i === 0 }));
-    await prisma.user.update({ where: { id: req.auth!.userId }, data: { paymentMethodsJson: remaining } });
+    const me = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { salaryAccountRef: true } });
+    await prisma.user.update({ where: { id: req.auth!.userId }, data: { paymentMethodsJson: remaining, ...(me.salaryAccountRef === req.params.id ? { salaryAccountLinked: false, salaryAccountRef: null } : {}) } });
     await audit(prisma, req.auth!.userId, 'PAYMENT_METHOD_REMOVED', 'User', req.auth!.userId, { rail: target.rail });
     res.json({ methods: remaining.map(publicMethod) });
   } catch (error) { next(error); }

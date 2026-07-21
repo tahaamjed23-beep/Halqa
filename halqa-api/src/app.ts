@@ -15,6 +15,7 @@ import riskRoutes from './routes/risk';
 import protectionRoutes from './routes/protection';
 import partnerRoutes from './routes/partner';
 import vaultRoutes from './routes/vault';
+import agreementRoutes from './routes/agreements';
 import { prisma } from './db';
 import { jsonSafe } from './lib/money';
 import { verifyPassport } from './lib/passport';
@@ -121,6 +122,7 @@ app.use('/api/risk', riskRoutes);
 app.use('/api/protection', protectionRoutes);
 app.use('/api/partner', partnerRoutes);
 app.use('/api/vault', vaultRoutes);
+app.use('/api/agreements', agreementRoutes);
 app.use((_req, res) => res.status(404).json({ error: 'Route not found' }));
 app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   if (error instanceof ZodError) return res.status(400).json({ error: 'Invalid request', details: error.flatten() });

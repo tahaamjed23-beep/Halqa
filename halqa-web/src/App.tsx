@@ -5,6 +5,7 @@ import AuthPage from './pages/AuthPage';
 import Shell from './pages/Shell';
 import HomePage from './pages/HomePage';
 import ErrorBoundary from './components/ErrorBoundary';
+import AgreementGate from './components/AgreementGate';
 import { SIMPLE_MODE } from './config';
 
 const CirclesPage=lazy(()=>import('./pages/CirclesPage'));
@@ -33,7 +34,10 @@ export default function App(){
   // Rafa is wrapped in its own scoped boundary everywhere it renders, so a
   // guide/chat failure can never blank the whole application.
   const rafa=(p:Page)=><ErrorBoundary scoped label="Rafa"><RafaBot page={p} setPage={next=>{setCommitteeId(null);setPage(next)}}/></ErrorBoundary>;
-  if(committeeId)return <Suspense fallback={<PageLoader/>}><ErrorBoundary resetKey={committeeId} label="Committee"><CommitteePage id={committeeId} user={user} onBack={()=>setCommitteeId(null)}/></ErrorBoundary>{rafa('circles')}</Suspense>;
+  // The weekly undertaking overlay rides on every logged-in branch: it shows
+  // right after account creation, then re-appears each week (or on any 428).
+  const gate=<ErrorBoundary scoped label="Undertaking"><AgreementGate userName={user.fullName}/></ErrorBoundary>;
+  if(committeeId)return <Suspense fallback={<PageLoader/>}><ErrorBoundary resetKey={committeeId} label="Committee"><CommitteePage id={committeeId} user={user} onBack={()=>setCommitteeId(null)}/></ErrorBoundary>{rafa('circles')}{gate}</Suspense>;
   // In simple mode the investment surfaces are hidden; coerce any stale route
   // to home. The turn marketplace stays live in simple mode.
   const view=SIMPLE_MODE&&['terminal','vault'].includes(page)?'home':page;
@@ -52,6 +56,7 @@ export default function App(){
       {view==='settings'&&<SettingsPage user={user}/>}
     </Suspense>
     </ErrorBoundary>
+    {gate}
   </Shell>
 }
 

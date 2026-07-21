@@ -16,8 +16,13 @@ async function request(path,{token,method='GET',body,expect=200}={}){
 const login=async identity=>(await request('/auth/login',{method:'POST',body:{identity,password:'halqa123'}})).accessToken;
 const health=await request('/health'); check('record-only health marker',health.stage==='record-only-prototype');
 const [sana,ayesha,bilal]=await Promise.all(['sana','ayesha','bilal'].map(login));
+// Weekly member undertaking: every money action (create/join/waitlist/pay) is
+// 428-gated on a live signature. Signing is an adopted digital signature —
+// the typed name must match the account name — so every actor e-signs up front.
+for(const [t,nm] of[[sana,'Sana Butt'],[ayesha,'Ayesha Noor'],[bilal,'Bilal Raza']])await request('/agreements/sign',{token:t,method:'POST',expect:201,body:{doc:'PLATFORM_UNDERTAKING',accept:true,signedName:nm}});
 await prisma.user.updateMany({where:{username:'bilal'},data:{creditScore:640}}); // pin precondition: repeated runs raise his score past 700
 await prisma.committee.updateMany({where:{host:{username:{in:['sana','ayesha']}},status:{in:['FORMING','ACTIVE']},OR:[{name:{startsWith:'Lifecycle '}},{name:{startsWith:'Soneri Rail '}},{name:{startsWith:'Bazaar '}},{name:{startsWith:'Priority '}},{name:{startsWith:'Sigma '}},{name:{startsWith:'Swap '}},{name:{startsWith:'Cover '}},{name:{startsWith:'Newbie '}},{name:{startsWith:'Safety '}},{name:{startsWith:'Protection QA'}},{name:{startsWith:'Bad '}},{name:{startsWith:'Autopay '}}]},data:{status:'CANCELLED'}}); // clear stale test circles so the 5-hosted cap never trips
+await prisma.committee.updateMany({where:{name:{startsWith:'ForwardLiab '},status:{in:['FORMING','ACTIVE']}},data:{status:'CANCELLED'}}); // forward-liability gate check hosts a fresh throwaway user each run; cancel its circles too
 // Referral trigger: bilal is marked as referred by ayesha BEFORE any circle
 // completes this run; the once-ever bonus ledgers on his first completion.
 const [ayeshaRow,bilalRow]=await Promise.all([prisma.user.findUniqueOrThrow({where:{username:'ayesha'}}),prisma.user.findUniqueOrThrow({where:{username:'bilal'}})]);
@@ -39,7 +44,7 @@ await request(`/committees/${circle.id}/start`,{token:ayesha,method:'POST',expec
 await request(`/committees/${circle.id}/start`,{token:sana,method:'POST',body:{}});
 let detail=await request(`/committees/${circle.id}`,{token:sana});
 check('schedule locked and rounds created',detail.status==='ACTIVE'&&detail.rounds.length===3&&detail.rounds[0].payments.length===3);
-check('hidden grace window sized to ~23% of the period (45d → 10d)',detail.rounds[0].graceDays===10,`graceDays=${detail.rounds[0].graceDays}`);
+check('hidden grace window: ~23% of period minus 2 days (45d → 8d, tightened 2026-07-21)',detail.rounds[0].graceDays===8,`graceDays=${detail.rounds[0].graceDays}`);
 const deposits=await request(`/committees/${circle.id}/deposits`,{token:sana});
 for(const deposit of deposits.filter(row=>row.status==='PENDING'))await request(`/committees/${circle.id}/deposits/${deposit.id}/confirm`,{token:sana,method:'POST',body:{txnRef:`DEP-${deposit.id.slice(-6)}`}});
 const round=detail.rounds[0]; const tokenById=new Map([[detail.members.find(m=>m.user.username==='sana').userId,sana],[detail.members.find(m=>m.user.username==='ayesha').userId,ayesha],[detail.members.find(m=>m.user.username==='bilal').userId,bilal]]);
@@ -331,6 +336,7 @@ const stamp=Date.now();
 const newbieReg=await request('/auth/register',{method:'POST',expect:201,body:{fullName:'Newbie Tester',username:`newbie${stamp}`,phone:`0345${String(stamp).slice(-7)}`,email:`newbie${stamp}@halqa.pk`,password:'halqa123x',referredBy:'ayesha'}});
 const newbieTok=newbieReg.accessToken;
 check('registration accepts a referral handle',!!newbieTok);
+await request('/agreements/sign',{token:newbieTok,method:'POST',expect:201,body:{doc:'PLATFORM_UNDERTAKING',accept:true,signedName:'Newbie Tester'}});
 const bigCircle=await request('/committees',{token:ayesha,method:'POST',expect:201,body:{name:`Newbie ${stamp}`,memberCap:5,contributionPaisa:'3000000',cadencePreset:'SHORT',periodDays:30,minMembersToStart:3,reinvestRatio:0,joinPolicy:'OPEN_UNTIL_FULL'}});
 const newbieJoin=await request(`/committees/${bigCircle.id}/join`,{token:newbieTok,method:'POST',expect:201,body:{}});
 check('newcomer can join a large circle (first-circle cap removed)',!!newbieJoin.id||!!newbieJoin.membership||newbieJoin.status!==403);
@@ -350,6 +356,9 @@ const bilalCoverId=cv.members.find(m=>m.user.username==='bilal').userId;
 for(const p of coverRound.payments.filter(p=>p.payerId!==bilalCoverId))await request('/payments',{token:new Map(cv.members.map(m=>[m.userId,{sana,ayesha,bilal}[m.user.username]])).get(p.payerId),method:'POST',expect:201,body:{roundId:coverRound.id,paidVia:'RAAST',txnRef:`CV-${p.payerId.slice(-4)}`,idempotencyKey:`cv-${coverRound.id}-${p.payerId}`}});
 await prisma.round.update({where:{id:coverRound.id},data:{dueDate:new Date(Date.now()-86_400_000)}});
 await prisma.payment.updateMany({where:{roundId:coverRound.id,payerId:bilalCoverId},data:{dueDate:new Date(Date.now()-86_400_000)}});
+// Autopay is the join default now; switch bilal's mandate off here so the
+// VAULT auto-cover path (not the auto-debit pull) is what settles this one.
+await prisma.committeeMember.updateMany({where:{committeeId:cover.id,userId:bilalCoverId},data:{autoDebitEnabled:false}});
 const delinquency=await request('/protection/delinquency/run',{token:sana,method:'POST',body:{}});
 check('delinquency pass auto-covered the overdue installment',delinquency.autoCovered>=1,`autoCovered=${delinquency.autoCovered}`);
 const coveredPayment=await prisma.payment.findUnique({where:{roundId_payerId:{roundId:coverRound.id,payerId:bilalCoverId}}});
@@ -448,6 +457,74 @@ check('recorded Safety Fund circle starts and exposes its fund balance',sv.statu
 const pack=await request(`/committees/${cover.id}/receivables-pack`,{token:sana});
 check('receivables pack: schedule + inflows + member reliability + disclaimer',Array.isArray(pack.receivables.schedule)&&pack.receivables.futureRounds>=2&&pack.receivables.perRoundInflowPaisa==='6000000'&&pack.members.length===3&&pack.members.every(m=>typeof m.reliabilityScore==='number')&&pack.disclaimer.includes('record-only'),`rounds=${pack.receivables.futureRounds}`);
 await request(`/committees/${cover.id}/receivables-pack`,{token:ayesha,method:'GET',expect:403}); // host-only
+
+// ---- Forward-liability security gate: early payouts secured to what the recipient still owes ----
+// Opt-in per circle; hosts a FRESH throwaway user (default score 700, 0 hosted)
+// so the five-circle cap can never trip. Proves the create->policy->engine->read
+// path and the per-position sizing (contribution x installments-still-owed).
+const flStamp=Date.now();
+const flReg=await request('/auth/register',{method:'POST',expect:201,body:{fullName:'FL Host',username:`flhost${flStamp}`,phone:`0323${String(flStamp).slice(-7)}`,email:`flhost${flStamp}@halqa.pk`,password:'halqa123x'}});
+const flHost=flReg.accessToken;
+// A brand-new account holds no undertaking: money actions must 428 until the
+// weekly iqrarnama is e-signed, then flow normally.
+const flBlocked=await request('/committees',{token:flHost,method:'POST',expect:428,body:{name:`ForwardLiab ${flStamp}`,memberCap:3,contributionPaisa:'1000000',cadencePreset:'SHORT',periodDays:30,minMembersToStart:3,reinvestRatio:0,orderMode:'CREDIT_WEIGHTED',joinPolicy:'INVITE_ONLY',forwardLiabilityGate:true}});
+check('unsigned account is blocked from money actions with the overlay code',flBlocked.code==='UNDERTAKING_REQUIRED');
+// The signature is real: a checkbox alone (no name) and a wrong name both 400.
+const flNoName=await request('/agreements/sign',{token:flHost,method:'POST',expect:400,body:{doc:'PLATFORM_UNDERTAKING',accept:true}});
+check('signing without a typed name is rejected',(flNoName.error||'').includes('full legal name'));
+const flWrongName=await request('/agreements/sign',{token:flHost,method:'POST',expect:400,body:{doc:'PLATFORM_UNDERTAKING',accept:true,signedName:'Someone Else'}});
+check('a signature not matching the account name is rejected',(flWrongName.error||'').includes('must match'));
+const flSign=await request('/agreements/sign',{token:flHost,method:'POST',expect:201,body:{doc:'PLATFORM_UNDERTAKING',accept:true,signedName:'FL Host'}});
+check('undertaking e-signature returns a hash and a 7-day expiry',/^[0-9a-f]{64}$/.test(flSign.textHash)&&new Date(flSign.expiresAt).getTime()>Date.now()+6*86_400_000);
+const flStatus=await request('/agreements/status',{token:flHost});
+check('agreement status reports the signature as fresh',flStatus.undertaking.fresh===true&&flStatus.renewalDays===7);
+const flCircle=await request('/committees',{token:flHost,method:'POST',expect:201,body:{name:`ForwardLiab ${flStamp}`,memberCap:3,contributionPaisa:'1000000',cadencePreset:'SHORT',periodDays:30,minMembersToStart:3,reinvestRatio:0,orderMode:'CREDIT_WEIGHTED',joinPolicy:'INVITE_ONLY',forwardLiabilityGate:true}});
+check('forward-liability gate persisted at creation',flCircle.riskPolicyJson?.forwardLiabilityGateEnabled===true,JSON.stringify(flCircle.riskPolicyJson?.forwardLiabilityGateEnabled));
+await request('/committees/join',{token:sana,method:'POST',expect:201,body:{inviteCode:flCircle.inviteCode}});
+await request('/committees/join',{token:bilal,method:'POST',expect:201,body:{inviteCode:flCircle.inviteCode}});
+// Joining auto-signed the mutual member-to-member guarantee — the paper each
+// member holds against every other before the circle can start.
+const flPg=await request(`/agreements/status?committeeId=${flCircle.id}`,{token:sana});
+check('mutual member-to-member guarantee is recorded at join, before start',!!flPg.mutualPg?.signedAt);
+const flPgText=await request(`/agreements/text?doc=MUTUAL_PG&committeeId=${flCircle.id}`,{token:sana});
+check('mutual guarantee text runs between members, never to Halqa',flPgText.text.includes('NOT TO HALQA')&&flPgText.text.includes('Order XXXVII'));
+await request(`/committees/${flCircle.id}/start`,{token:flHost,method:'POST',body:{}});
+const flProt=await request(`/protection/committee/${flCircle.id}`,{token:flHost});
+check('protection endpoint reports the forward-liability gate is on',flProt.forwardLiabilityGateEnabled===true);
+// Autopay is the join default now (opt-out): the fresh membership carries a
+// standing mandate stamped at join time.
+const flMember=await prisma.committeeMember.findFirst({where:{committeeId:flCircle.id,user:{username:'sana'}}});
+check('autopay mandate is on by default at join',flMember?.autoDebitEnabled===true&&!!flMember?.autoDebitMandateAt);
+
+// ---- Salary-linked account: designated method earns the disclosed fee reduction ----
+const salMethod=await request('/profile/payment-methods',{token:bilal,method:'POST',expect:201,body:{rail:'BANK_TRANSFER',accountNo:`PK36SALA${String(flStamp).slice(-12)}`,label:'Salary IBAN'}});
+const salSet=await request(`/profile/payment-methods/${salMethod.method.id}/salary`,{token:bilal,method:'POST',body:{enabled:true}});
+check('salary account designation persists with the method reference',salSet.salaryAccountLinked===true&&salSet.salaryAccountRef===salMethod.method.id);
+const salMe=await request('/auth/me',{token:bilal});
+check('profile exposes the salary link for the fee discount',salMe.salaryAccountLinked===true);
+await request(`/profile/payment-methods/${salMethod.method.id}`,{token:bilal,method:'DELETE'});
+const salMeAfter=await request('/auth/me',{token:bilal});
+check('deleting the salary method clears the salary link',salMeAfter.salaryAccountLinked===false);
+
+// ---- Family / linked-account policy (undertaking clause 7e): a linked
+// unresolved default pauses joins for the family member ----
+const famStamp=Date.now();
+const famXReg=await request('/auth/register',{method:'POST',expect:201,body:{fullName:'Fam Defaulter',username:`famx${famStamp}`,phone:`0331${String(famStamp).slice(-7)}`,email:`famx${famStamp}@halqa.pk`,password:'halqa123x'}});
+const famYReg=await request('/auth/register',{method:'POST',expect:201,body:{fullName:'Fam Relative',username:`famy${famStamp}`,phone:`0332${String(famStamp).slice(-7)}`,email:`famy${famStamp}@halqa.pk`,password:'halqa123x',referredBy:`famx${famStamp}`}});
+await request('/agreements/sign',{token:famYReg.accessToken,method:'POST',expect:201,body:{doc:'PLATFORM_UNDERTAKING',accept:true,signedName:'Fam Relative'}});
+// Fabricate famX's certified default directly (defaultFlag + an OPEN recovery
+// case borrowing an FL-circle payment row for the FKs — cancelled every run).
+const flDetail=await request(`/committees/${flCircle.id}`,{token:flHost});
+const famPayment=flDetail.rounds[0].payments[0];
+await prisma.user.update({where:{id:famXReg.user.id},data:{defaultFlag:true}});
+await prisma.recoveryCase.create({data:{userId:famXReg.user.id,committeeId:flCircle.id,roundId:flDetail.rounds[0].id,paymentId:famPayment.id,outstandingPaisa:100000n,status:'OPEN'}});
+const famBlocked=await request('/committees/join',{token:famYReg.accessToken,method:'POST',expect:403,body:{inviteCode:flCircle.inviteCode}});
+check('family member of an unresolved defaulter cannot join new circles',(famBlocked.error||'').includes('linked-account policy'));
+await prisma.recoveryCase.deleteMany({where:{userId:famXReg.user.id}});
+await prisma.user.update({where:{id:famXReg.user.id},data:{defaultFlag:false}});
+const flEarly=flProt.matrix.find(m=>m.turnPosition===1),flLast=flProt.matrix.find(m=>m.turnPosition===3);
+check('earliest turn is secured to its forward liability (70% of the 2 installments still owed)',BigInt(flEarly.requiredSecurityPaisa)===1000000n*2n*7000n/10000n,`${flEarly?.requiredSecurityPaisa}`);
+check('the final turn carries no forward liability and needs no security',BigInt(flLast.forwardLiabilityPaisa)===0n&&BigInt(flLast.requiredSecurityPaisa)===0n,`${flLast?.forwardLiabilityPaisa}`);
 
 console.log(JSON.stringify({passed:results.length,results},null,2));
 await prisma.$disconnect();

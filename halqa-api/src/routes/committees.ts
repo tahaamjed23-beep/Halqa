@@ -6,6 +6,9 @@ import { requireAuth } from '../lib/auth';
 import { assertHost, assertMember } from '../lib/guards';
 import { audit, ledger } from '../lib/audit';
 import { clampScore, paisaInput, projectedReturn } from '../lib/money';
+import { assessForwardLiability, type SecurityPolicy } from '../lib/forward-liability';
+import { MUTUAL_PG_VERSION, freshUndertaking, hashText, mutualPgText } from '../lib/agreements';
+import { linkedOpenDefault } from '../lib/family-links';
 import { assessRisk, policyHash } from '../lib/risk-engine';
 import { allocateCyclePool } from '../lib/distribution';
 import { reputationFor } from '../lib/reputation';
@@ -25,7 +28,14 @@ const protectionPolicy = (value: unknown) => (value && typeof value === 'object'
 // grace (settlement.ts / delinquency.ts apply the penalty on any late day);
 // only the harsh consequences wait until the grace elapses.
 const POST_DUE_GRACE_PCT = 0.23;
-const postDueGraceDays = (periodDays: number) => Math.max(2, Math.min(14, Math.round(periodDays * POST_DUE_GRACE_PCT)));
+// Tightened 2026-07-21 (chairman): the window is the ~23% curve MINUS two
+// days (floor 2) — e.g. 5 days on a 30-day circle, was 7. Score and bureau
+// damage still start from the first late day; only the harsh, irreversible
+// consequences wait for this window to lapse.
+const postDueGraceDays = (periodDays: number) => Math.max(2, Math.min(14, Math.round(periodDays * POST_DUE_GRACE_PCT) - 2));
+// Money actions (create / join / waitlist / pay) demand a live weekly
+// undertaking; 428 tells the web client to open the signing overlay.
+const UNDERTAKING_428 = { error: 'Your weekly member undertaking needs to be signed before this action', code: 'UNDERTAKING_REQUIRED' };
 const includeDetail = {
   host: { select: { id: true, fullName: true, username: true, creditScore: true } },
   scheme: true,
@@ -182,7 +192,18 @@ router.post('/', async (req, res, next) => {
       goalTargetPaisa: paisaInput.optional(),
       allowHalqaFill: z.boolean().default(false),
       listedPublicly: z.boolean().default(false),
+      // Anti-default: gate early payouts on security sized to the recipient's
+      // forward liability (the installments still owed after they take the pot).
+      // Recommended for "Secure" (credit-weighted) and stranger-discovered
+      // circles. blockOnSecurityShortfall makes an uncovered shortfall stop the
+      // payout; otherwise the pot itself is held back to collateralise it.
+      forwardLiabilityGate: z.boolean().default(false),
+      blockOnSecurityShortfall: z.boolean().default(false),
     }).parse(req.body);
+    // These two drive the security policy (riskPolicyJson), not Committee
+    // columns, so keep them out of the `...committeeInput` row spread below.
+    const { forwardLiabilityGate, blockOnSecurityShortfall, ...committeeInput } = input;
+    if (!(await freshUndertaking(prisma, req.auth!.userId))) return res.status(428).json(UNDERTAKING_428);
     if (input.minMembersToStart > input.memberCap) return res.status(400).json({ error: 'Minimum members cannot exceed member capacity' });
     const allocationCap = input.mode === 'ROTATING' ? 0.25 : input.mode === 'HYBRID' ? 0.75 : 1;
     if (input.reinvestRatio > allocationCap) return res.status(400).json({ error: `${input.mode} committees allow a maximum ${allocationCap * 100}% investment allocation` });
@@ -221,6 +242,8 @@ router.post('/', async (req, res, next) => {
       return res.status(400).json({ error: 'Circles with more than 30 members must run on intervals of 30 days or less' });
     }
     if (input.mode === 'INVESTMENT' && (input.payoutGuaranteed || input.slotFeeBps > 0)) return res.status(400).json({ error: 'Investment circles have no rotating payouts to guarantee or price' });
+    if (input.mode === 'INVESTMENT' && input.forwardLiabilityGate) return res.status(400).json({ error: 'Investment circles have no rotating payouts to secure against forward liability' });
+    if (input.blockOnSecurityShortfall && !input.forwardLiabilityGate) return res.status(400).json({ error: 'Blocking on a security shortfall requires the forward-liability gate to be enabled' });
     if (input.payoutGuaranteed && input.slotFeeBps < 50) return res.status(400).json({ error: 'Guaranteed payouts need a slot fee of at least 0.5% to fund the Safety Fund' });
     if (input.slotFeeBps > 0 && !input.payoutGuaranteed) return res.status(400).json({ error: 'A slot fee only applies to guaranteed circles — it funds the Safety Fund' });
     // Sukoon/Bazaar profit engine: rotating money earns on Islamic instruments
@@ -276,8 +299,16 @@ router.post('/', async (req, res, next) => {
         : input.tier === 'SIGMA'
         ? ` This is a Sigma (maximum-return, conventional) circle combining every return lever: (1) an Early Fee starting at ${(input.earlyFeeBps/100).toFixed(2)}% of the round payout for the earliest turn, declining to 0% for the last — ${input.dividendPooled ? 'pooled into the completion pot and distributed through the patience split' : 'paid immediately as an equal-split dividend to every other active member'}, never to Halqa; (2) a float sweep that places idle pool days in a disclosed Islamic money-market sleeve; (3) deposit yield pooled with the float profit and shared with a disclosed tilt toward later turn positions (weights 1.0x to 2.0x), so patience genuinely pays.${engineConsent} Because of the early-fee component this circle has NOT been reviewed for Shariah compliance; choose Sukoon or Bazaar for a halal alternative.${input.prizeDrawEnabled ? ' Half of each round\'s net float profit is gifted to one on-time payer chosen by a deterministic draw; principal is never staked.' : ''}`
         : input.tier === 'CLASSIC' ? '' : ` The ${input.tier === 'BAZAAR' ? 'Bazaar' : 'Sukoon'} engine places idle pool days and recorded deposits in disclosed Shariah-compliant schemes; profit is real but indicative, never guaranteed.${input.tier === 'BAZAAR' ? ' Your deposit is returned in full, but the float profit AND the deposit yield are pooled and shared with a disclosed tilt toward later turn positions (weights 1.0x to 2.0x): later turns carried the circle longest and receive the most, so the earliest turn may get back less profit than its own deposit earned.' : ' Deposit yield is paid to you, the depositor.'}${engineConsent}${input.prizeDrawEnabled ? ' Half of each round\'s net float profit is gifted to one on-time payer chosen by a deterministic draw; principal is never staked.' : ''}`;
-      const created = await tx.committee.create({ data: { ...input, allowTurnSale: input.mode !== 'INVESTMENT', schemeId: input.schemeId || null, hostId: host.id, inviteCode, partnerId, floatSchemeId, depositSchemeId, riskScore: initialRisk.score, riskBand: initialRisk.band, riskPolicyJson: { targetRiskScore: input.riskTolerance, payoutBufferBps: 1500, liquidityReserveBps: 1000, latePenaltyBps: 200, guarantorRequired: false, dynamicDeposit: true, profitCollateral: true, capitalDaysDistribution: true, delayedDistributionDays: 0, profitRecycling: input.distributionMode === 'COMPOUND', consentText: (input.custodyMode === 'BANK_CUSTODY' ? `I understand that partner custody is simulated in the sandbox, the disclosed slot fee funds this circle's own guarantee pool, and ${input.payoutGuaranteed ? 'payout guarantees reach only as far as that pool\'s recorded balance' : 'payouts are not guaranteed'}.` : 'I understand that projected returns are indicative, capital can be delayed or reduced, and this committee records rather than custodies funds during Stage 1.') + tierConsent } } });
-      await tx.committeeMember.create({ data: { committeeId: created.id, userId: host.id, turnPosition: 1 } });
+      const created = await tx.committee.create({ data: { ...committeeInput, allowTurnSale: input.mode !== 'INVESTMENT', schemeId: input.schemeId || null, hostId: host.id, inviteCode, partnerId, floatSchemeId, depositSchemeId, riskScore: initialRisk.score, riskBand: initialRisk.band, riskPolicyJson: { targetRiskScore: input.riskTolerance, payoutBufferBps: 1500, liquidityReserveBps: 1000, latePenaltyBps: 200, guarantorRequired: false, dynamicDeposit: true, profitCollateral: true, capitalDaysDistribution: true, delayedDistributionDays: 0, mutualPgRequired: true, ...(forwardLiabilityGate ? { forwardLiabilityGateEnabled: true, securityCoverageBps: input.depositCoverageBps, commitmentCoverageBps: 10_000, maxPotHoldbackBps: 6_000, blockOnSecurityShortfall } : {}), profitRecycling: input.distributionMode === 'COMPOUND', consentText: (input.custodyMode === 'BANK_CUSTODY' ? `I understand that partner custody is simulated in the sandbox, the disclosed slot fee funds this circle's own guarantee pool, and ${input.payoutGuaranteed ? 'payout guarantees reach only as far as that pool\'s recorded balance' : 'payouts are not guaranteed'}.` : 'I understand that projected returns are indicative, capital can be delayed or reduced, and this committee records rather than custodies funds during Stage 1.') + tierConsent } } });
+      // Autopay is the default (opt-out later): the standing collection
+      // consent is clause 4 of the signed weekly undertaking.
+      await tx.committeeMember.create({ data: { committeeId: created.id, userId: host.id, turnPosition: 1, autoDebitEnabled: true, autoDebitRail: 'RAAST', autoDebitMandateAt: new Date() } });
+      // The mutual member-to-member guarantee is e-signed at the moment of
+      // joining (here: the host founding the circle), so by the time the
+      // circle starts every member already holds enforceable paper against
+      // every other member. Halqa is witness, never beneficiary.
+      const pgText = mutualPgText(created.name, created.contributionPaisa, created.memberCap, created.cycleNumber);
+      await tx.agreementSignature.create({ data: { userId: host.id, committeeId: created.id, docType: 'MUTUAL_PG', version: MUTUAL_PG_VERSION, textHash: hashText(pgText) } });
       await audit(tx, host.id, 'COMMITTEE_CREATED', 'Committee', created.id, { memberCap: input.memberCap, contributionPaisa: input.contributionPaisa.toString(), periodDays: input.periodDays });
       return created;
     });
@@ -304,6 +335,7 @@ router.post('/:id/join-public', async (req, res, next) => {
 router.post('/:id/waitlist', async (req, res, next) => {
   try {
     const input = z.object({ preferredPosition: z.number().int().min(1).max(150).nullable().optional() }).parse(req.body ?? {});
+    if (!(await freshUndertaking(prisma, req.auth!.userId))) return res.status(428).json(UNDERTAKING_428);
     const committee = await prisma.committee.findUnique({ where: { id: req.params.id }, include: { members: { where: { userId: req.auth!.userId, status: 'ACTIVE' }, select: { id: true } } } });
     if (!committee || !committee.listedPublicly || committee.status === 'CANCELLED') return res.status(404).json({ error: 'Discoverable circle not found' });
     if (committee.members.length) return res.status(409).json({ error: 'You are already in this circle' });
@@ -322,10 +354,16 @@ router.post('/:id/join', (req, res, next) => joinCommittee(req.params.id, req, r
 async function joinCommittee(committeeId: string, req: Request, res: Response, next: NextFunction) {
   try {
     const userId = req.auth!.userId;
+    if (!(await freshUndertaking(prisma, userId))) return res.status(428).json(UNDERTAKING_428);
     const joiningUser=await prisma.user.findUniqueOrThrow({where:{id:userId}});
     if(joiningUser.isBanned)return res.status(403).json({error:'Restricted accounts cannot join committees'});
     if(joiningUser.cooldownUntil && joiningUser.cooldownUntil > new Date())return res.status(403).json({error:`Rehabilitation cooldown applies until ${joiningUser.cooldownUntil.toISOString()}`});
     if(joiningUser.creditScore<550)return res.status(403).json({error:'A reliability score of 550 or higher is required to join'});
+    // Linked-account policy (undertaking clause 7e): while a family member or
+    // associate — shared device, referral or guarantee link — sits in
+    // unresolved post-payout default, this account cannot join new circles.
+    const linkedDefault=await linkedOpenDefault(prisma,userId);
+    if(linkedDefault)return res.status(403).json({error:`Joining is paused under the linked-account policy: an account linked to yours (${linkedDefault.fullName}) has an unresolved default. It clears when their recovery completes.`});
     // Newcomer first-circle installment cap removed (chairman-directed): a
     // member's exposure is governed by the reliability-score gate, graduated
     // collateral and credit-weighted ordering, not a fixed installment ceiling.
@@ -341,8 +379,16 @@ async function joinCommittee(committeeId: string, req: Request, res: Response, n
       const activeCount = await tx.committeeMember.count({ where: { committeeId: committee.id, status: 'ACTIVE' } });
       if (activeCount >= committee.memberCap) throw Object.assign(new Error('Committee is full'), { status: 409 });
       const nextPosition = committee.members.reduce((highest, member) => Math.max(highest, member.turnPosition), 0) + 1;
-      const created = await tx.committeeMember.create({ data: { committeeId: committee.id, userId, turnPosition: nextPosition } });
-      await audit(tx, userId, 'COMMITTEE_JOINED', 'Committee', committee.id, {});
+      // Autopay defaults ON (opt-out later, consent = undertaking clause 4),
+      // pulling on the member's preferred linked rail when one exists.
+      const methods = Array.isArray(joiningUser.paymentMethodsJson) ? joiningUser.paymentMethodsJson as { rail?: string; preferred?: boolean }[] : [];
+      const preferredRail = (methods.find(m => m.preferred)?.rail || methods[0]?.rail || 'RAAST').toUpperCase();
+      const created = await tx.committeeMember.create({ data: { committeeId: committee.id, userId, turnPosition: nextPosition, autoDebitEnabled: true, autoDebitRail: preferredRail, autoDebitMandateAt: new Date() } });
+      // E-sign the member-to-member guarantee as part of joining — before the
+      // circle can start, every member holds this paper against every other.
+      const pgText = mutualPgText(committee.name, committee.contributionPaisa, committee.memberCap, committee.cycleNumber);
+      await tx.agreementSignature.create({ data: { userId, committeeId: committee.id, docType: 'MUTUAL_PG', version: MUTUAL_PG_VERSION, textHash: hashText(pgText) } });
+      await audit(tx, userId, 'COMMITTEE_JOINED', 'Committee', committee.id, { mutualPgSigned: true, autoDebitEnabled: true });
       return created;
     });
     res.status(201).json(membership);
@@ -365,6 +411,16 @@ router.post('/:id/start', async (req, res, next) => {
       if (accepted !== members.length) return res.status(409).json({ error: `${members.length - accepted} member risk acknowledgement(s) are still required` });
     }
     const protection = protectionPolicy(committee.riskPolicyJson);
+    // Mutual member-to-member guarantee: circles created since the agreements
+    // feature carry mutualPgRequired in their policy; every ACTIVE member must
+    // hold a current-version PG signature (recorded automatically at join)
+    // before the circle can start. Older circles are unaffected.
+    if (protection.mutualPgRequired === true) {
+      const pgSigned = await prisma.agreementSignature.findMany({ where: { committeeId: committee.id, docType: 'MUTUAL_PG', version: MUTUAL_PG_VERSION, userId: { in: members.map(member => member.userId) } }, select: { userId: true } });
+      const signedIds = new Set(pgSigned.map(row => row.userId));
+      const unsigned = members.filter(member => !signedIds.has(member.userId));
+      if (unsigned.length) return res.status(409).json({ error: `${unsigned.length} member(s) have not signed the mutual member-to-member guarantee for this circle` });
+    }
     if (protection.guarantorRequired || protection.promissoryNoteRequired || protection.autoDebitMandateRequired) {
       const commitments = await prisma.protectionCommitment.findMany({ where: { membershipId: { in: members.map(member => member.id) } } });
       const missing = members.filter(member => {
@@ -594,25 +650,53 @@ router.post('/:id/payout', async (req, res, next) => {
     const recipientPayment = round.payments.find(payment => payment.payerId === round.recipientId);
     const eligibilityDeadline = round.payoutDate.getTime() - 7 * 86_400_000;
     if (!recipientPayment?.paidAt || recipientPayment.paidAt.getTime() > eligibilityDeadline) return res.status(409).json({ error: 'Recipient did not clear the current installment by the locked seven-day eligibility deadline' });
-    const recipientMembership = await prisma.committeeMember.findUnique({ where: { committeeId_userId: { committeeId: committee.id, userId: round.recipientId } }, include: { securityDeposits: true, user: { select: { vaultParkingEnabled: true } } } });
+    const recipientMembership = await prisma.committeeMember.findUnique({ where: { committeeId_userId: { committeeId: committee.id, userId: round.recipientId } }, include: { securityDeposits: true, payoutHoldbacks: { where: { status: 'HELD' } }, protectionCommitment: true, user: { select: { vaultParkingEnabled: true, salaryAccountLinked: true } } } });
+    // Linked-account policy (undertaking clause 7e, Oraan model): the payout is
+    // withheld while an account linked to the recipient — family by shared
+    // device, referral or guarantee — has an unresolved post-payout default.
+    const recipientLinkedDefault = await linkedOpenDefault(prisma, round.recipientId);
+    if (recipientLinkedDefault) return res.status(409).json({ error: `Payout withheld under the linked-account policy: an account linked to the recipient (${recipientLinkedDefault.fullName}) has an unresolved default. It releases when that recovery completes.` });
     const unresolvedDeposit = recipientMembership?.securityDeposits.find(deposit => deposit.amountPaisa > 0n && deposit.status === 'PENDING');
     if (unresolvedDeposit) return res.status(409).json({ error: `The recipient's recorded security deposit of ${unresolvedDeposit.amountPaisa.toString()} paisa is not confirmed` });
     const members = await prisma.committeeMember.findMany({ where: { committeeId: committee.id, status: 'ACTIVE' } });
     const protection = protectionPolicy(committee.riskPolicyJson);
+    const totalRounds = await prisma.round.count({ where: { committeeId: committee.id } });
     const remainingRounds = Math.max(0, members.length - round.roundNumber);
     const holdbackEnabled = protection.payoutHoldbackEnabled !== false && remainingRounds > 0 && round.payoutPaisa > 0n;
-    const holdbackPaisa = holdbackEnabled ? round.payoutPaisa * BigInt(committee.payoutBufferBps) / 10_000n : 0n;
+    const bufferHoldbackPaisa = holdbackEnabled ? round.payoutPaisa * BigInt(committee.payoutBufferBps) / 10_000n : 0n;
+    // Forward-liability security gate (opt-in per circle). Sizes the security an
+    // EARLY recipient must have posted against their forward liability — the
+    // installments they still owe AFTER taking the pot — and satisfies it from
+    // held deposits, a host-verified PG/security cheque, or by auto-withholding
+    // the shortfall from this very pot. Off by default (display-only); when a
+    // circle opts in it also raises the holdback and can block a Secure circle's
+    // payout until coverage is met. The forfeiture path already exists: a
+    // post-receipt default forfeits this holdback in delinquency.ts.
+    const heldDepositPaisa = (recipientMembership?.securityDeposits ?? []).filter(deposit => deposit.status === 'HELD').reduce((sum, deposit) => sum + deposit.amountPaisa + deposit.accruedYieldPaisa, 0n);
+    const heldPriorHoldbackPaisa = (recipientMembership?.payoutHoldbacks ?? []).reduce((sum, holdback) => sum + holdback.amountPaisa, 0n);
+    const security = assessForwardLiability({
+      contributionPaisa: committee.contributionPaisa, roundNumber: round.roundNumber, totalRounds,
+      payoutPaisa: round.payoutPaisa, bufferHoldbackPaisa, defaultReleasePayments: Number(protection.holdbackReleasePayments ?? 2),
+      depositCoverageBps: committee.depositCoverageBps,
+      posted: { heldDepositPaisa, heldHoldbackPaisa: heldPriorHoldbackPaisa, commitmentVerified: Boolean(recipientMembership?.protectionCommitment?.verifiedByHostAt) },
+      policy: protection as SecurityPolicy,
+    });
+    if (security.gated) return res.status(409).json({ error: `This circle requires the recipient's forward liability of ${security.forwardLiabilityPaisa.toString()} paisa to be secured to ${security.coverageBps / 100}% (${security.requiredSecurityPaisa.toString()} paisa). Posted security covers ${security.postedSecurityPaisa.toString()} paisa and the pot can hold back ${security.securityHoldbackPaisa.toString()} paisa, leaving ${security.residualShortfallPaisa.toString()} paisa short. Record a larger security deposit, or a host-verified guarantee / signed undertaking, before payout.`, security });
+    const holdbackPaisa = security.holdbackPaisa;
     // Disclosed slot pricing (Oraan model): early positions pay the published
     // fee into this circle's guarantee pool; the final position pays nothing.
-    const totalRounds = await prisma.round.count({ where: { committeeId: committee.id } });
-    const slotFeePaisa = round.payoutPaisa * BigInt(slotFeeBpsForRound(committee.slotFeeBps, round.roundNumber, totalRounds)) / 10_000n;
+    // Salary-linked recipients pay 20% less on both the slot fee and the early
+    // fee — collection from a salary account is the most certain there is, and
+    // the discount is the disclosed reward (undertaking clause 4).
+    const salaryFactor = recipientMembership?.user.salaryAccountLinked ? 8_000n : 10_000n;
+    const slotFeePaisa = round.payoutPaisa * BigInt(slotFeeBpsForRound(committee.slotFeeBps, round.roundNumber, totalRounds)) / 10_000n * salaryFactor / 10_000n;
     // Priority/Sigma (conventional, chit-fund style): the recipient pays a
     // disclosed Early Fee on the same declining curve as the guarantee slot
     // fee. Priority (and Sigma in monthly mode) pays it out as an immediate
     // dividend to every OTHER active member this same round. Sigma in pooled
     // mode leaves the fee in escrow so it reaches members through the
     // patience-weighted completion split instead — either way, never Halqa's.
-    const earlyFeePaisa = committee.tier === 'PRIORITY' || committee.tier === 'SIGMA' ? round.payoutPaisa * BigInt(slotFeeBpsForRound(committee.earlyFeeBps, round.roundNumber, totalRounds)) / 10_000n : 0n;
+    const earlyFeePaisa = committee.tier === 'PRIORITY' || committee.tier === 'SIGMA' ? round.payoutPaisa * BigInt(slotFeeBpsForRound(committee.earlyFeeBps, round.roundNumber, totalRounds)) / 10_000n * salaryFactor / 10_000n : 0n;
     const releasedPayoutPaisa = round.payoutPaisa - holdbackPaisa - slotFeePaisa - earlyFeePaisa;
     // Sukoon/Bazaar float sweep: every PAID contribution earned the Islamic
     // money-market rate for the days it sat before this payout. Realised here,
@@ -692,7 +776,7 @@ router.post('/:id/payout', async (req, res, next) => {
         await tx.recoveryCase.upsert({ where: { paymentId: covered.id }, update: { outstandingPaisa: covered.amountPaisa, status: 'OPEN' }, create: { userId: covered.payerId, committeeId: committee.id, roundId: round.id, paymentId: covered.id, outstandingPaisa: covered.amountPaisa, penaltyPaisa: covered.penaltyPaisa } });
         await tx.notification.create({ data: { userId: covered.payerId, type: 'GUARANTEE_COVERAGE', message: `${committee.name} covered your missed installment from the guarantee pool. Your recovery obligation to the pool remains open.` } });
       }
-      if (holdbackPaisa > 0n && recipientMembership) await tx.payoutHoldback.create({ data: { committeeId: committee.id, membershipId: recipientMembership.id, roundId: round.id, amountPaisa: holdbackPaisa, requiredCleanPayments: Number(protection.holdbackReleasePayments ?? 2) } });
+      if (holdbackPaisa > 0n && recipientMembership) await tx.payoutHoldback.create({ data: { committeeId: committee.id, membershipId: recipientMembership.id, roundId: round.id, amountPaisa: holdbackPaisa, requiredCleanPayments: security.holdbackReleasePayments } });
       const nextNumber = round.roundNumber + 1;
       const nextRound = await tx.round.findUnique({ where: { committeeId_roundNumber: { committeeId: committee.id, roundNumber: nextNumber } } });
       if (nextRound) {
