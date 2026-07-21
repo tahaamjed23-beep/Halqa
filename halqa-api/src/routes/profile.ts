@@ -71,7 +71,7 @@ router.patch('/consent', async (req, res, next) => {
 // used to prefill checkout and to power the auto-debit mandate. Pointers only:
 // no balances, no card numbers (cards belong on the licensed aggregator's
 // hosted page, never here). Stored as a small JSON array on the user.
-type LinkedMethod = { id: string; rail: string; accountNo: string; label: string; preferred: boolean; verified?: boolean };
+type LinkedMethod = { id: string; rail: string; accountNo: string; accountTitle?: string; bankName?: string; label: string; preferred: boolean; verified?: boolean };
 const otpHash = (code: string) => createHash('sha256').update(code).digest('hex');
 const methodsOf = (raw: unknown): LinkedMethod[] => (Array.isArray(raw) ? raw as LinkedMethod[] : []);
 const maskAccount = (value: string) => value.length <= 4 ? value : `${'•'.repeat(Math.max(0, value.length - 4))}${value.slice(-4)}`;
@@ -86,7 +86,9 @@ router.post('/payment-methods', async (req, res, next) => {
   try {
     const input = z.object({
       rail: z.enum(['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER']),
-      accountNo: z.string().trim().min(11, 'Enter the full account / wallet number').max(34),
+      accountNo: z.string().trim().min(10, 'Enter the full account / wallet number').max(34),
+      accountTitle: z.string().trim().min(3, 'Enter the account holder name').max(60).optional(),
+      bankName: z.string().trim().max(40).optional(),
       label: z.string().trim().max(40).optional(),
       preferred: z.boolean().optional(),
     }).parse(req.body);
@@ -96,7 +98,8 @@ router.post('/payment-methods', async (req, res, next) => {
     const method: LinkedMethod = {
       id: `pm_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
       rail: input.rail, accountNo: input.accountNo.replace(/\s+/g, ''),
-      label: input.label || (input.rail === 'RAAST' ? 'Raast ID' : input.rail === 'BANK_TRANSFER' ? 'Bank account' : `${input.rail === 'JAZZCASH' ? 'JazzCash' : 'Easypaisa'} wallet`),
+      accountTitle: input.accountTitle, bankName: input.bankName,
+      label: input.label || input.bankName || (input.rail === 'RAAST' ? 'Raast ID' : input.rail === 'BANK_TRANSFER' ? 'Bank account' : `${input.rail === 'JAZZCASH' ? 'JazzCash' : 'Easypaisa'} wallet`),
       preferred: input.preferred ?? existing.length === 0, // the first link becomes preferred automatically
     };
     const next_ = method.preferred ? existing.map(m => ({ ...m, preferred: false })) : existing;

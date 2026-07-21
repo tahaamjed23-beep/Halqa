@@ -14,13 +14,14 @@ import { TERMS_VERSION, type DocId } from '../legal/content';
 // auto-collection is how every circle collects, so the account it pulls from
 // is linked the moment the account is made (changeable later in Profile).
 const REG_STEPS = ['phone', 'name', 'email', 'cnic', 'account', 'password', 'review'] as const;
-const RAILS: [string, string][] = [['RAAST', 'Raast'], ['JAZZCASH', 'JazzCash'], ['EASYPAISA', 'Easypaisa'], ['BANK_TRANSFER', 'Bank IBAN']];
+const RAILS: [string, string][] = [['RAAST', 'Raast'], ['JAZZCASH', 'JazzCash'], ['EASYPAISA', 'Easypaisa'], ['BANK_TRANSFER', 'Bank account']];
+const PK_BANKS = ['HBL', 'Meezan Bank', 'UBL', 'MCB', 'Allied Bank', 'Bank Alfalah', 'Standard Chartered', 'Faysal Bank', 'Bank Al Habib', 'Askari Bank', 'JS Bank', 'Soneri Bank', 'SadaPay', 'NayaPay', 'Other'];
 type RegStep = typeof REG_STEPS[number];
 
 export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const [mode,setMode]=useState<'login'|'register'>('login');
   const [step,setStep]=useState<RegStep>('phone');
-  const [form,setForm]=useState({identity:'',password:'',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:'',rail:'RAAST',accountNo:''});
+  const [form,setForm]=useState({identity:'',password:'',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:'',rail:'RAAST',accountNo:'',accountTitle:'',bankName:'HBL'});
   const [agreed,setAgreed]=useState(false);
   const [doc,setDoc]=useState<DocId|null>(null);
   const [error,setError]=useState('');const [busy,setBusy]=useState(false);
@@ -32,7 +33,7 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const emailOk=/.+@.+\..+/.test(form.email);
   const cnicOk=form.cnic.length===13;
   const passOk=form.regPassword.length>=8&&/[a-zA-Z]/.test(form.regPassword)&&/\d/.test(form.regPassword);
-  const accountOk=form.accountNo.replace(/\s+/g,'').length>=11;
+  const accountOk=form.accountNo.replace(/\s+/g,'').length>=10&&form.accountTitle.trim().length>=3;
   const canContinue=step==='phone'?phoneOk:step==='name'?nameOk:step==='email'?emailOk:step==='cnic'?cnicOk:step==='account'?accountOk:step==='password'?passOk:agreed;
   const next=()=>{setError('');if(stepIndex<REG_STEPS.length-1)setStep(REG_STEPS[stepIndex+1])};
   const back=()=>{setError('');if(stepIndex>0)setStep(REG_STEPS[stepIndex-1]);else setMode('login')};
@@ -42,7 +43,7 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
     // The mandatory collection account, linked the moment the account exists.
     // Best-effort: a rail hiccup must never strand a fresh registration —
     // Profile shows the link (and its WhatsApp OTP) if this needs a retry.
-    try{await api('/profile/payment-methods',{method:'POST',body:JSON.stringify({rail:form.rail,accountNo:form.accountNo.replace(/\s+/g,''),preferred:true})})}catch{/* retry from Profile */}
+    try{await api('/profile/payment-methods',{method:'POST',body:JSON.stringify({rail:form.rail,accountNo:form.accountNo.replace(/\s+/g,''),accountTitle:form.accountTitle.trim(),bankName:form.rail==='BANK_TRANSFER'?form.bankName:undefined,preferred:true})})}catch{/* retry from Profile */}
     onAuth(data.user)}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
 
   const stepBody=()=>{switch(step){
@@ -56,9 +57,15 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
     case 'cnic':return <><h2>Your CNIC number</h2><p>The 13 digits, no dashes. Verified members rank ahead in turn order, and your record becomes real, usable proof of reliability.</p>
       <input className="field big-field mono" inputMode="numeric" autoFocus maxLength={13} placeholder="3520212345671" value={form.cnic} onChange={e=>setForm({...form,cnic:e.target.value.replace(/\D/g,'')})}/>
       <div className="onboard-note"><b>Identity check</b><span>Your CNIC is recorded now and verified against NADRA when live verification activates. It is never shown to other members.</span></div></>;
-    case 'account':return <><h2>Link your collection account</h2><p>Every circle collects automatically from this account on each due date — that's how Halqa keeps circles safe. You'll get a WhatsApp receipt for every collection, and a one-time code confirms the link. Change it any time in Profile.</p>
-      <div className="rail-grid" style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:10}}>{RAILS.map(([id,label])=><button type="button" key={id} className={form.rail===id?'primary':'secondary'} style={{padding:'8px 14px',borderRadius:10,fontSize:12.5}} onClick={()=>setForm({...form,rail:id})}>{label}</button>)}</div>
-      <input className="field big-field mono" autoFocus placeholder={form.rail==='BANK_TRANSFER'?'PK36XXXX0000123456789012':'03XXXXXXXXX'} value={form.accountNo} onChange={e=>setForm({...form,accountNo:e.target.value})}/>
+    case 'account':return <><h2>Link your collection account</h2><p>Every circle collects automatically from this account on each due date — that's how Halqa keeps circles safe. A one-time code confirms the link and you get a WhatsApp receipt for every collection. Change it any time in Profile.</p>
+      <div className="rail-grid" style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:12}}>{RAILS.map(([id,label])=><button type="button" key={id} className={form.rail===id?'primary':'secondary'} style={{padding:'8px 14px',borderRadius:10,fontSize:12.5}} onClick={()=>setForm({...form,rail:id})}>{label}</button>)}</div>
+      <label className="onboard-field-label">Account holder name</label>
+      <input className="field" autoFocus autoComplete="name" placeholder="Exactly as printed on the account" value={form.accountTitle} onChange={e=>setForm({...form,accountTitle:e.target.value})}/>
+      {form.rail==='BANK_TRANSFER'&&<><label className="onboard-field-label">Bank</label>
+        <select className="field" value={form.bankName} onChange={e=>setForm({...form,bankName:e.target.value})}>{PK_BANKS.map(b=><option key={b} value={b}>{b}</option>)}</select></>}
+      <label className="onboard-field-label">{form.rail==='BANK_TRANSFER'?'IBAN':form.rail==='RAAST'?'Raast ID (mobile number)':'Wallet number'}</label>
+      <input className="field mono" inputMode={form.rail==='BANK_TRANSFER'?'text':'numeric'} placeholder={form.rail==='BANK_TRANSFER'?'PK36 XXXX 0000 1234 5678 9012':'03XX XXXXXXX'} value={form.accountNo} onChange={e=>setForm({...form,accountNo:e.target.value})}/>
+      <div className="linked-preview"><div className="method-logo" style={{background:'linear-gradient(135deg,#caa53a,#8a6d16)'}}>{(form.rail==='BANK_TRANSFER'?form.bankName:RAILS.find(([id])=>id===form.rail)?.[1]||'').slice(0,2).toUpperCase()}</div><div><b>{form.accountTitle||'Account holder'}</b><small className="mono">{form.rail==='BANK_TRANSFER'?form.bankName+' · ':''}{form.accountNo.replace(/\s+/g,'')?('•'.repeat(Math.max(0,form.accountNo.replace(/\s+/g,'').length-4))+form.accountNo.replace(/\s+/g,'').slice(-4)):'—'}</small></div></div>
       <div className="onboard-note"><b>Unconfigurable by design</b><span>Auto-collection is standard on every circle — no manual payments to remember, no missed installments. Halqa stores the identifier only, never balances or cards.</span></div></>;
     case 'password':return <><h2>Create a password</h2><p>At least 8 characters with letters and numbers.</p>
       <input className="field big-field" type="password" autoFocus autoComplete="new-password" placeholder="Password" value={form.regPassword} onChange={e=>setForm({...form,regPassword:e.target.value})}/>
@@ -70,7 +77,7 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
         <div><span>Username</span><b>@{form.username}</b></div>
         <div><span>Email</span><b>{form.email}</b></div>
         <div><span>CNIC</span><b className="mono">{'•'.repeat(9)}{form.cnic.slice(-4)}</b></div>
-        <div><span>Collection account</span><b className="mono">{RAILS.find(([id])=>id===form.rail)?.[1]} · {'•'.repeat(Math.max(0,form.accountNo.replace(/\s+/g,'').length-4))}{form.accountNo.replace(/\s+/g,'').slice(-4)}</b></div>
+        <div><span>Collection account</span><b>{form.accountTitle} · <span className="mono">{form.rail==='BANK_TRANSFER'?form.bankName+' ':''}{'•'.repeat(Math.max(0,form.accountNo.replace(/\s+/g,'').length-4))}{form.accountNo.replace(/\s+/g,'').slice(-4)}</span></b></div>
       </div>
       <label className="tos-check"><input type="checkbox" checked={agreed} onChange={e=>setAgreed(e.target.checked)}/><span>I have read and agree to the <button type="button" className="inline-link" onClick={()=>setDoc('agreement')}>User Agreement</button> and <button type="button" className="inline-link" onClick={()=>setDoc('privacy')}>Privacy Policy</button>, including the <button type="button" className="inline-link" onClick={()=>setDoc('fees')}>Fees & Payments Policy</button>.</span></label></>;
   }};

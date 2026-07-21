@@ -36,7 +36,7 @@ function Toggle({ label, hint, checked, onChange, disabled }: { label: string; h
 // Linked payment methods — wallet / Raast / bank identifiers the member saves
 // once and reuses at checkout and for auto-pay. Pointers only; never balances,
 // never card numbers.
-type LinkedMethod = { id: string; rail: string; accountNo: string; label: string; preferred: boolean; verified?: boolean };
+type LinkedMethod = { id: string; rail: string; accountNo: string; accountTitle?: string; bankName?: string; label: string; preferred: boolean; verified?: boolean };
 const RAIL_META: Record<string, { name: string; mono: string; color: string }> = {
   RAAST: { name: 'Raast', mono: 'RA', color: '#0e7d72' }, JAZZCASH: { name: 'JazzCash', mono: 'JC', color: '#c8102e' },
   EASYPAISA: { name: 'Easypaisa', mono: 'EP', color: '#3f9c35' }, BANK_TRANSFER: { name: 'Bank account', mono: 'BK', color: '#5b6472' },
@@ -44,13 +44,13 @@ const RAIL_META: Record<string, { name: string; mono: string; color: string }> =
 export function LinkedMethodsManager() {
   const [methods, setMethods] = useState<LinkedMethod[]>([]);
   const [salaryRef, setSalaryRef] = useState<string | null>(null);
-  const [adding, setAdding] = useState(false); const [rail, setRail] = useState('RAAST'); const [accountNo, setAccountNo] = useState(''); const [busy, setBusy] = useState(false); const [error, setError] = useState('');
+  const [adding, setAdding] = useState(false); const [rail, setRail] = useState('RAAST'); const [accountNo, setAccountNo] = useState(''); const [accountTitle, setAccountTitle] = useState(''); const [busy, setBusy] = useState(false); const [error, setError] = useState('');
   const load = () => Promise.all([
     api<{ methods: LinkedMethod[] }>('/profile/payment-methods').then(d => setMethods(d.methods)),
     api<{ salaryAccountLinked: boolean; salaryAccountRef: string | null }>('/auth/me').then(d => setSalaryRef(d.salaryAccountLinked ? d.salaryAccountRef : null)).catch(() => {}),
   ]).catch(() => {});
   useEffect(() => { void load(); }, []);
-  const add = async () => { setBusy(true); setError(''); try { await api('/profile/payment-methods', { method: 'POST', body: JSON.stringify({ rail, accountNo: accountNo.replace(/\s+/g, '') }) }); setAdding(false); setAccountNo(''); await load(); } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); } };
+  const add = async () => { setBusy(true); setError(''); try { await api('/profile/payment-methods', { method: 'POST', body: JSON.stringify({ rail, accountNo: accountNo.replace(/\s+/g, ''), accountTitle: accountTitle.trim() || undefined }) }); setAdding(false); setAccountNo(''); setAccountTitle(''); await load(); } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); } };
   const prefer = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}/preferred`, { method: 'POST' }); setMethods(d.methods); } catch { /* refresh next open */ } };
   const remove = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}`, { method: 'DELETE' }); setMethods(d.methods); if (id === salaryRef) setSalaryRef(null); } catch { /* refresh next open */ } };
   const markSalary = async (id: string, enabled: boolean) => { try { const d = await api<{ salaryAccountLinked: boolean; salaryAccountRef: string | null }>(`/profile/payment-methods/${id}/salary`, { method: 'POST', body: JSON.stringify({ enabled }) }); setSalaryRef(d.salaryAccountLinked ? d.salaryAccountRef : null); } catch { /* refresh next open */ } };
@@ -61,7 +61,7 @@ export function LinkedMethodsManager() {
     <div className="method-list">
       {methods.map(m => { const meta = RAIL_META[m.rail] || RAIL_META.BANK_TRANSFER; return <div key={m.id} className={`method-row static ${m.preferred ? 'on' : ''}`}>
         <i className="method-logo" style={{ background: meta.color }}>{meta.mono}</i>
-        <span className="method-text"><b>{m.label}{m.verified ? ' ✓' : ''}</b><small className="mono">{m.accountNo}{m.id === salaryRef ? ' · 💼 Salary account — 20% off early/slot fees' : ''}{!m.verified ? ' · code sent on WhatsApp' : ''}</small></span>
+        <span className="method-text"><b>{m.accountTitle || m.label}{m.verified ? ' ✓' : ''}</b><small className="mono">{m.bankName ? m.bankName + ' · ' : ''}{m.accountNo}{m.id === salaryRef ? ' · 💼 Salary — 20% off fees' : ''}{!m.verified ? ' · code sent on WhatsApp' : ''}</small></span>
         {!m.verified && (otpFor === m.id
           ? <span style={{ display: 'inline-flex', gap: 4 }}><input className="field" style={{ width: 92, padding: '4px 8px', fontSize: 12.5 }} inputMode="numeric" maxLength={6} placeholder="6-digit code" value={otpCode} onChange={e => setOtpCode(e.target.value.replace(/\D/g, ''))} /><button className="text-action slim-action" disabled={otpCode.length !== 6} onClick={() => void verify(m.id)}>Confirm</button></span>
           : <button className="text-action slim-action" onClick={() => { setOtpFor(m.id); setOtpCode(''); setOtpError(''); }}>Enter code</button>)}
@@ -74,8 +74,11 @@ export function LinkedMethodsManager() {
     </div>
     {adding ? <div className="add-method">
       <div className="rail-grid">{Object.keys(RAIL_META).map(r => <button key={r} className={`rail-chip ${rail === r ? 'on' : ''}`} onClick={() => setRail(r)}>{RAIL_META[r].name}</button>)}</div>
+      <Field label="Account holder name">
+        <input className="field" value={accountTitle} onChange={e => setAccountTitle(e.target.value)} placeholder="As printed on the account" autoComplete="name" />
+      </Field>
       <Field label={rail === 'BANK_TRANSFER' ? 'IBAN' : rail === 'RAAST' ? 'Raast ID (your mobile number)' : `${RAIL_META[rail].name} wallet number`}>
-        <input className="field" value={accountNo} onChange={e => setAccountNo(e.target.value)} placeholder={rail === 'BANK_TRANSFER' ? 'PK36XXXX0000123456789012' : '03XXXXXXXXX'} />
+        <input className="field mono" value={accountNo} onChange={e => setAccountNo(e.target.value)} placeholder={rail === 'BANK_TRANSFER' ? 'PK36XXXX0000123456789012' : '03XXXXXXXXX'} />
       </Field>
       {error && <div className="error-box">{error}</div>}
       <div className="form-actions"><button className="secondary" onClick={() => { setAdding(false); setError(''); }}>Cancel</button><button className="primary" disabled={busy || accountNo.replace(/\s+/g, '').length < 11} onClick={add}>{busy ? 'Linking…' : 'Link method'}</button></div>

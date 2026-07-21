@@ -26,5 +26,8 @@ async function request<T>(path:string,init:RequestInit,retried:boolean):Promise<
   return data as T;
 }
 export const api=<T>(path:string,init:RequestInit={})=>request<T>(path,init,false);
+// Warm the serverless function the instant the app JS loads, so the first real
+// call (login / dashboard) doesn't eat a cold start. Fire-and-forget.
+try{fetch(`${BASE}/health`).catch(()=>{})}catch{/* SSR / no fetch */}
 export const money=(paisa:string|number|bigint=0)=>new Intl.NumberFormat('en-PK',{style:'currency',currency:'PKR',maximumFractionDigits:0}).format(Number(paisa)/100);
 export const key=()=>crypto.randomUUID();

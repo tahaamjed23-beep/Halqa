@@ -3,7 +3,11 @@ import { Sparkles } from 'lucide-react';
 import { money } from '../api';
 
 export const scoreColor=(score:number)=>score>=750?'#22a865':score>=700?'#0a7cff':score>=650?'#e58900':'#e43d36';
-export const modeName={ROTATING:'Classic rotating',HYBRID:'Hybrid growth',INVESTMENT:'Investment circle'} as const;
+export const modeName={ROTATING:'Rotating payout',HYBRID:'Rotating payout',INVESTMENT:'Investment circle'} as const;
+// Engines were dropped — circles are distinguished by their TURN ORDER, not a
+// product tier. This is what the cards and headers show.
+export const orderingName:Record<string,string>={CREDIT_WEIGHTED:'Credit-weighted order',RANDOM_BALLOT:'Random ballot',HOST_ASSIGNED:'Host-assigned order'};
+export const orderingLabel=(m?:string)=>orderingName[m??'CREDIT_WEIGHTED']??'Credit-weighted order';
 export const cadenceName:Record<string,string>={VERY_SHORT:'Very short',SHORT:'Short',MID:'Mid term',LONG:'Long term'};
 // Display-layer rename over the DB tier enum. The enum values (CLASSIC/SUKOON/
 // BAZAAR/PRIORITY/SIGMA) stay unchanged in code and storage; only what the

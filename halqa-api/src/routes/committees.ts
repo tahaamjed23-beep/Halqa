@@ -81,8 +81,12 @@ function committeeEngineLabels(committee: { orderMode: string; tier: string; ear
 }
 
 router.get('/', async (req, res) => {
+  // The dashboard only ever renders the caller's OWN circles, so it passes
+  // ?scope=mine to skip the public-forming branch entirely — a much smaller
+  // query and payload on a busy platform. Discovery has its own endpoint.
+  const mineOnly = req.query.scope === 'mine';
   const rows = await prisma.committee.findMany({
-    where: { OR: [{ hostId: req.auth!.userId }, { members: { some: { userId: req.auth!.userId, status: 'ACTIVE' } } }, { status: 'FORMING', listedPublicly: true }] },
+    where: { OR: [{ hostId: req.auth!.userId }, { members: { some: { userId: req.auth!.userId, status: 'ACTIVE' } } }, ...(mineOnly ? [] : [{ status: 'FORMING' as const, listedPublicly: true }])] },
     include: { host: { select: { id: true, fullName: true, creditScore: true } }, scheme: true, members: { where: { status: 'ACTIVE' }, select: { userId: true, turnPosition: true, hasReceived: true } }, rounds: { where: { status: { in: ['COLLECTING', 'INVESTED'] } }, include: { payments: true }, take: 1 } },
     orderBy: { createdAt: 'desc' },
   });
@@ -109,6 +113,7 @@ router.get('/discover', async (req, res) => {
       waitlist: { where: { userId: req.auth!.userId, status: 'WAITING' }, select: { id: true, preferredPosition: true } },
     },
     orderBy: [{ status: 'asc' }, { createdAt: 'desc' }],
+    take: 30, // FORMING sorts first, so the newest open circles always surface; caps payload on a busy platform
   });
   const day = 86_400_000;
   res.json(rows.map(committee => {
