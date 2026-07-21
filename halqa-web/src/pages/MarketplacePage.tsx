@@ -5,7 +5,7 @@ import type { Committee, User } from '../types';
 import { Empty, Field } from '../components/ui';
 
 type Bid = { id: string; bidderId: string; premiumPaisa: string; status: string; bidder: { id: string; fullName: string; creditScore: number } };
-type Listing = { id: string; position: number; payoutPaisa: string; premiumPaisa: string; payoutDate?: string; remainingDuesPaisa: string; buyerNetCostPaisa: string; buyerScope: 'INSIDE' | 'OUTSIDE'; seller: { id: string; fullName: string; creditScore: number; kycLevel: number }; committee: { id: string; name: string; mode: string; currentRound: number; periodDays: number }; bids?: Bid[] };
+type Listing = { id: string; position: number; payoutPaisa: string; premiumPaisa: string; payoutDate?: string; remainingDuesPaisa: string; buyerNetCostPaisa: string; buyerScope: 'INSIDE' | 'OUTSIDE'; totalTurns?: number; seller: { id: string; fullName: string; creditScore: number; kycLevel: number }; committee: { id: string; name: string; mode: string; currentRound: number; periodDays: number }; bids?: Bid[] };
 
 export default function MarketplacePage({ user }: { user: User }) {
   const [rows, setRows] = useState<Listing[]>([]);
@@ -54,7 +54,7 @@ export default function MarketplacePage({ user }: { user: User }) {
         {rows.map((listing, index) => (
           <article className="listing-card stagger" style={{ animationDelay: `${index * 55}ms` }} key={listing.id}>
             <div className="listing-top">
-              <div className="turn-number"><span>Turn</span><b>#{listing.position}</b></div>
+              <div className="turn-number"><span>Turn</span><b>#{listing.position}{listing.totalTurns?<em className="of-total"> / {listing.totalTurns}</em>:null}</b></div>
               <div>
                 <span className={`scope scope-${listing.buyerScope.toLowerCase()}`}>
                   <Users />Inside-circle swap

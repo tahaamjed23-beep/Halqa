@@ -39,7 +39,7 @@ const includeDetail = {
 
 router.get('/', async (req, res) => {
   const rows = await prisma.committee.findMany({
-    where: { OR: [{ hostId: req.auth!.userId }, { members: { some: { userId: req.auth!.userId, status: 'ACTIVE' } } }, { status: 'FORMING', joinPolicy: 'OPEN_UNTIL_FULL' }] },
+    where: { OR: [{ hostId: req.auth!.userId }, { members: { some: { userId: req.auth!.userId, status: 'ACTIVE' } } }, { status: 'FORMING', listedPublicly: true }] },
     include: { host: { select: { id: true, fullName: true, creditScore: true } }, scheme: true, members: { where: { status: 'ACTIVE' }, select: { userId: true, turnPosition: true, hasReceived: true } }, rounds: { where: { status: { in: ['COLLECTING', 'INVESTED'] } }, include: { payments: true }, take: 1 } },
     orderBy: { createdAt: 'desc' },
   });
@@ -102,6 +102,7 @@ router.post('/', async (req, res, next) => {
       goalName: z.string().trim().max(60).optional(),
       goalTargetPaisa: paisaInput.optional(),
       allowHalqaFill: z.boolean().default(false),
+      listedPublicly: z.boolean().default(false),
     }).parse(req.body);
     if (input.minMembersToStart > input.memberCap) return res.status(400).json({ error: 'Minimum members cannot exceed member capacity' });
     const allocationCap = input.mode === 'ROTATING' ? 0.25 : input.mode === 'HYBRID' ? 0.75 : 1;
@@ -806,6 +807,20 @@ router.post('/:id/leave', async (req, res, next) => {
       await audit(tx, req.auth!.userId, 'MEMBER_EXITED', 'Committee', committee.id, {});
     });
     res.json({ message: 'You have exited the committee' });
+  } catch (error) { next(error); }
+});
+
+// Host toggles whether this forming circle is publicly discoverable. Flipping
+// it off hides it from the "Discover circles" list immediately; invite-code
+// joining still works either way.
+router.post('/:id/listing', async (req, res, next) => {
+  try {
+    const { listed } = z.object({ listed: z.boolean() }).parse(req.body);
+    const committee = await assertHost(req.params.id, req.auth!.userId);
+    if (committee.status !== 'FORMING') return res.status(409).json({ error: 'Only forming circles can be listed or hidden' });
+    await prisma.committee.update({ where: { id: committee.id }, data: { listedPublicly: listed } });
+    await audit(prisma, req.auth!.userId, listed ? 'CIRCLE_LISTED' : 'CIRCLE_HIDDEN', 'Committee', committee.id, {});
+    res.json({ listedPublicly: listed });
   } catch (error) { next(error); }
 });
 

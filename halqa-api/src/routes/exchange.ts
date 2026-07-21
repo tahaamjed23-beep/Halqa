@@ -36,6 +36,7 @@ router.get('/', async (req, res) => {
       remainingDuesPaisa,
       buyerNetCostPaisa: listing.premiumPaisa,
       buyerScope: 'INSIDE',
+      totalTurns: listing.committee.members.length,
     };
   }));
 });

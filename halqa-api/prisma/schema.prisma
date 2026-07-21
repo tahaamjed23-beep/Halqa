@@ -208,6 +208,10 @@ model Committee {
   // to minimise Halqa's own capital exposure) and carry a higher management
   // fee, both disclosed before the host confirms.
   allowHalqaFill Boolean @default(false)
+  // Host-controlled discoverability: when true and the circle is FORMING with
+  // open seats, it appears in the public "Discover circles" list. The host can
+  // flip this on/off any time.
+  listedPublicly Boolean @default(false)
   orderMode OrderMode @default(CREDIT_WEIGHTED)
   joinPolicy JoinPolicy @default(OPEN_UNTIL_FULL)
   joinDeadline DateTime?
