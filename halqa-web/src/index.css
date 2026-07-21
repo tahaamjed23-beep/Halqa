@@ -811,3 +811,10 @@ h1,h2,h3{font-weight:640}
 .country-opt .flag{font-size:17px}
 .country-opt .cname{flex:1;font-size:13px;color:#232014}
 .country-opt .cdial{font-size:12.5px;font-weight:700;color:#8a815f}
+
+/* ===== Let-Halqa-join toggle + disclaimer ===== */
+.halqa-fill-box{border:1px solid #efe8d2;border-radius:14px;padding:10px 14px;margin:10px 0}
+.disclaimer-box{margin-top:8px;border-left:3px solid #d9c26a;background:#fdf8ea;border-radius:0 10px 10px 0;padding:10px 14px}
+.disclaimer-box b{font-size:12.5px;color:#8a6a15}
+.disclaimer-box ul{margin:6px 0 0;padding-left:18px}
+.disclaimer-box li{font-size:11.5px;color:#6d6547;line-height:1.6;margin:3px 0}

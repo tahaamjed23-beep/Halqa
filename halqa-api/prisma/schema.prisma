@@ -203,6 +203,11 @@ model Committee {
   distributionMode DistributionMode @default(SHARE)
   allowTurnCashout Boolean @default(false)
   allowTurnSale Boolean @default(true)
+  // Host opted in at creation to let Halqa fill empty seats so the circle can
+  // start even if not full. Halqa's seats take the FIRST turns (host's choice,
+  // to minimise Halqa's own capital exposure) and carry a higher management
+  // fee, both disclosed before the host confirms.
+  allowHalqaFill Boolean @default(false)
   orderMode OrderMode @default(CREDIT_WEIGHTED)
   joinPolicy JoinPolicy @default(OPEN_UNTIL_FULL)
   joinDeadline DateTime?

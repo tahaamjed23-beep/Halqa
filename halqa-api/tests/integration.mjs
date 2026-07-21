@@ -387,6 +387,22 @@ if(apOther){const otherPaid=await prisma.payment.findUnique({where:{roundId_paye
 const revoked=await request(`/committees/${autopay.id}/autopay`,{token:apTokenById.get(apTarget),method:'POST',body:{enabled:false}});
 check('auto-debit mandate can be revoked',revoked.autoDebitEnabled===false);
 
+// ---- Halqa fill (fund-the-gap): opted in at creation, sponsors take FIRST turns ----
+await prisma.committee.updateMany({where:{hostId:sanaId,status:{in:['ACTIVE','FORMING']}},data:{status:'CANCELLED'}}); // free a host slot
+const fill=await request('/committees',{token:sana,method:'POST',expect:201,body:{name:`Autopay Fill ${Date.now()}`,memberCap:5,contributionPaisa:'1000000',cadencePreset:'MID',periodDays:30,minMembersToStart:3,reinvestRatio:0,orderMode:'CREDIT_WEIGHTED',joinPolicy:'INVITE_ONLY',allowHalqaFill:true}});
+check('allowHalqaFill persists on creation',fill.allowHalqaFill===true);
+await request('/committees/join',{token:ayesha,method:'POST',expect:201,body:{inviteCode:fill.inviteCode}});
+await request('/committees/join',{token:bilal,method:'POST',expect:201,body:{inviteCode:fill.inviteCode}});
+for(const token of [sana,ayesha,bilal])await request(`/risk/committee/${fill.id}/consent`,{token,method:'POST',expect:201,body:{accepted:true}});
+await request(`/committees/${fill.id}/start`,{token:sana,method:'POST',body:{}}); // no fundGap in body — relies on the creation opt-in
+const filled=await request(`/committees/${fill.id}`,{token:sana});
+check('Halqa auto-filled the 2 empty seats',filled.members.length===5,`members=${filled.members.length}`);
+const sponsors=filled.members.filter(m=>m.user.username.startsWith('halqa.gap.'));
+const reals=filled.members.filter(m=>!m.user.username.startsWith('halqa.gap.'));
+check('two Halqa sponsor seats added',sponsors.length===2,`sponsors=${sponsors.length}`);
+check('Halqa sponsors take the FIRST turns',sponsors.every(s=>s.turnPosition<=2)&&Math.max(...sponsors.map(s=>s.turnPosition))<Math.min(...reals.map(r=>r.turnPosition)),`sponsorPos=${sponsors.map(s=>s.turnPosition)} realPos=${reals.map(r=>r.turnPosition)}`);
+check('real members hold the later turns',reals.every(r=>r.turnPosition>=3));
+
 // ---- Security barrier: weak-password rejection + per-account lockout ----
 if(!RELAXED){
 const weak=await request('/auth/register',{method:'POST',expect:400,body:{fullName:'Weak Pass',username:`weak${stamp}`,phone:`0300${String(stamp).slice(-7)}`,email:`weak${stamp}@halqa.pk`,password:'aaaaaaaaaa'}});

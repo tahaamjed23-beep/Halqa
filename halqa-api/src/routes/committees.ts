@@ -101,6 +101,7 @@ router.post('/', async (req, res, next) => {
       goalType: z.enum(['HAJJ','EDUCATION','WEDDING','HOME','BUSINESS','CUSTOM']).optional(),
       goalName: z.string().trim().max(60).optional(),
       goalTargetPaisa: paisaInput.optional(),
+      allowHalqaFill: z.boolean().default(false),
     }).parse(req.body);
     if (input.minMembersToStart > input.memberCap) return res.status(400).json({ error: 'Minimum members cannot exceed member capacity' });
     const allocationCap = input.mode === 'ROTATING' ? 0.25 : input.mode === 'HYBRID' ? 0.75 : 1;
@@ -248,6 +249,9 @@ router.post('/:id/start', async (req, res, next) => {
     const { fundGap } = z.object({ fundGap: z.boolean().optional() }).parse(req.body ?? {});
     const committee = await assertHost(req.params.id, req.auth!.userId);
     if (committee.status !== 'FORMING') return res.status(409).json({ error: 'Only forming committees can start' });
+    // The host can request gap-filling at start, OR have opted in at creation
+    // (allowHalqaFill) so a not-full circle starts full automatically.
+    const useFundGap = fundGap || committee.allowHalqaFill;
     const members = await prisma.committeeMember.findMany({ where: { committeeId: committee.id, status: 'ACTIVE' }, include: { user: true }, orderBy: { joinedAt: 'asc' } });
     if (members.length < committee.minMembersToStart) return res.status(409).json({ error: `At least ${committee.minMembersToStart} members are required` });
     if (committee.memberConsentRequired && (committee.reinvestRatio > 0 || committee.tier !== 'CLASSIC' || committee.earlyFeeBps > 0)) {
@@ -270,7 +274,7 @@ router.post('/:id/start', async (req, res, next) => {
     // are always ordered LAST — the platform pays into every round before it
     // collects, so members carry zero exposure to the sponsored positions.
     let sponsorMembers: typeof members = [];
-    if (fundGap && members.length < committee.memberCap) {
+    if (useFundGap && members.length < committee.memberCap) {
       const missing = committee.memberCap - members.length;
       for (let g = 1; g <= missing; g++) {
         const sponsor = await ensureSponsorUser(prisma, g);
@@ -291,7 +295,11 @@ router.post('/:id/start', async (req, res, next) => {
     const orderedReal = committee.orderMode === 'CREDIT_WEIGHTED'
       ? [...members].sort((a,b) => verified(b) - verified(a) || b.user.creditScore - a.user.creditScore || a.joinedAt.getTime() - b.joinedAt.getTime())
       : members;
-    const ordered = [...orderedReal, ...sponsorMembers];
+    // Halqa's sponsor seats take the FIRST turns (host's creation choice): Halqa
+    // collects early and pays its share over the rest of the cycle, minimising
+    // Halqa's own capital at risk. Real members hold the later turns and rely on
+    // Halqa's per-round auto-contribution (settleSponsorPayments) to be paid.
+    const ordered = [...sponsorMembers, ...orderedReal];
     const now = new Date();
     await prisma.$transaction(async tx => {
       await tx.committeeMember.updateMany({ where: { committeeId: committee.id, status: 'ACTIVE' }, data: { turnPosition: { increment: 100 } } });
