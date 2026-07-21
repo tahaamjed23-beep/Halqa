@@ -41,7 +41,7 @@ const RAIL_META: Record<string, { name: string; mono: string; color: string }> =
   RAAST: { name: 'Raast', mono: 'RA', color: '#0e7d72' }, JAZZCASH: { name: 'JazzCash', mono: 'JC', color: '#c8102e' },
   EASYPAISA: { name: 'Easypaisa', mono: 'EP', color: '#3f9c35' }, BANK_TRANSFER: { name: 'Bank account', mono: 'BK', color: '#5b6472' },
 };
-function LinkedMethodsManager() {
+export function LinkedMethodsManager() {
   const [methods, setMethods] = useState<LinkedMethod[]>([]);
   const [adding, setAdding] = useState(false); const [rail, setRail] = useState('RAAST'); const [accountNo, setAccountNo] = useState(''); const [busy, setBusy] = useState(false); const [error, setError] = useState('');
   const load = () => api<{ methods: LinkedMethod[] }>('/profile/payment-methods').then(d => setMethods(d.methods)).catch(() => {});

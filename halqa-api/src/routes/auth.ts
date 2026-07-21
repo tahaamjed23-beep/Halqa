@@ -52,7 +52,10 @@ router.post('/register', async (req, res, next) => {
     // this member completes their first clean cycle. Invalid codes are ignored
     // silently — a typo must never block a signup.
     const referrer = body.referredBy ? await prisma.user.findUnique({ where: { username: body.referredBy.toLowerCase() } }) : null;
-    const user = await prisma.user.create({ data: { fullName: body.fullName.trim(), username, email, phone, cnic: body.cnic ?? null, passwordHash: await bcrypt.hash(body.password, 12), referredById: referrer?.id ?? null }, select: publicUser });
+    // Identity ladder: Level 0 = nothing on file, Level 1 = CNIC recorded
+    // (unlocks hosting), Level 2 = bank-verified (unlocks bank custody). A
+    // signup that provides a CNIC starts at Level 1.
+    const user = await prisma.user.create({ data: { fullName: body.fullName.trim(), username, email, phone, cnic: body.cnic ?? null, kycLevel: body.cnic ? 1 : 0, passwordHash: await bcrypt.hash(body.password, 12), referredById: referrer?.id ?? null }, select: publicUser });
     const payload = { userId: user.id, role: user.role };
     const refreshToken = signRefresh(payload);
     await prisma.refreshToken.create({ data: { tokenHash: tokenHash(refreshToken), userId: user.id, familyId: newFamilyId(), expiresAt: new Date(Date.now() + 30 * 86400000) } });
