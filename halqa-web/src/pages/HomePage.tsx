@@ -6,8 +6,9 @@ import { Empty, HalqaOrb, Metric, Mini, ScoreRing, formatDuration, modeName } fr
 import { SHOW_HOST_ELIGIBILITY, SIMPLE_MODE } from '../config';
 import { t, useLang } from '../lib/i18n';
 
-// Fifteen ways Pakistan says hello — one at random each visit.
-const GREETINGS=['Assalam-o-alaikum','Salam','Adaab','Khush aamdeed','Ji ayaan nu','Bhali karay aaya','Pakhair raghlay','Washen aatkay','Salam alaikum','Kya haal hai','Khair mubarak','Jeetay raho','Khush raho','Sada salamat raho','Bismillah, chalo shuru karein'];
+// Fifteen ways Pakistan says hello — one at random each visit. Assalam-o-alaikum
+// and a plain Hello stay in Latin; the rest are in Urdu/regional script.
+const GREETINGS=['Assalam-o-alaikum','Hello','سلام','آداب','خوش آمدید','جی آیاں نوں','پخیر راغلې','ڀلي ڪري آيا','سلام علیکم','کیا حال ہے','خیر مبارک','جیتے رہو','خوش رہو','سدا سلامت رہو','بسم اللہ، چلو شروع کریں'];
 
 // Instant paint: the last good copy of a list renders immediately from
 // localStorage while the fresh one loads — the committees screen stops
