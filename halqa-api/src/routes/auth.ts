@@ -15,6 +15,10 @@ const publicUser = { id: true, fullName: true, username: true, phone: true, emai
 // expose booleans + the derived tenure/discount status the UI needs.
 const pinHash = (pin: string) => createHash('sha256').update(`halqa-pin:${process.env.JWT_SECRET || 'dev'}:${pin}`).digest('hex');
 const otpHash = (code: string) => createHash('sha256').update(`halqa-otp:${code}`).digest('hex');
+// Demo bypass: DEMO_MODE=true lets a live demo create fresh accounts without a
+// real SMS gateway (phone OTP accepts any code; the code is surfaced so it can
+// be typed). Off by default — never enable in normal production.
+const demoMode = () => process.env.DEMO_MODE === 'true';
 const withHasPin = <T extends { pinHash?: string | null; biometricCredId?: string | null; creditScore: number; committeesCompletedClean: number; earlyTurnVerifiedAt: Date | null; incomeVerifiedAt: Date | null; chequeSecuredAt: Date | null; salaryAccountLinked: boolean }>(u: T) => {
   const { pinHash: _p, biometricCredId: _b, ...rest } = u;
   return { ...rest, hasPin: !!_p, hasBiometric: !!_b, earlyTurnUnlocked: earlyTurnUnlocked(u), feeDiscountBps: feeDiscountBps(u), discountReason: discountReason(u) };
@@ -106,7 +110,7 @@ router.post('/phone-otp', async (req, res, next) => {
     const code = String(Math.floor(100000 + Math.random() * 900000));
     await prisma.securityEvent.create({ data: { type: 'PHONE_OTP', identity: phone, detail: JSON.stringify({ codeHash: otpHash(code), expiresAt: Date.now() + 10 * 60_000 }) } });
     await logSecurity(req, 'PHONE_OTP_SENT', { identity: phone });
-    res.status(201).json({ otpSent: true, ...(process.env.NODE_ENV !== 'production' ? { devCode: code } : {}) });
+    res.status(201).json({ otpSent: true, ...((process.env.NODE_ENV !== 'production' || demoMode()) ? { devCode: code } : {}) });
   } catch (error) { next(error); }
 });
 const OTP_MAX_ATTEMPTS = 5;
@@ -114,6 +118,7 @@ router.post('/phone-otp/verify', async (req, res, next) => {
   try {
     const body = z.object({ phone: z.string().trim().min(11).max(15), code: z.string().trim().regex(/^\d{6}$/) }).parse(req.body);
     const phone = cleanPhone(body.phone);
+    if (demoMode()) { await prisma.securityEvent.create({ data: { type: 'PHONE_OTP_VERIFIED', identity: phone } }); return res.json({ verified: true, demo: true }); }
     const event = await prisma.securityEvent.findFirst({ where: { type: 'PHONE_OTP', identity: phone }, orderBy: { createdAt: 'desc' } });
     const detail = event?.detail ? JSON.parse(event.detail) as { codeHash: string; expiresAt: number; attempts?: number } : null;
     if (!detail || !event) return res.status(404).json({ error: 'Request a code first' });
