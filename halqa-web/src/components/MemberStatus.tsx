@@ -36,6 +36,7 @@ export default function MemberStatus({ user }: { user: User }) {
 
   return <section className="panel">
     <div className="panel-head"><div><span className="eyebrow">Your standing</span><h2>Turn access & rewards</h2><p>Earn cheaper fees and earlier turns by proving you're reliable.</p></div><BadgeCheck /></div>
+    <div className="tenure-note" style={{ background: '#fdecec', borderColor: '#f0b8b8', color: '#8a1d1d' }}>⚠ Be honest — every claim here is checked against your documents when we review your account. Misrepresenting your income, employer or cheque will get you removed and blacklisted.</div>
 
     {/* Tenure */}
     <div className="tenure-note">
@@ -53,7 +54,7 @@ export default function MemberStatus({ user }: { user: User }) {
       </div>
 
       <div className="verify-row">
-        <span><b>Income & employer verified</b><small>Prove your workplace + income → 80% off charges</small></span>
+        <span><b>Income & employer verified</b><small>Employed? Your employer + pay slip. Housewife/student? Your husband's or guardian's employer + their pay slip → 80% off charges</small></span>
         {me.incomeVerifiedAt
           ? <button className="text-action slim-action danger" disabled={busy==='income'} onClick={() => void clearOne('income')}>Remove</button>
           : askEmployer

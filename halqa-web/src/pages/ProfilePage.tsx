@@ -60,15 +60,14 @@ export function VaultPanel(){
 // every active circle, one switch each. The mandate itself is per-circle.
 type AutoCircle={id:string;name:string;status:string;members?:{userId:string;autoDebitEnabled?:boolean;autoDebitRail?:string|null}[]};
 function AutoPayPanel({user}:{user:User}){
-  const [circles,setCircles]=useState<AutoCircle[]>([]);const [busy,setBusy]=useState('');
+  const [circles,setCircles]=useState<AutoCircle[]>([]);
   const load=useCallback(()=>api<AutoCircle[]>('/committees').then(rows=>setCircles(rows.filter(row=>row.status==='ACTIVE'||row.status==='FORMING'))),[]);
   useEffect(()=>{void load()},[load]);
   const mine=(c:AutoCircle)=>c.members?.find(m=>m.userId===user.id);
-  const toggle=async(c:AutoCircle,enabled:boolean)=>{setBusy(c.id);try{await api(`/committees/${c.id}/autopay`,{method:'POST',body:JSON.stringify({enabled,rail:mine(c)?.autoDebitRail||'RAAST'})});await load()}catch{/* surface stays */}finally{setBusy('')}};
   const joined=circles.filter(c=>mine(c));
-  if(!joined.length)return null;
-  return <section className="panel"><div className="panel-head"><div><span className="eyebrow">Never miss a round</span><h2>Auto-pay</h2><p>Each circle you're in, one switch. The installment is collected automatically on the due date — Halqa schedules it, never holds it.</p></div><CreditCard/></div>
-  <div className="policy-toggles compact">{joined.map(c=>{const m=mine(c)!;return <label key={c.id}><input type="checkbox" disabled={busy===c.id} checked={!!m.autoDebitEnabled} onChange={e=>toggle(c,e.target.checked)}/><span><b>{c.name}{m.autoDebitEnabled?` · ${m.autoDebitRail||'RAAST'}`:''}</b><small>{m.autoDebitEnabled?'On — collected automatically each round.':'Off — pay manually from the circle.'}</small></span></label>})}</div>
+  if(!joined.length)return <section className="panel"><div className="panel-head"><div><span className="eyebrow">Never miss a round</span><h2>Auto-collection</h2><p>Every circle you join collects automatically on the due date — always on, never removable. If you pay early yourself, there's simply nothing left to collect. Halqa schedules it, never holds it.</p></div><CreditCard/></div><LinkedAccountsManager/></section>;
+  return <section className="panel"><div className="panel-head"><div><span className="eyebrow">Never miss a round</span><h2>Auto-collection</h2><p>Auto-collection is standard on every circle — always on, never removable (it's how Halqa keeps circles safe). If you pay early yourself, there's nothing left to collect that round. Halqa schedules it, never holds it.</p></div><CreditCard/></div>
+  <div className="info-stack">{joined.map(c=>{const m=mine(c)!;return <div key={c.id}><span>{c.name}</span><b>🔒 Auto-collect ON · {m.autoDebitRail||'RAAST'}</b></div>})}</div>
   <LinkedAccountsManager/></section>;
 }
 
