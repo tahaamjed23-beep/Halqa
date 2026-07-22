@@ -71,7 +71,10 @@ router.patch('/consent', async (req, res, next) => {
 // used to prefill checkout and to power the auto-debit mandate. Pointers only:
 // no balances, no card numbers (cards belong on the licensed aggregator's
 // hosted page, never here). Stored as a small JSON array on the user.
-type LinkedMethod = { id: string; rail: string; accountNo: string; accountTitle?: string; bankName?: string; label: string; preferred: boolean; verified?: boolean };
+type LinkedMethod = { id: string; rail: string; accountNo: string; accountTitle?: string; bankName?: string; label: string; preferred: boolean; verified?: boolean; brand?: string; last4?: string; expiry?: string; addressLine?: string; city?: string };
+// Card brand from the leading digits (display only — the full PAN is never
+// stored). Covers the networks that actually issue in Pakistan.
+const cardBrand = (digits: string) => /^4/.test(digits) ? 'Visa' : /^(5[1-5]|222[1-9]|22[3-9]\d|2[3-6]\d\d|27[01]\d|2720)/.test(digits) ? 'Mastercard' : /^3[47]/.test(digits) ? 'Amex' : /^(60|65|81|82)/.test(digits) ? 'PayPak' : 'Card';
 const otpHash = (code: string) => createHash('sha256').update(code).digest('hex');
 const methodsOf = (raw: unknown): LinkedMethod[] => (Array.isArray(raw) ? raw as LinkedMethod[] : []);
 const maskAccount = (value: string) => value.length <= 4 ? value : `${'•'.repeat(Math.max(0, value.length - 4))}${value.slice(-4)}`;
@@ -85,23 +88,44 @@ router.get('/payment-methods', async (req, res) => {
 router.post('/payment-methods', async (req, res, next) => {
   try {
     const input = z.object({
-      rail: z.enum(['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER']),
-      accountNo: z.string().trim().min(10, 'Enter the full account / wallet number').max(34),
+      rail: z.enum(['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER', 'CARD']),
+      accountNo: z.string().trim().max(34).optional(),
       accountTitle: z.string().trim().min(3, 'Enter the account holder name').max(60).optional(),
       bankName: z.string().trim().max(40).optional(),
       label: z.string().trim().max(40).optional(),
       preferred: z.boolean().optional(),
+      // Card-only. The full PAN and CVC are accepted transiently to derive the
+      // brand + last4 and are NEVER persisted (PCI: real processing happens on
+      // the licensed partner's hosted page). CVC is not even a stored field.
+      cardNumber: z.string().trim().regex(/^[\d\s]{13,23}$/).optional(),
+      expiry: z.string().trim().regex(/^(0[1-9]|1[0-2])\/\d{2}$/, 'Expiry must be MM/YY').optional(),
+      cvc: z.string().trim().regex(/^\d{3,4}$/).optional(),
+      addressLine: z.string().trim().max(120).optional(),
+      city: z.string().trim().max(60).optional(),
     }).parse(req.body);
     const u = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { paymentMethodsJson: true } });
     const existing = methodsOf(u.paymentMethodsJson);
     if (existing.length >= 5) return res.status(409).json({ error: 'A maximum of five linked methods is allowed' });
-    const method: LinkedMethod = {
-      id: `pm_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
-      rail: input.rail, accountNo: input.accountNo.replace(/\s+/g, ''),
-      accountTitle: input.accountTitle, bankName: input.bankName,
-      label: input.label || input.bankName || (input.rail === 'RAAST' ? 'Raast ID' : input.rail === 'BANK_TRANSFER' ? 'Bank account' : `${input.rail === 'JAZZCASH' ? 'JazzCash' : 'Easypaisa'} wallet`),
-      preferred: input.preferred ?? existing.length === 0, // the first link becomes preferred automatically
-    };
+    const id = `pm_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+    const preferred = input.preferred ?? existing.length === 0;
+    let method: LinkedMethod;
+    if (input.rail === 'CARD') {
+      const digits = (input.cardNumber ?? '').replace(/\D/g, '');
+      if (digits.length < 13 || !input.expiry || !input.accountTitle) return res.status(400).json({ error: 'Card number, expiry and cardholder name are required' });
+      const brand = cardBrand(digits);
+      const last4 = digits.slice(-4);
+      // Store ONLY brand + last4 + expiry + holder + billing address. Never the
+      // PAN, never the CVC — those leave scope with the request.
+      method = { id, rail: 'CARD', accountNo: last4, brand, last4, expiry: input.expiry, accountTitle: input.accountTitle, bankName: brand, addressLine: input.addressLine, city: input.city, label: input.label || `${brand} ····${last4}`, preferred };
+    } else {
+      const accountNo = (input.accountNo ?? '').replace(/\s+/g, '');
+      if (accountNo.length < 10) return res.status(400).json({ error: 'Enter the full account / wallet number' });
+      method = {
+        id, rail: input.rail, accountNo, accountTitle: input.accountTitle, bankName: input.bankName,
+        label: input.label || input.bankName || (input.rail === 'RAAST' ? 'Raast ID' : input.rail === 'BANK_TRANSFER' ? 'Bank account' : `${input.rail === 'JAZZCASH' ? 'JazzCash' : 'Easypaisa'} wallet`),
+        preferred,
+      };
+    }
     const next_ = method.preferred ? existing.map(m => ({ ...m, preferred: false })) : existing;
     // Mandate OTP: linking an account that auto-collection will pull from is
     // confirmed with a one-time code, delivered on the WhatsApp rail (in-app
@@ -131,7 +155,11 @@ router.post('/payment-methods/:id/verify', async (req, res, next) => {
     if (otpHash(code) !== detail.codeHash) return res.status(400).json({ error: 'Incorrect code' });
     const u = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { paymentMethodsJson: true } });
     const updated = methodsOf(u.paymentMethodsJson).map(m => m.id === req.params.id ? { ...m, verified: true } : m);
-    await prisma.user.update({ where: { id: req.auth!.userId }, data: { paymentMethodsJson: updated } });
+    // Consume the code on success so a known code can't be replayed in-window.
+    await prisma.$transaction([
+      prisma.securityEvent.delete({ where: { id: event!.id } }),
+      prisma.user.update({ where: { id: req.auth!.userId }, data: { paymentMethodsJson: updated } }),
+    ]);
     await audit(prisma, req.auth!.userId, 'PAYMENT_METHOD_VERIFIED', 'User', req.auth!.userId, { methodId: req.params.id });
     res.json({ methods: updated.map(publicMethod) });
   } catch (error) { next(error); }

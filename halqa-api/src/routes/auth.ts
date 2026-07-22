@@ -8,7 +8,11 @@ import { createHash } from 'node:crypto';
 
 const router = Router();
 const cleanPhone = (v: string) => v.replace(/\s+/g, '').replace(/^\+92/, '0');
-const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, createdAt: true } as const;
+const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, phoneVerified:true, addressLine:true, city:true, occupationType:true, employerName:true, createdAt: true } as const;
+// Never send the PIN hash to the client; we only ever expose whether one is set.
+const pinHash = (pin: string) => createHash('sha256').update(`halqa-pin:${process.env.JWT_SECRET || 'dev'}:${pin}`).digest('hex');
+const otpHash = (code: string) => createHash('sha256').update(`halqa-otp:${code}`).digest('hex');
+const withHasPin = <T extends { pinHash?: string | null }>(u: T) => { const { pinHash: _p, ...rest } = u; return { ...rest, hasPin: !!_p }; };
 const credentials = z.object({ identity: z.string().trim().min(1), password: z.string().min(8).max(128) });
 const tokenHash=(token:string)=>createHash('sha256').update(token).digest('hex');
 // Passwords must mix letters and digits. 8-char floor is enforced by the zod
@@ -40,6 +44,13 @@ router.post('/register', async (req, res, next) => {
       // Version of the User Agreement / Privacy Policy shown at signup; its
       // acceptance is recorded in the security log as legal evidence.
       termsVersion: z.string().trim().max(20).optional(),
+      // Underwriting profile + app PIN, all optional so older clients and the
+      // test seeders keep registering unchanged.
+      addressLine: z.string().trim().max(120).optional(),
+      city: z.string().trim().max(60).optional(),
+      occupationType: z.enum(['EMPLOYED','BUSINESS_OWNER','HOUSEWIFE','STUDENT','SELF_EMPLOYED','RETIRED','OTHER']).optional(),
+      employerName: z.string().trim().max(80).optional(),
+      pin: z.string().trim().regex(/^\d{4,6}$/, 'PIN must be 4 to 6 digits').optional(),
     }).parse(req.body);
     if (!relaxed() && !passwordStrongEnough(body.password)) return res.status(400).json({ error: 'Password must contain both letters and numbers' });
     const username = body.username.trim().toLowerCase();
@@ -55,7 +66,17 @@ router.post('/register', async (req, res, next) => {
     // Identity ladder: Level 0 = nothing on file, Level 1 = CNIC recorded
     // (unlocks hosting), Level 2 = bank-verified (unlocks bank custody). A
     // signup that provides a CNIC starts at Level 1.
-    const user = await prisma.user.create({ data: { fullName: body.fullName.trim(), username, email, phone, cnic: body.cnic ?? null, kycLevel: body.cnic ? 1 : 0, passwordHash: await bcrypt.hash(body.password, 12), referredById: referrer?.id ?? null }, select: publicUser });
+    // Phone ownership: mark verified if a fresh OTP was confirmed for this phone
+    // in the last 30 minutes (the signup wizard does this before register).
+    const phoneOtpOk = await prisma.securityEvent.findFirst({ where: { type: 'PHONE_OTP_VERIFIED', identity: phone, createdAt: { gt: new Date(Date.now() - 30 * 60_000) } } });
+    const user = await prisma.user.create({ data: {
+      fullName: body.fullName.trim(), username, email, phone, cnic: body.cnic ?? null, kycLevel: body.cnic ? 1 : 0,
+      passwordHash: await bcrypt.hash(body.password, 12), referredById: referrer?.id ?? null,
+      phoneVerified: !!phoneOtpOk,
+      addressLine: body.addressLine ?? null, city: body.city ?? null, occupationType: body.occupationType ?? null,
+      employerName: body.occupationType === 'EMPLOYED' ? (body.employerName ?? null) : null,
+      pinHash: body.pin ? pinHash(body.pin) : null,
+    }, select: { ...publicUser, pinHash: true } });
     const payload = { userId: user.id, role: user.role };
     const refreshToken = signRefresh(payload);
     await prisma.refreshToken.create({ data: { tokenHash: tokenHash(refreshToken), userId: user.id, familyId: newFamilyId(), expiresAt: new Date(Date.now() + 30 * 86400000) } });
@@ -63,7 +84,73 @@ router.post('/register', async (req, res, next) => {
     // Timestamped acceptance of the User Agreement + Privacy Policy shown at
     // signup — the record a court asks for when a member claims "I never agreed".
     if (body.termsVersion) await logSecurity(req, 'TOS_ACCEPTED', { userId: user.id, identity: username, detail: `version ${body.termsVersion}` });
-    res.status(201).json({ user, accessToken: signAccess(payload), refreshToken });
+    res.status(201).json({ user: withHasPin(user), accessToken: signAccess(payload), refreshToken });
+  } catch (error) { next(error); }
+});
+
+// Phone OTP at signup: request a 6-digit code for a phone number (no auth — the
+// account does not exist yet). Stored hashed against the phone in the security
+// log; delivered on the WhatsApp/SMS rail once a provider connects. In non-prod
+// the code is returned inline so the demo flows end-to-end.
+router.post('/phone-otp', async (req, res, next) => {
+  try {
+    const phone = cleanPhone(z.object({ phone: z.string().trim().min(11).max(15) }).parse(req.body).phone);
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    await prisma.securityEvent.create({ data: { type: 'PHONE_OTP', identity: phone, detail: JSON.stringify({ codeHash: otpHash(code), expiresAt: Date.now() + 10 * 60_000 }) } });
+    await logSecurity(req, 'PHONE_OTP_SENT', { identity: phone });
+    res.status(201).json({ otpSent: true, ...(process.env.NODE_ENV !== 'production' ? { devCode: code } : {}) });
+  } catch (error) { next(error); }
+});
+const OTP_MAX_ATTEMPTS = 5;
+router.post('/phone-otp/verify', async (req, res, next) => {
+  try {
+    const body = z.object({ phone: z.string().trim().min(11).max(15), code: z.string().trim().regex(/^\d{6}$/) }).parse(req.body);
+    const phone = cleanPhone(body.phone);
+    const event = await prisma.securityEvent.findFirst({ where: { type: 'PHONE_OTP', identity: phone }, orderBy: { createdAt: 'desc' } });
+    const detail = event?.detail ? JSON.parse(event.detail) as { codeHash: string; expiresAt: number; attempts?: number } : null;
+    if (!detail || !event) return res.status(404).json({ error: 'Request a code first' });
+    if (Date.now() > detail.expiresAt) return res.status(410).json({ error: 'The code expired — request a new one' });
+    if (otpHash(body.code) !== detail.codeHash) {
+      // Cap wrong guesses per code: after OTP_MAX_ATTEMPTS the code is burned so
+      // a live OTP can't be brute-forced within its window (mirrors the password
+      // lockout). The user must request a fresh code.
+      const attempts = (detail.attempts ?? 0) + 1;
+      if (attempts >= OTP_MAX_ATTEMPTS) await prisma.securityEvent.delete({ where: { id: event.id } });
+      else await prisma.securityEvent.update({ where: { id: event.id }, data: { detail: JSON.stringify({ ...detail, attempts }) } });
+      return res.status(400).json({ error: attempts >= OTP_MAX_ATTEMPTS ? 'Too many wrong attempts — request a new code' : 'Incorrect code' });
+    }
+    // Consume the code on success — single-use, so a stolen/known code cannot be
+    // replayed even within the 10-minute window.
+    await prisma.$transaction([
+      prisma.securityEvent.delete({ where: { id: event.id } }),
+      prisma.securityEvent.create({ data: { type: 'PHONE_OTP_VERIFIED', identity: phone } }),
+    ]);
+    res.json({ verified: true });
+  } catch (error) { next(error); }
+});
+
+// App PIN: set (or change) the 4-6 digit PIN asked on every app open. Setting a
+// PIN when one already exists requires the current PIN; first-time set is open
+// to the authenticated session (the user just proved their password to log in).
+router.post('/set-pin', requireAuth, async (req, res, next) => {
+  try {
+    const body = z.object({ pin: z.string().trim().regex(/^\d{4,6}$/, 'PIN must be 4 to 6 digits'), currentPin: z.string().trim().optional() }).parse(req.body);
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { pinHash: true } });
+    if (user.pinHash && user.pinHash !== pinHash(body.currentPin ?? '')) return res.status(403).json({ error: 'Current PIN is incorrect' });
+    await prisma.user.update({ where: { id: req.auth!.userId }, data: { pinHash: pinHash(body.pin) } });
+    await logSecurity(req, 'PIN_SET', { userId: req.auth!.userId });
+    res.json({ hasPin: true });
+  } catch (error) { next(error); }
+});
+// Verify the PIN on app open. Rate-limited by the /auth limiter; a wrong PIN
+// never reveals whether one is set.
+router.post('/verify-pin', requireAuth, async (req, res, next) => {
+  try {
+    const { pin } = z.object({ pin: z.string().trim().regex(/^\d{4,6}$/) }).parse(req.body);
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { pinHash: true } });
+    if (!user.pinHash) return res.json({ verified: true, hasPin: false });
+    if (user.pinHash !== pinHash(pin)) { await logSecurity(req, 'PIN_FAIL', { userId: req.auth!.userId }); return res.status(401).json({ error: 'Incorrect PIN' }); }
+    res.json({ verified: true, hasPin: true });
   } catch (error) { next(error); }
 });
 
@@ -89,8 +176,8 @@ router.post('/login', async (req, res, next) => {
     const refreshToken = signRefresh(payload);
     await prisma.refreshToken.create({ data: { tokenHash: tokenHash(refreshToken), userId: user.id, familyId: newFamilyId(), expiresAt: new Date(Date.now() + 30 * 86400000) } });
     await logSecurity(req, 'LOGIN_OK', { userId: user.id, identity: value });
-    const safe = await prisma.user.findUniqueOrThrow({ where: { id: user.id }, select: publicUser });
-    res.json({ user: safe, accessToken: signAccess(payload), refreshToken });
+    const safe = await prisma.user.findUniqueOrThrow({ where: { id: user.id }, select: { ...publicUser, pinHash: true } });
+    res.json({ user: withHasPin(safe), accessToken: signAccess(payload), refreshToken });
   } catch (error) { next(error); }
 });
 
@@ -133,8 +220,8 @@ router.post('/logout',requireAuth,async(req,res)=>{const token=z.object({refresh
   await logSecurity(req,'LOGOUT',{userId:req.auth!.userId});res.status(204).end()});
 
 router.get('/me', requireAuth, async (req, res) => {
-  const user = await prisma.user.findUnique({ where: { id: req.auth!.userId }, select: publicUser });
-  res.json(user);
+  const user = await prisma.user.findUnique({ where: { id: req.auth!.userId }, select: { ...publicUser, pinHash: true } });
+  res.json(user ? withHasPin(user) : user);
 });
 
 // Change password (logged-in). Closes the audited "no way to rotate a

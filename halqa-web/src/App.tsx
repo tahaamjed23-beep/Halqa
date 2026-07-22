@@ -6,6 +6,7 @@ import Shell from './pages/Shell';
 import HomePage from './pages/HomePage';
 import ErrorBoundary from './components/ErrorBoundary';
 import AgreementGate from './components/AgreementGate';
+import PinLock from './components/PinLock';
 import { SIMPLE_MODE } from './config';
 
 const CirclesPage=lazy(()=>import('./pages/CirclesPage'));
@@ -25,10 +26,21 @@ export default function App(){
   const [loading,setLoading]=useState(true);
   const [page,setPage]=useState<Page>('home');
   const [committeeId,setCommitteeId]=useState<string|null>(null);
+  // In-memory PIN unlock: false on every fresh load, so the app re-asks the PIN
+  // each time it opens (a reload counts as an open). A fresh login sets it true
+  // — you just proved your password, so no PIN on the same open.
+  const [unlocked,setUnlocked]=useState(false);
+  const [pinDeferred,setPinDeferred]=useState(false); // existing users who skip first-open setup
   const loadUser=useCallback(async()=>{try{setUser(await api<User>('/auth/me'))}catch{tokens.clear();setUser(null)}finally{setLoading(false)}},[]);
   useEffect(()=>{if(tokens.get())void loadUser();else setLoading(false)},[loadUser]);
   if(loading)return <div className="splash"><div className="splash-ring">ح</div></div>;
-  if(!user)return <AuthPage onAuth={setUser}/>;
+  if(!user)return <AuthPage onAuth={u=>{setUnlocked(true);setUser(u)}}/>;
+  // PIN gate: a member WITH a PIN must enter it on every open; a member WITHOUT
+  // one (older accounts) gets a one-time setup they may defer into Settings.
+  if(!unlocked){
+    if(user.hasPin)return <PinLock user={user} mode="verify" onUnlock={()=>setUnlocked(true)} onLogout={()=>{tokens.clear();setUser(null)}}/>;
+    if(!pinDeferred)return <PinLock user={user} mode="setup" onUnlock={()=>{setUser({...user,hasPin:true});setUnlocked(true)}} onSkip={()=>{setPinDeferred(true);setUnlocked(true)}} onLogout={()=>{tokens.clear();setUser(null)}}/>;
+  }
   // Rafa rides along on the committee page too — it renders outside the Shell,
   // and this is exactly where the pay/payout reactions fire.
   // Rafa is wrapped in its own scoped boundary everywhere it renders, so a

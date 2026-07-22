@@ -8,7 +8,7 @@ import { prisma } from '../db';
 export type SecurityEventType =
   | 'REGISTER' | 'LOGIN_OK' | 'LOGIN_FAIL' | 'ACCOUNT_LOCKED'
   | 'PASSWORD_CHANGED' | 'TOKEN_REFRESH' | 'TOKEN_REUSE_REVOKED' | 'LOGOUT'
-  | 'TOS_ACCEPTED';
+  | 'TOS_ACCEPTED' | 'PHONE_OTP_SENT' | 'PIN_SET' | 'PIN_FAIL';
 
 // Prefer the real client IP behind a proxy, but never trust a forwarded header
 // blindly for anything but logging (it is attacker-settable).

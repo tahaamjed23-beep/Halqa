@@ -5,11 +5,40 @@ Defaults follow the CNIC into the national credit system, so the cost of
 walking away from a circle is a ruined financial life — the strongest legal
 deterrent available without any court.
 
-## Why this works
-- **TASDEEQ** is an SBP-licensed private credit bureau that accepts data from
-  fintechs, BNPL and payday lenders — not only banks. **DataCheck** is the
-  second private bureau. Every regulated lender in Pakistan screens against
-  these before approving anything.
+## ⚠️ Access reality — no direct linkage for a non-FI (researched 2026-07-22)
+There is **no official self-serve linkage** to any licensed bureau for Halqa as
+a deliberately non-financial facilitator. This is a hard constraint, not a
+to-do we can simply "sign up" for:
+- **eCIB (SBP's own):** membership is restricted to regulated FIs only — Banks,
+  DFIs, NBFCs, MFBs. SBP rule: no FI accesses eCIB without membership, and
+  membership is offered only to those categories. **Closed to a non-FI** unless
+  we become an NBFC/MFB (the licence we deliberately avoid). Reach it only via
+  the partner institution reporting on the circle's behalf.
+- **TASDEEQ & DataCheck (private bureaus):** no public "become a member" signup.
+  Only a **bespoke negotiated commercial contract**, and under the Credit
+  Bureaus Act 2015 it splits:
+  - *Pull (read a score at signup, with written consumer consent):* achievable
+    as a subscriber — **Karandaaz**, a non-bank, signed a TASDEEQ data-sharing
+    agreement, so non-FI contracts exist. → **PARTNER AGREEMENT**.
+  - *Report (furnish defaults):* a *non-credit-institution* furnisher requires
+    **Federal-Government notification** (the route utilities/telcos took) — not
+    a signup. Cleaner to furnish **through a member partner FI**. → **BANK PARTNER**.
+- **TASDEEQ score scale = 200 (very poor) → 600 (excellent)**, NOT 300–850.
+  Intermediate band cutoffs are not published; they arrive with the member kit.
+  Halqa maps TASDEEQ→our 300–850 in `src/lib/score-bands.ts` (recalibrate there
+  when the real bands land).
+- **Keystone conclusion:** the bureau deterrent does **not** happen without the
+  bank/aggregator partner, who is already a member of all three. Every bureau
+  claim is stage-tagged **BANK PARTNER** (or PARTNER AGREEMENT for pull-only).
+  Act-clause specifics are **lawyer-to-confirm** (SBP PDFs did not parse
+  cleanly during research). Sources: SBP Credit Bureaus Act 2015; SBP eCIB FAQ;
+  tasdeeq.com; datacheck.com.pk; Karandaaz–TASDEEQ press release.
+
+## Why this works (once the partner is in place)
+- **TASDEEQ** is an SBP-licensed private credit bureau that ingests data from
+  non-bank furnishers (utilities, telcos, insurers) as well as banks.
+  **DataCheck** is the second private bureau. Every regulated lender in Pakistan
+  screens against these before approving anything.
 - **eCIB** is the State Bank's bureau; only regulated financial institutions
   report into it. Halqa reaches it **via the partner institution** (custody
   bank / NBFC partner reports the default on the circle's behalf).

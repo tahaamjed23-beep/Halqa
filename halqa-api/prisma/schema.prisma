@@ -160,6 +160,18 @@ model User {
   // 20% reduction on early/slot fees at payout.
   salaryAccountLinked Boolean @default(false)
   salaryAccountRef String?
+  // App-open PIN (4-6 digits): set at signup, asked on every open even inside a
+  // valid session. Hashed (sha256+salt via lib/pin), never stored in the clear.
+  pinHash String?
+  // Phone ownership: a 6-digit OTP confirms the number at signup (WhatsApp rail
+  // in sandbox). Real once the messaging provider connects.
+  phoneVerified Boolean @default(false)
+  // KYC / underwriting profile captured at signup — address, city, and what the
+  // member does for a living (drives future risk models + partner KYC handoff).
+  addressLine String?
+  city String?
+  occupationType String?
+  employerName String?
   vaultParkingEnabled Boolean @default(false)
   vaultTier String @default("STANDARD")
   vaultAutoCover Boolean @default(false)

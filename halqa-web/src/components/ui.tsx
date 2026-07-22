@@ -1,13 +1,26 @@
 import type { ReactNode } from 'react';
-import { Sparkles } from 'lucide-react';
+import { Coins, Sparkles } from 'lucide-react';
 import { money } from '../api';
+
+// Turn-pricing chip — the single label used on EVERY committee surface
+// (Discover, Marketplace, own-circle cards, committee header) so a member
+// always sees whether early seats pay a fee that flows to later seats (the
+// "late premium" spectrum) or the circle is flat. Accepts either the discover
+// payload's turnPricing object or a raw earlyFeeBps off a Committee.
+export type TurnPricing={kind:'EARLY_FEE'|'FLAT';earlyFeeBps:number;pooled?:boolean};
+export const pricingOf=(earlyFeeBps?:number):TurnPricing=>earlyFeeBps&&earlyFeeBps>0?{kind:'EARLY_FEE',earlyFeeBps}:{kind:'FLAT',earlyFeeBps:0};
+export function TurnPricingChip({pricing}:{pricing:TurnPricing}){
+  if(pricing.kind!=='EARLY_FEE')return <span className="pricing-chip flat"><Coins size={12}/>Flat — no turn pricing</span>;
+  return <span className="pricing-chip premium"><Coins size={12}/>Turn pricing · {(pricing.earlyFeeBps/100).toFixed(pricing.earlyFeeBps%100?1:0)}% early fee → late bonus</span>;
+}
 
 export const scoreColor=(score:number)=>score>=750?'#22a865':score>=700?'#0a7cff':score>=650?'#e58900':'#e43d36';
 export const modeName={ROTATING:'Rotating payout',HYBRID:'Rotating payout',INVESTMENT:'Investment circle'} as const;
-// Engines were dropped — circles are distinguished by their TURN ORDER, not a
-// product tier. This is what the cards and headers show.
-export const orderingName:Record<string,string>={CREDIT_WEIGHTED:'Credit-weighted order',RANDOM_BALLOT:'Random ballot',HOST_ASSIGNED:'Host-assigned order'};
-export const orderingLabel=(m?:string)=>orderingName[m??'CREDIT_WEIGHTED']??'Credit-weighted order';
+// Engines AND credit-weighted ordering were both dropped — nobody is reordered
+// by score now; members pick a band-eligible seat (score-bands). So every
+// rotating/hybrid circle simply shows "Rotating payout"; the differentiators
+// members actually care about (turn pricing, goal) render as their own chips.
+export const orderingLabel=(_m?:string)=>'Rotating payout';
 export const cadenceName:Record<string,string>={VERY_SHORT:'Very short',SHORT:'Short',MID:'Mid term',LONG:'Long term'};
 // Display-layer rename over the DB tier enum. The enum values (CLASSIC/SUKOON/
 // BAZAAR/PRIORITY/SIGMA) stay unchanged in code and storage; only what the

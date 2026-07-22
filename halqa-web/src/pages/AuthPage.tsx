@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, ShieldCheck } from 'lucide-react';
 import { api, tokens } from '../api';
 import type { User } from '../types';
 import { HalqaOrb, Logo } from '../components/ui';
@@ -14,14 +14,21 @@ import { TERMS_VERSION, type DocId } from '../legal/content';
 // submits as a single register call at the end. The ACCOUNT step is mandatory:
 // auto-collection is how every circle collects, so the account it pulls from
 // is linked the moment the account is made (changeable later in Profile).
-const REG_STEPS = ['phone', 'name', 'email', 'cnic', 'account', 'password', 'review'] as const;
+const REG_STEPS = ['phone', 'otp', 'name', 'profile', 'email', 'cnic', 'account', 'password', 'pin', 'review'] as const;
 type RegStep = typeof REG_STEPS[number];
+// Occupation drives future risk models + the partner KYC handoff. EMPLOYED asks
+// for the employer (salary-deduction collection is the most certain there is).
+const OCCUPATIONS: [string, string][] = [['EMPLOYED','Employed (salaried)'],['BUSINESS_OWNER','Business owner'],['SELF_EMPLOYED','Self-employed / freelance'],['HOUSEWIFE','Housewife'],['STUDENT','Student'],['RETIRED','Retired'],['OTHER','Other']];
+// A short searchable list of the largest Pakistani cities; free text is allowed
+// for anywhere not listed.
+const PK_CITIES = ['Karachi','Lahore','Islamabad','Rawalpindi','Faisalabad','Multan','Peshawar','Quetta','Hyderabad','Gujranwala','Sialkot','Bahawalpur','Sargodha','Sukkur','Larkana','Sheikhupura','Mardan','Gujrat','Kasur','Rahim Yar Khan','Sahiwal','Okara','Wah Cantt','Dera Ghazi Khan','Mirpur','Abbottabad','Muzaffarabad','Mingora','Nawabshah','Chiniot'];
 
 export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const [mode,setMode]=useState<'login'|'register'>('login');
   const [step,setStep]=useState<RegStep>('phone');
-  const [form,setForm]=useState({identity:'',password:'',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:'',rail:'RAAST',accountNo:'',accountTitle:'',bankName:'HBL'});
+  const [form,setForm]=useState({identity:'',password:'',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:'',rail:'RAAST',accountNo:'',accountTitle:'',bankName:'HBL',otpCode:'',addressLine:'',city:'',occupationType:'',employerName:'',pin:'',pinConfirm:''});
   const [agreed,setAgreed]=useState(false);
+  const [otpSent,setOtpSent]=useState(false);const [otpVerified,setOtpVerified]=useState(false);const [devCode,setDevCode]=useState('');
   const [doc,setDoc]=useState<DocId|null>(null);
   const [error,setError]=useState('');const [busy,setBusy]=useState(false);
   const stepIndex=REG_STEPS.indexOf(step);
@@ -33,12 +40,22 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const cnicOk=form.cnic.length===13;
   const passOk=form.regPassword.length>=8&&/[a-zA-Z]/.test(form.regPassword)&&/\d/.test(form.regPassword);
   const accountOk=form.accountNo.replace(/\s+/g,'').length>=10&&form.accountTitle.trim().length>=3;
-  const canContinue=step==='phone'?phoneOk:step==='name'?nameOk:step==='email'?emailOk:step==='cnic'?cnicOk:step==='account'?accountOk:step==='password'?passOk:agreed;
+  const profileOk=form.addressLine.trim().length>=5&&form.city.trim().length>=2&&!!form.occupationType&&(form.occupationType!=='EMPLOYED'||form.employerName.trim().length>=2);
+  const pinOk=/^\d{4,6}$/.test(form.pin)&&form.pin===form.pinConfirm;
+  const canContinue=step==='phone'?phoneOk:step==='otp'?otpVerified:step==='name'?nameOk:step==='profile'?profileOk:step==='email'?emailOk:step==='cnic'?cnicOk:step==='account'?accountOk:step==='password'?passOk:step==='pin'?pinOk:agreed;
   const next=()=>{setError('');if(stepIndex<REG_STEPS.length-1)setStep(REG_STEPS[stepIndex+1])};
   const back=()=>{setError('');if(stepIndex>0)setStep(REG_STEPS[stepIndex-1]);else setMode('login')};
 
+  // Phone OTP: request a code when the user reaches the verify step, and confirm
+  // it before they can continue. Sandbox surfaces the code inline (devCode).
+  const requestOtp=async()=>{setBusy(true);setError('');try{const d=await api<{otpSent:boolean;devCode?:string}>('/auth/phone-otp',{method:'POST',body:JSON.stringify({phone:form.phone.trim()})});setOtpSent(true);setDevCode(d.devCode||'')}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
+  const verifyOtp=async()=>{setBusy(true);setError('');try{await api('/auth/phone-otp/verify',{method:'POST',body:JSON.stringify({phone:form.phone.trim(),code:form.otpCode.trim()})});setOtpVerified(true)}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
+  // Advancing off the phone step fires the OTP so the code is waiting when the
+  // verify step paints.
+  const goNext=()=>{const cur=step;next();if(cur==='phone'&&!otpSent)void requestOtp()};
+
   const login=async(event:React.FormEvent)=>{event.preventDefault();setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/login',{method:'POST',body:JSON.stringify({identity:form.identity.trim(),password:form.password.trim()})});tokens.set(data.accessToken,data.refreshToken);onAuth(data.user)}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
-  const register=async()=>{setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/register',{method:'POST',body:JSON.stringify({fullName:form.fullName.trim(),username:form.username.trim(),phone:form.phone.trim(),email:form.email.trim(),cnic:form.cnic,password:form.regPassword,termsVersion:TERMS_VERSION})});tokens.set(data.accessToken,data.refreshToken);
+  const register=async()=>{setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/register',{method:'POST',body:JSON.stringify({fullName:form.fullName.trim(),username:form.username.trim(),phone:form.phone.trim(),email:form.email.trim(),cnic:form.cnic,password:form.regPassword,termsVersion:TERMS_VERSION,addressLine:form.addressLine.trim(),city:form.city.trim(),occupationType:form.occupationType,employerName:form.occupationType==='EMPLOYED'?form.employerName.trim():undefined,pin:form.pin})});tokens.set(data.accessToken,data.refreshToken);
     // The mandatory collection account, linked the moment the account exists.
     // Best-effort: a rail hiccup must never strand a fresh registration —
     // Profile shows the link (and its WhatsApp OTP) if this needs a retry.
@@ -46,11 +63,28 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
     onAuth(data.user)}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
 
   const stepBody=()=>{switch(step){
-    case 'phone':return <><h2>What's your mobile number?</h2><p>Your number is your identity on Halqa — invites, reminders and payments all reach you here.</p>
-      <PhoneInput value={form.phone} onChange={v=>setForm({...form,phone:v})} autoFocus/></>;
+    case 'phone':return <><h2>What's your mobile number?</h2><p>Your number is your identity on Halqa — invites, reminders and payments all reach you here. We'll send a one-time code to confirm it.</p>
+      <PhoneInput value={form.phone} onChange={v=>{setForm({...form,phone:v});if(otpSent){setOtpSent(false);setOtpVerified(false);setDevCode('')}}} autoFocus/></>;
+    case 'otp':return <><h2>Confirm your number</h2><p>We sent a 6-digit code to <b>{form.phone}</b>. Enter it to prove the number is yours.</p>
+      <input className="field big-field mono" inputMode="numeric" autoFocus maxLength={6} placeholder="6-digit code" value={form.otpCode} disabled={otpVerified} onChange={e=>setForm({...form,otpCode:e.target.value.replace(/\D/g,'')})}/>
+      {otpVerified
+        ?<div className="commitment-ok" style={{marginTop:10}}><ShieldCheck/><div><b>Number confirmed</b><p>Tap Continue to carry on.</p></div></div>
+        :<div className="otp-actions"><button type="button" className="secondary" disabled={busy||form.otpCode.length!==6} onClick={()=>void verifyOtp()}>{busy?'Checking…':'Verify code'}</button><button type="button" className="text-action" disabled={busy} onClick={()=>void requestOtp()}>Resend code</button></div>}
+      {devCode&&!otpVerified&&<p className="muted" style={{fontSize:11.5,marginTop:8}}>Sandbox — no SMS gateway yet. Your code is <b className="mono">{devCode}</b>. Real codes arrive by SMS/WhatsApp once the provider connects.</p>}</>;
     case 'name':return <><h2>Your name, as on your CNIC</h2><p>Circles run on real names — it's how members know exactly who they're trusting.</p>
       <input className="field big-field" autoFocus autoComplete="name" placeholder="Full name" value={form.fullName} onChange={e=>setForm({...form,fullName:e.target.value})}/>
       <input className="field" placeholder="Pick a username" autoComplete="username" value={form.username} onChange={e=>setForm({...form,username:e.target.value.toLowerCase().replace(/[^a-z0-9_.]/g,'')})}/></>;
+    case 'profile':return <><h2>Where you live & what you do</h2><p>Your address and work help us keep circles trustworthy and, later, verify you faster. Never shown to other members.</p>
+      <label className="onboard-field-label">Home address</label>
+      <input className="field" autoFocus autoComplete="street-address" placeholder="House / street / area" value={form.addressLine} onChange={e=>setForm({...form,addressLine:e.target.value})}/>
+      <label className="onboard-field-label">City</label>
+      <input className="field" list="pk-cities" autoComplete="address-level2" placeholder="Start typing your city" value={form.city} onChange={e=>setForm({...form,city:e.target.value})}/>
+      <datalist id="pk-cities">{PK_CITIES.map(c=><option key={c} value={c}/>)}</datalist>
+      <label className="onboard-field-label">What do you do?</label>
+      <select className="field" value={form.occupationType} onChange={e=>setForm({...form,occupationType:e.target.value})}><option value="">Select…</option>{OCCUPATIONS.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select>
+      {form.occupationType==='EMPLOYED'&&<><label className="onboard-field-label">Where do you work?</label>
+        <input className="field" placeholder="Company / employer name" value={form.employerName} onChange={e=>setForm({...form,employerName:e.target.value})}/>
+        <div className="onboard-note"><b>Salary account = best rate</b><span>Members who collect from a salary account get a 20% fee discount — the most reliable collection there is.</span></div></>}</>;
     case 'email':return <><h2>Your email address</h2><p>For receipts, records and account recovery. No marketing without your say-so.</p>
       <input className="field big-field" type="email" autoFocus autoComplete="email" placeholder="you@example.com" value={form.email} onChange={e=>setForm({...form,email:e.target.value})}/></>;
     case 'cnic':return <><h2>Your CNIC number</h2><p>The 13 digits, no dashes. Verified members rank ahead in turn order, and your record becomes real, usable proof of reliability.</p>
@@ -69,6 +103,13 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
     case 'password':return <><h2>Create a password</h2><p>At least 8 characters with letters and numbers.</p>
       <input className="field big-field" type="password" autoFocus autoComplete="new-password" placeholder="Password" value={form.regPassword} onChange={e=>setForm({...form,regPassword:e.target.value})}/>
       <div className={`pass-meter ${passOk?'ok':form.regPassword.length>0?'weak':''}`}><i/><span>{passOk?'Strong enough':form.regPassword.length?'Keep going — letters + numbers, 8 minimum':'—'}</span></div></>;
+    case 'pin':return <><h2>Set your app PIN</h2><p>A 4-digit PIN you'll enter every time you open Halqa — a second lock even when you're already signed in.</p>
+      <label className="onboard-field-label">Choose a PIN</label>
+      <input className="field big-field mono" inputMode="numeric" autoFocus maxLength={6} placeholder="••••" value={form.pin} onChange={e=>setForm({...form,pin:e.target.value.replace(/\D/g,'')})}/>
+      <label className="onboard-field-label">Confirm PIN</label>
+      <input className="field big-field mono" inputMode="numeric" maxLength={6} placeholder="••••" value={form.pinConfirm} onChange={e=>setForm({...form,pinConfirm:e.target.value.replace(/\D/g,'')})}/>
+      {form.pin&&form.pinConfirm&&form.pin!==form.pinConfirm&&<div className="pin-error" style={{textAlign:'left'}}>PINs don't match yet</div>}
+      <div className="onboard-note"><b>Keep it private</b><span>You'll need this PIN on every open. Forgot it later? Sign in with your password to reset.</span></div></>;
     case 'review':return <><h2>One look before we start</h2><p>Check your details, accept the terms, and your Halqa opens.</p>
       <div className="review-rows">
         <div><span>Mobile</span><b>{form.phone}</b></div>
@@ -76,7 +117,10 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
         <div><span>Username</span><b>@{form.username}</b></div>
         <div><span>Email</span><b>{form.email}</b></div>
         <div><span>CNIC</span><b className="mono">{'•'.repeat(9)}{form.cnic.slice(-4)}</b></div>
+        <div><span>City</span><b>{form.city||'—'}</b></div>
+        <div><span>Work</span><b>{OCCUPATIONS.find(([id])=>id===form.occupationType)?.[1]||'—'}{form.occupationType==='EMPLOYED'&&form.employerName?` · ${form.employerName}`:''}</b></div>
         <div><span>Collection account</span><b>{form.accountTitle} · <span className="mono">{form.rail==='BANK_TRANSFER'?form.bankName+' ':''}{'•'.repeat(Math.max(0,form.accountNo.replace(/\s+/g,'').length-4))}{form.accountNo.replace(/\s+/g,'').slice(-4)}</span></b></div>
+        <div><span>App PIN</span><b>Set ✓</b></div>
       </div>
       <label className="tos-check"><input type="checkbox" checked={agreed} onChange={e=>setAgreed(e.target.checked)}/><span>I have read and agree to the <button type="button" className="inline-link" onClick={()=>setDoc('agreement')}>User Agreement</button> and <button type="button" className="inline-link" onClick={()=>setDoc('privacy')}>Privacy Policy</button>, including the <button type="button" className="inline-link" onClick={()=>setDoc('fees')}>Fees & Payments Policy</button>.</span></label></>;
   }};
@@ -103,7 +147,7 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
       <div className="onboard-body">{stepBody()}</div>
       {error&&<div className="error-box">{error}</div>}
       {step!=='review'
-        ?<button className="primary full" disabled={!canContinue} onClick={next}>Continue</button>
+        ?<button className="primary full" disabled={!canContinue||busy} onClick={goNext}>Continue</button>
         :<button className="primary full" disabled={!agreed||busy} onClick={register}>{busy?'Opening your Halqa…':'Agree & open my Halqa'}</button>}
     </>}
   </div><LegalFooter/></section>

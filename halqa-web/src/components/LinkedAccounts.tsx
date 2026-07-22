@@ -8,7 +8,7 @@ import { Field } from './ui';
 // live preview card that fills in as you type. Pointers only, always: the
 // server masks numbers on the way out; no balances, no card numbers.
 
-export type LinkedMethod = { id: string; rail: string; accountNo: string; accountTitle?: string; bankName?: string; label: string; preferred: boolean; verified?: boolean };
+export type LinkedMethod = { id: string; rail: string; accountNo: string; accountTitle?: string; bankName?: string; label: string; preferred: boolean; verified?: boolean; brand?: string; last4?: string; expiry?: string; addressLine?: string; city?: string };
 
 type BrandMeta = { name: string; mono: string; color: string; dark: string };
 export const RAIL_META: Record<string, BrandMeta> = {
@@ -16,7 +16,12 @@ export const RAIL_META: Record<string, BrandMeta> = {
   JAZZCASH: { name: 'JazzCash', mono: 'JC', color: '#c8102e', dark: '#7e0a1d' },
   EASYPAISA: { name: 'Easypaisa', mono: 'EP', color: '#3f9c35', dark: '#25631f' },
   BANK_TRANSFER: { name: 'Bank account', mono: 'BK', color: '#5b6472', dark: '#39404b' },
+  CARD: { name: 'Debit / credit card', mono: '💳', color: '#2b2f45', dark: '#14162a' },
 };
+// Card brand from leading digits — display only; the PAN never leaves the form.
+export const cardBrand = (digits: string) => /^4/.test(digits) ? 'Visa' : /^(5[1-5]|2[2-7])/.test(digits) ? 'Mastercard' : /^3[47]/.test(digits) ? 'Amex' : /^(60|65|81|82)/.test(digits) ? 'PayPak' : 'Card';
+export const formatCard = (raw: string) => raw.replace(/\D/g, '').slice(0, 19).replace(/(.{4})/g, '$1 ').trim();
+export const formatExpiry = (raw: string) => { const d = raw.replace(/\D/g, '').slice(0, 4); return d.length >= 3 ? `${d.slice(0, 2)}/${d.slice(2)}` : d; };
 
 // Indicative brand palette for the demo bank directory — avatar colors, not
 // official assets. "Other bank" keeps the neutral slate.
@@ -51,21 +56,28 @@ export const formatEntry = (rail: string, raw: string) => rail === 'BANK_TRANSFE
   ? groupAccount(raw.toUpperCase().replace(/[^A-Z0-9•]/g, '').slice(0, 24))
   : raw.replace(/[^\d•]/g, '').slice(0, 11).replace(/^(.{4})(.+)$/, '$1 $2');
 
-export function AccountCard({ rail, bankName, accountTitle, accountNo, label, verified, preferred, salary, draft, footer }:
-  { rail: string; bankName?: string; accountTitle?: string; accountNo: string; label?: string; verified?: boolean; preferred?: boolean; salary?: boolean; draft?: boolean; footer?: React.ReactNode }) {
-  const meta = cardMeta(rail, bankName);
-  return <div className="acct-card" style={{ background: `linear-gradient(135deg, ${meta.color}, ${meta.dark})` }}>
+export function AccountCard({ rail, bankName, accountTitle, accountNo, label, verified, preferred, salary, draft, brand, last4, expiry, footer }:
+  { rail: string; bankName?: string; accountTitle?: string; accountNo: string; label?: string; verified?: boolean; preferred?: boolean; salary?: boolean; draft?: boolean; brand?: string; last4?: string; expiry?: string; footer?: React.ReactNode }) {
+  const isCard = rail === 'CARD';
+  const meta = isCard ? { ...RAIL_META.CARD, name: brand || 'Card' } : cardMeta(rail, bankName);
+  // For a card, show the classic •••• •••• •••• 1234 line; the last4 comes back
+  // from the server (the stored accountNo IS the last4), or from live input.
+  const cardLine = isCard ? `•••• •••• •••• ${(last4 || accountNo || '').replace(/\D/g, '').slice(-4) || '••••'}` : groupAccount(accountNo);
+  return <div className={`acct-card${isCard ? ' is-card' : ''}`} style={{ background: `linear-gradient(135deg, ${meta.color}, ${meta.dark})` }}>
     <div className="acct-card-top">
       <i className="acct-card-logo">{meta.mono}</i>
-      <b>{rail === 'BANK_TRANSFER' ? (bankName || 'Bank account') : meta.name}</b>
+      <b>{isCard ? (brand || 'Card') : rail === 'BANK_TRANSFER' ? (bankName || 'Bank account') : meta.name}</b>
       <span className="acct-badges">
         {draft ? <em className="acct-badge">Preview</em> : verified ? <em className="acct-badge ok">Verified ✓</em> : <em className="acct-badge warn">Unverified</em>}
         {preferred && <em className="acct-badge gold">Preferred</em>}
         {salary && <em className="acct-badge gold">💼 Salary · 20% off fees</em>}
       </span>
     </div>
-    <div className="acct-card-no mono">{groupAccount(accountNo) || '•••• •••• ••••'}</div>
-    <div className="acct-card-holder"><span>Account holder</span><b>{accountTitle || label || '—'}</b></div>
+    <div className="acct-card-no mono">{cardLine || '•••• •••• ••••'}</div>
+    <div className="acct-card-holder">
+      <div><span>{isCard ? 'Cardholder' : 'Account holder'}</span><b>{accountTitle || label || '—'}</b></div>
+      {isCard && <div className="acct-card-exp"><span>Expires</span><b>{expiry || 'MM/YY'}</b></div>}
+    </div>
     {footer}
   </div>;
 }
@@ -75,6 +87,10 @@ export function LinkedAccountsManager() {
   const [salaryRef, setSalaryRef] = useState<string | null>(null);
   const [adding, setAdding] = useState(false); const [rail, setRail] = useState('RAAST'); const [bank, setBank] = useState('HBL');
   const [accountNo, setAccountNo] = useState(''); const [accountTitle, setAccountTitle] = useState('');
+  // Card-only fields. CVC is kept in local state only and NEVER sent onward
+  // once the (sandbox) link is made — real processing is the partner's job.
+  const [cardNumber, setCardNumber] = useState(''); const [expiry, setExpiry] = useState(''); const [cvc, setCvc] = useState('');
+  const [billingAddress, setBillingAddress] = useState(''); const [billingCity, setBillingCity] = useState('');
   const [busy, setBusy] = useState(false); const [error, setError] = useState('');
   const [otpFor, setOtpFor] = useState(''); const [otpCode, setOtpCode] = useState(''); const [otpError, setOtpError] = useState(''); const [devCode, setDevCode] = useState('');
   const load = () => Promise.all([
@@ -83,12 +99,17 @@ export function LinkedAccountsManager() {
   ]).catch(() => {});
   useEffect(() => { void load(); }, []);
   const add = async () => { setBusy(true); setError(''); try {
-    const d = await api<{ method: LinkedMethod; devCode?: string }>('/profile/payment-methods', { method: 'POST', body: JSON.stringify({ rail, accountNo: accountNo.replace(/\s+/g, ''), accountTitle: accountTitle.trim() || undefined, bankName: rail === 'BANK_TRANSFER' ? bank : undefined }) });
-    setAdding(false); setAccountNo(''); setAccountTitle(''); await load();
+    const body = rail === 'CARD'
+      ? { rail, cardNumber: cardNumber.replace(/\s+/g, ''), expiry, cvc, accountTitle: accountTitle.trim(), addressLine: billingAddress.trim() || undefined, city: billingCity.trim() || undefined }
+      : { rail, accountNo: accountNo.replace(/\s+/g, ''), accountTitle: accountTitle.trim() || undefined, bankName: rail === 'BANK_TRANSFER' ? bank : undefined };
+    const d = await api<{ method: LinkedMethod; devCode?: string }>('/profile/payment-methods', { method: 'POST', body: JSON.stringify(body) });
+    setAdding(false); setAccountNo(''); setAccountTitle(''); setCardNumber(''); setExpiry(''); setCvc(''); setBillingAddress(''); setBillingCity(''); await load();
     // Jump straight into verification for the fresh link; in sandbox the code
     // is surfaced inline so the demo flows end-to-end without a real gateway.
     setOtpFor(d.method.id); setOtpCode(''); setOtpError(''); setDevCode(d.devCode || '');
   } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); } };
+  const cardDigits = cardNumber.replace(/\D/g, '');
+  const cardValid = cardDigits.length >= 13 && /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry) && cvc.length >= 3 && accountTitle.trim().length >= 3;
   const prefer = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}/preferred`, { method: 'POST' }); setMethods(d.methods); } catch { /* refresh next open */ } };
   const remove = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}`, { method: 'DELETE' }); setMethods(d.methods); if (id === salaryRef) setSalaryRef(null); } catch { /* refresh next open */ } };
   const markSalary = async (id: string, enabled: boolean) => { try { const d = await api<{ salaryAccountLinked: boolean; salaryAccountRef: string | null }>(`/profile/payment-methods/${id}/salary`, { method: 'POST', body: JSON.stringify({ enabled }) }); setSalaryRef(d.salaryAccountLinked ? d.salaryAccountRef : null); } catch { /* refresh next open */ } };
@@ -97,7 +118,7 @@ export function LinkedAccountsManager() {
   return <div className="settings-block">
     <span className="eyebrow" style={{ display: 'block', marginBottom: 8 }}>Linked collection accounts</span>
     <div className="acct-list">
-      {methods.map(m => <AccountCard key={m.id} rail={m.rail} bankName={m.bankName} accountTitle={m.accountTitle} accountNo={m.accountNo} label={m.label} verified={m.verified} preferred={m.preferred} salary={m.id === salaryRef}
+      {methods.map(m => <AccountCard key={m.id} rail={m.rail} bankName={m.bankName} accountTitle={m.accountTitle} accountNo={m.accountNo} label={m.label} verified={m.verified} preferred={m.preferred} salary={m.id === salaryRef} brand={m.brand} last4={m.last4} expiry={m.expiry}
         footer={<div className="acct-card-actions">
           {!m.verified && (otpFor === m.id
             ? <span className="otp-strip"><input className="otp-in mono" inputMode="numeric" maxLength={6} placeholder="6-digit code" value={otpCode} onChange={e => setOtpCode(e.target.value.replace(/\D/g, ''))} /><button className="card-action" disabled={otpCode.length !== 6} onClick={() => void verify(m.id)}>Confirm</button>{devCode && <small className="otp-dev">Sandbox code: <b className="mono">{devCode}</b></small>}</span>
@@ -116,15 +137,33 @@ export function LinkedAccountsManager() {
         <span className="eyebrow">Step 2 · Pick your bank</span>
         <div className="bank-grid" style={{ margin: '8px 0 14px' }}>{PK_BANKS.map(b => <button key={b.name} type="button" className={`bank-tile ${bank === b.name ? 'on' : ''}`} onClick={() => setBank(b.name)}><i style={{ background: `linear-gradient(135deg, ${b.color}, ${b.dark})` }}>{b.mono}</i><span>{b.name}</span></button>)}</div>
       </>}
-      <span className="eyebrow">{rail === 'BANK_TRANSFER' ? 'Step 3' : 'Step 2'} · Account details</span>
-      <div style={{ marginTop: 8 }}>
-        <Field label="Account holder name"><input className="field" value={accountTitle} onChange={e => setAccountTitle(e.target.value)} placeholder="Exactly as printed on the account" autoComplete="name" /></Field>
-        <Field label={numberLabel}><input className="field mono" inputMode={rail === 'BANK_TRANSFER' ? 'text' : 'numeric'} value={accountNo} onChange={e => setAccountNo(formatEntry(rail, e.target.value))} placeholder={rail === 'BANK_TRANSFER' ? 'PK36 SONE 0000 1234 5678 9012' : '03XX XXXXXXX'} /></Field>
-      </div>
-      <div style={{ margin: '10px 0' }}><AccountCard draft rail={rail} bankName={rail === 'BANK_TRANSFER' ? bank : undefined} accountTitle={accountTitle} accountNo={accountNo} /></div>
-      {error && <div className="error-box">{error}</div>}
-      <div className="form-actions"><button className="secondary" onClick={() => { setAdding(false); setError(''); }}>Cancel</button><button className="primary" disabled={busy || accountNo.replace(/[\s•]+/g, '').length < 10 || accountTitle.trim().length < 3} onClick={add}>{busy ? 'Linking…' : 'Link account'}</button></div>
-      <p className="muted" style={{ fontSize: 11.5 }}>A one-time WhatsApp code confirms the mandate. Halqa stores the identifier only — never balances, never cards. Cards will be entered on the licensed payment partner's own secure page when live rails switch on.</p>
+      {rail === 'CARD' ? <>
+        <span className="eyebrow">Step 2 · Card details</span>
+        <div style={{ marginTop: 8 }}>
+          <Field label="Cardholder name"><input className="field" value={accountTitle} onChange={e => setAccountTitle(e.target.value)} placeholder="Name as printed on the card" autoComplete="cc-name" /></Field>
+          <Field label="Card number"><input className="field mono" inputMode="numeric" autoComplete="cc-number" value={cardNumber} onChange={e => setCardNumber(formatCard(e.target.value))} placeholder="1234 5678 9012 3456" /></Field>
+          <div className="form-grid">
+            <Field label="Expiry (MM/YY)"><input className="field mono" inputMode="numeric" autoComplete="cc-exp" value={expiry} onChange={e => setExpiry(formatExpiry(e.target.value))} placeholder="08/28" /></Field>
+            <Field label="CVC"><input className="field mono" inputMode="numeric" autoComplete="cc-csc" maxLength={4} value={cvc} onChange={e => setCvc(e.target.value.replace(/\D/g, ''))} placeholder="123" /></Field>
+          </div>
+          <Field label="Billing address"><input className="field" autoComplete="street-address" value={billingAddress} onChange={e => setBillingAddress(e.target.value)} placeholder="House / street / area" /></Field>
+          <Field label="City"><input className="field" autoComplete="address-level2" value={billingCity} onChange={e => setBillingCity(e.target.value)} placeholder="City" /></Field>
+        </div>
+        <div style={{ margin: '10px 0' }}><AccountCard draft rail="CARD" accountTitle={accountTitle} accountNo={cardDigits} brand={cardDigits ? cardBrand(cardDigits) : undefined} expiry={expiry} /></div>
+        {error && <div className="error-box">{error}</div>}
+        <div className="form-actions"><button className="secondary" onClick={() => { setAdding(false); setError(''); }}>Cancel</button><button className="primary" disabled={busy || !cardValid} onClick={add}>{busy ? 'Linking…' : 'Link card'}</button></div>
+        <p className="muted" style={{ fontSize: 11.5 }}>🔒 Halqa stores only your card's <b>brand, last 4 digits, expiry and billing address</b> — never the full number, never the CVC. Real card charges run on the licensed payment partner's own PCI-secure page when live rails switch on.</p>
+      </> : <>
+        <span className="eyebrow">{rail === 'BANK_TRANSFER' ? 'Step 3' : 'Step 2'} · Account details</span>
+        <div style={{ marginTop: 8 }}>
+          <Field label="Account holder name"><input className="field" value={accountTitle} onChange={e => setAccountTitle(e.target.value)} placeholder="Exactly as printed on the account" autoComplete="name" /></Field>
+          <Field label={numberLabel}><input className="field mono" inputMode={rail === 'BANK_TRANSFER' ? 'text' : 'numeric'} value={accountNo} onChange={e => setAccountNo(formatEntry(rail, e.target.value))} placeholder={rail === 'BANK_TRANSFER' ? 'PK36 SONE 0000 1234 5678 9012' : '03XX XXXXXXX'} /></Field>
+        </div>
+        <div style={{ margin: '10px 0' }}><AccountCard draft rail={rail} bankName={rail === 'BANK_TRANSFER' ? bank : undefined} accountTitle={accountTitle} accountNo={accountNo} /></div>
+        {error && <div className="error-box">{error}</div>}
+        <div className="form-actions"><button className="secondary" onClick={() => { setAdding(false); setError(''); }}>Cancel</button><button className="primary" disabled={busy || accountNo.replace(/[\s•]+/g, '').length < 10 || accountTitle.trim().length < 3} onClick={add}>{busy ? 'Linking…' : 'Link account'}</button></div>
+        <p className="muted" style={{ fontSize: 11.5 }}>A one-time WhatsApp code confirms the mandate. Halqa stores the identifier only — never balances, never cards. Cards will be entered on the licensed payment partner's own secure page when live rails switch on.</p>
+      </>}
     </div> : methods.length < 5 && <button className="secondary" style={{ marginTop: 10, padding: '9px 14px', borderRadius: 12, fontSize: 12.5, fontWeight: 700 }} onClick={() => setAdding(true)}>+ Link an account</button>}
   </div>;
 }

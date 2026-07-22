@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { CalendarDays, Plus, ShieldCheck, Users, Gavel } from 'lucide-react';
 import { api, key, money, tokens } from '../api';
 import type { Committee, User } from '../types';
-import { Empty, Field } from '../components/ui';
+import { Empty, Field, TurnPricingChip, type TurnPricing } from '../components/ui';
 import { SHOW_INVESTOR_BRIEFING_FEATURES } from '../config';
 
 type Bid = { id: string; bidderId: string; premiumPaisa: string; status: string; bidder: { id: string; fullName: string; creditScore: number } };
-type Listing = { id: string; position: number; payoutPaisa: string; premiumPaisa: string; payoutDate?: string; remainingDuesPaisa: string; buyerNetCostPaisa: string; buyerScope: 'INSIDE' | 'OUTSIDE'; totalTurns?: number; secure:boolean;creditHealth:{averageCreditScore:number;grade:'EXCELLENT'|'STRONG'|'FAIR'|'WATCH';defaults:number;latePayments:number;earlyPayments:number};engines:string[]; seller: { id: string; fullName: string; creditScore: number; kycLevel: number }; committee: { id: string; name: string; mode: string; currentRound: number; periodDays: number }; bids?: Bid[] };
+type Listing = { id: string; position: number; payoutPaisa: string; premiumPaisa: string; payoutDate?: string; remainingDuesPaisa: string; buyerNetCostPaisa: string; buyerScope: 'INSIDE' | 'OUTSIDE'; totalTurns?: number; turnPricing:TurnPricing;creditHealth:{averageCreditScore:number;grade:'EXCELLENT'|'STRONG'|'FAIR'|'WATCH';defaults:number;latePayments:number;earlyPayments:number};engines:string[]; seller: { id: string; fullName: string; creditScore: number; kycLevel: number }; committee: { id: string; name: string; mode: string; currentRound: number; periodDays: number }; bids?: Bid[] };
 
 export default function MarketplacePage({ user }: { user: User }) {
   const [rows, setRows] = useState<Listing[]>([]);
@@ -60,7 +60,7 @@ export default function MarketplacePage({ user }: { user: User }) {
                 <span className={`scope scope-${listing.buyerScope.toLowerCase()}`}>
                   <Users />Inside-circle swap
                 </span>
-                {SHOW_INVESTOR_BRIEFING_FEATURES&&listing.secure&&<span className="secure-chip"><ShieldCheck/>Secure</span>}
+                <TurnPricingChip pricing={listing.turnPricing}/>
                 <h3>{listing.committee.name}</h3>
                 <p>Seller {listing.seller.fullName} · score {listing.seller.creditScore}</p>
               </div>

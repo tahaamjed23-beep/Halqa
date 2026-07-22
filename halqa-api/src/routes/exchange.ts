@@ -5,6 +5,7 @@ import { requireAuth } from '../lib/auth';
 import { assertMember } from '../lib/guards';
 import { audit, ledger } from '../lib/audit';
 import { paisaInput } from '../lib/money';
+import { band, allowedPositions, mayBuyTurns } from '../lib/score-bands';
 
 const router = Router();
 router.use(requireAuth);
@@ -41,8 +42,6 @@ router.get('/', async (req, res) => {
     const earlyPayments = payments.filter(payment => Boolean(payment.paidAt && payment.paidAt < payment.dueDate)).length;
     const averageCreditScore = listing.committee.members.length ? Math.round(listing.committee.members.reduce((sum, member) => sum + member.user.creditScore, 0) / listing.committee.members.length) : 700;
     const engines = [
-      listing.committee.orderMode === 'CREDIT_WEIGHTED' ? 'Credit-weighted ordering' : listing.committee.orderMode === 'RANDOM_BALLOT' ? 'Random ballot' : 'Host-assigned ordering',
-      listing.committee.earlyFeeBps > 0 ? `Early-turn fee spectrum ${(listing.committee.earlyFeeBps / 100).toFixed(1)}%→0%` : null,
       listing.committee.tier !== 'CLASSIC' ? `${listing.committee.tier[0]}${listing.committee.tier.slice(1).toLowerCase()} earning engine` : null,
       listing.committee.reinvestRatio > 0 && listing.committee.scheme ? `${Math.round(listing.committee.reinvestRatio * 100)}% ${listing.committee.scheme.name} allocation` : null,
       listing.committee.payoutGuaranteed ? 'Safety Fund' : null,
@@ -56,7 +55,7 @@ router.get('/', async (req, res) => {
       buyerNetCostPaisa: listing.premiumPaisa,
       buyerScope: 'INSIDE',
       totalTurns: listing.committee.members.length,
-      secure: listing.committee.orderMode === 'CREDIT_WEIGHTED',
+      turnPricing: listing.committee.earlyFeeBps > 0 ? { kind: 'EARLY_FEE' as const, earlyFeeBps: listing.committee.earlyFeeBps, pooled: false } : { kind: 'FLAT' as const, earlyFeeBps: 0, pooled: false },
       creditHealth: { averageCreditScore, defaults: defaultingMembers.size, latePayments, earlyPayments, grade: defaultingMembers.size ? 'WATCH' : averageCreditScore >= 750 && latePayments === 0 ? 'EXCELLENT' : averageCreditScore >= 700 ? 'STRONG' : averageCreditScore >= 650 ? 'FAIR' : 'WATCH' },
       engines,
     };
@@ -98,13 +97,18 @@ router.post('/:id/bid', async (req, res, next) => {
     if (!listing || listing.status !== 'OPEN') return res.status(404).json({ error: 'Open listing not found' });
     if (listing.sellerId === req.auth!.userId) return res.status(409).json({ error: 'Cannot bid on your own listing' });
     const bidderUser = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId } });
-    if (bidderUser.isBanned||bidderUser.creditScore < 650) return res.status(403).json({ error: 'Active buyers require a reliability score of 650 or higher' });
+    // Marketplace access follows the score bands: only BAD (<550) is barred
+    // from buying turns (score-bands.ts). Banned/cooldown stays fully locked.
+    if (bidderUser.isBanned || !mayBuyTurns(bidderUser.creditScore)) return res.status(403).json({ error: 'Turn buying is not available at your reliability band — build your score to unlock the marketplace' });
     const [bidderMembership,committee]=await Promise.all([
       prisma.committeeMember.findUnique({where:{committeeId_userId:{committeeId:listing.committeeId,userId:req.auth!.userId}}}),
-      prisma.committee.findUniqueOrThrow({where:{id:listing.committeeId},select:{currentRound:true,tier:true}}),
+      prisma.committee.findUniqueOrThrow({where:{id:listing.committeeId},select:{currentRound:true,tier:true,memberCap:true}}),
     ]);
     if(!bidderMembership||bidderMembership.status!=='ACTIVE')return res.status(403).json({error:'Turn auctions are currently restricted to active members of the same committee'});
     if(bidderMembership.hasReceived||bidderMembership.turnPosition<=committee.currentRound)return res.status(409).json({error:'Only members with a future unreceived turn can bid'});
+    // Anti-default invariant: buying a turn can't drop you into a seat your band
+    // couldn't sit in at join. A Decent member can't buy into the first half.
+    if(!allowedPositions(band(bidderUser.creditScore),committee.memberCap).includes(listing.position))return res.status(409).json({error:'That turn is earlier than your reliability band allows you to hold'});
     if(committee.tier==='SUKOON'||committee.tier==='BAZAAR'){
       // Free-swap tiers: a bid is a swap request, not an auction — no premium.
       if(input.premiumPaisa!==0n)return res.status(400).json({error:'Sukoon and Bazaar circles allow free turn swaps only — bid zero to request the swap'});

@@ -9,6 +9,7 @@ import { clampScore, paisaInput, projectedReturn } from '../lib/money';
 import { assessForwardLiability, type SecurityPolicy } from '../lib/forward-liability';
 import { MUTUAL_PG_VERSION, freshUndertaking, hashText, mutualPgText } from '../lib/agreements';
 import { linkedOpenDefault } from '../lib/family-links';
+import { band, allowedPositions, startOrder } from '../lib/score-bands';
 import { assessRisk, policyHash } from '../lib/risk-engine';
 import { allocateCyclePool } from '../lib/distribution';
 import { reputationFor } from '../lib/reputation';
@@ -68,10 +69,9 @@ function committeeCreditHealth(members: HealthMember[], rounds: HealthRound[], r
 }
 
 function committeeEngineLabels(committee: { orderMode: string; tier: string; earlyFeeBps: number; payoutGuaranteed: boolean; reinvestRatio: number; scheme: { name: string } | null; allowTurnSale: boolean }) {
+  // Ordering is no longer a per-circle "engine" — everyone picks a band-eligible
+  // seat, so the old credit-weighted/random/host-assigned labels are dropped.
   const labels: string[] = [];
-  if (committee.orderMode === 'CREDIT_WEIGHTED') labels.push('Credit-weighted ordering');
-  else if (committee.orderMode === 'RANDOM_BALLOT') labels.push('Random ballot');
-  else labels.push('Host-assigned ordering');
   if (committee.earlyFeeBps > 0) labels.push(`Early-turn fee spectrum ${(committee.earlyFeeBps / 100).toFixed(1)}%→0%`);
   if (committee.tier !== 'CLASSIC') labels.push(`${committee.tier[0]}${committee.tier.slice(1).toLowerCase()} earning engine`);
   if (committee.reinvestRatio > 0 && committee.scheme) labels.push(`${Math.round(committee.reinvestRatio * 100)}% ${committee.scheme.name} allocation`);
@@ -116,28 +116,43 @@ router.get('/discover', async (req, res) => {
     take: 30, // FORMING sorts first, so the newest open circles always surface; caps payload on a busy platform
   });
   const day = 86_400_000;
-  res.json(rows.map(committee => {
+  // The viewer's band decides which seats they may claim — Discover only shows
+  // circles where they actually have an eligible free seat (no dead ends).
+  const viewer = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { creditScore: true } });
+  const viewerBand = band(viewer.creditScore);
+  const mapped = rows.map(committee => {
     const openNow = committee.status === 'FORMING' && committee.members.length < committee.memberCap && committee.joinPolicy !== 'INVITE_ONLY';
     const occupied = new Set(committee.members.map(member => member.turnPosition));
     const latestPayout = committee.rounds.reduce((latest, round) => Math.max(latest, round.payoutDate.getTime()), Date.now());
     const projectedCycleStart = openNow ? Date.now() + 7 * day : latestPayout + committee.periodDays * day;
+    const eligibleSet = new Set(allowedPositions(viewerBand, committee.memberCap));
     const availablePositions = Array.from({ length: committee.memberCap }, (_, index) => index + 1)
       .filter(position => !openNow || !occupied.has(position))
       .map(position => ({
         position,
         expectedPayoutAt: new Date(projectedCycleStart + position * committee.periodDays * day + 7 * day),
-        indicative: committee.orderMode !== 'HOST_ASSIGNED',
+        eligible: eligibleSet.has(position),
       }));
+    // Turn pricing: an early-fee circle charges early seats a declining fee that
+    // pays out to later seats — a real "late premium" spectrum. Flat circles
+    // have none. Surfaced on every card so members see it everywhere.
+    const turnPricing = committee.earlyFeeBps > 0
+      ? { kind: 'EARLY_FEE' as const, earlyFeeBps: committee.earlyFeeBps, pooled: committee.dividendPooled }
+      : { kind: 'FLAT' as const, earlyFeeBps: 0, pooled: false };
+    const eligiblePositions = availablePositions.filter(p => p.eligible).map(p => p.position);
     return {
       id: committee.id, name: committee.name, mode: committee.mode, status: committee.status,
       availability: openNow ? 'OPEN' : 'WAIT_NEXT_CYCLE', memberCount: committee.members.length, memberCap: committee.memberCap,
       contributionPaisa: committee.contributionPaisa, periodDays: committee.periodDays, cycleNumber: committee.cycleNumber,
-      orderMode: committee.orderMode, secure: committee.orderMode === 'CREDIT_WEIGHTED', riskScore: committee.riskScore, riskBand: committee.riskBand,
-      host: committee.host, scheme: committee.scheme, availablePositions,
+      riskScore: committee.riskScore, riskBand: committee.riskBand, turnPricing,
+      host: committee.host, scheme: committee.scheme, availablePositions, eligiblePositions,
       projectedCycleStart: new Date(projectedCycleStart), creditHealth: committeeCreditHealth(committee.members, committee.rounds, committee.recoveryCases),
       engines: committeeEngineLabels(committee), waitlisted: committee.waitlist.length > 0,
     };
-  }));
+  });
+  // Hide OPEN circles the viewer can't actually sit in; keep WAIT_NEXT_CYCLE
+  // ones (they book seats on the next cycle, not now) so the pipeline is visible.
+  res.json(mapped.filter(c => c.availability !== 'OPEN' || c.eligiblePositions.length > 0));
 });
 
 // Pre-join trust surface: resolve an invite code to the circle's terms and the
@@ -360,10 +375,13 @@ async function joinCommittee(committeeId: string, req: Request, res: Response, n
   try {
     const userId = req.auth!.userId;
     if (!(await freshUndertaking(prisma, userId))) return res.status(428).json(UNDERTAKING_428);
+    // Optional slot pick. Score no longer REORDERS anyone; it only limits which
+    // free positions a joiner may claim (score-bands.ts). The member picks from
+    // their band-eligible free slots; omitting it takes the earliest eligible.
+    const { position: requestedPosition } = z.object({ position: z.number().int().min(1).max(150).optional() }).parse(req.body ?? {});
     const joiningUser=await prisma.user.findUniqueOrThrow({where:{id:userId}});
     if(joiningUser.isBanned)return res.status(403).json({error:'Restricted accounts cannot join committees'});
     if(joiningUser.cooldownUntil && joiningUser.cooldownUntil > new Date())return res.status(403).json({error:`Rehabilitation cooldown applies until ${joiningUser.cooldownUntil.toISOString()}`});
-    if(joiningUser.creditScore<550)return res.status(403).json({error:'A reliability score of 550 or higher is required to join'});
     // Linked-account policy (undertaking clause 7e): while a family member or
     // associate — shared device, referral or guarantee link — sits in
     // unresolved post-payout default, this account cannot join new circles.
@@ -371,19 +389,33 @@ async function joinCommittee(committeeId: string, req: Request, res: Response, n
     if(linkedDefault)return res.status(403).json({error:`Joining is paused under the linked-account policy: an account linked to yours (${linkedDefault.fullName}) has an unresolved default. It clears when their recovery completes.`});
     // Newcomer first-circle installment cap removed (chairman-directed): a
     // member's exposure is governed by the reliability-score gate, graduated
-    // collateral and credit-weighted ordering, not a fixed installment ceiling.
+    // collateral and band-based slot eligibility, not a fixed installment ceiling.
     const committee = await prisma.committee.findUnique({ where: { id: committeeId }, include: { members: { where: { status: 'ACTIVE' } } } });
     if (!committee) return res.status(404).json({ error: 'Committee not found' });
     if (committee.status !== 'FORMING') return res.status(409).json({ error: 'Committee has already started' });
     if (committee.members.length >= committee.memberCap) return res.status(409).json({ error: 'Committee is full' });
     const existing = committee.members.some(m => m.userId === userId);
     if (existing) return res.status(409).json({ error: 'Already a member' });
+    // Band-based slot eligibility: risky members can only sit in late seats
+    // (which are owed money and can't default), replacing credit-weighted
+    // reordering. Compute the joiner's eligible-and-free positions here so the
+    // pick is validated the same way for every join route.
+    const joinerBand = band(joiningUser.creditScore);
+    const occupiedNow = new Set(committee.members.map(m => m.turnPosition));
+    const eligibleFree = allowedPositions(joinerBand, committee.memberCap).filter(p => !occupiedNow.has(p));
+    if (!eligibleFree.length) return res.status(409).json({ error: 'No turn position is available for your reliability band in this circle. Try another circle — Discover only shows ones you can join.' });
+    if (requestedPosition !== undefined && !eligibleFree.includes(requestedPosition)) {
+      return res.status(409).json({ error: `Turn ${requestedPosition} is not available to you. Your reliability band can take: ${eligibleFree.join(', ')}.` });
+    }
+    const chosenPosition = requestedPosition ?? eligibleFree[0];
     const membership = await prisma.$transaction(async tx => {
-      // Re-check the cap inside the transaction: two simultaneous joins both
-      // pass the pre-read above, and a circle must never exceed its cap.
-      const activeCount = await tx.committeeMember.count({ where: { committeeId: committee.id, status: 'ACTIVE' } });
-      if (activeCount >= committee.memberCap) throw Object.assign(new Error('Committee is full'), { status: 409 });
-      const nextPosition = committee.members.reduce((highest, member) => Math.max(highest, member.turnPosition), 0) + 1;
+      // Re-check the cap AND the specific slot inside the transaction: two
+      // simultaneous joins both pass the pre-read above, and a circle must
+      // never exceed its cap or double-book a position.
+      const active = await tx.committeeMember.findMany({ where: { committeeId: committee.id, status: 'ACTIVE' }, select: { turnPosition: true } });
+      if (active.length >= committee.memberCap) throw Object.assign(new Error('Committee is full'), { status: 409 });
+      if (active.some(m => m.turnPosition === chosenPosition)) throw Object.assign(new Error('That turn was just taken — pick another'), { status: 409 });
+      const nextPosition = chosenPosition;
       // Autopay defaults ON (opt-out later, consent = undertaking clause 4),
       // pulling on the member's preferred linked rail when one exists.
       const methods = Array.isArray(joiningUser.paymentMethodsJson) ? joiningUser.paymentMethodsJson as { rail?: string; preferred?: boolean }[] : [];
@@ -452,17 +484,19 @@ router.post('/:id/start', async (req, res, next) => {
         sponsorMembers.push({ ...membership, user: sponsor } as (typeof members)[number]);
       }
     }
-    // Money Fellows-style slot gating: identity-verified members (CNIC on file)
-    // rank ahead of unverified ones for the early, high-exposure positions.
-    // An unverified member is automatically slotted late — they pay in before
-    // they ever collect, so their maximum possible damage is zero. Position is
-    // the collateral in the no-deposit model.
-    const verified = (m: (typeof members)[number]) => (m.user.cnic ? 1 : 0);
-    const orderedReal = committee.orderMode === 'CREDIT_WEIGHTED'
-      ? [...members].sort((a,b) => verified(b) - verified(a) || b.user.creditScore - a.user.creditScore || a.joinedAt.getTime() - b.joinedAt.getTime())
-      : committee.orderMode === 'RANDOM_BALLOT'
-      ? members.map(member => ({ member, key: crypto.randomUUID() })).sort((a, b) => a.key.localeCompare(b.key)).map(item => item.member)
-      : members;
+    // Compaction to contiguous 1..N when a circle starts under capacity must
+    // NOT let a risky member's late pick collapse into an early seat: a 10-cap
+    // circle where three BAD members picked seats 8/9/10 and starts with just
+    // those three would otherwise renumber seat-8 to seat-1 — handing the pot to
+    // the riskiest member first, the exact early-default the bands exist to stop.
+    // So we order by band-risk FIRST (safer bands take the earlier seats),
+    // preserving each member's own pick only WITHIN their band. This keeps the
+    // anti-default guarantee against the ACTUAL started size, not the original
+    // cap. (In an all-risky circle someone must still be first — unavoidable —
+    // but the safest achievable ordering is guaranteed.)
+    const orderedReal = [...members].sort((a,b) => startOrder(
+      { creditScore: a.user.creditScore, turnPosition: a.turnPosition, joinedAt: a.joinedAt.getTime() },
+      { creditScore: b.user.creditScore, turnPosition: b.turnPosition, joinedAt: b.joinedAt.getTime() }));
     // Halqa's sponsor seats take the FIRST turns (host's creation choice): Halqa
     // collects early and pays its share over the rest of the cycle, minimising
     // Halqa's own capital at risk. Real members hold the later turns and rely on

@@ -880,9 +880,12 @@ h1,h2,h3{font-weight:640}
 .acct-badge.warn{background:rgba(0,0,0,.26)}
 .acct-badge.gold{background:linear-gradient(135deg,#caa53a,#8a6d16)}
 .acct-card-no{font-size:17px;letter-spacing:2.4px;margin:16px 0 12px;font-weight:600;position:relative;z-index:1;word-break:break-all}
-.acct-card-holder{display:flex;flex-direction:column;gap:1px;position:relative;z-index:1}
+.acct-card-holder{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;position:relative;z-index:1}
+.acct-card-holder>div{display:flex;flex-direction:column;gap:1px;min-width:0}
+.acct-card-holder .acct-card-exp{text-align:right;flex:none}
 .acct-card-holder span{font-size:9.5px;letter-spacing:1.2px;text-transform:uppercase;opacity:.75;font-weight:700}
-.acct-card-holder b{font-size:13.5px}
+.acct-card-holder b{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acct-card.is-card .acct-card-no{letter-spacing:3px}
 .acct-card-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.2);position:relative;z-index:1}
 .acct-card-actions .card-action{background:rgba(255,255,255,.15);border:none;color:#fff;font:inherit;font-size:11px;font-weight:700;padding:5px 10px;border-radius:9px;cursor:pointer}
 .acct-card-actions .card-action:hover{background:rgba(255,255,255,.26)}
@@ -896,3 +899,29 @@ h1,h2,h3{font-weight:640}
 .bank-tile i{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-style:normal;font-weight:800;font-size:10.5px}
 .bank-tile span{font-size:10.5px;font-weight:700;color:#5d5638;text-align:center;line-height:1.15}
 .bank-tile.on{border-color:#b08d2f;box-shadow:0 0 0 2px rgba(176,141,47,.13)}
+/* App-open PIN gate — full-screen keypad, gold/white brand. */
+.pin-screen{position:fixed;inset:0;z-index:1200;background:linear-gradient(160deg,#fbf7ec,#f3ead2);display:flex;align-items:center;justify-content:center;padding:20px}
+.pin-card{width:100%;max-width:340px;background:#fff;border:1px solid #ece2c4;border-radius:22px;padding:26px 24px 20px;box-shadow:0 20px 50px rgba(90,70,15,.12);text-align:center}
+.pin-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.pin-lockicon{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#caa53a,#8a6d16);display:flex;align-items:center;justify-content:center;color:#fff}
+.pin-card h2{margin:6px 0 4px;font-size:20px}
+.pin-card p{margin:0 0 16px;font-size:12.5px;color:#7a6d3f}
+.pin-dots{display:flex;gap:14px;justify-content:center;margin:6px 0 12px}
+.pin-dots i{width:14px;height:14px;border-radius:50%;border:2px solid #d9c88f;transition:all .15s}
+.pin-dots i.on{background:#b08d2f;border-color:#b08d2f;transform:scale(1.05)}
+.pin-error{color:#c0392b;font-size:12.5px;font-weight:700;margin:2px 0 8px;min-height:16px}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:8px 0 14px}
+.pin-key{height:60px;border-radius:16px;border:1px solid #ece2c4;background:#fdfaf1;font-size:23px;font-weight:700;color:#2b230e;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .05s,background .12s}
+.pin-key:active:not(:disabled){transform:scale(.94);background:#f4ead0}
+.pin-key:disabled{opacity:.5;cursor:default}
+.pin-key.ghost{background:transparent;border-color:transparent;color:#8a7a45}
+.pin-key.spacer{background:transparent;border:none;pointer-events:none}
+.pin-forgot{background:none;border:none;color:#8a6a15;font-size:12.5px;font-weight:700;cursor:pointer;padding:6px}
+/* Turn-pricing chip — shown on every committee surface (Discover, Marketplace,
+   own circles, committee header). Premium = early-fee spectrum; flat = none. */
+.pricing-chip{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:800;letter-spacing:.2px;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.pricing-chip.premium{background:#fbeecb;color:#8a6a15;border:1px solid #e7d18a}
+.pricing-chip.flat{background:#eef1f4;color:#5b6472;border:1px solid #dbe0e6}
+/* Band-locked slot in the Discover pick-your-turn board — visible but unpickable */
+.slot-list button.locked{opacity:.5;cursor:not-allowed;background:repeating-linear-gradient(135deg,rgba(120,120,120,.05),rgba(120,120,120,.05) 6px,transparent 6px,transparent 12px)}
+.slot-list button.locked b{color:#8a815f}
