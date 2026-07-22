@@ -49,23 +49,18 @@ const includeDetail = {
 } satisfies Prisma.CommitteeInclude;
 
 type HealthMember = { user: { creditScore: number } };
-type HealthPayment = { payerId: string; status: string; paidAt: Date | null; dueDate: Date };
-type HealthRound = { payments: HealthPayment[] };
 type HealthRecovery = { userId: string; status: string };
 
-function committeeCreditHealth(members: HealthMember[], rounds: HealthRound[], recoveries: HealthRecovery[]) {
-  const payments = rounds.flatMap(round => round.payments);
-  const defaultingMembers = new Set([
-    ...payments.filter(payment => payment.status === 'MISSED').map(payment => payment.payerId),
-    ...recoveries.filter(item => ['OPEN', 'PAYMENT_RECORDED'].includes(item.status)).map(item => item.userId),
-  ]);
-  const latePayments = payments.filter(payment => payment.status === 'LATE' || Boolean(payment.paidAt && payment.paidAt > payment.dueDate)).length;
-  const earlyPayments = payments.filter(payment => Boolean(payment.paidAt && payment.paidAt < payment.dueDate)).length;
-  const settledPayments = payments.filter(payment => payment.status !== 'PENDING').length;
+// Lightweight circle health for Discover — computed from member scores + open
+// recovery cases only (NO per-payment fetch). Pulling every round's payments for
+// 30 circles made discover take ~10s; this keeps it sub-second. The detailed
+// payment breakdown lives on the committee page where a single circle is loaded.
+function committeeCreditHealth(members: HealthMember[], recoveries: HealthRecovery[]) {
+  const defaults = new Set(recoveries.filter(item => ['OPEN', 'PAYMENT_RECORDED'].includes(item.status)).map(item => item.userId)).size;
   const averageCreditScore = members.length ? Math.round(members.reduce((sum, member) => sum + member.user.creditScore, 0) / members.length) : 700;
-  const paymentQualityPct = settledPayments ? Math.max(0, Math.round((settledPayments - latePayments - defaultingMembers.size) / settledPayments * 100)) : 100;
-  const grade = defaultingMembers.size ? 'WATCH' : averageCreditScore >= 750 && latePayments === 0 ? 'EXCELLENT' : averageCreditScore >= 700 ? 'STRONG' : averageCreditScore >= 650 ? 'FAIR' : 'WATCH';
-  return { averageCreditScore, grade, defaults: defaultingMembers.size, latePayments, earlyPayments, settledPayments, paymentQualityPct };
+  const grade = defaults ? 'WATCH' : averageCreditScore >= 750 ? 'EXCELLENT' : averageCreditScore >= 700 ? 'STRONG' : averageCreditScore >= 650 ? 'FAIR' : 'WATCH';
+  const paymentQualityPct = defaults ? Math.max(0, 100 - defaults * 15) : 100;
+  return { averageCreditScore, grade, defaults, latePayments: 0, earlyPayments: 0, settledPayments: 0, paymentQualityPct };
 }
 
 function committeeEngineLabels(committee: { orderMode: string; tier: string; earlyFeeBps: number; payoutGuaranteed: boolean; reinvestRatio: number; scheme: { name: string } | null; allowTurnSale: boolean }) {
@@ -107,13 +102,13 @@ router.get('/discover', async (req, res) => {
     include: {
       host: { select: { id: true, fullName: true, creditScore: true } },
       scheme: { select: { name: true, riskScore: true, indicativeRatePct: true } },
-      members: { where: { status: 'ACTIVE' }, include: { user: { select: { creditScore: true } } }, orderBy: { turnPosition: 'asc' } },
-      rounds: { include: { payments: { select: { payerId: true, status: true, paidAt: true, dueDate: true } } }, orderBy: { roundNumber: 'asc' } },
+      members: { where: { status: 'ACTIVE' }, select: { turnPosition: true, user: { select: { creditScore: true } } } },
+      rounds: { select: { payoutDate: true } }, // only for the projected next-cycle date; no payment fetch (perf)
       recoveryCases: { select: { userId: true, status: true } },
-      waitlist: { where: { userId: req.auth!.userId, status: 'WAITING' }, select: { id: true, preferredPosition: true } },
+      waitlist: { where: { userId: req.auth!.userId, status: 'WAITING' }, select: { id: true } },
     },
     orderBy: [{ status: 'asc' }, { createdAt: 'desc' }],
-    take: 30, // FORMING sorts first, so the newest open circles always surface; caps payload on a busy platform
+    take: 18, // FORMING sorts first, so the newest open circles always surface; caps payload + query cost
   });
   const day = 86_400_000;
   // The viewer's TENURE + band decide which seats they may claim — Discover only
@@ -146,7 +141,7 @@ router.get('/discover', async (req, res) => {
       contributionPaisa: committee.contributionPaisa, periodDays: committee.periodDays, cycleNumber: committee.cycleNumber,
       riskScore: committee.riskScore, riskBand: committee.riskBand, turnPricing,
       host: committee.host, scheme: committee.scheme, availablePositions, eligiblePositions: eligiblePositionList,
-      projectedCycleStart: new Date(projectedCycleStart), creditHealth: committeeCreditHealth(committee.members, committee.rounds, committee.recoveryCases),
+      projectedCycleStart: new Date(projectedCycleStart), creditHealth: committeeCreditHealth(committee.members, committee.recoveryCases),
       engines: committeeEngineLabels(committee), waitlisted: committee.waitlist.length > 0,
     };
   });

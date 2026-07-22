@@ -12,7 +12,10 @@ router.use(requireAuth);
 
 router.get('/', async (req, res) => {
   const listings = await prisma.exchangeListing.findMany({
-    where: { status: 'OPEN', committee: { members: { some: { userId: req.auth!.userId, status: 'ACTIVE' } } } },
+    // Show the whole platform's open turn market (not just the viewer's circles),
+    // so the marketplace is populated for everyone. Bidding still requires being
+    // an active member of that circle (enforced on the bid route).
+    where: { status: 'OPEN' },
     include: {
       seller: { select: { id: true, fullName: true, creditScore: true, kycLevel: true } },
       committee: {
@@ -21,25 +24,22 @@ router.get('/', async (req, res) => {
           orderMode: true, tier: true, earlyFeeBps: true, payoutGuaranteed: true, reinvestRatio: true, allowTurnSale: true,
           riskScore: true, riskBand: true, scheme: { select: { name: true } },
           members: { where: { status: 'ACTIVE' }, select: { userId: true, user: { select: { creditScore: true } } } },
-          rounds: { select: { roundNumber: true, payoutDate: true, payoutPaisa: true, payments: { select: { payerId: true, status: true, paidAt: true, dueDate: true } } }, orderBy: { roundNumber: 'asc' } },
+          rounds: { select: { roundNumber: true, payoutDate: true, payoutPaisa: true }, orderBy: { roundNumber: 'asc' } }, // no payment fetch (perf)
           recoveryCases: { select: { userId: true, status: true } },
         },
       },
       bids: { where: { status: 'OPEN' }, include: { bidder: { select: { id: true, fullName: true, creditScore: true } } } },
     },
     orderBy: { listedAt: 'desc' },
+    take: 40,
   });
   res.json(listings.map(listing => {
     const targetRound = listing.committee.rounds.find(round => round.roundNumber === listing.position);
     const remainingRounds = Math.max(0, listing.committee.rounds.length - listing.committee.currentRound + 1);
     const remainingDuesPaisa = listing.committee.contributionPaisa * BigInt(remainingRounds);
-    const payments = listing.committee.rounds.flatMap(round => round.payments);
-    const defaultingMembers = new Set([
-      ...payments.filter(payment => payment.status === 'MISSED').map(payment => payment.payerId),
-      ...listing.committee.recoveryCases.filter(item => ['OPEN', 'PAYMENT_RECORDED'].includes(item.status)).map(item => item.userId),
-    ]);
-    const latePayments = payments.filter(payment => payment.status === 'LATE' || Boolean(payment.paidAt && payment.paidAt > payment.dueDate)).length;
-    const earlyPayments = payments.filter(payment => Boolean(payment.paidAt && payment.paidAt < payment.dueDate)).length;
+    // Health from member scores + open recovery cases only (no per-payment fetch — perf).
+    const defaultingMembers = new Set(listing.committee.recoveryCases.filter(item => ['OPEN', 'PAYMENT_RECORDED'].includes(item.status)).map(item => item.userId));
+    const latePayments = 0, earlyPayments = 0;
     const averageCreditScore = listing.committee.members.length ? Math.round(listing.committee.members.reduce((sum, member) => sum + member.user.creditScore, 0) / listing.committee.members.length) : 700;
     const engines = [
       listing.committee.tier !== 'CLASSIC' ? `${listing.committee.tier[0]}${listing.committee.tier.slice(1).toLowerCase()} earning engine` : null,
