@@ -4,15 +4,21 @@ import { z } from 'zod';
 import { prisma } from '../db';
 import { requireAuth, signAccess, signRefresh, verifyRefresh } from '../lib/auth';
 import { logSecurity, newFamilyId } from '../lib/security';
+import { earlyTurnUnlocked } from '../lib/score-bands';
+import { feeDiscountBps, discountReason } from '../lib/discounts';
 import { createHash } from 'node:crypto';
 
 const router = Router();
 const cleanPhone = (v: string) => v.replace(/\s+/g, '').replace(/^\+92/, '0');
-const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, phoneVerified:true, addressLine:true, city:true, occupationType:true, employerName:true, createdAt: true } as const;
-// Never send the PIN hash to the client; we only ever expose whether one is set.
+const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, phoneVerified:true, addressLine:true, city:true, occupationType:true, employerName:true, committeesCompletedClean:true, earlyTurnVerifiedAt:true, incomeVerifiedAt:true, chequeSecuredAt:true, cnicCaptured:true, createdAt: true } as const;
+// Never send the PIN hash or biometric credential id to the client; we only
+// expose booleans + the derived tenure/discount status the UI needs.
 const pinHash = (pin: string) => createHash('sha256').update(`halqa-pin:${process.env.JWT_SECRET || 'dev'}:${pin}`).digest('hex');
 const otpHash = (code: string) => createHash('sha256').update(`halqa-otp:${code}`).digest('hex');
-const withHasPin = <T extends { pinHash?: string | null }>(u: T) => { const { pinHash: _p, ...rest } = u; return { ...rest, hasPin: !!_p }; };
+const withHasPin = <T extends { pinHash?: string | null; biometricCredId?: string | null; creditScore: number; committeesCompletedClean: number; earlyTurnVerifiedAt: Date | null; incomeVerifiedAt: Date | null; chequeSecuredAt: Date | null; salaryAccountLinked: boolean }>(u: T) => {
+  const { pinHash: _p, biometricCredId: _b, ...rest } = u;
+  return { ...rest, hasPin: !!_p, hasBiometric: !!_b, earlyTurnUnlocked: earlyTurnUnlocked(u), feeDiscountBps: feeDiscountBps(u), discountReason: discountReason(u) };
+};
 const credentials = z.object({ identity: z.string().trim().min(1), password: z.string().min(8).max(128) });
 const tokenHash=(token:string)=>createHash('sha256').update(token).digest('hex');
 // Passwords must mix letters and digits. 8-char floor is enforced by the zod
@@ -51,6 +57,7 @@ router.post('/register', async (req, res, next) => {
       occupationType: z.enum(['EMPLOYED','BUSINESS_OWNER','HOUSEWIFE','STUDENT','SELF_EMPLOYED','RETIRED','OTHER']).optional(),
       employerName: z.string().trim().max(80).optional(),
       pin: z.string().trim().regex(/^\d{4,6}$/, 'PIN must be 4 to 6 digits').optional(),
+      cnicCaptured: z.boolean().optional(),
     }).parse(req.body);
     if (!relaxed() && !passwordStrongEnough(body.password)) return res.status(400).json({ error: 'Password must contain both letters and numbers' });
     const username = body.username.trim().toLowerCase();
@@ -76,7 +83,8 @@ router.post('/register', async (req, res, next) => {
       addressLine: body.addressLine ?? null, city: body.city ?? null, occupationType: body.occupationType ?? null,
       employerName: body.occupationType === 'EMPLOYED' ? (body.employerName ?? null) : null,
       pinHash: body.pin ? pinHash(body.pin) : null,
-    }, select: { ...publicUser, pinHash: true } });
+      cnicCaptured: body.cnicCaptured ?? false,
+    }, select: { ...publicUser, pinHash: true, biometricCredId: true } });
     const payload = { userId: user.id, role: user.role };
     const refreshToken = signRefresh(payload);
     await prisma.refreshToken.create({ data: { tokenHash: tokenHash(refreshToken), userId: user.id, familyId: newFamilyId(), expiresAt: new Date(Date.now() + 30 * 86400000) } });
@@ -154,6 +162,18 @@ router.post('/verify-pin', requireAuth, async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+// Optional biometric (fingerprint/Face) unlock. The client registers a WebAuthn
+// platform credential and sends us its id so "biometric enabled" persists; the
+// private key never leaves the device and the assertion is verified client-side
+// on unlock. Send null to disable. Prototype-grade convenience over the PIN.
+router.post('/set-biometric', requireAuth, async (req, res, next) => {
+  try {
+    const { credentialId } = z.object({ credentialId: z.string().trim().min(1).max(512).nullable() }).parse(req.body);
+    await prisma.user.update({ where: { id: req.auth!.userId }, data: { biometricCredId: credentialId } });
+    res.json({ hasBiometric: !!credentialId });
+  } catch (error) { next(error); }
+});
+
 router.post('/login', async (req, res, next) => {
   try {
     const body = credentials.parse(req.body);
@@ -176,7 +196,7 @@ router.post('/login', async (req, res, next) => {
     const refreshToken = signRefresh(payload);
     await prisma.refreshToken.create({ data: { tokenHash: tokenHash(refreshToken), userId: user.id, familyId: newFamilyId(), expiresAt: new Date(Date.now() + 30 * 86400000) } });
     await logSecurity(req, 'LOGIN_OK', { userId: user.id, identity: value });
-    const safe = await prisma.user.findUniqueOrThrow({ where: { id: user.id }, select: { ...publicUser, pinHash: true } });
+    const safe = await prisma.user.findUniqueOrThrow({ where: { id: user.id }, select: { ...publicUser, pinHash: true, biometricCredId: true } });
     res.json({ user: withHasPin(safe), accessToken: signAccess(payload), refreshToken });
   } catch (error) { next(error); }
 });
@@ -220,7 +240,7 @@ router.post('/logout',requireAuth,async(req,res)=>{const token=z.object({refresh
   await logSecurity(req,'LOGOUT',{userId:req.auth!.userId});res.status(204).end()});
 
 router.get('/me', requireAuth, async (req, res) => {
-  const user = await prisma.user.findUnique({ where: { id: req.auth!.userId }, select: { ...publicUser, pinHash: true } });
+  const user = await prisma.user.findUnique({ where: { id: req.auth!.userId }, select: { ...publicUser, pinHash: true, biometricCredId: true } });
   res.json(user ? withHasPin(user) : user);
 });
 

@@ -54,6 +54,22 @@ export const allowedPositions = (b: ScoreBand, cap: number): number[] => {
 
 export const mayBuyTurns = (score: number) => band(score) !== 'BAD';
 
+// Tenure quarantine (Taha, 2026-07-23). A NEW member — whatever their score —
+// may only take one of the LAST turns of any circle. Turn position is the
+// collateral in the no-deposit model: a late-turn taker pays in before they
+// ever collect, so their loss to the group is zero. Early turns unlock only
+// after they finish REQUIRED_CLEAN_CIRCLES circles cleanly AND are manually
+// verified ("called around"). A new member is treated exactly like the BAD
+// band for position purposes, regardless of their actual score.
+export const REQUIRED_CLEAN_CIRCLES = 2;
+export type MemberTenure = { creditScore: number; committeesCompletedClean: number; earlyTurnVerifiedAt: Date | string | null };
+export const earlyTurnUnlocked = (m: MemberTenure) =>
+  m.committeesCompletedClean >= REQUIRED_CLEAN_CIRCLES && m.earlyTurnVerifiedAt != null;
+// Positions a member may claim: unlocked members fall back to their score band;
+// everyone else is quarantined to the last turns (same set as the BAD band).
+export const eligiblePositions = (cap: number, m: MemberTenure): number[] =>
+  earlyTurnUnlocked(m) ? allowedPositions(band(m.creditScore), cap) : allowedPositions('BAD', cap);
+
 // Ordering weight for start-time seat assignment: safer bands rank lower and so
 // take the earlier seats. When a circle starts under capacity and seats are
 // compacted to a contiguous 1..N, ordering by this weight first guarantees a

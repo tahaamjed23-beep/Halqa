@@ -6,6 +6,7 @@ import { HalqaOrb, Logo } from '../components/ui';
 import PhoneInput from '../components/PhoneInput';
 import LegalFooter, { LegalDocModal } from '../components/LegalFooter';
 import { AccountCard, PK_BANKS, RAIL_META, formatEntry } from '../components/LinkedAccounts';
+import CnicCapture from '../components/CnicCapture';
 import { TERMS_VERSION, type DocId } from '../legal/content';
 
 // Onboarding is one question per screen (the pattern every Pakistani wallet
@@ -28,6 +29,7 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const [step,setStep]=useState<RegStep>('phone');
   const [form,setForm]=useState({identity:'',password:'',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:'',rail:'RAAST',accountNo:'',accountTitle:'',bankName:'HBL',otpCode:'',addressLine:'',city:'',occupationType:'',employerName:'',pin:'',pinConfirm:''});
   const [agreed,setAgreed]=useState(false);
+  const [cnicCaptured,setCnicCaptured]=useState(false);const [scanning,setScanning]=useState(false);
   const [otpSent,setOtpSent]=useState(false);const [otpVerified,setOtpVerified]=useState(false);const [devCode,setDevCode]=useState('');
   const [doc,setDoc]=useState<DocId|null>(null);
   const [error,setError]=useState('');const [busy,setBusy]=useState(false);
@@ -55,7 +57,7 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const goNext=()=>{const cur=step;next();if(cur==='phone'&&!otpSent)void requestOtp()};
 
   const login=async(event:React.FormEvent)=>{event.preventDefault();setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/login',{method:'POST',body:JSON.stringify({identity:form.identity.trim(),password:form.password.trim()})});tokens.set(data.accessToken,data.refreshToken);onAuth(data.user)}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
-  const register=async()=>{setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/register',{method:'POST',body:JSON.stringify({fullName:form.fullName.trim(),username:form.username.trim(),phone:form.phone.trim(),email:form.email.trim(),cnic:form.cnic,password:form.regPassword,termsVersion:TERMS_VERSION,addressLine:form.addressLine.trim(),city:form.city.trim(),occupationType:form.occupationType,employerName:form.occupationType==='EMPLOYED'?form.employerName.trim():undefined,pin:form.pin})});tokens.set(data.accessToken,data.refreshToken);
+  const register=async()=>{setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/register',{method:'POST',body:JSON.stringify({fullName:form.fullName.trim(),username:form.username.trim(),phone:form.phone.trim(),email:form.email.trim(),cnic:form.cnic,password:form.regPassword,termsVersion:TERMS_VERSION,addressLine:form.addressLine.trim(),city:form.city.trim(),occupationType:form.occupationType,employerName:form.occupationType==='EMPLOYED'?form.employerName.trim():undefined,pin:form.pin,cnicCaptured})});tokens.set(data.accessToken,data.refreshToken);
     // The mandatory collection account, linked the moment the account exists.
     // Best-effort: a rail hiccup must never strand a fresh registration —
     // Profile shows the link (and its WhatsApp OTP) if this needs a retry.
@@ -87,8 +89,11 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
         <div className="onboard-note"><b>Salary account = best rate</b><span>Members who collect from a salary account get a 20% fee discount — the most reliable collection there is.</span></div></>}</>;
     case 'email':return <><h2>Your email address</h2><p>For receipts, records and account recovery. No marketing without your say-so.</p>
       <input className="field big-field" type="email" autoFocus autoComplete="email" placeholder="you@example.com" value={form.email} onChange={e=>setForm({...form,email:e.target.value})}/></>;
-    case 'cnic':return <><h2>Your CNIC number</h2><p>The 13 digits, no dashes. Verified members rank ahead in turn order, and your record becomes real, usable proof of reliability.</p>
+    case 'cnic':return <><h2>Your CNIC number</h2><p>The 13 digits, no dashes. Scan the card or type it — your record becomes real, usable proof of reliability.</p>
       <input className="field big-field mono" inputMode="numeric" autoFocus maxLength={13} placeholder="3520212345671" value={form.cnic} onChange={e=>setForm({...form,cnic:e.target.value.replace(/\D/g,'')})}/>
+      {cnicCaptured
+        ?<div className="commitment-ok" style={{marginTop:10}}><ShieldCheck/><div><b>CNIC scanned ✓</b><p>Card photo captured on your device.</p></div></div>
+        :<button type="button" className="secondary" style={{marginTop:10,display:'inline-flex',alignItems:'center',gap:8}} onClick={()=>setScanning(true)}>📷 Scan my CNIC with the camera</button>}
       <div className="onboard-note"><b>Identity check</b><span>Your CNIC is recorded now and verified against NADRA when live verification activates. It is never shown to other members.</span></div></>;
     case 'account':return <><h2>Link your collection account</h2><p>Every circle collects automatically from this account on each due date — that's how Halqa keeps circles safe. A one-time code confirms the link and you get a WhatsApp receipt for every collection. Change it any time in Profile.</p>
       <div className="rail-grid" style={{marginBottom:12}}>{Object.keys(RAIL_META).map(id=><button type="button" key={id} className={`rail-chip ${form.rail===id?'on':''}`} onClick={()=>setForm({...form,rail:id})}><i className="chip-logo" style={{background:RAIL_META[id].color}}>{RAIL_META[id].mono}</i>{RAIL_META[id].name}</button>)}</div>
@@ -151,5 +156,6 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
         :<button className="primary full" disabled={!agreed||busy} onClick={register}>{busy?'Opening your Halqa…':'Agree & open my Halqa'}</button>}
     </>}
   </div><LegalFooter/></section>
-  {doc&&<LegalDocModal doc={doc} onClose={()=>setDoc(null)}/>}</main>
+  {doc&&<LegalDocModal doc={doc} onClose={()=>setDoc(null)}/>}
+  {scanning&&<CnicCapture onClose={()=>setScanning(false)} onCaptured={()=>{setCnicCaptured(true);setScanning(false)}}/>}</main>
 }

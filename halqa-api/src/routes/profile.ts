@@ -7,9 +7,41 @@ import { reputationFor } from '../lib/reputation';
 import { issuePassport } from '../lib/passport';
 import { audit } from '../lib/audit';
 import { queueWhatsApp } from '../lib/whatsapp';
+import { INCOME_DISCOUNT_BPS, CHEQUE_DISCOUNT_BPS } from '../lib/discounts';
 
 const router = Router();
 router.use(requireAuth);
+
+// Income & employer verification → 80% discount on Halqa's service charges. In
+// the sandbox the member submits their details and we confirm immediately;
+// production verifies the income slip with the named employer before it applies.
+router.post('/verify-income', async (req, res, next) => {
+  try {
+    const input = z.object({ employerName: z.string().trim().min(2).max(80) }).parse(req.body);
+    await prisma.user.update({ where: { id: req.auth!.userId }, data: { incomeVerifiedAt: new Date(), employerName: input.employerName } });
+    await audit(prisma, req.auth!.userId, 'INCOME_VERIFIED', 'User', req.auth!.userId, { employerName: input.employerName });
+    res.json({ incomeVerified: true, feeDiscountBps: INCOME_DISCOUNT_BPS });
+  } catch (error) { next(error); }
+});
+// Guarantee cheque → 95% discount. A physical cheque unlocks the 489-F criminal
+// route (the strongest deterrent), so a cheque-secured member is lowest-risk.
+// The member flags a cheque is provided; production marks it secured only once
+// an agent physically collects the cheque.
+router.post('/secure-cheque', async (req, res, next) => {
+  try {
+    await prisma.user.update({ where: { id: req.auth!.userId }, data: { chequeSecuredAt: new Date() } });
+    await audit(prisma, req.auth!.userId, 'CHEQUE_SECURED', 'User', req.auth!.userId, {});
+    res.json({ chequeSecured: true, feeDiscountBps: CHEQUE_DISCOUNT_BPS });
+  } catch (error) { next(error); }
+});
+// Remove a verification (member changes their mind / cheque returned).
+router.post('/clear-verification', async (req, res, next) => {
+  try {
+    const { kind } = z.object({ kind: z.enum(['income', 'cheque']) }).parse(req.body);
+    await prisma.user.update({ where: { id: req.auth!.userId }, data: kind === 'income' ? { incomeVerifiedAt: null } : { chequeSecuredAt: null } });
+    res.json({ cleared: kind });
+  } catch (error) { next(error); }
+});
 router.get('/credit', async (req, res) => res.json(await prisma.creditEvent.findMany({ where: { userId: req.auth!.userId }, orderBy: { scoredAt: 'desc' }, take: 50 })));
 
 router.get('/reputation/:userId', async (req, res) => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { band, allowedPositions, mayBuyTurns, fromTasdeeq, startOrder, BAND_CUTOFFS } from '../src/lib/score-bands';
+import { band, allowedPositions, mayBuyTurns, fromTasdeeq, startOrder, eligiblePositions, earlyTurnUnlocked, BAND_CUTOFFS } from '../src/lib/score-bands';
 
 // Score bands replaced credit-weighted ordering: score only limits WHICH seats
 // a member may claim, never reorders anyone. These lock the boundaries so a
@@ -84,6 +84,24 @@ describe('score bands', () => {
     // Same band-rank → the earlier pick (2) comes first.
     expect(ordered[0].turnPosition).toBe(2);
     expect(ordered[1].turnPosition).toBe(5);
+  });
+
+  it('tenure quarantine: a new member is last-turns-only regardless of score', () => {
+    const excellentNewbie = { creditScore: 820, committeesCompletedClean: 0, earlyTurnVerifiedAt: null };
+    expect(earlyTurnUnlocked(excellentNewbie)).toBe(false);
+    // Even an 820 (Excellent) new member is quarantined to the BAD-band seats.
+    expect(eligiblePositions(10, excellentNewbie)).toEqual(allowedPositions('BAD', 10));
+    expect(eligiblePositions(10, excellentNewbie)).not.toContain(1);
+  });
+  it('tenure quarantine: needs BOTH 2 clean circles AND manual verification to unlock', () => {
+    const d = new Date();
+    expect(earlyTurnUnlocked({ creditScore: 700, committeesCompletedClean: 2, earlyTurnVerifiedAt: null })).toBe(false); // circles but no verify
+    expect(earlyTurnUnlocked({ creditScore: 700, committeesCompletedClean: 1, earlyTurnVerifiedAt: d })).toBe(false);   // verify but 1 circle
+    expect(earlyTurnUnlocked({ creditScore: 700, committeesCompletedClean: 2, earlyTurnVerifiedAt: d })).toBe(true);    // both → unlocked
+  });
+  it('an unlocked member falls back to their score band for positions', () => {
+    const unlockedGood = { creditScore: 700, committeesCompletedClean: 3, earlyTurnVerifiedAt: new Date() };
+    expect(eligiblePositions(10, unlockedGood)).toEqual(allowedPositions('GOOD', 10)); // GOOD → any seat
   });
 
   it('maps the TASDEEQ 200-600 scale onto our 300-850 scale, clamped', () => {

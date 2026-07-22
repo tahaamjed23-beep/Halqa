@@ -172,6 +172,22 @@ model User {
   city String?
   occupationType String?
   employerName String?
+  // Tenure quarantine: new members may only take the LAST turns of any circle,
+  // regardless of score, until they complete `committeesCompletedClean` >= 2
+  // circles cleanly AND are manually verified (earlyTurnVerifiedAt set). Then
+  // early turns unlock. Turn position is the collateral in the no-deposit model.
+  committeesCompletedClean Int @default(0)
+  earlyTurnVerifiedAt DateTime?
+  // Verification discounts on Halqa's service charges (take the largest that
+  // applies): income slip + employer confirmed = 80%; a physical guarantee
+  // cheque collected (enables the 489-F criminal route) = 95%. Salary link = 20%.
+  incomeVerifiedAt DateTime?
+  chequeSecuredAt DateTime?
+  // Optional biometric unlock (WebAuthn platform authenticator) alongside the
+  // app PIN. Stores the credential id only; the private key never leaves the
+  // device. CNIC photo captured at signup (camera scan) — flag only for now.
+  biometricCredId String?
+  cnicCaptured Boolean @default(false)
   vaultParkingEnabled Boolean @default(false)
   vaultTier String @default("STANDARD")
   vaultAutoCover Boolean @default(false)

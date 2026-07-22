@@ -9,7 +9,7 @@ import { clampScore, paisaInput, projectedReturn } from '../lib/money';
 import { assessForwardLiability, type SecurityPolicy } from '../lib/forward-liability';
 import { MUTUAL_PG_VERSION, freshUndertaking, hashText, mutualPgText } from '../lib/agreements';
 import { linkedOpenDefault } from '../lib/family-links';
-import { band, allowedPositions, startOrder } from '../lib/score-bands';
+import { band, allowedPositions, eligiblePositions, earlyTurnUnlocked, startOrder } from '../lib/score-bands';
 import { assessRisk, policyHash } from '../lib/risk-engine';
 import { allocateCyclePool } from '../lib/distribution';
 import { reputationFor } from '../lib/reputation';
@@ -116,16 +116,16 @@ router.get('/discover', async (req, res) => {
     take: 30, // FORMING sorts first, so the newest open circles always surface; caps payload on a busy platform
   });
   const day = 86_400_000;
-  // The viewer's band decides which seats they may claim — Discover only shows
-  // circles where they actually have an eligible free seat (no dead ends).
-  const viewer = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { creditScore: true } });
-  const viewerBand = band(viewer.creditScore);
+  // The viewer's TENURE + band decide which seats they may claim — Discover only
+  // shows circles where they actually have an eligible free seat (no dead ends).
+  // A new member sees only the late seats until they graduate (score-bands.ts).
+  const viewer = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { creditScore: true, committeesCompletedClean: true, earlyTurnVerifiedAt: true } });
   const mapped = rows.map(committee => {
     const openNow = committee.status === 'FORMING' && committee.members.length < committee.memberCap && committee.joinPolicy !== 'INVITE_ONLY';
     const occupied = new Set(committee.members.map(member => member.turnPosition));
     const latestPayout = committee.rounds.reduce((latest, round) => Math.max(latest, round.payoutDate.getTime()), Date.now());
     const projectedCycleStart = openNow ? Date.now() + 7 * day : latestPayout + committee.periodDays * day;
-    const eligibleSet = new Set(allowedPositions(viewerBand, committee.memberCap));
+    const eligibleSet = new Set(eligiblePositions(committee.memberCap, viewer));
     const availablePositions = Array.from({ length: committee.memberCap }, (_, index) => index + 1)
       .filter(position => !openNow || !occupied.has(position))
       .map(position => ({
@@ -139,13 +139,13 @@ router.get('/discover', async (req, res) => {
     const turnPricing = committee.earlyFeeBps > 0
       ? { kind: 'EARLY_FEE' as const, earlyFeeBps: committee.earlyFeeBps, pooled: committee.dividendPooled }
       : { kind: 'FLAT' as const, earlyFeeBps: 0, pooled: false };
-    const eligiblePositions = availablePositions.filter(p => p.eligible).map(p => p.position);
+    const eligiblePositionList = availablePositions.filter(p => p.eligible).map(p => p.position);
     return {
       id: committee.id, name: committee.name, mode: committee.mode, status: committee.status,
       availability: openNow ? 'OPEN' : 'WAIT_NEXT_CYCLE', memberCount: committee.members.length, memberCap: committee.memberCap,
       contributionPaisa: committee.contributionPaisa, periodDays: committee.periodDays, cycleNumber: committee.cycleNumber,
       riskScore: committee.riskScore, riskBand: committee.riskBand, turnPricing,
-      host: committee.host, scheme: committee.scheme, availablePositions, eligiblePositions,
+      host: committee.host, scheme: committee.scheme, availablePositions, eligiblePositions: eligiblePositionList,
       projectedCycleStart: new Date(projectedCycleStart), creditHealth: committeeCreditHealth(committee.members, committee.rounds, committee.recoveryCases),
       engines: committeeEngineLabels(committee), waitlisted: committee.waitlist.length > 0,
     };
@@ -192,7 +192,7 @@ router.post('/', async (req, res, next) => {
       cadencePreset: z.enum(['VERY_SHORT','SHORT','MID','LONG']), periodDays: z.number().int().min(1).max(365),
       minMembersToStart: z.number().int().min(3).max(30), reinvestRatio: z.number().min(0).max(1).default(0),
       riskTolerance: z.number().int().min(1).max(8).default(3),
-      depositCoverageBps: z.number().int().min(3000).max(9000).default(7000),
+      depositCoverageBps: z.number().int().min(0).max(9000).default(7000), // 0 = record-only, no deposits (the live product default)
       // Host's expectation of how many days before the due date members
       // typically pay. Drives the float-projection estimates only — actual
       // float profit is always computed from real payment timestamps.
@@ -396,16 +396,19 @@ async function joinCommittee(committeeId: string, req: Request, res: Response, n
     if (committee.members.length >= committee.memberCap) return res.status(409).json({ error: 'Committee is full' });
     const existing = committee.members.some(m => m.userId === userId);
     if (existing) return res.status(409).json({ error: 'Already a member' });
-    // Band-based slot eligibility: risky members can only sit in late seats
-    // (which are owed money and can't default), replacing credit-weighted
-    // reordering. Compute the joiner's eligible-and-free positions here so the
-    // pick is validated the same way for every join route.
-    const joinerBand = band(joiningUser.creditScore);
+    // Slot eligibility. On PUBLIC (stranger-joinable) circles the tenure
+    // quarantine applies: a new member — whatever their score — may only take a
+    // LATE turn until they finish 2 clean circles and are verified (score-bands
+    // .ts). INVITE-ONLY circles bypass it: the host is vouching (the social
+    // collateral Akif Saeed flagged), and positions there are host-assigned.
     const occupiedNow = new Set(committee.members.map(m => m.turnPosition));
-    const eligibleFree = allowedPositions(joinerBand, committee.memberCap).filter(p => !occupiedNow.has(p));
-    if (!eligibleFree.length) return res.status(409).json({ error: 'No turn position is available for your reliability band in this circle. Try another circle — Discover only shows ones you can join.' });
+    const allPositions = Array.from({ length: committee.memberCap }, (_, i) => i + 1);
+    const allowedForJoiner = committee.listedPublicly ? eligiblePositions(committee.memberCap, joiningUser) : allPositions;
+    const eligibleFree = allowedForJoiner.filter(p => !occupiedNow.has(p));
+    const quarantined = committee.listedPublicly && !earlyTurnUnlocked(joiningUser);
+    if (!eligibleFree.length) return res.status(409).json({ error: quarantined ? 'New members can only take the last turns of a circle until they complete two circles cleanly. No late turn is free here — try another circle.' : 'No turn position is available to you in this circle. Try another — Discover only shows ones you can join.' });
     if (requestedPosition !== undefined && !eligibleFree.includes(requestedPosition)) {
-      return res.status(409).json({ error: `Turn ${requestedPosition} is not available to you. Your reliability band can take: ${eligibleFree.join(', ')}.` });
+      return res.status(409).json({ error: quarantined ? `Turn ${requestedPosition} is reserved for established members. As a new member you can take: ${eligibleFree.join(', ')}.` : `Turn ${requestedPosition} is not available to you. You can take: ${eligibleFree.join(', ')}.` });
     }
     const chosenPosition = requestedPosition ?? eligibleFree[0];
     const membership = await prisma.$transaction(async tx => {
@@ -529,7 +532,9 @@ router.post('/:id/start', async (req, res, next) => {
         const coverageCap = Math.min(9500, coverageBase + 500);
         const positionCoverageBps = ordered.length <= 1 ? 0 : Math.round(coverageBase * (ordered.length - i - 1) / (ordered.length - 1));
         const creditAdjustmentBps = Math.max(-1000, Math.min(1500, Math.round((700 - ordered[i].user.creditScore) * 10)));
-        const requiredCoverageBps = Math.max(0, Math.min(coverageCap, positionCoverageBps + creditAdjustmentBps));
+        // coverageBase 0 = deposits disabled for this circle (the record-only
+        // default): no position or credit-adjustment deposit is created.
+        const requiredCoverageBps = coverageBase === 0 ? 0 : Math.max(0, Math.min(coverageCap, positionCoverageBps + creditAdjustmentBps));
         
         const depositAmount = protection.dynamicDeposit === false ? 0n : remainingDues * BigInt(requiredCoverageBps) / 10_000n;
         if (depositAmount > 0n) await tx.securityDeposit.create({ data: { membershipId: ordered[i].id, amountPaisa: depositAmount, status: 'PENDING' } });
@@ -825,6 +830,16 @@ router.post('/:id/payout', async (req, res, next) => {
         await tx.committee.update({ where: { id: committee.id }, data: { currentRound: nextNumber } });
       } else {
         await tx.committee.update({ where: { id: committee.id }, data: { status: 'COMPLETED' } });
+        // Tenure progression: members who finished this circle WITHOUT a default
+        // earn one clean-completion credit toward unlocking early turns (2 needed
+        // + manual verification). Anyone with a missed payment or an open recovery
+        // case in this circle is excluded.
+        const defaulterIds = new Set<string>([
+          ...(await tx.payment.findMany({ where: { round: { committeeId: committee.id }, status: 'MISSED' }, select: { payerId: true } })).map(p => p.payerId),
+          ...(await tx.recoveryCase.findMany({ where: { committeeId: committee.id }, select: { userId: true } })).map(r => r.userId),
+        ]);
+        const cleanMemberIds = members.map(m => m.userId).filter(id => !defaulterIds.has(id));
+        if (cleanMemberIds.length) await tx.user.updateMany({ where: { id: { in: cleanMemberIds } }, data: { committeesCompletedClean: { increment: 1 } } });
         const heldDeposits = await tx.securityDeposit.findMany({ where: { membership: { committeeId: committee.id }, status: 'HELD' }, include: { membership: true } });
         // Deposits That Earn: in Sukoon/Bazaar the recorded deposits accrue at
         // the Islamic deposit scheme's dated rate; Classic keeps the host-set bps.
