@@ -172,6 +172,11 @@ model User {
   city String?
   occupationType String?
   employerName String?
+  // Live home location captured at signup (device GPS). Stored as coordinates —
+  // the member must set their real home; we reverse-geocode it to the address.
+  homeLat Float?
+  homeLng Float?
+  homeLocationAt DateTime?
   // Tenure quarantine: new members may only take the LAST turns of any circle,
   // regardless of score, until they complete `committeesCompletedClean` >= 2
   // circles cleanly AND are manually verified (earlyTurnVerifiedAt set). Then

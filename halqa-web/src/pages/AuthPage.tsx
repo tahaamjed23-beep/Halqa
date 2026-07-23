@@ -30,6 +30,7 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const [form,setForm]=useState({identity:'',password:'',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:'',rail:'RAAST',accountNo:'',accountTitle:'',bankName:'HBL',otpCode:'',addressLine:'',city:'',occupationType:'',employerName:'',pin:'',pinConfirm:''});
   const [agreed,setAgreed]=useState(false);
   const [cnicCaptured,setCnicCaptured]=useState(false);const [scanning,setScanning]=useState(false);
+  const [homeLat,setHomeLat]=useState<number|null>(null);const [homeLng,setHomeLng]=useState<number|null>(null);const [locating,setLocating]=useState(false);const [locErr,setLocErr]=useState('');
   const [otpSent,setOtpSent]=useState(false);const [otpVerified,setOtpVerified]=useState(false);const [devCode,setDevCode]=useState('');
   const [doc,setDoc]=useState<DocId|null>(null);
   const [error,setError]=useState('');const [busy,setBusy]=useState(false);
@@ -42,7 +43,7 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const cnicOk=form.cnic.length===13;
   const passOk=form.regPassword.length>=8&&/[a-zA-Z]/.test(form.regPassword)&&/\d/.test(form.regPassword);
   const accountOk=form.accountNo.replace(/\s+/g,'').length>=10&&form.accountTitle.trim().length>=3;
-  const profileOk=form.addressLine.trim().length>=5&&form.city.trim().length>=2&&!!form.occupationType&&(form.occupationType!=='EMPLOYED'||form.employerName.trim().length>=2);
+  const profileOk=homeLat!=null&&form.addressLine.trim().length>=5&&form.city.trim().length>=2&&!!form.occupationType&&(form.occupationType!=='EMPLOYED'||form.employerName.trim().length>=2);
   const pinOk=/^\d{4,6}$/.test(form.pin)&&form.pin===form.pinConfirm;
   const canContinue=step==='phone'?phoneOk:step==='otp'?otpVerified:step==='name'?nameOk:step==='profile'?profileOk:step==='email'?emailOk:step==='cnic'?cnicOk:step==='account'?accountOk:step==='password'?passOk:step==='pin'?pinOk:agreed;
   const next=()=>{setError('');if(stepIndex<REG_STEPS.length-1)setStep(REG_STEPS[stepIndex+1])};
@@ -51,13 +52,30 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   // Phone OTP: request a code when the user reaches the verify step, and confirm
   // it before they can continue. Sandbox surfaces the code inline (devCode).
   const requestOtp=async()=>{setBusy(true);setError('');try{const d=await api<{otpSent:boolean;devCode?:string}>('/auth/phone-otp',{method:'POST',body:JSON.stringify({phone:form.phone.trim()})});setOtpSent(true);setDevCode(d.devCode||'')}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
+  // Live location: capture the device's real GPS and reverse-geocode it to
+  // prefill the address + city. The coordinates are saved as the member's home.
+  const captureLocation=()=>{
+    setLocating(true);setLocErr('');
+    if(!('geolocation' in navigator)){setLocErr('Location isn’t available on this device — type your address instead.');setLocating(false);return}
+    navigator.geolocation.getCurrentPosition(async pos=>{
+      const lat=pos.coords.latitude,lng=pos.coords.longitude;setHomeLat(lat);setHomeLng(lng);
+      try{
+        const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&zoom=16`,{headers:{Accept:'application/json'}});
+        const j=await r.json();const a=j.address||{};
+        const city=a.city||a.town||a.village||a.county||'';
+        const line=[a.road,a.suburb,a.neighbourhood,a.residential].filter(Boolean).join(', ')||(j.display_name||'').split(',').slice(0,2).join(', ');
+        setForm(f=>({...f,city:city||f.city,addressLine:line||f.addressLine}));
+      }catch{/* coordinates alone are enough */}
+      setLocating(false);
+    },err=>{setLocErr(err.code===1?'Please allow location access — your home location is required.':'Couldn’t get your location. Try again.');setLocating(false)},{enableHighAccuracy:true,timeout:15000});
+  };
   const verifyOtp=async()=>{setBusy(true);setError('');try{await api('/auth/phone-otp/verify',{method:'POST',body:JSON.stringify({phone:form.phone.trim(),code:form.otpCode.trim()})});setOtpVerified(true)}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
   // Advancing off the phone step fires the OTP so the code is waiting when the
   // verify step paints.
   const goNext=()=>{const cur=step;next();if(cur==='phone'&&!otpSent)void requestOtp()};
 
   const login=async(event:React.FormEvent)=>{event.preventDefault();setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/login',{method:'POST',body:JSON.stringify({identity:form.identity.trim(),password:form.password.trim()})});tokens.set(data.accessToken,data.refreshToken);onAuth(data.user)}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
-  const register=async()=>{setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/register',{method:'POST',body:JSON.stringify({fullName:form.fullName.trim(),username:form.username.trim(),phone:form.phone.trim(),email:form.email.trim(),cnic:form.cnic,password:form.regPassword,termsVersion:TERMS_VERSION,addressLine:form.addressLine.trim(),city:form.city.trim(),occupationType:form.occupationType,employerName:form.occupationType==='EMPLOYED'?form.employerName.trim():undefined,pin:form.pin,cnicCaptured})});tokens.set(data.accessToken,data.refreshToken);
+  const register=async()=>{setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/register',{method:'POST',body:JSON.stringify({fullName:form.fullName.trim(),username:form.username.trim(),phone:form.phone.trim(),email:form.email.trim(),cnic:form.cnic,password:form.regPassword,termsVersion:TERMS_VERSION,addressLine:form.addressLine.trim(),city:form.city.trim(),occupationType:form.occupationType,employerName:form.occupationType==='EMPLOYED'?form.employerName.trim():undefined,pin:form.pin,cnicCaptured,homeLat:homeLat??undefined,homeLng:homeLng??undefined})});tokens.set(data.accessToken,data.refreshToken);
     // The mandatory collection account, linked the moment the account exists.
     // Best-effort: a rail hiccup must never strand a fresh registration —
     // Profile shows the link (and its WhatsApp OTP) if this needs a retry.
@@ -76,7 +94,11 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
     case 'name':return <><h2>Your name, as on your CNIC</h2><p>Circles run on real names — it's how members know exactly who they're trusting.</p>
       <input className="field big-field" autoFocus autoComplete="name" placeholder="Full name" value={form.fullName} onChange={e=>setForm({...form,fullName:e.target.value})}/>
       <input className="field" placeholder="Pick a username" autoComplete="username" value={form.username} onChange={e=>setForm({...form,username:e.target.value.toLowerCase().replace(/[^a-z0-9_.]/g,'')})}/></>;
-    case 'profile':return <><h2>Where you live & what you do</h2><p>Your address and work help us keep circles trustworthy and, later, verify you faster. Never shown to other members.</p>
+    case 'profile':return <><h2>Where you live & what you do</h2><p>Your home location and work help us keep circles trustworthy and verify you faster. Never shown to other members.</p>
+      {homeLat!=null
+        ?<div className="commitment-ok" style={{marginBottom:10}}><ShieldCheck/><div><b>Home location set ✓</b><p>Pinned from your device — this is your registered home.</p></div></div>
+        :<button type="button" className="secondary" style={{marginBottom:10,display:'inline-flex',alignItems:'center',gap:8}} disabled={locating} onClick={captureLocation}>📍 {locating?'Getting your location…':'Use my live location (required)'}</button>}
+      {locErr&&<div className="error-box" style={{marginBottom:10}}>{locErr}</div>}
       <label className="onboard-field-label">Home address</label>
       <input className="field" autoFocus autoComplete="street-address" placeholder="House / street / area" value={form.addressLine} onChange={e=>setForm({...form,addressLine:e.target.value})}/>
       <label className="onboard-field-label">City</label>
