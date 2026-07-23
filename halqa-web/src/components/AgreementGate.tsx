@@ -9,8 +9,9 @@ type DocText = { doc: string; version: number; text: string; textHash: string };
 // first time an account signs in and again every seven days when the previous
 // signature lapses; also re-opened by any 428 UNDERTAKING_REQUIRED from the
 // API. Signing is a REAL adopted digital signature: the member types their
-// full legal name (verified against the account) and may draw their signature;
-// both are stored with the document hash, IP and timestamp (ETO 2002).
+// full legal name (verified against the account) and draws their signature —
+// both are required and stored with the document hash, IP and timestamp
+// (ETO 2002).
 export default function AgreementGate({ userName }: { userName: string }) {
   const [open, setOpen] = useState(false);
   const [docText, setDocText] = useState<DocText | null>(null);
@@ -77,7 +78,8 @@ export default function AgreementGate({ userName }: { userName: string }) {
     setBusy(true); setError('');
     try {
       const signatureData = hasDrawn && canvasRef.current ? canvasRef.current.toDataURL('image/png') : undefined;
-      await api('/agreements/sign', { method: 'POST', body: JSON.stringify({ doc: 'PLATFORM_UNDERTAKING', accept: true, signedName: typedName.trim(), ...(signatureData && signatureData.length <= 80_000 ? { signatureData } : {}) }) });
+      if (!signatureData) { setError('Please draw your signature in the box above.'); setBusy(false); return; }
+      await api('/agreements/sign', { method: 'POST', body: JSON.stringify({ doc: 'PLATFORM_UNDERTAKING', accept: true, signedName: typedName.trim(), ...(signatureData.length <= 80_000 ? { signatureData } : {}) }) });
       setOpen(false);
     } catch (reason) { setError((reason as Error).message); }
     finally { setBusy(false); }
@@ -101,7 +103,7 @@ export default function AgreementGate({ userName }: { userName: string }) {
           <span><b>I have read the undertaking and adopt the signature below as my own act</b><small>Version {docText.version} · document hash {docText.textHash.slice(0, 12)}… · valid 7 days, then renewed here</small></span>
         </label>
         <div>
-          <div style={{ fontSize: 12, opacity: .75, marginBottom: 4 }}>Draw your signature (optional)</div>
+          <div style={{ fontSize: 12, opacity: .75, marginBottom: 4 }}>Draw your signature <b style={{ color: 'var(--gold)' }}>(required)</b></div>
           <div style={{ position: 'relative' }}>
             <canvas ref={canvasRef} width={560} height={120} style={{ width: '100%', height: 96, background: '#f7f2e2', borderRadius: 10, border: '1px dashed rgba(120,95,20,.45)', touchAction: 'none', cursor: 'crosshair' }}
               onPointerDown={startDraw} onPointerMove={moveDraw} onPointerUp={endDraw} onPointerLeave={endDraw} />
@@ -115,7 +117,7 @@ export default function AgreementGate({ userName }: { userName: string }) {
           {typedName.length > 2 && !nameMatches && <div style={{ fontSize: 12, color: '#c96b6b', marginTop: 4 }}>Must match your account name exactly: {userName}</div>}
         </div>
         {error && <div className="error-box">{error}</div>}
-        <button className="primary full" disabled={!agreed || !nameMatches || busy} onClick={sign}>{busy ? 'Signing…' : 'E-sign the undertaking'}</button>
+        <button className="primary full" disabled={!agreed || !nameMatches || !hasDrawn || busy} onClick={sign}>{busy ? 'Signing…' : 'E-sign the undertaking'}</button>
       </div>
     </div>
   );

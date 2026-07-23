@@ -10,7 +10,7 @@ import { createHash } from 'node:crypto';
 
 const router = Router();
 const cleanPhone = (v: string) => v.replace(/\s+/g, '').replace(/^\+92/, '0');
-const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, phoneVerified:true, addressLine:true, city:true, occupationType:true, employerName:true, committeesCompletedClean:true, earlyTurnVerifiedAt:true, incomeVerifiedAt:true, chequeSecuredAt:true, cnicCaptured:true, homeLat:true, homeLng:true, createdAt: true } as const;
+const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, phoneVerified:true, addressLine:true, city:true, locality:true, occupationType:true, employerName:true, jobTitle:true, committeesCompletedClean:true, earlyTurnVerifiedAt:true, incomeVerifiedAt:true, chequeSecuredAt:true, cnicCaptured:true, homeLat:true, homeLng:true, createdAt: true } as const;
 // Never send the PIN hash or biometric credential id to the client; we only
 // expose booleans + the derived tenure/discount status the UI needs.
 const pinHash = (pin: string) => createHash('sha256').update(`halqa-pin:${process.env.JWT_SECRET || 'dev'}:${pin}`).digest('hex');
@@ -58,8 +58,14 @@ router.post('/register', async (req, res, next) => {
       // test seeders keep registering unchanged.
       addressLine: z.string().trim().max(120).optional(),
       city: z.string().trim().max(60).optional(),
+      // Broad area within the city (sector/colony) shown to other members — a
+      // light trust signal, never the house number.
+      locality: z.string().trim().max(60).optional(),
       occupationType: z.enum(['EMPLOYED','BUSINESS_OWNER','HOUSEWIFE','STUDENT','SELF_EMPLOYED','RETIRED','OTHER']).optional(),
       employerName: z.string().trim().max(80).optional(),
+      // Profession shown publicly (NOT the employer). For a housewife this holds
+      // the husband's job.
+      jobTitle: z.string().trim().max(60).optional(),
       pin: z.string().trim().regex(/^\d{4,6}$/, 'PIN must be 4 to 6 digits').optional(),
       cnicCaptured: z.boolean().optional(),
       homeLat: z.number().min(-90).max(90).optional(),
@@ -86,8 +92,10 @@ router.post('/register', async (req, res, next) => {
       fullName: body.fullName.trim(), username, email, phone, cnic: body.cnic ?? null, kycLevel: body.cnic ? 1 : 0,
       passwordHash: await bcrypt.hash(body.password, 12), referredById: referrer?.id ?? null,
       phoneVerified: !!phoneOtpOk,
-      addressLine: body.addressLine ?? null, city: body.city ?? null, occupationType: body.occupationType ?? null,
+      addressLine: body.addressLine ?? null, city: body.city ?? null, locality: body.locality ?? null,
+      occupationType: body.occupationType ?? null,
       employerName: body.occupationType === 'EMPLOYED' ? (body.employerName ?? null) : null,
+      jobTitle: body.jobTitle ?? null,
       pinHash: body.pin ? pinHash(body.pin) : null,
       cnicCaptured: body.cnicCaptured ?? false,
       homeLat: body.homeLat ?? null, homeLng: body.homeLng ?? null,

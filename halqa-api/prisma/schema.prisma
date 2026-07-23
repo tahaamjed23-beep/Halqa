@@ -170,8 +170,14 @@ model User {
   // member does for a living (drives future risk models + partner KYC handoff).
   addressLine String?
   city String?
+  // Broad area within the city (sector/colony, e.g. "G-13", "DHA Phase 2") —
+  // shown to other members after the city as a light trust signal (never the
+  // house number). jobTitle = the member's profession shown publicly (NOT the
+  // employer); for a housewife it holds the husband's job.
+  locality String?
   occupationType String?
   employerName String?
+  jobTitle String?
   // Live home location captured at signup (device GPS). Stored as coordinates —
   // the member must set their real home; we reverse-geocode it to the address.
   homeLat Float?

@@ -20,6 +20,18 @@ type RegStep = typeof REG_STEPS[number];
 // Occupation drives future risk models + the partner KYC handoff. EMPLOYED asks
 // for the employer (salary-deduction collection is the most certain there is).
 const OCCUPATIONS: [string, string][] = [['EMPLOYED','Employed (salaried)'],['BUSINESS_OWNER','Business owner'],['SELF_EMPLOYED','Self-employed / freelance'],['HOUSEWIFE','Housewife'],['STUDENT','Student'],['RETIRED','Retired'],['OTHER','Other']];
+// The public "job" line shown on a member's profile — the profession, never the
+// employer. For a housewife it captures the husband's job (a common Pakistani
+// reference point). Label/placeholder change with the occupation picked.
+const JOB_FIELD: Record<string,{label:string;ph:string}> = {
+  EMPLOYED:{label:'Your job / role (shown to members)',ph:'e.g. Teacher, Accountant, Engineer'},
+  BUSINESS_OWNER:{label:'What’s your business? (shown to members)',ph:'e.g. Grocery store, Garments trader'},
+  SELF_EMPLOYED:{label:'What work do you do? (shown to members)',ph:'e.g. Electrician, Tailor, Driver'},
+  STUDENT:{label:'What are you studying? (shown to members)',ph:'e.g. BSc Computer Science'},
+  HOUSEWIFE:{label:'Husband’s job (shown to members)',ph:'e.g. Shopkeeper, Government officer'},
+  RETIRED:{label:'What did you do? (shown to members)',ph:'e.g. Retired schoolteacher'},
+  OTHER:{label:'Your work (shown to members)',ph:'Describe your work'},
+};
 // A short searchable list of the largest Pakistani cities; free text is allowed
 // for anywhere not listed.
 const PK_CITIES = ['Karachi','Lahore','Islamabad','Rawalpindi','Faisalabad','Multan','Peshawar','Quetta','Hyderabad','Gujranwala','Sialkot','Bahawalpur','Sargodha','Sukkur','Larkana','Sheikhupura','Mardan','Gujrat','Kasur','Rahim Yar Khan','Sahiwal','Okara','Wah Cantt','Dera Ghazi Khan','Mirpur','Abbottabad','Muzaffarabad','Mingora','Nawabshah','Chiniot'];
@@ -27,7 +39,7 @@ const PK_CITIES = ['Karachi','Lahore','Islamabad','Rawalpindi','Faisalabad','Mul
 export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const [mode,setMode]=useState<'login'|'register'>('login');
   const [step,setStep]=useState<RegStep>('phone');
-  const [form,setForm]=useState({identity:'',password:'',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:'',rail:'RAAST',accountNo:'',accountTitle:'',bankName:'HBL',otpCode:'',addressLine:'',city:'',occupationType:'',employerName:'',pin:'',pinConfirm:''});
+  const [form,setForm]=useState({identity:'',password:'',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:'',rail:'RAAST',accountNo:'',accountTitle:'',bankName:'HBL',otpCode:'',addressLine:'',city:'',locality:'',occupationType:'',employerName:'',jobTitle:'',pin:'',pinConfirm:''});
   const [agreed,setAgreed]=useState(false);
   const [cnicCaptured,setCnicCaptured]=useState(false);const [scanning,setScanning]=useState(false);
   const [homeLat,setHomeLat]=useState<number|null>(null);const [homeLng,setHomeLng]=useState<number|null>(null);const [locating,setLocating]=useState(false);const [locErr,setLocErr]=useState('');
@@ -63,8 +75,10 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
         const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&zoom=16`,{headers:{Accept:'application/json'}});
         const j=await r.json();const a=j.address||{};
         const city=a.city||a.town||a.village||a.county||'';
+        // Broad area shown to members (sector/colony), never the house number.
+        const locality=a.suburb||a.neighbourhood||a.city_district||a.quarter||a.residential||a.borough||'';
         const line=[a.road,a.suburb,a.neighbourhood,a.residential].filter(Boolean).join(', ')||(j.display_name||'').split(',').slice(0,2).join(', ');
-        setForm(f=>({...f,city:city||f.city,addressLine:line||f.addressLine}));
+        setForm(f=>({...f,city:city||f.city,locality:locality||f.locality,addressLine:line||f.addressLine}));
       }catch{/* coordinates alone are enough */}
       setLocating(false);
     },err=>{setLocErr(err.code===1?'Please allow location access — your home location is required.':'Couldn’t get your location. Try again.');setLocating(false)},{enableHighAccuracy:true,timeout:15000});
@@ -75,7 +89,7 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const goNext=()=>{const cur=step;next();if(cur==='phone'&&!otpSent)void requestOtp()};
 
   const login=async(event:React.FormEvent)=>{event.preventDefault();setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/login',{method:'POST',body:JSON.stringify({identity:form.identity.trim(),password:form.password.trim()})});tokens.set(data.accessToken,data.refreshToken);onAuth(data.user)}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
-  const register=async()=>{setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/register',{method:'POST',body:JSON.stringify({fullName:form.fullName.trim(),username:form.username.trim(),phone:form.phone.trim(),email:form.email.trim(),cnic:form.cnic,password:form.regPassword,termsVersion:TERMS_VERSION,addressLine:form.addressLine.trim(),city:form.city.trim(),occupationType:form.occupationType,employerName:form.occupationType==='EMPLOYED'?form.employerName.trim():undefined,pin:form.pin,cnicCaptured,homeLat:homeLat??undefined,homeLng:homeLng??undefined})});tokens.set(data.accessToken,data.refreshToken);
+  const register=async()=>{setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/register',{method:'POST',body:JSON.stringify({fullName:form.fullName.trim(),username:form.username.trim(),phone:form.phone.trim(),email:form.email.trim(),cnic:form.cnic,password:form.regPassword,termsVersion:TERMS_VERSION,addressLine:form.addressLine.trim(),city:form.city.trim(),locality:form.locality.trim()||undefined,occupationType:form.occupationType,employerName:form.occupationType==='EMPLOYED'?form.employerName.trim():undefined,jobTitle:form.jobTitle.trim()||undefined,pin:form.pin,cnicCaptured,homeLat:homeLat??undefined,homeLng:homeLng??undefined})});tokens.set(data.accessToken,data.refreshToken);
     // The mandatory collection account, linked the moment the account exists.
     // Best-effort: a rail hiccup must never strand a fresh registration —
     // Profile shows the link (and its WhatsApp OTP) if this needs a retry.
@@ -94,19 +108,24 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
     case 'name':return <><h2>Your name, as on your CNIC</h2><p>Circles run on real names — it's how members know exactly who they're trusting.</p>
       <input className="field big-field" autoFocus autoComplete="name" placeholder="Full name" value={form.fullName} onChange={e=>setForm({...form,fullName:e.target.value})}/>
       <input className="field" placeholder="Pick a username" autoComplete="username" value={form.username} onChange={e=>setForm({...form,username:e.target.value.toLowerCase().replace(/[^a-z0-9_.]/g,'')})}/></>;
-    case 'profile':return <><h2>Where you live & what you do</h2><p>Your home location and work help us keep circles trustworthy and verify you faster. Never shown to other members.</p>
+    case 'profile':return <><h2>Where you live & what you do</h2><p>Your city, area and job appear on your member profile — a light trust signal so people know who they're saving with. Your exact street address and CNIC are <b>never</b> shown to anyone.</p>
+      <div className="onboard-warn"><b>⚠ Enter your real, correct details</b><span>Members see your name, area and job, and our team checks them when we review your account. Wrong or made-up information gets your account frozen.</span></div>
       {homeLat!=null
-        ?<div className="commitment-ok" style={{marginBottom:10}}><ShieldCheck/><div><b>Home location set ✓</b><p>Pinned from your device — this is your registered home.</p></div></div>
-        :<button type="button" className="secondary" style={{marginBottom:10,display:'inline-flex',alignItems:'center',gap:8}} disabled={locating} onClick={captureLocation}>📍 {locating?'Getting your location…':'Use my live location (required)'}</button>}
+        ?<div className="commitment-ok" style={{margin:'10px 0'}}><ShieldCheck/><div><b>Home location set ✓</b><p>Pinned from your device — this is your registered home.</p></div></div>
+        :<button type="button" className="location-cta" disabled={locating} onClick={captureLocation}><span className="location-cta-pin">📍</span><span className="location-cta-text"><b>{locating?'Getting your location…':'Use my live location'}</b><small>{locating?'Hold on a moment':'Required — tap to pin your home from your device GPS'}</small></span></button>}
       {locErr&&<div className="error-box" style={{marginBottom:10}}>{locErr}</div>}
-      <label className="onboard-field-label">Home address</label>
+      <label className="onboard-field-label">Home address <span className="label-private">· private</span></label>
       <input className="field" autoFocus autoComplete="street-address" placeholder="House / street / area" value={form.addressLine} onChange={e=>setForm({...form,addressLine:e.target.value})}/>
       <label className="onboard-field-label">City</label>
       <input className="field" list="pk-cities" autoComplete="address-level2" placeholder="Start typing your city" value={form.city} onChange={e=>setForm({...form,city:e.target.value})}/>
       <datalist id="pk-cities">{PK_CITIES.map(c=><option key={c} value={c}/>)}</datalist>
+      <label className="onboard-field-label">Area / sector <span className="label-shown">· shown to members</span></label>
+      <input className="field" placeholder="e.g. G-13, DHA Phase 2, Gulberg" value={form.locality} onChange={e=>setForm({...form,locality:e.target.value})}/>
       <label className="onboard-field-label">What do you do?</label>
-      <select className="field" value={form.occupationType} onChange={e=>setForm({...form,occupationType:e.target.value})}><option value="">Select…</option>{OCCUPATIONS.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select>
-      {form.occupationType==='EMPLOYED'&&<><label className="onboard-field-label">Where do you work?</label>
+      <select className="field" value={form.occupationType} onChange={e=>setForm({...form,occupationType:e.target.value,employerName:e.target.value==='EMPLOYED'?form.employerName:'',jobTitle:''})}><option value="">Select…</option>{OCCUPATIONS.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select>
+      {form.occupationType&&<><label className="onboard-field-label">{JOB_FIELD[form.occupationType].label}</label>
+        <input className="field" placeholder={JOB_FIELD[form.occupationType].ph} value={form.jobTitle} onChange={e=>setForm({...form,jobTitle:e.target.value})}/></>}
+      {form.occupationType==='EMPLOYED'&&<><label className="onboard-field-label">Where do you work? <span className="label-private">· private</span></label>
         <input className="field" placeholder="Company / employer name" value={form.employerName} onChange={e=>setForm({...form,employerName:e.target.value})}/>
         <div className="onboard-note"><b>Salary account = best rate</b><span>Members who collect from a salary account get a 20% fee discount — the most reliable collection there is.</span></div></>}</>;
     case 'email':return <><h2>Your email address</h2><p>For receipts, records and account recovery. No marketing without your say-so.</p>
@@ -144,8 +163,8 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
         <div><span>Username</span><b>@{form.username}</b></div>
         <div><span>Email</span><b>{form.email}</b></div>
         <div><span>CNIC</span><b className="mono">{'•'.repeat(9)}{form.cnic.slice(-4)}</b></div>
-        <div><span>City</span><b>{form.city||'—'}</b></div>
-        <div><span>Work</span><b>{OCCUPATIONS.find(([id])=>id===form.occupationType)?.[1]||'—'}{form.occupationType==='EMPLOYED'&&form.employerName?` · ${form.employerName}`:''}</b></div>
+        <div><span>City &amp; area</span><b>{form.city||'—'}{form.locality?` · ${form.locality}`:''}</b></div>
+        <div><span>Work</span><b>{OCCUPATIONS.find(([id])=>id===form.occupationType)?.[1]||'—'}{form.jobTitle?` · ${form.jobTitle}`:''}</b></div>
         <div><span>Collection account</span><b>{form.accountTitle} · <span className="mono">{form.rail==='BANK_TRANSFER'?form.bankName+' ':''}{'•'.repeat(Math.max(0,form.accountNo.replace(/\s+/g,'').length-4))}{form.accountNo.replace(/\s+/g,'').slice(-4)}</span></b></div>
         <div><span>App PIN</span><b>Set ✓</b></div>
       </div>

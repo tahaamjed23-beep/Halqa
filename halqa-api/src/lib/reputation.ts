@@ -3,7 +3,7 @@ import { prisma } from '../db';
 // Reliability record derived from real payment/completion events only — never
 // self-reported. This is the trust surface shown before joining a circle.
 export async function reputationFor(userId: string) {
-  const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, fullName: true, username: true, creditScore: true, paymentStreak: true, createdAt: true, defaultFlag: true, isBanned: true } });
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, fullName: true, username: true, creditScore: true, paymentStreak: true, createdAt: true, defaultFlag: true, isBanned: true, city: true, locality: true, occupationType: true, jobTitle: true } });
   if (!user) return null;
   const [hostedCompleted, hostedActive, cleanCompletions, payments] = await Promise.all([
     prisma.committee.count({ where: { hostId: user.id, status: 'COMPLETED' } }),
@@ -20,5 +20,8 @@ export async function reputationFor(userId: string) {
     hostedCompleted, hostedActive, cleanCompletions,
     paymentsResolved: resolved, onTimePct: resolved ? Math.round((onTime / resolved) * 100) : null,
     missedPayments: missed, defaultFlag: user.defaultFlag, isBanned: user.isBanned,
+    // Light public trust signals: broad location (city + sector/colony, never
+    // the house number) and the member's job (never the employer).
+    city: user.city, locality: user.locality, occupationType: user.occupationType, jobTitle: user.jobTitle,
   };
 }
