@@ -1,460 +1,78 @@
-# Halqa — Complete Meeting Brief: Akif Saeed (Chairman, SECP) · 23 Jul 2026, 09:30
+# Halqa — Meeting Brief (compact): Akif Saeed, Chairman SECP · 23 Jul 2026
 
-> The full picture. §0–§1 are your opener; §4 (legal) and §5 (anti-default) are
-> what he'll press on; §14–§15 are the roadmaps. Everything is honesty-first —
-> you're meeting the *regulator*. Every legal/licensing claim is sourced (links
-> in §4, §14, §15). Model as it stands: **record-only — no vault, no deposits, no
-> custody, no bank partner.** Anti-default = turn-position + tenure + legal +
-> reputation + verification incentives.
+## 0 · Who + how to play it
+- **Akif Saeed = sitting Chairman, SECP** (ex-Commissioner Securities Market, ex-ADB, ex-AmEx corporate banking). Knows NBFC/EMI/AMC/CIS cold.
+- **Mentorship, not a pitch** — he won't invest; the prize is guidance + credibility + the **regulatory sandbox**. Never bluff the licence position — candour wins, spin loses.
+- **Landmine:** the investment layer (idle funds → T-bills/Sukuk) is his exact domain and an NBFC "Investment Finance" activity. Don't present it as live — call it a licensed-future product. Lead with **record-only committee + anti-default + credit record**.
 
----
+## 1 · 15-minute flow
+1. **What (30s):** record-only committee/ROSCA digitiser — "we record the money, never hold it."
+2. **Problem (his frame):** committees run on social collateral; two killers = **operator runs off** (Karachi Rs 400m; Indian chit funds) + **early recipient stops paying**. We kill both.
+3. **Fraud → no custody:** money moves member-to-member on a double-entry ledger; **no central pool to steal** = the root cause of every mass fraud, removed. Also why no EMI licence needed.
+4. **Default → position + law** (spend the most time here — §2).
+5. **Licence position, proactively:** "We stay a facilitator — no funds held, no lending, no pooling — outside EMI/NBFC. I'd rather learn the lines from you than trip over them."
+6. **Ask:** the SECP sandbox (§6).
+7. **Close:** "What would you need to see before you'd consider this credible to pilot?"
 
-## 0. WHO YOU'RE MEETING — AND HOW TO PLAY IT *(read twice)*
+## 2 · Anti-default system (no custody, no deposits)
+- **Turn position IS the collateral** — a late-turn taker pays in every round before collecting, so their loss to the group = 0.
+- **New-member quarantine:** any new member, whatever their score, may take **only the last turns** of a public circle. Early turns unlock after **2 clean completed circles + manual verification**. (Invite-only circles bypass it — the host vouches = social collateral.)
+- **Legal layer:** weekly e-signed **undertaking (iqrarnama)** + **mutual member↔member PG** (never to Halqa) → fast **Order XXXVII** summary suit + arbitration.
+- **Punishment:** day-1 score damage → ban → RecoveryCase; **family/linked-account withholding**; platform-wide **CNIC blacklist** + paid rehab.
+- **Simulation (say: simulation):** 100k Pakistan-calibrated members → post-payout default **~1.4% → ~0.3%**, **~85%** of exposure recovered vs ~0% in a paper committee.
 
-**Akif Saeed = sitting Chairman of the SECP** (the securities regulator). Ex-SECP
-Commissioner (Securities Market), ex-ADB, ex-American Express corporate banking.
-He knows the NBFC / EMI / AMC / collective-investment regimes cold.
-
-1. **Mentorship, not a pitch.** He won't invest. The prize is his guidance,
-   credibility, and a regulatory pathway (the sandbox — §3, §15).
-2. **Never bluff licensing.** Credibility = knowing exactly why you need no licence
-   today and what would trigger one. Candour wins him; spin loses him instantly.
-3. **Lead on his stated concern:** default risk + fraud/consumer-protection. He
-   wrote "if the default aspect is addressed there's a lot of potential."
-4. **The landmine — the investment layer** (idle funds → T-bills/Sukuk/funds). That
-   is *securities in his exact domain* and is explicitly an NBFC "Investment
-   Finance Services" licensed activity (§15). Do NOT present it as live — it's a
-   licensed-future product you'd want his guidance to structure. Lead with the
-   **record-only committee + anti-default engine + portable credit record.**
-
----
-
-## 1. THE 15–20 MINUTE TALK TRACK
-
-1. **What it is (30s):** "Halqa digitises Pakistan's committee/ROSCA system as a
-   **record-only** platform — we never touch the money. We record it, schedule it,
-   protect it against default."
-2. **The problem in his frame (1–2m):** committees run on *social collateral*.
-   Two killers: **operator runs off** (Karachi Rs 400m; Indian chit funds) and
-   **early recipient stops paying.** Halqa kills both.
-3. **Kill fraud → no custody (1m):** money moves member-to-member; we only record
-   it on a double-entry ledger. **No central pool to steal** — the root cause of
-   every mass committee fraud, removed. (Also why we need no EMI licence.)
-4. **Kill default (4–5m — the heart, §5):** turn-position-as-collateral → new-member
-   quarantine → earned graduation → auto-collection → verification incentives
-   (cheque/salary) → mutual PG + undertaking → reputation + credit record.
-5. **Licence position, proactively honest (1–2m):** "We deliberately stay a
-   facilitator — no funds held, no lending, no pooling — so we sit outside EMI and
-   NBFC. I'd rather learn the exact lines from you than trip over them."
-6. **The ask (1m):** the SECP Regulatory Sandbox (§3, §15).
-7. **Close:** "What would you need to see before you'd consider this credible
-   enough to pilot?"
-
----
-
-## 2. CORRECTIONS TO YOUR OLD LINKEDIN ANSWERS *(the model changed — stay consistent)*
-
-- ❌ "Graduated security deposits" + "payout hold-back" → **removed** (they implied
-  pseudo-custody). Defence is now **turn-position quarantine.**
-- ❌ "Credit-weighted ordering" → **new-member quarantine to late turns** until 2
-  clean circles + verification.
-- ❌ "Vault auto-covers a missed installment" → **vault removed.**
-- ⚠️ "5% of the profit on idle money" → **drop this with him** — sounds like an AMC
-  fee. Say "small service fees today; any yield-share is a licensed-future
-  question."
-- ⚠️ "Investment layer" → de-emphasise (§0, §15).
-
----
-
-## 3. QUESTIONS TO ASK *HIM* — with *why* you're asking each
-
-*(He's the regulator. Good questions show you understand the rules and respect his
-role. Each one below has the plain reason you're asking it.)*
-
-1. **The sandbox — lead with this.** *Ask:* "Sir, SECP's Regulatory Sandbox has run
-   cohorts — is there one a pre-revenue platform like Halqa could apply to, to pilot
-   legally under supervision?" *Why:* this is the single most valuable thing he can
-   open for you — a legal way to test with real users before you have any licence.
-   Its rules even allow **unregistered start-ups intending to register** (that's you).
-2. **Where the licence line is.** *Ask:* "At what exact point does a record-only
-   committee platform cross into needing an **NBFC or EMI** licence — is it holding
-   funds, promising a return, or the pooling itself?" *Why:* you want *him* to draw
-   the line so you never cross it by accident. Shows you know the regimes exist.
-3. **The investment layer.** *Ask:* "If idle committee funds were ever placed into
-   T-bills or Sukuk, is that squarely **Investment Finance / a collective investment
-   scheme** needing an NBFC licence — and is there any lighter compliant path?"
-   *Why:* this is the riskiest part of your idea in his domain — asking shows
-   maturity, and his answer tells you whether that feature is worth pursuing.
-4. **Credit bureaus.** *Ask:* "Is there any route for a non-financial platform to
-   read from or report to **eCIB / a credit bureau** without first becoming a
-   licensed institution?" *Why:* the bureau "life sentence" is your strongest
-   deterrent — you want to know the real path to it.
-5. **Consumer protection.** *Ask:* "Given the Karachi Rs 400m and the chit-fund
-   frauds, what **safeguards would SECP want hard-coded** before a platform like
-   this touches real users at scale?" *Why:* it signals you care about protecting
-   users (his core mandate) and invites him to shape your product — the fastest way
-   to earn his backing.
-6. **Insurance.** *Ask:* "Would a **takaful default-cover** product need its own
-   arrangement, or could it ride a partner's licence?" *Why:* he raised insurance
-   himself on LinkedIn — following up shows you listened.
-7. **The humble closer.** *Ask:* "What would you need to see from a model like this
-   before you'd consider it credible enough to pilot?" *Why:* it turns him into your
-   mentor and gives you a concrete to-do list to come back with.
-
----
-
-## 4. LEGAL — PG, UNDERTAKING, JAIL & ASSETS *(verified; he'll test it)*
-
-**Instruments built:**
-- **Undertaking (iqrarnama):** a weekly, e-signed promise-to-pay a definite sum.
-- **Mutual personal guarantee (PG):** every member guarantees every other member —
-  runs member↔member, **never to Halqa** (so Halqa never becomes a lender). A
-  circle can't start until all PGs are signed.
-- **Arbitration clause:** expedited private route; an award enforces as a decree.
-- **Guarantee cheque (optional):** a member may lodge a physical cheque (§6) — the
-  *only* thing that arms the criminal §489-F route.
-
-**Jail? — Essentially NO. Say this right or he'll catch you.**
-- Pakistan does **not** imprison for a plain civil debt. A PG/undertaking default is
-  **civil**. Signing them ≠ "default → prison."
-- The **only** criminal/jail route is **§489-F PPC — a dishonoured cheque** issued
-  to repay an obligation (up to **3 years**). It exists in Halqa only as the
-  *optional* guarantee-cheque tier — most members won't have one. And even §489-F is
-  *punishment only*: the source states "recovery cannot be made through this
-  process." [ppc-489-F](https://pakarbiter.com/laws-in-pakistan/pakistan-penal-code-1860/ppc-section-489-f/) · [scope](https://courtingthelaw.com/2022/06/26/commentary/guest-columnists/section-489-f-ppc-object-scope-trial/)
-- §420 PPC (cheating) needs *proven deception up front* — not inability to pay.
-- **Credible line:** "We don't rely on jail. We rely on making unproven members
-  take late turns where they can't default, a fast civil-recovery path, an optional
-  cheque tier, and a permanent reputational cost."
-
-**Assets? — Yes, but only after a court decree.**
-- The undertaking (written promise, fixed sum) + PG (guarantee) qualify for **Order
-  XXXVII CPC — the summary suit** (covers "a debt or liquidated demand from a
-  written contract or a guarantee"). Defendant has **10 days** to seek leave to
-  defend; if refused → **decree executable forthwith** → **attachment & sale of
-  assets.** [Order XXXVII CPC](https://pakistankanoon.com/statutes/cpc/o-xxxvii/)
-- You cannot self-seize or take "everything" — decree amount only, some assets
-  exempt. **Timeline:** months if uncontested; longer if fought.
-
-**Honesty flags:** undertaking/PG are **lawyer-unreviewed drafts** (must be papered
-by a banking lawyer); and with no collateral held, enforcement today = the signed
-instruments + reputation + the fact unproven members can't take early money at all.
-
----
-
-## 5. THE FULL ANTI-DEFAULT SYSTEM *(the heart — his #1 concern)*
-
-**Core insight:** default is an *early-turn* problem — whoever collects the pot in
-round 2 of 20 still owes 18 installments and can run; the last seats are *owed*
-money and cannot. Every layer targets the early seats.
-
-**A · Position is the collateral (prevention, needs no custody):**
-1. **New-member quarantine** — a new member, *whatever their score*, may only take
-   one of the **last turns** of a public circle. A late-turn taker pays in every
-   period before they ever collect, so their loss to the group is **zero.**
-2. **Earned graduation** — early turns unlock only after **2 clean completed
-   circles + manual verification** ("calling around"). Trust is earned (the Money
-   Fellows model). Invite-only circles bypass the quarantine — the host is
-   vouching (the social collateral you and Akif both value).
-3. **Reliability score (300–850) + bands** — an ongoing signal; risky bands stay
-   restricted even after graduating.
-
-**B · Make missing hard:**
-4. **Auto-collection / auto-debit (§7)** — unconfigurable; pulls on the due date
-   from the linked account, mandate-OTP confirmed. Balance reminders 3 days + 1 day
-   out.
-5. **Verification incentives (§6)** — salary-account link, income+employer proof,
-   or a guarantee cheque lower a member's risk and their fees.
-
-**C · Legal deterrence (signed before money moves):**
-6. **Weekly e-signed undertaking** + **mutual member-to-member PG** → Order XXXVII
-   fast-track + arbitration (§4).
-
-**D · Punishment + recovery:**
-7. Tightened grace, day-1 score damage, MISSED → ban → **RecoveryCase** opened.
-8. **Family / linked-account withholding** — an account linked to a defaulter
-   (referral / shared device / guarantor) can't join and has payouts withheld until
-   cleared.
-9. **Platform-wide CNIC blacklist** + a paid rehabilitation path.
-
-**E · The portable consequence:**
-10. Every miss stains the **reliability score** and (future) is queued for bureau
-    reporting (§14) — default stops being free.
-
-**The number (say: simulation, not live):** a 100,000-member Pakistan-calibrated
-sim cut post-payout default ~1.4% → ~0.3% and recovered ~85% of exposure vs ~0% in
-a paper committee.
-
----
-
-## 6. VERIFICATION & DISCOUNTS — the employer / income / cheque system
-
-A member lowers their own risk by proving reliability, and earns a **discount on
-Halqa's service charges** (largest applies — they don't stack). All recorded,
-never held.
-
-| Proof | Discount | Why it lowers risk |
+## 3 · Verification discounts (the cheque / income / employer system)
+| Proof | Discount | Why it de-risks |
 |---|---|---|
-| **Guarantee cheque** on file | **95% off** | A physical cheque arms the §489-F criminal route — the strongest deterrent. Collected in person by an agent (that physicality is the point). |
-| **Income slip + employer verified** | **80% off** | Certain, traceable income; employer confirms the person and their pay. |
-| **Salary account linked** | **20% off** | Auto-collection from a salary account is the most certain collection there is (Money Fellows steer). |
+| Guarantee cheque on file | **95%** | Arms the §489-F criminal route; collected in person by an agent |
+| Income slip + employer verified | **80%** | Certain, traceable income (housewife/student → spouse/guardian's employer + pay slip) |
+| Salary account linked | **20%** | Auto-collection from salary = most certain collection |
+- **Employer angle:** verified employment is also the on-ramp to **employer payroll deduction** (future) — the Money Fellows corporate shield. All recorded, never held — a pricing lever, not custody.
 
-- **Employer/employee angle (what he'll ask about):** verified employment is both a
-  discount driver *and* the on-ramp to **employer payroll deduction** (§17) — the
-  ultimate collection shield where the employer deducts the installment before
-  paying salary. That's the Money Fellows corporate channel; it's on our roadmap
-  once an employer partner signs.
-- All of this is a **pricing lever**, not custody — it keeps the record-only
-  structure intact.
+## 4 · Legal — jail & assets (verified)
+- **Jail? Essentially NO.** No imprisonment for civil debt in Pakistan. Only criminal route = **§489-F PPC — dishonoured cheque** (≤ **3 yrs**), which exists here only as the *optional* cheque tier; even §489-F is punishment-only ("recovery cannot be made through this process"). §420 (cheating) needs proven up-front deception.
+- **Assets? Yes, after a court decree.** Undertaking + PG qualify for **Order XXXVII** summary suit (10-day leave-to-defend → decree executable → **attachment & sale of assets**). No self-seizure; decree amount only; some assets exempt. Timeline: months if uncontested.
+- **Flags:** undertaking/PG are lawyer-unreviewed drafts; with no collateral held, enforcement = the signed instruments + reputation + unproven members can't take early money at all.
 
----
-
-## 7. AUTO-COLLECTION / AUTO-DEBIT
-
-- **Unconfigurable by design:** every circle collects automatically from the
-  member's linked account on the due date — no manual payments to forget. Consent
-  is clause 4 of the signed undertaking.
-- **Mandate confirmed by OTP** (WhatsApp/SMS rail; sandbox today) when the account
-  is linked; a WhatsApp receipt is issued for every collection.
-- **Balance reminders** 3 days out ("keep Rs X available") and the day before.
-- **Stage note:** the *scheduling, mandate, receipts and reminders* are functional
-  in-app; the **real bank pull** needs a payment-rail partner (Raast/aggregator) —
-  a licensed-stage upgrade. Today the member confirms/records the transfer.
-
----
-
-## 8. SIGNUP & SECURITY (identity + account protection)
-
-- **7-step signup:** phone → **phone-OTP verification** → name → address/city/
-  occupation(+employer) → email → **CNIC (with camera scan)** → linked collection
-  account → password → **app PIN** → review.
-- **CNIC camera capture** (scan the whole card, Oraan-style) + manual fallback;
-  NADRA Verisys is a licensed-stage upgrade.
-- **App PIN on every open** (even inside a valid session) + **optional
-  fingerprint/biometric** unlock (WebAuthn; private key never leaves the device).
-- **Account security:** bcrypt passwords, lockout after repeated failures, JWT +
-  refresh-token rotation with reuse detection, single-use rate-capped OTP, IP rate
-  limiting, CSP/Helmet + HSTS.
-- **PCI discipline:** card linking stores only brand/last-4/expiry — never the full
-  number or CVC.
-
----
-
-## 9. HOW HALQA WORKS + THE THREE ROLES
-
-- **Committee = fixed group** (e.g. 10 × Rs 5,000/mo). Each period all contribute;
-  one member gets the whole pot; rotation until all have received once.
-- **Halqa's three internal roles:** the **Ledger** (double-entry record of every
-  rupee), the **Treasury** (schedules turns, timelines, liquidity), the **Credit
-  Bureau** (builds each member's reliability record).
-- **Stack:** TypeScript throughout — Node/Express/Prisma/PostgreSQL API, React/Vite
-  web, Vercel + Supabase. Live at halqa-seven.vercel.app.
-
----
-
-## 10. CURRENT FEATURE INVENTORY
-
-Onboarding (OTP + CNIC scan + PIN + biometric) · committees (create, discover open
-now / next cycle, tenure-gated turn pick, host controls, fund-the-gap) · **turn
-marketplace** (buy/sell future turns, band-gated) · **turn pricing** (early fee →
-late bonus) · reliability score + bands · **verification discounts** (cheque/income/
-salary) · auto-collection + WhatsApp receipts · mutual PG + weekly undertaking ·
-family-linkage withholding · CNIC blacklist + recovery cases · group chat · Rafa AI
-guide · Urdu · full legal corpus. *(Removed/dormant: vault, deposits, hold-back,
-profit "engines", Credit Passport.)*
-
----
-
-## 11. TURN MARKETPLACE + TURN PRICING
-
-- **Marketplace:** a member can list a future turn for sale at a premium; other
-  members bid; the premium is capped (≤50% of the payout); a platform fee (10% of
-  the premium) is Halqa's cut. Band-gated — the riskiest members can't buy into
-  early seats.
-- **Turn pricing:** circles can price turns on a spectrum — early seats pay a
-  declining fee that flows to later seats as a bonus ("the price of liquidity",
-  exactly what Oraan and Money Fellows do). Shown on every committee card.
-
----
-
-## 12. REVENUE MODEL *(keep it simple and honest with him)*
-
-- **Today (record-only):** modest **service/booking fees** on turns (with the
-  verification discounts above), and the **turn-marketplace fee** (10% of premium).
-  No custody fee, no interest, no yield-share.
-- **Future (licensed / partnered):** merchant commission on asset committees (§17),
-  employer B2B SaaS, and — only under a proper AMC/CIS structure — a yield share on
-  invested pools. **Do not pitch the yield-share to him as live.**
-
----
-
-## 13. CYBERSECURITY / FRAUD / ANTI-PONZI *(regulators care most here)*
-
-- **No custody** → kills the operator-runs-off fraud (the Karachi/chit-fund root
-  cause).
-- **Double-entry ledger + immutable audit log** → every rupee traceable.
-- **No guaranteed returns, no central pool** → structurally *not* a Ponzi; the
-  opposite of the opaque single-managed schemes that collapsed.
-- Full engineering security stack per §8; harmful-scheme guards (premium caps, no
-  pyramid/referral-yield mechanics, "record-only / not-a-lender" in every legal
-  doc).
-
----
-
-## 14. CREDIT-BUREAU LINKAGE — THE FULL ROADMAP *(he asked about this)*
-
-There are **three relationships**, and as a non-FI you reach only the first:
-
-1. **PULL a score at signup (read):** achievable as a **subscriber via a negotiated
-   commercial contract** with TASDEEQ or DataCheck — NOT a public signup. Precedent:
-   **Karandaaz, a non-bank, signed a TASDEEQ data-sharing agreement.** → **PARTNER
-   AGREEMENT.** We map TASDEEQ's 200–600 scale onto our 300–850 in code, ready for
-   the day this signs.
-2. **REPORT/furnish defaults (write):** a *non-credit-institution* furnisher needs a
-   **Federal-Government Gazette notification** (the route utilities/telcos took) — or
-   files **through a member partner FI**. → **BANK PARTNER** (cleaner route).
-3. **eCIB (SBP's registry):** **closed to non-FIs entirely** — reachable only via a
-   partner FI reporting on the circle's behalf.
-
-**What we do now with no partner:** score members on our **own** data (Oraan and
-Money Fellows both do this — proprietary, not bureau-fed), and **accumulate the
-reporting queue** (every miss is CNIC-linked and queued; consent is already signed
-in the undertaking). Firing it needs a partner. Sources: SBP Credit Bureaus Act
-2015; [SECP fintech regulation (Lexology)](https://www.lexology.com/library/detail.aspx?g=84bbef62-a654-45f6-abd8-d0b64ef5718a); tasdeeq.com; datacheck.com.pk.
-
----
-
-## 15. LICENSING — THE FULL ROADMAP, VERIFIED *(names + links)*
-
-**Step 1 — legitimacy (we don't have this yet):** register a **SECP private limited
-company** ([eServices](https://eservices.secp.gov.pk/): name reservation → MOA/AOA
-→ incorporation certificate), which **auto-integrates with FBR** for the **NTN**
-([IRIS](https://iris.fbr.gov.pk/)). A private limited company + NTN is the minimum
-to operate legitimately.
-
-**What we do NOT need — while record-only (the whole argument):**
-- **EMI licence (SBP)** — only to **issue/hold electronic money / accept public
-  funds.** We do neither. [SBP EMI Regulations 2019](https://www.sbp.org.pk/psd/2019/C1-Annex-A.pdf) · [revised 2023](https://www.sbp.org.pk/press/2023/Pr-21-Jun-2023-1.pdf)
-- **NBFC lending licence (SECP)** — only to **lend.** We don't.
-- **NBFC "Investment Finance Services" licence (SECP)** — required to **pool and
-  invest members' funds** (T-bills/Sukuk). This is *exactly* the investment-layer
-  trigger → licensed-future only. [SECP Investment Finance Services](https://www.secp.gov.pk/licensing/nbfcs/investment-finance-services/)
-
-**The pilot pathway — SECP Regulatory Sandbox:** cohorts since 2020; a controlled,
-time-limited live test (6–12 months) for models that don't fit existing rules; its
-rules expressly allow **unregistered start-ups intending to register** to apply.
-**The single most valuable door Akif can open.** [SECP Regulatory Sandbox](https://www.secp.gov.pk/regulatory-sandbox/)
-
-**Agreements we'll need (named):** SECP incorporation + FBR NTN (now); TASDEEQ/
-DataCheck subscriber agreement (pull); payment-aggregator/PSP agreement (real
-collection); bank/EMI custody agreement; takaful partner agreement; merchant
-agreements (asset committees); employer agreements (payroll deduction).
-
-> ⚠️ **Lawyer-to-confirm:** these regimes/triggers are per SECP/SBP primary sources,
-> but a Pakistani corporate/banking lawyer must confirm Halqa's exact
-> classification. Say this to Akif — it shows you know the limits of your analysis.
-
----
-
-## 16. MARKET RESEARCH — Oraan & Money Fellows
-
-- **Oraan (Pakistan):** women-first digital committee; 5/10-month circles;
-  **pick-your-payout-month priced by a management fee** (early = higher);
-  proprietary scoring (no bureau); **CNIC + 3–5 day manual human verification**
-  (calls, employment/family checks); **Oraan Gold** = physical ARY-certified gold in
-  fixed installments, **price locked at start**; SNPL education financing.
-- **Money Fellows (Egypt):** ~$1.5B processed, profitable 2025; **capital-light**
-  (<8% of slots need their capital); **position-priced slots** (up to ~16% on the
-  earliest → 0% later); **earned slot progression**; company-backed payout guarantee
-  (⚠️ needs a balance sheet — we do NOT copy this); **prepaid card + cashback**;
-  **employer payroll deduction**; closed-loop merchant disbursal.
-- **Takeaway:** proven at scale abroad, demand validated in Pakistan; Halqa's edge =
-  *record-only, no-custody* + *position-based anti-default* + *portable credit
-  record*.
-
----
-
-## 16b. HEAD-TO-HEAD — Halqa vs Oraan vs Money Fellows *(the comparison table)*
-
-| Dimension | Oraan (Pakistan) | Money Fellows (Egypt) | **Halqa** |
+## 5 · Head-to-head
+| Dimension | Oraan (PK) | Money Fellows (EG) | **Halqa** |
 |---|---|---|---|
-| Money model | Holds funds (escrow, partner bank) | Holds funds (escrow, Banque Misr) | **Record-only — never touches the money** |
-| Default *prevention* | Manual CNIC + 3–5 day human vetting; references/guarantors; family cross-liability | Position-priced slots; earned slot progression; credit assessment; salary link | **Turn-position quarantine (new members → late seats only); earned graduation (2 clean circles); verification discounts; mutual PG + weekly undertaking** |
-| Default *recovery* | 30-day cure → recall entire outstanding + legal + bureau report; withhold defaulter's & family's payouts | **Company covers the gap from its own balance sheet** so members never lose; blacklist on iScore | **No company capital used: fast Order XXXVII civil suit → asset attachment; optional guarantee cheque → §489-F criminal; family/linked withholding; CNIC blacklist + rehab; (future) bureau report** |
-| Credit bureau | No — proprietary scoring | Educates on iScore; proprietary underwriting | Own scoring now; bureau pull/report = partner-gated |
-| Business model | Management fee, priced by payout month | Position/slot admin fee (~16%→0%) + prepaid-card interchange + merchant + employer B2B | Turn/service fees (minus verification discounts) + turn-marketplace fee; future merchant commission + employer SaaS |
-| Options / products | Cash committee, **Oraan Gold** (price-locked), SNPL education | Cash committee, prepaid card, non-rotating savings, employer plans | Cash committee, turn marketplace; future gold + asset committees, custody, takaful |
-| Users / scale | ~10k+ savers (2021), 84% women, 170+ cities | ~1M served, ~350k MAU, ~8M downloads | Prototype — pre-launch |
-| Funding | ~$4M raised | >$60M raised; **profitable 2025**; $1.5B processed | Pre-seed prototype |
-| Goal | Formalise women's committees in Pakistan | Digitise Egypt's gam'eya, expand across Africa | Formalise Pakistan's committees, record-only, scale to emerging markets |
-| Market size | Pakistan ROSCA market **~$5B/yr, ~41% participation** | Egypt gam'eya market — large, mostly informal | Same **~$5B/yr Pakistan** market, then other emerging ROSCA markets |
+| Money | Holds funds (escrow/bank) | Holds funds (Banque Misr) | **Record-only — never holds** |
+| Prevention | Manual CNIC + 3–5 day vetting, references, family liability | Position-priced slots, earned progression, salary link | **Position quarantine + earned graduation + verification discounts + mutual PG/undertaking** |
+| Recovery | Recall outstanding + legal + bureau; withhold family payouts | **Covers the gap from its own balance sheet** (members never lose); iScore blacklist | **No company capital: Order XXXVII → asset attachment; optional cheque → §489-F; family withholding; blacklist; future bureau** |
+| Bureau | No (proprietary) | Educates on iScore; proprietary underwriting | Own scoring now; pull/report = partner-gated |
+| Revenue | Mgmt fee by payout month | Slot fee (~16%→0%) + card interchange + merchant + B2B | Turn/service fees (− discounts) + 10% turn-market fee; future merchant + employer |
+| Users | ~10k+ (2021), 84% women | ~1M served, ~350k MAU, $1.5B processed, **profitable 2025** | Prototype (pre-launch) |
+| Funding | ~$4M | >$60M | Pre-seed |
+| Goal / market | Women's committees; PK ROSCA **~$5B/yr, ~41%** | Egypt gam'eya → Africa | Same PK **~$5B/yr** market → emerging markets |
+- **One line:** *"They recover from their balance sheet — needs custody, a licence, capital. We recover through position and law — which is exactly why we run record-only without a licence today."*
 
-**The one line that captures the difference (say this):** *"Oraan and Money Fellows
-both hold the money and recover from their own balance sheet — that needs custody, a
-licence, and capital. Halqa recovers through **position and law** instead of capital
-— which is exactly why we can run record-only, without a licence, today."*
+## 6 · Licensing — what lets us operate (verified, with links)
+- **Need (don't have yet):** **SECP private-limited company** (eservices.secp.gov.pk) + **FBR NTN** (auto-linked, iris.fbr.gov.pk).
+- **Don't need while record-only:** **EMI licence (SBP)** = only to hold/issue e-money; **NBFC lending licence** = only to lend; **NBFC Investment-Finance licence** = only to pool+invest funds (the investment-layer trigger). Sources: SBP EMI Regs 2019; secp.gov.pk/licensing/nbfcs/investment-finance-services.
+- **Pilot pathway:** **SECP Regulatory Sandbox** (cohorts since 2020; 6–12 mo live test; rules allow *unregistered start-ups intending to register*) — the highest-value door he can open. secp.gov.pk/regulatory-sandbox.
+- *Lawyer-to-confirm the exact classification of our structure.*
 
----
+## 7 · Credit-bureau roadmap (he asked)
+- **Pull a score (read):** subscriber via a negotiated contract with **TASDEEQ / DataCheck** — precedent: **Karandaaz (a non-bank) signed a TASDEEQ agreement**. TASDEEQ scale = **200–600**; mapped to our 300–850 in code. → PARTNER AGREEMENT.
+- **Report defaults (write):** non-FI furnisher needs a **Federal-Government Gazette notification**, or files **through a member partner FI**. → BANK PARTNER.
+- **eCIB (SBP registry):** **closed to non-FIs** — only via a partner FI.
+- **Now, no partner:** we score on our own data (Oraan & MF both do this) + queue every default CNIC-linked (consent already signed).
 
-## 16c. APIs & INTEGRATIONS — what we use now and need next
+## 8 · APIs & integrations
+- **Now:** own REST API · WhatsApp/SMS OTP (sandbox) · device **camera (getUserMedia)** CNIC scan · **WebAuthn** biometric · **device GPS** (home location, reverse-geocoded).
+- **Need next:** **NADRA Verisys / Biometric Verisys** (verify CNIC is real + belongs to the person — the identity gold standard; nadra.gov.pk) · **Raast / PSP aggregator** (real auto-collection pulls) · **TASDEEQ/DataCheck API** (bureau) · **WhatsApp Business API** · **takaful API** (default insurance) · **merchant APIs** (future gold/asset committees).
 
-**Using today (functional / sandbox):**
-- Internal REST API (our own Node/Express) · WhatsApp/SMS OTP rail (sandbox) ·
-  device **camera (getUserMedia)** for CNIC scan · **WebAuthn** for biometric unlock.
+## 9 · Feature inventory (live)
+Signup (phone-OTP, **CNIC camera scan**, **live GPS home**, app **PIN**, optional **fingerprint**) · committees (discover open-now/next-cycle, tenure-gated turn pick, host controls, fund-the-gap) · **turn marketplace** (buy/sell turns, band-gated) · **turn pricing** (early fee → late bonus) · reliability score/bands · **verification discounts** · **always-on auto-collection** (unremovable; pay early and there's nothing to collect) · mutual PG + weekly undertaking · family withholding · CNIC blacklist + recovery · group chat · Rafa AI guide · Urdu · legal corpus. *(Dormant/removed: vault, deposits, hold-back, profit engines, Credit Passport.)*
 
-**Need next (partner/licensed — each is a named integration to chase):**
-- **NADRA Verisys / Biometric Verisys** — verify a CNIC is real and belongs to the
-  person (Pakistan's identity gold standard). Turns our "CNIC recorded" into "CNIC
-  *verified*". Requires a NADRA integration agreement. *(nadra.gov.pk)*
-- **Raast** (SBP instant-payment rail) / a **payment aggregator (PSP)** — for real
-  auto-collection pulls instead of recorded transfers.
-- **TASDEEQ / DataCheck bureau API** — pull a credit score at signup (subscriber
-  contract) and, via a partner, report defaults.
-- **WhatsApp Business API provider** — turn queued receipts/OTPs into real messages.
-- **Takaful partner API** — default-cover insurance.
-- **Merchant/vendor APIs** — for the future gold + asset committees (deliver the
-  asset, not cash).
+## 10 · Questions to ask him (with *why*)
+1. **Sandbox (lead):** "Is there a cohort a pre-revenue platform like this could pilot in?" — *the biggest door he can open.*
+2. **Licence line:** "Exactly where does record-only cross into needing an NBFC/EMI licence — custody, a return promise, or the pooling?" — *shows you know the regimes.*
+3. **Investment layer:** "Are T-bills/Sukuk pooling a CIS needing an NBFC licence — any lighter path?" — *maturity; tells you if it's worth pursuing.*
+4. **Bureau:** "Any route to read/report to eCIB or a bureau without being a licensed FI?" — *your strongest deterrent.*
+5. **Consumer protection:** "Given the Karachi/chit-fund frauds, what safeguards would SECP want hard-coded before scale?" — *signals you protect users (his mandate).*
+6. **Insurance:** "Takaful default-cover — own arrangement or ride a partner's licence?" — *he raised it; shows you listened.*
 
----
-
-## 17. FUTURE ROADMAP *(all partner/licence-gated — present as the vision)*
-
-- **Gold committee** (fixed-price, Oraan-style) — needs a gold vendor/refiner
-  partner + Shariah sign-off.
-- **Asset committee** (fixed-price solar / motorbike / plot-file / appliance,
-  delivered by a **merchant partner** — payout becomes the *asset, not cash*, which
-  is itself anti-default + earns merchant commission; Shariah-cleaner via Murabaha).
-- **Custody + real auto-collection** (hold funds, real Raast pull) — EMI/PSP or bank.
-- **Security deposits + payout hold-back** — return once custody exists.
-- **Default insurance (takaful)** — takaful partner.
-- **Employer payroll deduction** + **merchant closed-loop disbursal** — employer /
-  merchant partners.
-- **Credit-bureau linkage** (pull + report + eCIB) — §14.
-
----
-
-## 18. GLOSSARIES
-
-**Finance/fintech:** ROSCA · turn/slot position as collateral · float · liquidity ·
-forward liability · double-entry ledger · receivables · Murabaha / Bai' Muajjal ·
-Mudarabah · Sukuk · T-bills · money-market · Bay' al-Sarf · takaful · credit scoring
-/ reliability bands · KYC/CNIC · auto-debit mandate · turn pricing · collective
-investment scheme · EMI · NBFC · Investment Finance Services · AMC.
-
-**CS/tech:** TypeScript · React/Vite SPA · Node/Express REST · Prisma ORM ·
-PostgreSQL · serverless (Vercel) · JWT + refresh rotation · bcrypt/SHA-256 · OTP ·
-WebAuthn biometric · rate limiting · RBAC · idempotency keys · double-entry ledger ·
-CSP/HSTS/Helmet · audit log · additive migrations · Monte-Carlo simulation · CI test
-suite.
-
----
-
-## 19. HONEST WEAKNESSES *(know them cold)*
-
-- No legal entity/registration yet. No licence. No partner (by design).
-- Undertaking/PG texts lawyer-unreviewed.
-- Anti-default numbers are *simulation*, not live.
-- Money rails (auto-collection, WhatsApp, bureau) are sandbox.
-- The investment layer is the most regulatorily sensitive part — handle per §0/§15.
-
-*Your honesty about these is an asset with him. Yes boss.*
+## 11 · Honest weaknesses
+No entity/licence/partner yet · undertaking/PG lawyer-unreviewed · anti-default numbers are simulation · money rails (collection/WhatsApp/bureau) are sandbox · investment layer is the sensitive part (handle per §0/§6). **Your honesty about these is an asset with him.**
