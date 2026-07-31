@@ -12,3 +12,7 @@ halqa-web/ios/
 
 # Internal master context — never commit (frank notes + credential pointers)
 yessir.md
+
+# Machine-local tooling and research scratch — never commit
+Git/
+.research-tmp/

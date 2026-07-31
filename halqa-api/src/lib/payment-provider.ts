@@ -36,6 +36,25 @@ export function railIsLive(rail: Rail): boolean {
 
 const ref = (rail: Rail) => `${rail === 'RAAST' ? 'RST' : rail === 'JAZZCASH' ? 'JZC' : rail === 'EASYPAISA' ? 'EZP' : 'REF'}-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
 
+// Account title fetch — the ownership half of salary-account verification.
+// 1LINK/Raast expose title inquiry through the aggregator: given a rail and an
+// account/wallet number, the registered holder name comes back, and it must
+// match the member's CNIC name before the account can anchor auto-collection.
+// Sandbox echoes the expected name (so the flow is exercisable end to end);
+// the live branch fills in with the aggregator's API at Gate 2. A live rail
+// whose title API is not yet wired returns unverified rather than lying.
+export interface TitleFetchResult { provider: string; title: string | null; matches: boolean }
+const normalizeName = (v: string) => v.toLowerCase().replace(/[^a-z]/g, '');
+export async function titleFetch(rail: Rail, accountNo: string, expectedName: string): Promise<TitleFetchResult> {
+  if (railIsLive(rail)) {
+    // Live branch — aggregator title-inquiry call goes here with Gate-2 creds.
+    return { provider: `${rail}_LIVE`, title: null, matches: false };
+  }
+  const title = expectedName.trim();
+  const matches = normalizeName(title) === normalizeName(expectedName) && accountNo.length >= 10;
+  return { provider: `${rail}_SANDBOX`, title, matches };
+}
+
 // Produce a payment instruction for an installment. In sandbox this returns an
 // auto-confirming instruction; when a rail is live it would create the real
 // charge and return autoConfirm:false to await the provider's webhook.

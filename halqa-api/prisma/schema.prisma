@@ -160,6 +160,20 @@ model User {
   // 20% reduction on early/slot fees at payout.
   salaryAccountLinked Boolean @default(false)
   salaryAccountRef String?
+  // Salary-day verification (2026-07-31). salaryDay = the payday the member
+  // declares; salaryDayLearned = the day our own collection outcomes prove
+  // (lib/salary-pattern.ts). Verification is earned, never self-asserted:
+  // PAYSLIP (document), PATTERN (>=2 months of first-success-of-month within
+  // tolerance), or ALERTS (on-device credit-alert summaries, aggregates only).
+  // A declared day the pattern contradicts mid-cycle clears the verification,
+  // costs the salary fee discount and a recorded score event.
+  salaryDay Int?
+  salaryDayLearned Int?
+  salaryVerifiedAt DateTime?
+  salaryVerifyMethod String?
+  paymentAttempts PaymentAttempt[]
+  salarySignals SalarySignal[]
+  payslipUploads PayslipUpload[]
   // App-open PIN (4-6 digits): set at signup, asked on every open even inside a
   // valid session. Hashed (sha256+salt via lib/pin), never stored in the clear.
   pinHash String?
@@ -744,6 +758,56 @@ model AgreementSignature {
 
 // Append-only forensic trail of security-relevant events. Never updated or
 // deleted in normal operation — this is the record you hand an auditor.
+// One row per collection attempt against a member's instrument — the raw
+// material of salary-pattern verification. We never see account inflows
+// (no open banking); what we own is the outcome of our own pulls by calendar
+// day, and that is enough: the day retries start succeeding IS the payday.
+model PaymentAttempt {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id])
+  paymentId String?
+  rail String
+  calendarDay Int
+  outcome String // COLLECTED | AWAITING | FAILED
+  source String  // AUTO_DEBIT | MANUAL
+  amountPaisa BigInt
+  attemptedAt DateTime @default(now())
+  @@index([userId, attemptedAt])
+}
+
+// Opt-in, on-device credit-alert summaries (notification-listener route — no
+// SMS permission, no raw text ever leaves the phone). One row per month per
+// source class; two consistent months verify the payday by observation.
+model SalarySignal {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id])
+  dayOfMonth Int
+  amountBand String   // coarse band only, e.g. "25-50k" — never the amount
+  sourceClass String  // BANK | WALLET
+  observedMonth String // "2026-07" — dedup + cadence key
+  createdAt DateTime @default(now())
+  @@unique([userId, observedMonth, sourceClass])
+}
+
+// A single payslip photo (member-downscaled JPEG). Sandbox auto-accepts,
+// mirroring verify-income; production holds PENDING for review before the
+// salary verification flag is granted on its strength.
+model PayslipUpload {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id])
+  image Bytes
+  mime String
+  sha256 String
+  sizeBytes Int
+  status String @default("PENDING") // PENDING | ACCEPTED | REJECTED
+  uploadedAt DateTime @default(now())
+  reviewedAt DateTime?
+  @@index([userId])
+}
+
 model SecurityEvent {
   id String @id @default(cuid())
   type String

@@ -93,10 +93,27 @@ export function LinkedAccountsManager() {
   const [billingAddress, setBillingAddress] = useState(''); const [billingCity, setBillingCity] = useState('');
   const [busy, setBusy] = useState(false); const [error, setError] = useState('');
   const [otpFor, setOtpFor] = useState(''); const [otpCode, setOtpCode] = useState(''); const [otpError, setOtpError] = useState(''); const [devCode, setDevCode] = useState('');
+  type SalaryStatus = { salaryDay: number | null; salaryDayLearned: number | null; salaryVerifiedAt: string | null; salaryVerifyMethod: string | null; payslip: { status: string } | null };
+  const [salary, setSalary] = useState<SalaryStatus | null>(null);
+  const [payslipBusy, setPayslipBusy] = useState(false);
   const load = () => Promise.all([
     api<{ methods: LinkedMethod[] }>('/profile/payment-methods').then(d => setMethods(d.methods)),
     api<{ salaryAccountLinked: boolean; salaryAccountRef: string | null }>('/auth/me').then(d => setSalaryRef(d.salaryAccountLinked ? d.salaryAccountRef : null)).catch(() => {}),
+    api<SalaryStatus>('/profile/salary-status').then(setSalary).catch(() => {}),
   ]).catch(() => {});
+  const setSalaryDay = async (value: string) => { try { await api('/profile/salary-day', { method: 'POST', body: JSON.stringify({ day: value ? Number(value) : null }) }); await load(); } catch { /* refresh next open */ } };
+  // One payslip, one photo. Downscaled on-device to a small JPEG so the upload
+  // is instant on any connection — nobody fights a form for a discount.
+  const uploadPayslip = async (file: File) => { setPayslipBusy(true); try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => { const i = new Image(); i.onload = () => resolve(i); i.onerror = reject; i.src = URL.createObjectURL(file); });
+    const scale = Math.min(1, 1000 / Math.max(img.width, img.height));
+    const canvas = document.createElement('canvas'); canvas.width = Math.round(img.width * scale); canvas.height = Math.round(img.height * scale);
+    canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height);
+    URL.revokeObjectURL(img.src);
+    const imageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+    await api('/profile/payslip', { method: 'POST', body: JSON.stringify({ imageBase64 }) });
+    await load();
+  } catch { /* surfaced by status staying unchanged */ } finally { setPayslipBusy(false); } };
   useEffect(() => { void load(); }, []);
   const add = async () => { setBusy(true); setError(''); try {
     const body = rail === 'CARD'
@@ -112,11 +129,29 @@ export function LinkedAccountsManager() {
   const cardValid = cardDigits.length >= 13 && /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry) && cvc.length >= 3 && accountTitle.trim().length >= 3;
   const prefer = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}/preferred`, { method: 'POST' }); setMethods(d.methods); } catch { /* refresh next open */ } };
   const remove = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}`, { method: 'DELETE' }); setMethods(d.methods); if (id === salaryRef) setSalaryRef(null); } catch { /* refresh next open */ } };
-  const markSalary = async (id: string, enabled: boolean) => { try { const d = await api<{ salaryAccountLinked: boolean; salaryAccountRef: string | null }>(`/profile/payment-methods/${id}/salary`, { method: 'POST', body: JSON.stringify({ enabled }) }); setSalaryRef(d.salaryAccountLinked ? d.salaryAccountRef : null); } catch { /* refresh next open */ } };
+  const markSalary = async (id: string, enabled: boolean) => { try { const d = await api<{ salaryAccountLinked: boolean; salaryAccountRef: string | null }>(`/profile/payment-methods/${id}/salary`, { method: 'POST', body: JSON.stringify({ enabled }) }); setSalaryRef(d.salaryAccountLinked ? d.salaryAccountRef : null); await load(); } catch { /* refresh next open */ } };
   const verify = async (id: string) => { setOtpError(''); try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}/verify`, { method: 'POST', body: JSON.stringify({ code: otpCode.trim() }) }); setMethods(d.methods); setOtpFor(''); setOtpCode(''); setDevCode(''); } catch (reason) { setOtpError((reason as Error).message); } };
   const numberLabel = rail === 'BANK_TRANSFER' ? 'IBAN' : rail === 'RAAST' ? 'Raast ID (your mobile number)' : `${RAIL_META[rail].name} wallet number`;
   return <div className="settings-block">
     <span className="eyebrow" style={{ display: 'block', marginBottom: 8 }}>Linked collection accounts</span>
+    {salary && <div className="onboard-note" style={{ marginBottom: 10 }}>
+      <b>Salary day{salary.salaryVerifiedAt ? ' · Verified ✓' : salary.payslip?.status === 'PENDING' ? ' · Payslip under review' : ''}</b>
+      <span>
+        {salary.salaryVerifiedAt
+          ? `Verified ${salary.salaryVerifyMethod === 'PATTERN' ? 'from your payment history' : salary.salaryVerifyMethod === 'ALERTS' ? 'from your credit alerts' : salary.salaryVerifyMethod === 'PAYSLIP' ? 'by payslip' : 'for the pilot'} — collection runs on your payday${salary.salaryDayLearned ? ` (around the ${salary.salaryDayLearned}th)` : ''}, before it is even due.`
+          : 'Set the day your pay arrives and collection runs that morning — while the money is there. It verifies itself from your payment history, or instantly with one payslip photo.'}
+      </span>
+      <div style={{ display: 'flex', gap: 8, marginTop: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+        <select className="field" style={{ maxWidth: 220, margin: 0 }} value={salary.salaryDay ?? ''} onChange={e => void setSalaryDay(e.target.value)}>
+          <option value="">Salary day: varies / not set</option>
+          {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={d}>Pay arrives on the {d}{d === 1 || d === 21 || d === 31 ? 'st' : d === 2 || d === 22 ? 'nd' : d === 3 || d === 23 ? 'rd' : 'th'}</option>)}
+        </select>
+        {!salary.salaryVerifiedAt && salary.payslip?.status !== 'PENDING' && <label className="card-action" style={{ cursor: 'pointer' }}>
+          {payslipBusy ? 'Uploading…' : 'Add one payslip photo'}
+          <input type="file" accept="image/*" capture="environment" style={{ display: 'none' }} disabled={payslipBusy} onChange={e => { const f = e.target.files?.[0]; if (f) void uploadPayslip(f); e.target.value = ''; }} />
+        </label>}
+      </div>
+    </div>}
     <div className="acct-list">
       {methods.map(m => <AccountCard key={m.id} rail={m.rail} bankName={m.bankName} accountTitle={m.accountTitle} accountNo={m.accountNo} label={m.label} verified={m.verified} preferred={m.preferred} salary={m.id === salaryRef} brand={m.brand} last4={m.last4} expiry={m.expiry}
         footer={<div className="acct-card-actions">
@@ -125,7 +160,7 @@ export function LinkedAccountsManager() {
             : <button className="card-action" onClick={() => { setOtpFor(m.id); setOtpCode(''); setOtpError(''); setDevCode(''); }}>Enter WhatsApp code</button>)}
           {!m.preferred && <button className="card-action" onClick={() => void prefer(m.id)}>Make preferred</button>}
           {m.id === salaryRef ? <button className="card-action" onClick={() => void markSalary(m.id, false)}>Unset salary</button> : <button className="card-action" onClick={() => void markSalary(m.id, true)}>Mark as salary account</button>}
-          <button className="card-action danger" onClick={() => void remove(m.id)}>Remove</button>
+          {m.id !== salaryRef && <button className="card-action danger" onClick={() => void remove(m.id)}>Remove</button>}
         </div>} />)}
       {otpError && <div className="error-box">{otpError}</div>}
       {!methods.length && !adding && <p className="muted" style={{ fontSize: 12.5 }}>Nothing linked yet. Link your wallet, Raast ID or bank account once — auto-collection pulls from it and checkout pre-fills it.</p>}

@@ -689,7 +689,7 @@ router.post('/:id/payout', async (req, res, next) => {
     const recipientPayment = round.payments.find(payment => payment.payerId === round.recipientId);
     const eligibilityDeadline = round.payoutDate.getTime() - 7 * 86_400_000;
     if (!recipientPayment?.paidAt || recipientPayment.paidAt.getTime() > eligibilityDeadline) return res.status(409).json({ error: 'Recipient did not clear the current installment by the locked seven-day eligibility deadline' });
-    const recipientMembership = await prisma.committeeMember.findUnique({ where: { committeeId_userId: { committeeId: committee.id, userId: round.recipientId } }, include: { securityDeposits: true, payoutHoldbacks: { where: { status: 'HELD' } }, protectionCommitment: true, user: { select: { vaultParkingEnabled: true, salaryAccountLinked: true } } } });
+    const recipientMembership = await prisma.committeeMember.findUnique({ where: { committeeId_userId: { committeeId: committee.id, userId: round.recipientId } }, include: { securityDeposits: true, payoutHoldbacks: { where: { status: 'HELD' } }, protectionCommitment: true, user: { select: { vaultParkingEnabled: true, salaryAccountLinked: true, salaryVerifiedAt: true } } } });
     // Linked-account policy (undertaking clause 7e, Oraan model): the payout is
     // withheld while an account linked to the recipient — family by shared
     // device, referral or guarantee — has an unresolved post-payout default.
@@ -726,8 +726,11 @@ router.post('/:id/payout', async (req, res, next) => {
     // fee into this circle's guarantee pool; the final position pays nothing.
     // Salary-linked recipients pay 20% less on both the slot fee and the early
     // fee — collection from a salary account is the most certain there is, and
-    // the discount is the disclosed reward (undertaking clause 4).
-    const salaryFactor = recipientMembership?.user.salaryAccountLinked ? 8_000n : 10_000n;
+    // the discount is the disclosed reward (undertaking clause 4). The discount
+    // pays only while the salary claim is VERIFIED (payslip, pattern or
+    // alerts — lib/salary-pattern.ts); a claim the evidence contradicted has
+    // had salaryVerifiedAt cleared, and with it the discount.
+    const salaryFactor = recipientMembership?.user.salaryAccountLinked && recipientMembership.user.salaryVerifiedAt ? 8_000n : 10_000n;
     const slotFeePaisa = round.payoutPaisa * BigInt(slotFeeBpsForRound(committee.slotFeeBps, round.roundNumber, totalRounds)) / 10_000n * salaryFactor / 10_000n;
     // Priority/Sigma (conventional, chit-fund style): the recipient pays a
     // disclosed Early Fee on the same declining curve as the guarantee slot

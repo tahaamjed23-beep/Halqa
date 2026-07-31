@@ -32,6 +32,9 @@ router.post('/initiate', undertakingGate, async (req, res, next) => {
     const instruction = await initiatePayment(input.rail as Rail, payment.amountPaisa);
     if (!instruction.autoConfirm) return res.json({ settled: false, instruction });
     const settled = await prisma.$transaction(tx => settleContribution(tx, { round, payment, paidVia: input.rail, txnRef: instruction.reference, idempotencyKey: input.idempotencyKey, actorId: req.auth!.userId }));
+    // Salary-pattern evidence: a manual payment is also proof money was
+    // present today (lib/salary-pattern.ts). Logging must never block paying.
+    await prisma.paymentAttempt.create({ data: { userId: req.auth!.userId, paymentId: payment.id, rail: input.rail, outcome: 'COLLECTED', source: 'MANUAL', amountPaisa: payment.amountPaisa, calendarDay: new Date().getDate() } }).catch(() => {});
     res.status(201).json({ settled: true, payment: settled, instruction });
   } catch (error) { next(error); }
 });
@@ -54,6 +57,7 @@ router.post('/', undertakingGate, async (req, res, next) => {
     if (!payment) return res.status(404).json({ error: 'Payment obligation not found' });
     if (payment.status === 'PAID') return res.json(payment);
     const updated = await prisma.$transaction(tx => settleContribution(tx, { round, payment, paidVia: input.paidVia, txnRef: input.txnRef, idempotencyKey: input.idempotencyKey, actorId: req.auth!.userId }));
+    await prisma.paymentAttempt.create({ data: { userId: req.auth!.userId, paymentId: payment.id, rail: input.paidVia, outcome: 'COLLECTED', source: 'MANUAL', amountPaisa: payment.amountPaisa, calendarDay: new Date().getDate() } }).catch(() => {});
     res.status(201).json(updated);
   } catch (error) { next(error); }
 });

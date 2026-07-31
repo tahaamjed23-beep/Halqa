@@ -3,6 +3,7 @@ import { audit, ledger } from '../lib/audit';
 import { clampScore } from '../lib/money';
 import { settleContribution } from '../lib/settlement';
 import { runAutoDebit } from '../lib/auto-debit';
+import { evaluateSalaryPattern } from '../lib/salary-pattern';
 
 export type DelinquencySummary={checked:number;late:number;missed:number;postReceiptDefaults:number;autoCovered:number;autoDebited:number};
 
@@ -22,6 +23,13 @@ export async function evaluateDelinquencies(now=new Date()):Promise<DelinquencyS
   // opted-in member is never nudged or punished for something the system was
   // going to collect anyway.
   const autoDebit = await runAutoDebit(now);
+  // Salary-pattern evaluation for everyone the pass attempted to collect from:
+  // verifies honestly-declared paydays, learns undeclared ones, and fires the
+  // misdeclaration consequence the moment mid-cycle evidence contradicts a
+  // claim. Failures are swallowed per-user — scoring must never block sweeps.
+  for (const userId of autoDebit.touchedUserIds) {
+    await evaluateSalaryPattern(userId).catch(() => {});
+  }
   const reminderWindow = new Date(now.getTime() + 3 * 86_400_000);
   const upcoming = await prisma.payment.findMany({ where: { status: 'PENDING', reminderLevel: 0, dueDate: { gte: now, lte: reminderWindow }, round: { status: 'COLLECTING' } }, include: { round: { include: { committee: true } } } });
   for (const payment of upcoming) {

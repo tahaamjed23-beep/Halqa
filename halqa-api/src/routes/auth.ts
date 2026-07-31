@@ -10,7 +10,7 @@ import { createHash } from 'node:crypto';
 
 const router = Router();
 const cleanPhone = (v: string) => v.replace(/\s+/g, '').replace(/^\+92/, '0');
-const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, phoneVerified:true, addressLine:true, city:true, locality:true, occupationType:true, employerName:true, jobTitle:true, committeesCompletedClean:true, earlyTurnVerifiedAt:true, incomeVerifiedAt:true, chequeSecuredAt:true, cnicCaptured:true, homeLat:true, homeLng:true, createdAt: true } as const;
+const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, phoneVerified:true, addressLine:true, city:true, locality:true, occupationType:true, employerName:true, jobTitle:true, committeesCompletedClean:true, earlyTurnVerifiedAt:true, incomeVerifiedAt:true, chequeSecuredAt:true, cnicCaptured:true, homeLat:true, homeLng:true, salaryDay:true, salaryDayLearned:true, salaryVerifiedAt:true, salaryVerifyMethod:true, createdAt: true } as const;
 // Never send the PIN hash or biometric credential id to the client; we only
 // expose booleans + the derived tenure/discount status the UI needs.
 const pinHash = (pin: string) => createHash('sha256').update(`halqa-pin:${process.env.JWT_SECRET || 'dev'}:${pin}`).digest('hex');
@@ -67,6 +67,9 @@ router.post('/register', async (req, res, next) => {
       // the husband's job.
       jobTitle: z.string().trim().max(60).optional(),
       pin: z.string().trim().regex(/^\d{4,6}$/, 'PIN must be 4 to 6 digits').optional(),
+      // Declared payday (1–31): the day auto-collection pulls, ahead of the
+      // due date. Verified later against our own collection pattern.
+      salaryDay: z.number().int().min(1).max(31).optional(),
       cnicCaptured: z.boolean().optional(),
       homeLat: z.number().min(-90).max(90).optional(),
       homeLng: z.number().min(-180).max(180).optional(),
@@ -97,6 +100,7 @@ router.post('/register', async (req, res, next) => {
       employerName: body.occupationType === 'EMPLOYED' ? (body.employerName ?? null) : null,
       jobTitle: body.jobTitle ?? null,
       pinHash: body.pin ? pinHash(body.pin) : null,
+      salaryDay: body.salaryDay ?? null,
       cnicCaptured: body.cnicCaptured ?? false,
       homeLat: body.homeLat ?? null, homeLng: body.homeLng ?? null,
       homeLocationAt: (body.homeLat != null && body.homeLng != null) ? new Date() : null,

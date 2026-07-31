@@ -512,9 +512,14 @@ const salSet=await request(`/profile/payment-methods/${salMethod.method.id}/sala
 check('salary account designation persists with the method reference',salSet.salaryAccountLinked===true&&salSet.salaryAccountRef===salMethod.method.id);
 const salMe=await request('/auth/me',{token:bilal});
 check('profile exposes the salary link for the fee discount',salMe.salaryAccountLinked===true);
+// The salary anchor is replace-only (2026-07-31): deleting it outright is
+// refused; unsetting the salary designation first releases it.
+const salDelBlocked=await request(`/profile/payment-methods/${salMethod.method.id}`,{token:bilal,method:'DELETE',expect:409});
+check('the salary anchor cannot be deleted while designated',/salary account/i.test(salDelBlocked.error||''));
+await request(`/profile/payment-methods/${salMethod.method.id}/salary`,{token:bilal,method:'POST',body:{enabled:false}});
 await request(`/profile/payment-methods/${salMethod.method.id}`,{token:bilal,method:'DELETE'});
 const salMeAfter=await request('/auth/me',{token:bilal});
-check('deleting the salary method clears the salary link',salMeAfter.salaryAccountLinked===false);
+check('unsetting then deleting the salary method clears the salary link',salMeAfter.salaryAccountLinked===false);
 
 // ---- Family / linked-account policy (undertaking clause 7e): a linked
 // unresolved default pauses joins for the family member ----

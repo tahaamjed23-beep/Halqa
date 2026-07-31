@@ -8,6 +8,8 @@ import { issuePassport } from '../lib/passport';
 import { audit } from '../lib/audit';
 import { queueWhatsApp } from '../lib/whatsapp';
 import { INCOME_DISCOUNT_BPS, CHEQUE_DISCOUNT_BPS } from '../lib/discounts';
+import { titleFetch, type Rail } from '../lib/payment-provider';
+import { evaluateSalaryPattern } from '../lib/salary-pattern';
 
 const router = Router();
 router.use(requireAuth);
@@ -103,7 +105,7 @@ router.patch('/consent', async (req, res, next) => {
 // used to prefill checkout and to power the auto-debit mandate. Pointers only:
 // no balances, no card numbers (cards belong on the licensed aggregator's
 // hosted page, never here). Stored as a small JSON array on the user.
-type LinkedMethod = { id: string; rail: string; accountNo: string; accountTitle?: string; bankName?: string; label: string; preferred: boolean; verified?: boolean; brand?: string; last4?: string; expiry?: string; addressLine?: string; city?: string };
+type LinkedMethod = { id: string; rail: string; accountNo: string; accountTitle?: string; bankName?: string; label: string; preferred: boolean; verified?: boolean; brand?: string; last4?: string; expiry?: string; addressLine?: string; city?: string; titleName?: string; titleMatch?: boolean };
 // Card brand from the leading digits (display only — the full PAN is never
 // stored). Covers the networks that actually issue in Pakistan.
 const cardBrand = (digits: string) => /^4/.test(digits) ? 'Visa' : /^(5[1-5]|222[1-9]|22[3-9]\d|2[3-6]\d\d|27[01]\d|2720)/.test(digits) ? 'Mastercard' : /^3[47]/.test(digits) ? 'Amex' : /^(60|65|81|82)/.test(digits) ? 'PayPak' : 'Card';
@@ -135,7 +137,7 @@ router.post('/payment-methods', async (req, res, next) => {
       addressLine: z.string().trim().max(120).optional(),
       city: z.string().trim().max(60).optional(),
     }).parse(req.body);
-    const u = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { paymentMethodsJson: true } });
+    const u = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { paymentMethodsJson: true, fullName: true } });
     const existing = methodsOf(u.paymentMethodsJson);
     if (existing.length >= 5) return res.status(409).json({ error: 'A maximum of five linked methods is allowed' });
     const id = `pm_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
@@ -152,10 +154,17 @@ router.post('/payment-methods', async (req, res, next) => {
     } else {
       const accountNo = (input.accountNo ?? '').replace(/\s+/g, '');
       if (accountNo.length < 10) return res.status(400).json({ error: 'Enter the full account / wallet number' });
+      // Title fetch — ownership verification at the moment of linking. The
+      // registered holder name must belong to the member (CNIC name) before
+      // this account can anchor auto-collection. Sandbox echoes; the live
+      // aggregator API replaces the echo at Gate 2, and a live mismatch
+      // refuses the link outright.
+      const title = await titleFetch(input.rail as Rail, accountNo, u.fullName);
+      if (title.title !== null && !title.matches) return res.status(400).json({ error: 'This account is not registered in your name. Auto-collection can only anchor to your own account.' });
       method = {
         id, rail: input.rail, accountNo, accountTitle: input.accountTitle, bankName: input.bankName,
         label: input.label || input.bankName || (input.rail === 'RAAST' ? 'Raast ID' : input.rail === 'BANK_TRANSFER' ? 'Bank account' : `${input.rail === 'JAZZCASH' ? 'JazzCash' : 'Easypaisa'} wallet`),
-        preferred,
+        preferred, titleName: title.title ?? undefined, titleMatch: title.matches || undefined,
       };
     }
     const next_ = method.preferred ? existing.map(m => ({ ...m, preferred: false })) : existing;
@@ -219,7 +228,15 @@ router.post('/payment-methods/:id/salary', async (req, res, next) => {
     const u = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { paymentMethodsJson: true } });
     const method = methodsOf(u.paymentMethodsJson).find(m => m.id === req.params.id);
     if (!method) return res.status(404).json({ error: 'Linked method not found' });
-    const updated = await prisma.user.update({ where: { id: req.auth!.userId }, data: { salaryAccountLinked: enabled, salaryAccountRef: enabled ? method.id : null }, select: { salaryAccountLinked: true, salaryAccountRef: true } });
+    // Sandbox verifies the claim immediately (the verify-income posture) so the
+    // full discount loop is exercisable; production earns verification from
+    // evidence only — payslip, pattern or alerts (lib/salary-pattern.ts).
+    const sandboxVerify = enabled && process.env.NODE_ENV !== 'production';
+    const updated = await prisma.user.update({ where: { id: req.auth!.userId }, data: {
+      salaryAccountLinked: enabled, salaryAccountRef: enabled ? method.id : null,
+      ...(sandboxVerify ? { salaryVerifiedAt: new Date(), salaryVerifyMethod: 'SANDBOX' } : {}),
+      ...(!enabled ? { salaryVerifiedAt: null, salaryVerifyMethod: null } : {}),
+    }, select: { salaryAccountLinked: true, salaryAccountRef: true, salaryVerifiedAt: true, salaryVerifyMethod: true } });
     await audit(prisma, req.auth!.userId, 'SALARY_ACCOUNT_SET', 'User', req.auth!.userId, { enabled, methodRail: method.rail });
     res.json(updated);
   } catch (error) { next(error); }
@@ -231,12 +248,87 @@ router.delete('/payment-methods/:id', async (req, res, next) => {
     const methods = methodsOf(u.paymentMethodsJson);
     const target = methods.find(m => m.id === req.params.id);
     if (!target) return res.status(404).json({ error: 'Linked method not found' });
+    const me = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { salaryAccountRef: true } });
+    // The salary anchor is replace-only, never delete (chairman's directive):
+    // auto-collection's certainty rests on it. Mark another account as salary
+    // first, then this one releases.
+    if (me.salaryAccountRef === req.params.id) return res.status(409).json({ error: 'This is your salary account — collections anchor to it. Mark another account as your salary account first, then remove this one.' });
     let remaining = methods.filter(m => m.id !== req.params.id);
     if (target.preferred && remaining.length) remaining = remaining.map((m, i) => ({ ...m, preferred: i === 0 }));
-    const me = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { salaryAccountRef: true } });
     await prisma.user.update({ where: { id: req.auth!.userId }, data: { paymentMethodsJson: remaining, ...(me.salaryAccountRef === req.params.id ? { salaryAccountLinked: false, salaryAccountRef: null } : {}) } });
     await audit(prisma, req.auth!.userId, 'PAYMENT_METHOD_REMOVED', 'User', req.auth!.userId, { rail: target.rail });
     res.json({ methods: remaining.map(publicMethod) });
+  } catch (error) { next(error); }
+});
+
+// ---- Salary-day verification (2026-07-31) -------------------------------
+// The payday is the collection event (auto-debit pulls on it, ahead of the due
+// date), so the declared day is verified against evidence: our own collection
+// pattern, opt-in credit alerts, or one payslip photo. lib/salary-pattern.ts
+// holds the rules and the misdeclaration consequence.
+
+// Declare (or clear) the salary day. 1–31; null = varies / not declared.
+router.post('/salary-day', async (req, res, next) => {
+  try {
+    const { day } = z.object({ day: z.number().int().min(1).max(31).nullable() }).parse(req.body);
+    await prisma.user.update({ where: { id: req.auth!.userId }, data: { salaryDay: day, ...(day === null ? {} : {}) } });
+    await audit(prisma, req.auth!.userId, 'SALARY_DAY_SET', 'User', req.auth!.userId, { day });
+    const evaluation = await evaluateSalaryPattern(req.auth!.userId);
+    res.json({ salaryDay: day, evaluation });
+  } catch (error) { next(error); }
+});
+
+// Current verification state, for the Settings chip.
+router.get('/salary-status', async (req, res, next) => {
+  try {
+    const u = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { salaryDay: true, salaryDayLearned: true, salaryVerifiedAt: true, salaryVerifyMethod: true, salaryAccountLinked: true } });
+    const payslip = await prisma.payslipUpload.findFirst({ where: { userId: req.auth!.userId }, orderBy: { uploadedAt: 'desc' }, select: { status: true, uploadedAt: true } });
+    res.json({ ...u, payslip });
+  } catch (error) { next(error); }
+});
+
+// One payslip, one photo — client downscales to a small JPEG so nobody is
+// asked to fight an upload form. Sandbox accepts immediately (the same
+// posture as verify-income); production holds PENDING for review.
+router.post('/payslip', async (req, res, next) => {
+  try {
+    const { imageBase64 } = z.object({ imageBase64: z.string().min(64).max(1_400_000) }).parse(req.body);
+    const match = imageBase64.match(/^data:(image\/(?:jpeg|png|webp));base64,(.+)$/);
+    if (!match) return res.status(400).json({ error: 'Send the payslip as a single photo (JPEG or PNG)' });
+    const bytes = Buffer.from(match[2], 'base64');
+    if (bytes.length > 900_000) return res.status(413).json({ error: 'Photo too large — retake it or use the in-app camera' });
+    const sha256 = createHash('sha256').update(bytes).digest('hex');
+    const sandbox = process.env.NODE_ENV !== 'production';
+    const upload = await prisma.$transaction(async tx => {
+      const row = await tx.payslipUpload.create({ data: { userId: req.auth!.userId, image: bytes, mime: match[1], sha256, sizeBytes: bytes.length, status: sandbox ? 'ACCEPTED' : 'PENDING', reviewedAt: sandbox ? new Date() : null } });
+      if (sandbox) await tx.user.update({ where: { id: req.auth!.userId }, data: { salaryVerifiedAt: new Date(), salaryVerifyMethod: 'PAYSLIP' } });
+      await audit(tx, req.auth!.userId, 'PAYSLIP_UPLOADED', 'PayslipUpload', row.id, { sha256, sizeBytes: bytes.length, status: row.status });
+      return row;
+    });
+    res.status(201).json({ status: upload.status, uploadedAt: upload.uploadedAt });
+  } catch (error) { next(error); }
+});
+
+// Opt-in credit-alert summaries from the device's notification listener.
+// Aggregates only — a coarse amount band, a day, a source class, a month.
+// Raw alert text never leaves the phone; two consistent months verify.
+router.post('/salary-signals', async (req, res, next) => {
+  try {
+    const { events } = z.object({ events: z.array(z.object({
+      dayOfMonth: z.number().int().min(1).max(31),
+      amountBand: z.string().trim().min(2).max(20),
+      sourceClass: z.enum(['BANK', 'WALLET']),
+      observedMonth: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/),
+    })).min(1).max(6) }).parse(req.body);
+    for (const e of events) {
+      await prisma.salarySignal.upsert({
+        where: { userId_observedMonth_sourceClass: { userId: req.auth!.userId, observedMonth: e.observedMonth, sourceClass: e.sourceClass } },
+        create: { userId: req.auth!.userId, ...e },
+        update: { dayOfMonth: e.dayOfMonth, amountBand: e.amountBand },
+      });
+    }
+    const evaluation = await evaluateSalaryPattern(req.auth!.userId);
+    res.status(201).json({ recorded: events.length, evaluation });
   } catch (error) { next(error); }
 });
 
