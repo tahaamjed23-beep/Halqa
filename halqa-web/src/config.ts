@@ -18,7 +18,7 @@ export const SHOW_BANK_RAIL = false;
 // hidden, the app is create / join / pay / collect only. All that code stays
 // intact; flip to false to bring the full licensed product back. See the
 // SIMPLE_MODE gates in Shell, App, CreateCirclePage and CommitteePage.
-export const SIMPLE_MODE = true;
+export const SIMPLE_MODE = false;
 
 // Investor-briefing discovery pack. Every UI surface added for public-circle
 // discovery, slot timelines and committee intelligence is gated here. Run

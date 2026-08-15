@@ -792,3 +792,20 @@ span:has(> strong + small) > small{font-size:11.5px;line-height:1.5;color:var(--
   background:#fff;padding:12px 14px}
 .stat-rows > div > span{font-size:12.5px;color:var(--muted)}
 .stat-rows > div > b{font-size:13.5px;font-weight:750}
+
+/* Exit ladder options */
+.exit-opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;padding:13px;
+  border-radius:15px;border:1px solid var(--line);background:#fff;cursor:pointer;margin-bottom:9px}
+.exit-opt.on{border-color:var(--l400);background:var(--l50)}
+.exit-opt .row-body strong{display:block;font-size:13.5px}
+.exit-opt .row-body span{display:block;font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:2px}
+.exit-nums{display:flex;gap:14px;flex-wrap:wrap;margin-top:7px}
+.exit-nums span{font-size:11.5px;color:var(--muted)}
+.exit-nums b{color:var(--l700);font-weight:750}
+.warn-box{display:flex;gap:11px;align-items:flex-start;background:#FFF7E6;border:1px solid #F0D8A0;
+  border-radius:14px;padding:13px;color:#7A5A12}
+.warn-box b{display:block;font-size:13.5px;margin-bottom:3px}
+.warn-box small{font-size:11.5px;line-height:1.5;display:block}
+.exit-bar{display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:18px 0 26px;
+  padding:14px;border-radius:15px;background:#fff;border:1px solid var(--line)}
+.exit-bar span{font-size:11.5px;color:var(--muted)}
