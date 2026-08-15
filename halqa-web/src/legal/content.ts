@@ -1,7 +1,7 @@
 // Halqa legal corpus. Shown from the signup screen (acceptance recorded
 // server-side as TOS_ACCEPTED with TERMS_VERSION) and from Settings → Legal.
 // Drafted in the structure large platforms use (LinkedIn/PayPal-style numbered
-// agreements). NOTE FOR THE RECORD: engineering drafts — route through
+// agreements). NOTE FOR THE RECORD: engineering drafts, route through
 // Pakistani counsel before any paid marketing push.
 
 export const TERMS_VERSION = '1.0-2026-07-20';
@@ -23,7 +23,7 @@ export const LEGAL_DOCS: Record<DocId, LegalDoc> = {
         '1.4. Any figures described as indicative, estimated, or projected anywhere in the Services are illustrations, not promises, offers, or guarantees of any return.' ] },
       { h: '2. Eligibility and your account', p: [
         '2.1. You must be at least 18 years of age, resident in Pakistan or otherwise legally able to contract, and capable of forming a binding agreement.',
-        '2.2. You must register with true, current, and complete information — including your legal name, an active Pakistani mobile number, an email address, and, where requested, your CNIC number — and keep it updated. Impersonation, fictitious identities, and accounts opened on behalf of undisclosed third parties are prohibited.',
+        '2.2. You must register with true, current, and complete information, including your legal name, an active Pakistani mobile number, an email address, and, where requested, your CNIC number, and keep it updated. Impersonation, fictitious identities, and accounts opened on behalf of undisclosed third parties are prohibited.',
         '2.3. You are responsible for safeguarding your credentials and for all activity under your account. Notify us immediately of any suspected unauthorised use. We may suspend an account to protect you, other members, or the Services.',
         '2.4. One natural person, one account. We may refuse, suspend, or terminate duplicate or fraudulent accounts.' ] },
       { h: '3. Your obligations in a Circle', p: [
@@ -34,7 +34,7 @@ export const LEGAL_DOCS: Record<DocId, LegalDoc> = {
       { h: '4. Records as evidence', p: [
         '4.1. You agree that the ledger entries, timestamps, acceptance logs, and communications recorded by the Services are business records generated in the ordinary course, and you consent to their use as evidence in any dispute, recovery action, or legal proceeding arising from a Circle, to the extent permitted by the Qanun-e-Shahadat Order, 1984 and the Electronic Transactions Ordinance, 2002.' ] },
       { h: '5. Fees', p: [
-        '5.1. Core membership is currently free. Fees Halqa does charge — including late adjustments and management fees on Halqa-supported slots — are set out in the Fees & Payments Policy and disclosed in-product before you incur them.',
+        '5.1. Core membership is currently free. Fees Halqa does charge, including late adjustments and management fees on Halqa-supported slots, are set out in the Fees & Payments Policy and disclosed in-product before you incur them.',
         '5.2. We may introduce or change fees prospectively with notice; continued use after the effective date constitutes acceptance.' ] },
       { h: '6. Prohibited conduct', p: [
         '6.1. You must not use the Services to launder money, finance terrorism, evade tax, or violate any law, including the Anti-Money Laundering Act, 2010.',
@@ -75,7 +75,7 @@ export const LEGAL_DOCS: Record<DocId, LegalDoc> = {
         '16.1. Halqa shall not be liable for any failure or delay in performance to the extent caused by events beyond its reasonable control, including acts of God, flood, earthquake, epidemic, war, terrorism, civil unrest, labour disputes, governmental action, power or telecommunication failures, failures of payment schemes or banking infrastructure, or failures of third-party hosting providers.',
         '16.2. During a force majeure event, Halqa’s obligations are suspended to the extent affected; Halqa will use commercially reasonable efforts to resume performance and to preserve the integrity of the ledger and your records.' ] },
       { h: '17. Notices and communications', p: [
-        '17.1. You consent to receive notices, disclosures, and communications from Halqa electronically — in-product, by push notification, by SMS or messaging service to your registered mobile number, or by email to your registered address — and agree that electronic delivery satisfies any legal requirement of written notice.',
+        '17.1. You consent to receive notices, disclosures, and communications from Halqa electronically, in-product, by push notification, by SMS or messaging service to your registered mobile number, or by email to your registered address, and agree that electronic delivery satisfies any legal requirement of written notice.',
         '17.2. Notices to Halqa must be sent through the in-product support channel or to the contact address published in the Help section, and are deemed received on the next business day.',
         '17.3. It is your responsibility to keep your contact details current; a notice delivered to the details on file is effective even if no longer monitored by you.' ] },
       { h: '18. Survival', p: [
@@ -103,11 +103,11 @@ export const LEGAL_DOCS: Record<DocId, LegalDoc> = {
       { h: '2. Why we process it (legal bases)', p: [
         '2.1. To perform our contract with you: operating circles, schedules, ledgers, scores, and support.',
         '2.2. Legitimate interests: securing the Services, preventing fraud and multi-accounting, enforcing the User Agreement, and producing records usable in dispute resolution.',
-        '2.3. Consent: goal-intent sharing with commercial partners (Section 4) and marketing communications — each only with your separate, revocable opt-in.',
+        '2.3. Consent: goal-intent sharing with commercial partners (Section 4) and marketing communications, each only with your separate, revocable opt-in.',
         '2.4. Legal obligations: responses to lawful orders of courts, regulators, and law-enforcement agencies of Pakistan.' ] },
       { h: '3. What other members see', p: [
         '3.1. Members of your circle see your name, username, reliability indicators, payment status within that circle, and messages you post there. Hosts see what they need to run the circle. Your CNIC number is never shown to other members; verification status (verified / not verified) is.' ] },
-      { h: '4. Goal-intent sharing with partners — strictly opt-in', p: [
+      { h: '4. Goal-intent sharing with partners, strictly opt-in', p: [
         '4.1. If, and only if, you switch on "Share my goal interest" in Settings → Data privacy, Halqa may inform relevant service providers (for example, licensed Hajj/Umrah tour operators, educational institutions, or retailers) that a consenting member is saving toward such a goal, together with your name, contact number, city, and goal category.',
         '4.2. We never share your CNIC, your ledger history, your score, your circle membership details, or your messages with commercial partners.',
         '4.3. You can withdraw this consent at any time in Settings; withdrawal stops future sharing immediately.',
@@ -143,7 +143,7 @@ export const LEGAL_DOCS: Record<DocId, LegalDoc> = {
     sections: [
       { h: '1. What we store', p: [
         '1.1. Strictly necessary storage: authentication tokens that keep you signed in, and security state that protects your account. The Services cannot work without these.',
-        '1.2. Preference storage: your language (English/اردو), notification choices, and preferred payment rail — stored locally on your device.',
+        '1.2. Preference storage: your language (English/اردو), notification choices, and preferred payment rail, stored locally on your device.',
         '1.3. We do not run third-party advertising cookies or cross-site trackers in the applications.' ] },
       { h: '2. Your choices', p: [
         '2.1. Clearing your browser or app storage signs you out and resets preferences. Blocking strictly necessary storage prevents sign-in.',
@@ -157,12 +157,12 @@ export const LEGAL_DOCS: Record<DocId, LegalDoc> = {
     sections: [
       { h: '1. Our model', p: [
         '1.1. Halqa membership is free. Instead of charging members, Halqa may earn from commercial partners who want to serve members that have opted in to goal-intent sharing (see Privacy Policy, Section 4), and from disclosed fees listed in the Fees & Payments Policy.',
-        '1.2. We do not sell your ledger, your score, your CNIC, or your circle history to anyone. What a partner can receive is limited to: your name, contact number, city, and stated goal category — and only with your active consent.' ] },
+        '1.2. We do not sell your ledger, your score, your CNIC, or your circle history to anyone. What a partner can receive is limited to: your name, contact number, city, and stated goal category, and only with your active consent.' ] },
       { h: '2. Ad choices', p: [
         '2.1. Settings → Advertising data lets you switch goal-intent sharing on or off at any time. Off means no partner receives anything about you, ever.',
         '2.2. Sponsored placements inside the app, if introduced, will be labelled "Sponsored".',
         '2.3. Marketing messages from Halqa itself require your separate opt-in and carry an unsubscribe path.' ] },
-      { h: '3. Complaints', p: [ '3.1. If a partner contacts you improperly or after you opted out, report it in Help — we investigate every report and terminate partners who breach our data terms.' ] },
+      { h: '3. Complaints', p: [ '3.1. If a partner contacts you improperly or after you opted out, report it in Help, we investigate every report and terminate partners who breach our data terms.' ] },
     ],
   },
   community: {
@@ -170,7 +170,7 @@ export const LEGAL_DOCS: Record<DocId, LegalDoc> = {
     updated: 'Effective 20 July 2026 · Version 1.0',
     intro: 'Circles run on trust. These rules keep the platform worthy of it.',
     sections: [
-      { h: '1. Be who you say you are', p: [ '1.1. Real names, real numbers, one account. Verified identity ranks ahead of unverified in turn ordering — that is deliberate.' ] },
+      { h: '1. Be who you say you are', p: [ '1.1. Real names, real numbers, one account. Verified identity ranks ahead of unverified in turn ordering, that is deliberate.' ] },
       { h: '2. Pay what you committed', p: [ '2.1. A committee is a promise to every other member. Pay on time, every round, including after your own payout. Late adjustments, score changes, and feature locks follow the disclosed schedule automatically.' ] },
       { h: '3. Host honestly', p: [ '3.1. Hosts disclose all settings before members join, run the order by the book, and never take undisclosed money. Host reputation is public and permanent.' ] },
       { h: '4. Respect the chat', p: [ '4.1. No harassment, hate, threats, spam, or scams. No sharing another member\'s personal data. Circle chat is recorded with the circle.' ] },
@@ -185,7 +185,7 @@ export const LEGAL_DOCS: Record<DocId, LegalDoc> = {
     sections: [
       { h: '1. Free', p: [ '1.1. Creating an account, creating a circle, joining a circle, paying, collecting, chat, reputation, and the Credit Passport are free.' ] },
       { h: '2. Late adjustments', p: [ '2.1. A contribution paid after its disclosed due window incurs a graduated late adjustment (currently 2%, 5%, or 10% of the installment by lateness tier), disclosed in the circle before you join. These adjustments are platform revenue and also deter the behaviour that breaks circles.' ] },
-      { h: '3. Halqa-supported slots (management fee)', p: [ '3.1. Where a host chooses "Start full — Halqa fills the empty slots", Halqa supports the unfilled positions so the circle can begin on time. Circles using this support carry a higher management fee, disclosed on the start screen before the host confirms. Halqa-supported slots always take the last turn positions — member money is never exposed to them.' ] },
+      { h: '3. Halqa-supported slots (management fee)', p: [ '3.1. Where a host chooses "Start full, Halqa fills the empty slots", Halqa supports the unfilled positions so the circle can begin on time. Circles using this support carry a higher management fee, disclosed on the start screen before the host confirms. Halqa-supported slots always take the last turn positions, member money is never exposed to them.' ] },
       { h: '4. Turn marketplace', p: [ '4.1. Selling a turn position is free to list. A disclosed service margin may be applied to completed premium trades; the current margin is shown on the listing screen before you confirm.' ] },
       { h: '5. Payment execution', p: [ '5.1. Payments run on third-party rails (Raast, bank transfer, licensed wallets). Those providers may charge their own fees under their own terms; Halqa does not control or receive them. In the current release, digital confirmations run in sandbox mode and are marked as such.' ] },
       { h: '6. Changes', p: [ '6.1. Fee changes apply prospectively with in-product notice and never retroactively to a circle already running.' ] },

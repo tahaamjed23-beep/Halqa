@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Halqa — The Report, Explained · for an A-level student · 28 July 2026</title>
+<style>
+  @page { size: A4; margin: 20mm 18mm; }
+  *{box-sizing:border-box}
+  body{
+    background:#fff; color:#000;
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:10.4pt; line-height:1.58; margin:0;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  h1{font-size:15.5pt;font-weight:normal;margin:0 0 4mm;padding-bottom:2mm;border-bottom:1.5px solid #000}
+  h2{font-size:11.6pt;margin:7mm 0 2.5mm;padding-bottom:1mm;border-bottom:1px solid #000}
+  h3{font-size:10.5pt;margin:5mm 0 1.5mm;font-weight:bold}
+  p{margin:0 0 2.6mm}
+  ul,ol{margin:2mm 0 3mm;padding-left:6mm}
+  li{margin:1.3mm 0}
+  code{font-family:Consolas,'Courier New',monospace;font-size:9.2pt;background:#f2f2f2;padding:0 1mm}
+  table{border-collapse:collapse;width:100%;margin:3mm 0 4mm}
+  th,td{border:1px solid #000;padding:1.9mm 2.4mm;font-size:9.1pt;vertical-align:top;text-align:left}
+  th{background:#e8e8e8;font-weight:bold}
+  tr{page-break-inside:avoid}
+  .brk{page-break-before:always}
+  .work{border:1px solid #000;padding:3.5mm 4.5mm;margin:4mm 0;page-break-inside:avoid;background:#fafafa}
+  .work .t{font-weight:bold;margin-bottom:1.5mm}
+  .math{font-family:Consolas,'Courier New',monospace;font-size:9.3pt;margin:1.5mm 0;padding-left:4mm}
+  .selftest{border:1.5px solid #000;padding:3.5mm 4.5mm;margin:5mm 0;page-break-inside:avoid}
+  .selftest .t{font-weight:bold;margin-bottom:1.5mm}
+  .ans{font-size:9.2pt;font-style:italic}
+  .q{font-weight:bold;margin-top:4mm}
+  .cover{height:240mm;display:flex;flex-direction:column;justify-content:center;text-align:center;page-break-after:always}
+  .cover .m{font-size:38pt;letter-spacing:.22em;margin:0 0 6mm}
+  .cover hr{width:60mm;border:none;border-top:1.5px solid #000;margin:0 auto 8mm}
+  .cover .t{font-size:14pt;margin:0 0 3mm}
+  .cover .d{font-size:10.5pt;margin:0 0 14mm}
+  .cover .n{font-size:9.4pt;line-height:1.9}
+  .gloss td:first-child{width:38mm;font-weight:bold}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="m">HALQA</p>
+  <hr>
+  <p class="t">The Report, Explained</p>
+  <p class="d">A first-principles walkthrough of the Full Project Report<br>for an A-level student · 28 July 2026</p>
+  <p class="n">
+    Part I — eleven short chapters that teach the report, with worked arithmetic.<br>
+    Part II — the glossary, the facts to memorise, and the hard questions with model answers.<br><br>
+    Two rules govern this document. Every technical term is defined the first time it appears.<br>
+    Every number is one you can recompute by hand.
+  </p>
+</div>
+
+<!-- ============ HOW TO USE ============ -->
+<section>
+<h1>How to use this document</h1>
+<p>The Full Project Report is written for regulators, investors and engineers, and so it compresses. This companion expands it back out. Nothing here adds to the report or changes it. If the two ever seem to disagree, the report is right, and the disagreement is a fault in this document worth reporting.</p>
+<p>Each chapter ends with a short self-test. Do them with a pen. None of the arithmetic goes beyond A-level. The genuine difficulty in finance is rarely the calculation itself — it is knowing which quantity to calculate. That is the skill these chapters practise.</p>
+<p>Part II is revision material for any meeting: a glossary you should be able to define without notes, a facts sheet you should know from memory, and fifteen hard questions — the ones a sharp person will actually ask — each with a model answer worth rehearsing aloud.</p>
+</section>
+
+<!-- ============ CH 1 ============ -->
+<section class="brk">
+<h1>Chapter 1 · What a kameti actually is</h1>
+
+<p>Twelve friends agree to pay <b>Rs 10,000 each month</b> into a common pool, for twelve months. Each month the whole pool — <b>Rs 120,000</b> — goes to one member. The next month it goes to another. After twelve months, every member has paid twelve times and collected once, and the circle is complete.</p>
+
+<div class="work">
+<p class="t">Worked example — check that it balances</p>
+<p class="math">Each member pays in:&nbsp;&nbsp;12 × Rs 10,000 = Rs 120,000</p>
+<p class="math">Each member collects:&nbsp;Rs 10,000 × 12 members = Rs 120,000</p>
+<p style="margin-bottom:0">Everyone pays Rs 120,000 and receives Rs 120,000. No one gains a rupee, and no one loses one — a committee is not an investment. What it changes is <b>timing</b>. The member who collects in month 1 has, in effect, received an interest-free loan of the pool, repaid over the remaining eleven months. The member who collects in month 12 has used a forced savings plan — a commitment that made them put aside Rs 10,000 every month when willpower alone might not have. The same circle serves both, and that is the point.</p>
+</div>
+
+<p>This is the most important idea in the entire report: <b>a committee is two financial products wearing one coat</b> — a loan for the early seats, a savings plan for the late ones. In Pakistan the structure is called a <i>kameti</i> or <i>BC</i>; the international term is <b>ROSCA</b>, a rotating savings and credit association. It charges no interest, which matters religiously — there is no <i>riba</i>. It needs no bank, no credit history and no collateral. It runs entirely on the members trusting one another.</p>
+
+<p>That trust is also the whole problem, as the next chapter shows.</p>
+
+<div class="selftest">
+<p class="t">Self-test 1</p>
+<p>A 10-member kameti at Rs 5,000 per month. (a) What is the pot? (b) How much does each member pay over the full cycle? (c) Who is effectively borrowing, and who is effectively saving?</p>
+<p class="ans" style="margin-bottom:0">(a) 10 × 5,000 = Rs 50,000. (b) 10 × 5,000 = Rs 50,000 — the same number; that is the balance. (c) Early seats borrow, because they collect before they have paid much in. Late seats save, because they pay in before they collect.</p>
+</div>
+</section>
+
+<!-- ============ CH 2 ============ -->
+<section class="brk">
+<h1>Chapter 2 · The two ways a committee dies</h1>
+
+<h3>Death one — the organiser runs away with the pool</h3>
+<p>In an informal committee, one person physically collects everyone's cash and hands over the pool. That person is a <b>single point of failure</b> — an engineering term for a component whose failure brings down the whole system. The report cites two real cases: a Karachi committee network that collapsed with <b>Rs 420 million</b>, and the Sidra Humaid case, in which roughly <b>US$2 million was taken from about 200 women</b>. Both frauds needed the same precondition: an account where member money accumulated under one person's control.</p>
+
+<h3>Death two — the early collector stops paying</h3>
+<p>This one is quieter, and it is where the report's central formula lives. Define a member's <b>forward liability</b> as the amount they still owe the circle at the moment they collect:</p>
+
+<p class="math">L(k) = c × (n − k)</p>
+
+<p>where <code>c</code> is the contribution per round, <code>n</code> the number of members, and <code>k</code> the member's turn position (seat 1 collects first). The derivation is short enough to rebuild from memory: by their turn, the member in seat <code>k</code> has paid <code>c × k</code> and collected <code>c × n</code>. The difference, <code>c(n − k)</code>, is money the group has extended to them and not yet received back.</p>
+
+<div class="work">
+<p class="t">Worked example — three seats in the twelve-friend circle</p>
+<p class="math">Seat 1:&nbsp;&nbsp;L(1)&nbsp;&nbsp;= 10,000 × (12 − 1)&nbsp;&nbsp;= Rs 110,000 still owed</p>
+<p class="math">Seat 6:&nbsp;&nbsp;L(6)&nbsp;&nbsp;= 10,000 × (12 − 6)&nbsp;&nbsp;= Rs 60,000</p>
+<p class="math">Seat 12:&nbsp;L(12) = 10,000 × (12 − 12) = Rs 0</p>
+<p style="margin-bottom:0">If seat 1 walks away, the group loses Rs 110,000. If seat 12 walks away, the group loses nothing — that member had already paid in everything before collecting. Risk is not spread across the circle. It is concentrated at the front and falls in a straight line to zero. (The A-level connection: L(k) is a linear, strictly decreasing function of k. Plot it and you have drawn Exhibit 2 of the report.)</p>
+</div>
+
+<p>Every anti-default idea in Halqa is an attack on this one formula: either keep <code>L</code> small for people who are not yet proven, or make defaulting on <code>L</code> expensive and provable.</p>
+
+<div class="selftest">
+<p class="t">Self-test 2</p>
+<p>A 20-member circle at Rs 2,000 per round. (a) What is the forward liability of seat 3? (b) Of seat 18? (c) A stranger with no history asks for seat 2. In one sentence, why is that the most dangerous request in the system?</p>
+<p class="ans" style="margin-bottom:0">(a) 2,000 × 17 = Rs 34,000. (b) 2,000 × 2 = Rs 4,000. (c) Seat 2 maximises what they could take and never repay — L is largest at the front, and a stranger offers no evidence that they will keep paying.</p>
+</div>
+</section>
+
+<!-- ============ CH 3 ============ -->
+<section class="brk">
+<h1>Chapter 3 · What Halqa actually is — and is not</h1>
+
+<p>Halqa removes the first death by refusing to be the organiser. <b>Money never passes through Halqa.</b> When Ahmed pays his installment, it travels from Ahmed's account directly to this month's recipient over a <b>payment rail</b> — the general term for any system that moves money, such as Raast (Pakistan's state-built instant payment system), the JazzCash and Easypaisa wallets, or an ordinary account transfer. Halqa observes that the payment happened and records it.</p>
+
+<p>The right mental model is the scorer at a cricket match. The scorer never holds the runs, yet the scorebook is the authority on the score. Halqa is the scorer. No account exists anywhere in the system where members' money accumulates, so the Rs 420 million fraud is not merely against the rules — it is <i>impossible to construct</i>. There is nothing to run away with.</p>
+
+<h3>The ledger, and why it is called double-entry</h3>
+<p>A <b>ledger</b> is the ordered record of every money event. <b>Double-entry</b> means each event is written twice: once as a <b>debit</b> (value leaving someone) and once as a matching <b>credit</b> (value arriving somewhere). The two sides of every entry must be equal.</p>
+
+<div class="work">
+<p class="t">A physics analogy — conservation laws</p>
+<p style="margin-bottom:0">In mechanics, momentum before equals momentum after. If your numbers do not balance, you have made an arithmetic error, and the imbalance itself tells you so. Double-entry gives money the same property: across the whole ledger, total debits must equal total credits, always. A stolen or miscounted rupee breaks the equality and thereby announces itself. The ledger is <b>self-checking</b>. A single-entry record — an informal committee's notebook, where one exists at all — has no such property, so its errors and thefts stay silent.</p>
+</div>
+
+<p>Each ledger entry also carries an <b>idempotency key</b>, explained properly in Chapter 8, which guarantees that a payment accidentally submitted twice — a weak signal, a double tap — is recorded exactly once.</p>
+
+<p>Finally, every event is <b>timestamped and CNIC-linked</b>. The CNIC is the government's national identity card. Under Pakistan's <i>Electronic Transactions Ordinance 2002</i>, electronic records of this kind are admissible as evidence in court. In plain terms: Halqa converts "he stopped paying, and it is my word against his" into a dated, signed, identity-bound claim. The informal committee's fatal weakness is that it keeps no records. <b>The record is the product.</b></p>
+
+<div class="selftest">
+<p class="t">Self-test 3</p>
+<p>(a) In the scorer analogy, what is the one thing the scorer must never do? (b) Ahmed's Rs 10,000 payment enters the ledger — write the two entries. (c) Why does a double-entry ledger detect a missing rupee when a notebook does not?</p>
+<p class="ans" style="margin-bottom:0">(a) Hold the runs — that is, take possession of the money. (b) Debit Ahmed Rs 10,000; credit the recipient Rs 10,000. (c) Debits must equal credits, so a missing rupee breaks the balance — like a momentum imbalance revealing an arithmetic slip.</p>
+</div>
+</section>
+
+<!-- ============ CH 4 ============ -->
+<section class="brk">
+<h1>Chapter 4 · The licence question — why "never hold money" is a legal strategy</h1>
+
+<p>A <b>licence</b> is state permission to perform a regulated activity, granted with conditions: minimum capital, audits, inspections. The key fact in the report is that Pakistan's heavy financial licences each attach to a <i>specific activity</i>, not to "being a fintech." Match the activity to the licence:</p>
+
+<table>
+<tr><th>Licence</th><th>Regulator</th><th>Triggered by</th><th>Does Halqa do it?</th></tr>
+<tr><td><b>EMI</b> — Electronic Money Institution</td><td>SBP, the State Bank of Pakistan — the central bank, which regulates money and payments</td><td><i>Holding</i> customers' money as a stored balance, the way an Easypaisa wallet does. Requires <b>Rs 200 million</b> in capital.</td><td>No. Halqa holds no balances, at any stage.</td></tr>
+<tr><td><b>NBFC</b> — Non-Banking Finance Company</td><td>SECP, the Securities and Exchange Commission of Pakistan — which regulates companies and non-bank finance</td><td><i>Lending</i> your own money, or <i>pooling</i> other people's money and deploying it.</td><td>No. The members lend to each other; at the second stage, savings are deployed only by a licensed asset-management company under its own licence.</td></tr>
+<tr><td><b>PSO / PSP</b> — Payment System Operator / Provider</td><td>SBP</td><td><i>Operating</i> a payment system that moves money between parties.</td><td>No. Halqa uses rails operated by licensed companies.</td></tr>
+</table>
+
+<div class="work">
+<p class="t">The referee and the player</p>
+<p style="margin-bottom:0">A footballer needs a player's registration; the referee does not, however central they are to the match, because refereeing is a different activity. Halqa is built to be the referee. Note the direction of the logic: this is not a company evading regulation the way a smuggler evades customs. The regulated activities genuinely do not occur anywhere in the system, so the licences that govern them cannot apply. The legal position is a consequence of the architecture — which is why the report calls the no-custody decision the fraud control, the legal strategy and the moat at once.</p>
+</div>
+
+<h3>The three red lines</h3>
+<p>The position holds only while three things stay true. They are worth memorising, because they come up in every serious conversation. <b>One: no custody</b> — never hold the pool. Crossing this triggers the EMI licence, and even the second stage keeps it uncrossed, because savings there sit with CDC as trustee, not with Halqa. <b>Two: no lending at scale</b> — never fill gaps with Halqa's own money at scale. That triggers the NBFC licence. <b>Three: no bureau reporting</b> — never formally report defaults to a credit bureau, which requires financial-institution status. Each line could only be crossed deliberately, with the right licence in hand; the architecture prevents crossing one by accident.</p>
+
+<p>Laws apply regardless — laws bind everyone, while licences attach to activities. Halqa operates under the Anti-Money Laundering Act 2010, PECA 2016 (the cyber-crime statute), the Electronic Transactions Ordinance 2002 — the law that makes its records court-admissible, and therefore a law that works in Halqa's favour — and the forthcoming personal-data-protection framework.</p>
+
+<div class="selftest">
+<p class="t">Self-test 4</p>
+<p>(a) Halqa decides to cover missed installments from its own funds, at scale. Which line is crossed, and which licence does it trigger? (b) If no licence is needed, why does Gate 2 still budget Rs 50,000–100,000 for a lawyer's opinion letter?</p>
+<p class="ans" style="margin-bottom:0">(a) Lending at scale — the NBFC licence. (b) "We need no licence" is a legal conclusion. A written opinion from fintech counsel makes it defensible to counterparties and the regulator, rather than remaining the company's own claim about itself.</p>
+</div>
+</section>
+
+<!-- ============ CH 5 ============ -->
+<section class="brk">
+<h1>Chapter 5 · Position is the collateral</h1>
+
+<p><b>Collateral</b> is something of value a borrower puts at stake, so that defaulting costs them: a lender holds your house papers against your loan. Committee members have no collateral to offer — that is exactly why they use committees. Money Fellows answers this with credit checks and deposits. Halqa's answer costs nothing: <b>the seat itself is the collateral.</b></p>
+
+<p>Recall Chapter 2: forward liability L(k) = c(n − k) falls to zero at the last seat. So a member who is not yet proven is simply not offered the seats where L is large. They may only take seats where, by construction, they must pay in nearly everything before they collect. No one has to trust them. The arithmetic constrains them instead.</p>
+
+<h3>Who may take which seat</h3>
+<p>Two independent gates are checked when a member picks a seat at join time. The member <i>chooses</i> from a permitted set; the platform never reshuffles anyone, and a claimed seat is never taken away.</p>
+<ul>
+<li><b>Score band</b> (Chapter 7). Members below 550 may take only the last three seats, and never earlier than halfway, whatever the circle's size. Members between 550 and 649 may take any seat in the second half. Members at 650 and above may take any free seat.</li>
+<li><b>Tenure quarantine.</b> A <i>new</i> member — whatever their score — is treated like the lowest band until they have completed <b>two clean circles</b> and been manually verified. A new account's score of 700 is an assumption, not evidence.</li>
+</ul>
+
+<div class="work">
+<p class="t">Worked example — the exposure bound</p>
+<p>Twelve members, Rs 10,000, a Rs 120,000 pot. A brand-new member may take seat 10, 11 or 12. The worst case for the group is seat 10:</p>
+<p class="math">L(10) = 10,000 × (12 − 10) = Rs 20,000&nbsp;&nbsp;→&nbsp;&nbsp;20,000 / 120,000 = 16.7% of the pot</p>
+<p style="margin-bottom:0">The exact statement — the one to use in any meeting — is that exposure to an unproven member is <b>bounded and small</b>: at worst two contributions, here Rs 20,000. Only the single final seat carries literally zero. The precision matters because anyone can open the app and check, and a claim that fails inspection weakens every claim standing next to it.</p>
+</div>
+
+<p>Around this core sit the other layers of the report's §3 stack, each removing one specific failure: identity (the CNIC — no anonymous re-entry), schedule (locked dates and a hidden grace window), price (the late fees of Chapter 6), payout controls (a round's payout cannot be released while any contribution in it is unpaid — which includes the recipient's own — and linked-account defaults withhold it), consequence (default brings a platform-wide feature lock, a public flag, and a recovery case with a 10% rehabilitation fee, all on court-usable records), and contract (the weekly e-signed undertaking and the mutual member-to-member guarantee, with a circle unable to start until every member's guarantee is on file).</p>
+
+<div class="selftest">
+<p class="t">Self-test 5</p>
+<p>An 8-member circle at Rs 5,000. (a) Which seats may a new member take, and what is the worst-case exposure? (b) A member with a score of 780 but no completed circles asks for seat 2 — is that allowed?</p>
+<p class="ans" style="margin-bottom:0">(a) The new-member rule: seats after max(8−3, ⌊8/2⌋) = max(5, 4) = 5, so seats 6, 7 and 8. Worst case L(6) = 5,000 × 2 = Rs 10,000, which is 25% of the Rs 40,000 pot. (b) No. Quarantine ignores the score — two clean circles and manual verification come first.</p>
+</div>
+</section>
+
+<!-- ============ CH 6 ============ -->
+<section class="brk">
+<h1>Chapter 6 · Late fees and the hidden grace window</h1>
+
+<p>One unit must be second nature: the <b>basis point</b> (bps). 1 bps = 0.01%, so 100 bps = 1%, 200 bps = 2%, and 1,000 bps = 10%. Finance uses basis points to avoid the ambiguity in phrases like "a one percent increase."</p>
+
+<h3>The ladder</h3>
+<p>If auto-collection fails and a member pays late, the fee escalates through three tiers. All percentages apply to the installment, not the pot:</p>
+<table>
+<tr><th>When</th><th>Fee</th><th>Score damage</th></tr>
+<tr><td>Days 1–3 late</td><td>The circle's own <code>latePenaltyBps</code> — default 200 bps (2%), capped at 1,000</td><td>−10</td></tr>
+<tr><td>Day 4 to the grace boundary</td><td>500 bps (5%)</td><td>−20</td></tr>
+<tr><td>Beyond the grace boundary</td><td>1,000 bps (10%) — the payment is classified MISSED; if the member has already collected their payout, it is a <b>DEFAULT</b></td><td>−40, and a default itself can cost up to −200</td></tr>
+</table>
+
+<div class="work">
+<p class="t">Worked example — a Rs 10,000 installment in a 30-day circle</p>
+<p>The grace boundary comes from the circle's period:</p>
+<p class="math">graceDays = max(2, min(14, round(periodDays × 0.23) − 2))</p>
+<p class="math">periodDays = 30:&nbsp;&nbsp;round(30 × 0.23) − 2 = round(6.9) − 2 = 7 − 2 = 5&nbsp;&nbsp;→&nbsp;&nbsp;5 days</p>
+<p>The <code>max(2, …)</code> floor and the <code>min(14, …)</code> ceiling are clamps. Check them at the extremes: a 7-day circle gives round(1.61) − 2 = 0, lifted to 2 by the floor; a 90-day circle gives round(20.7) − 2 = 19, cut to 14 by the ceiling.</p>
+<p class="math">2 days late:&nbsp;&nbsp;10,000 × 200 / 10,000&nbsp;&nbsp;= Rs 200,&nbsp;&nbsp;score −10</p>
+<p class="math">4 days late:&nbsp;&nbsp;10,000 × 500 / 10,000&nbsp;&nbsp;= Rs 500,&nbsp;&nbsp;score −20</p>
+<p class="math">6+ days late:&nbsp;10,000 × 1000 / 10,000 = Rs 1,000, score −40 — past grace, MISSED</p>
+<p style="margin-bottom:0">Notice the arithmetic pattern <code>amount × bps / 10,000</code> — that division by ten thousand is what "basis points" means in practice.</p>
+</div>
+
+<h3>Why members never see the grace window</h3>
+<p>This is a small decision with real game theory inside it. If the app displayed "you actually have five extra days," every member would treat day five as the true deadline — a disclosed grace period is nothing more than a later due date. Keeping the window internal means an honest member who slips a day is not punished as a delinquent, while a calculating member has nothing to plan around. And the score damage begins on day one regardless. The window forgives the <i>fee</i>; it never forgives the <i>record</i>. One further protection sits in front of all of this: the daily sweep attempts auto-collection <i>before</i> assessing any penalty, so a member whose mandate works never encounters this ladder at all.</p>
+
+<div class="selftest">
+<p class="t">Self-test 6</p>
+<p>A 45-day circle with a Rs 8,000 installment. (a) Compute graceDays. (b) What is the fee for being 5 days late? (c) Why does hiding the grace window work better than disclosing it?</p>
+<p class="ans" style="margin-bottom:0">(a) round(45 × 0.23) − 2 = round(10.35) − 2 = 10 − 2 = 8 days. (b) Day 5 falls in tier two: 8,000 × 500 / 10,000 = Rs 400. (c) A disclosed grace is simply a later deadline that people optimise against; a hidden one protects honest mistakes without changing calculated behaviour.</p>
+</div>
+</section>
+
+<!-- ============ CH 7 ============ -->
+<section class="brk">
+<h1>Chapter 7 · The score — a credit history for people who have none</h1>
+
+<p>A <b>credit score</b> is a number that summarises how reliably a person repays. Lenders obtain them from a <b>credit bureau</b> — a licensed company that collects repayment histories. Pakistan's bureaus include TASDEEQ and DataCheck, and the central bank keeps its own registry, called <b>eCIB</b>. The report's point is stark: roughly 100 million Pakistanis are invisible to this entire system. They have no loans, no history and no score — yet many of them have years of flawless committee discipline that nobody ever wrote down. Halqa writes it down.</p>
+
+<h3>How the score works</h3>
+<p>The scale runs 300 to 850, and every account opens at <b>700</b>. On-time payments, clean completions and streaks raise it. The ladder of Chapter 6 lowers it — by 10, 20 or 40 points depending on the tier, and by up to 200 for a post-payout default. Every movement is stored as an immutable <b>credit event</b>, timestamped and carrying its reason, so the score is an auditable consequence of history rather than an editable number. The thresholds: <b>550</b> separates the lowest band from the rest (and members below it may not buy marketplace turns), <b>650</b> marks the GOOD band, <b>750</b> marks EXCELLENT, and hosting a circle requires <b>700 or above</b>.</p>
+
+<div class="work">
+<p class="t">The A-level moment — the TASDEEQ mapping is a straight line</p>
+<p>TASDEEQ publishes scores on a 200–600 scale; Halqa uses 300–850. The report says the conversion is linear and invertible. Build it yourself as the line through (200, 300) and (600, 850):</p>
+<p class="math">gradient = (850 − 300) / (600 − 200) = 550 / 400 = 1.375</p>
+<p class="math">halqa(t) = 300 + (t − 200) × 550/400</p>
+<p class="math">Check the endpoints:&nbsp;halqa(200) = 300 ✓&nbsp;&nbsp;&nbsp;halqa(600) = 300 + 400 × 1.375 = 850 ✓</p>
+<p style="margin-bottom:0">Inverting for Halqa's cutoffs — t = 200 + (h − 300) × 400/550 — places 550, 650 and 750 at TASDEEQ ≈ 382, 455 and 527, exactly the figures in the report. Two notes travel with this. The mapping is <i>wired, not live</i>: reading TASDEEQ requires a subscriber agreement concluded directly with the bureau, and <i>writing</i> to any bureau requires financial-institution status, which is red line three. And TASDEEQ does not publish its internal band boundaries, so Halqa's quartering is provisional until a data agreement supplies their true default-probability bands.</p>
+</div>
+
+<h3>The Credit Passport</h3>
+<p>A member can export a <b>cryptographically signed</b> summary of their record — clean completions, on-time percentage, total recorded, an expiry date — as a link. "Cryptographically signed" means sealed by mathematics: any change to the content breaks the seal. A landlord, employer or lender can therefore verify the record <i>without a Halqa account and without taking the member's word for it</i>. This is the report's bridge from committee discipline to formal credit, and neither Oraan nor Money Fellows has an equivalent.</p>
+
+<div class="selftest">
+<p class="t">Self-test 7</p>
+<p>(a) A member at 700 pays six days late, past the grace boundary. New score and band? (b) Convert TASDEEQ 500 to the Halqa scale. (c) Why are score and tenure kept as separate gates?</p>
+<p class="ans" style="margin-bottom:0">(a) 700 − 40 = 660 — still GOOD (650–749). (b) 300 + (500 − 200) × 1.375 = 300 + 412.5 ≈ 713. (c) The score answers "how have you behaved"; tenure answers "have you behaved at all." A fresh account's 700 has no behaviour behind it, so tenure must be earned separately.</p>
+</div>
+</section>
+
+<!-- ============ CH 8 ============ -->
+<section class="brk">
+<h1>Chapter 8 · The technology, in plain words</h1>
+
+<h3>Why money is never a decimal</h3>
+<div class="work">
+<p class="t">Try this in any browser console</p>
+<p class="math">0.1 + 0.2&nbsp;&nbsp;→&nbsp;&nbsp;0.30000000000000004</p>
+<p style="margin-bottom:0">Computers store numbers in binary, and 0.1 in binary is a recurring fraction — like ⅓ in decimal, it cannot be written exactly and must be rounded. One rounding is harmless. Across millions of ledger rows, the residue accumulates until the books no longer balance, and by then the history is already wrong. The remedy is to remove fractions entirely: store money as a whole-number count of the smallest unit — <b>paisa</b>, at 100 to the rupee — using <b>BigInt</b>, a number type with unlimited size and exact integer arithmetic. Rs 10,000 is stored as <code>1000000</code> paisa. Percentages become basis-point arithmetic on integers: <code>amount × bps / 10000</code>. No decimals exist anywhere, so every operation is exact by construction. This decision cannot be retrofitted, because by the time floating-point errors become visible, the damage is historical.</p>
+</div>
+
+<h3>Idempotency — pressing the button twice charges once</h3>
+<p>An operation is <b>idempotent</b> if performing it twice has the same effect as performing it once. You already know an example from mathematics: taking the absolute value twice, | |x| | = |x|, changes nothing the second time. On a Pakistani mobile network, requests genuinely do arrive twice — a timeout, then a retry. Every money operation therefore carries an <b>idempotency key</b>, a unique fingerprint of that specific intent. A repeated key is recognised and ignored. Combined with double-entry (Chapter 3), the ledger cannot double-charge, cannot double-pay, and cannot silently lose a rupee.</p>
+
+<h3>Serverless, and the two decisions it forces</h3>
+<p>The API runs <b>serverless</b>: rather than one computer running around the clock, a small short-lived instance is created for each request and then discarded. This is cheap and scales automatically, but it forces two visible decisions. First, <b>connection pooling</b>. Thousands of short-lived instances would each demand their own database connection, and a database has a fixed budget of them. A pooler called <b>pgBouncer</b> stands in front, lending a small set of real connections out per transaction — a receptionist for the database. Second, <b>placement</b>. The database lives in Singapore, so the API functions are pinned to Singapore as well. A transaction pays the network round trip once <i>per statement</i>; put thirty statements across an ocean at 150 milliseconds each and the travel time alone runs to several seconds. Co-locating compute with data took the discovery screen from roughly ten seconds to under one — a sixty-fold improvement from a single configuration line.</p>
+
+<h3>Migrations — changing the aircraft in flight</h3>
+<p>Schema changes to the production database are <b>additive-only, hand-written SQL</b>: new columns arrive as nullable, and nothing is dropped or altered in place. The reason is the deployment window. For a short time during every deploy, old and new code run side by side, and additive-only changes are the ones that keep both versions correct throughout. The report's §11 carries a live illustration of what happens when the discipline slips: two columns added in code on 23 July without their matching SQL. The SQL now exists and awaits application; until it is applied, deploying that code would break signup.</p>
+
+<p>The verification state, as the report gives it: both packages type-clean, 53 of 53 unit tests passing, and — as of 28 July — all 349 integration checks passing on the rebuilt local database, covering the full lifecycle and the attack scenarios. The default figures of 0.3–1.4% remain the output of Monte-Carlo and 120,000-agent simulation: <b>models, not measurements</b>. Converting them into measured numbers is what the pilot stage is for.</p>
+
+<div class="selftest">
+<p class="t">Self-test 8</p>
+<p>(a) Why can 0.1 not be represented exactly in binary? (b) How is Rs 250 stored? (c) A payment request is transmitted twice by a poor connection — what prevents a double charge? (d) Why must the API sit in the same region as the database?</p>
+<p class="ans" style="margin-bottom:0">(a) In base 2 it is a recurring fraction, like ⅓ in base 10, so it must be rounded. (b) As 25,000 paisa. (c) The idempotency key — the duplicate carries the same key and is ignored. (d) A transaction pays the round trip per statement, so distance is multiplied by the number of statements.</p>
+</div>
+</section>
+
+<!-- ============ CH 9 ============ -->
+<section class="brk">
+<h1>Chapter 9 · Security, in plain words</h1>
+
+<h3>The controls, translated</h3>
+<table>
+<tr><th style="width:44mm">Control</th><th>What it means</th></tr>
+<tr><td>TLS and HSTS</td><td><b>TLS</b> encrypts everything between the phone and the server — the padlock. <b>HSTS</b> is a header that instructs browsers never to connect unencrypted again, for two years; with <code>preload</code>, that promise ships inside the browser itself.</td></tr>
+<tr><td>bcrypt at cost 12</td><td>Passwords are never stored — only a one-way <b>hash</b>, a fingerprint that cannot feasibly be reversed. bcrypt is deliberately slow, and cost 12 means 2¹² = 4,096 internal rounds. The slowness is the feature: after a database leak, an attacker who could test billions of guesses per second against a fast hash can test only thousands against bcrypt.</td></tr>
+<tr><td>JWT with rotating refresh tokens</td><td>Signing in issues a short-lived signed pass (a <b>JWT</b>) plus a longer-lived refresh token used to obtain new passes. Every use of the refresh token exchanges it for a fresh one. If an already-used token is ever presented — the signature of theft — the entire token family is revoked. A stolen token becomes one detectable event rather than a lasting foothold.</td></tr>
+<tr><td>Rate limiting and lockout</td><td>At most 30 sign-in attempts per 15 minutes per source; five wrong passwords lock the account. Together they make password guessing arithmetically hopeless. Sign-in also takes the same time whether or not the username exists, so response timing cannot be used to harvest a list of real users.</td></tr>
+<tr><td>Zod and Prisma</td><td>Every request body is validated against a strict schema before any logic runs (Zod), and every database query is <b>parameterised</b> (Prisma): user input travels as data, never as query syntax. This is why <b>SQL injection</b> — typing database commands into a login box — is not merely blocked but structurally unavailable.</td></tr>
+<tr><td>The audit log</td><td>An append-only diary of every sensitive action: writes only, no edits, no deletions. It is the security counterpart of the ledger.</td></tr>
+</table>
+
+<h3>How to read the grade of B+</h3>
+<p>The report grades its own security B+ and lists exactly what keeps it from an A. The exposed database credential not yet rotated — a deferred decision, on record. The application connecting as the all-powerful master database role instead of a <b>least-privilege</b> role, one restricted to what the application actually needs, so that a breach inherits little. No second sign-in factor yet, with WhatsApp OTP planned as the free implementation. No automated alerting, so nobody is paged when errors spike — detection currently requires someone to look. And no external penetration test yet. Every one of these is operational, fixable in minutes to days; none is a fault in the architecture. A stated B+ with a written gap list is stronger evidence of competence than a claimed A, because a reader can verify the first and can only take the second on trust.</p>
+
+<div class="selftest">
+<p class="t">Self-test 9</p>
+<p>(a) Why is a slow hash better than a fast one for passwords? (b) What event reveals a stolen refresh token? (c) The code has no known vulnerability — why does the master-role gap still matter?</p>
+<p class="ans" style="margin-bottom:0">(a) It caps the guessing rate after a leak — billions of attempts per second become thousands. (b) A consumed token being presented again; a legitimate client never replays one. (c) Defence in depth assumes some layer will eventually fail. If the application layer is breached, a least-privilege role limits the damage; the master role does not.</p>
+</div>
+</section>
+
+<!-- ============ CH 10 ============ -->
+<section class="brk">
+<h1>Chapter 10 · The plan — two gates, eight weeks, then the second stage</h1>
+
+<h3>Gate 1 — exist as a company (weeks 1–2, about Rs 20–30k)</h3>
+<p>Incorporate a private limited company with SECP (roughly Rs 3,000–5,000 self-filed, two to five working days). Obtain the NTN tax number from FBR (free, one to two days). Register for provincial sales tax on services. Open the company's own operating account (one to two weeks, started in parallel). File the trademark with IPO-Pakistan. All of it is administrative, inexpensive, and mostly waiting.</p>
+
+<h3>Gate 2 — turn on real money (weeks 2–4)</h3>
+<p>The centrepiece is a <b>Merchant Services Agreement</b> with a licensed <b>aggregator</b> — a company such as PayFast or Safepay that already holds the SBP payment licences and offers access to many rails through one integration. <b>It is a contract to sign, not a licence to obtain.</b> That single distinction is why the hardest-sounding step in the plan is a commercial negotiation of one to three weeks rather than a regulatory approval of many months. Alongside it: NADRA Verisys for CNIC verification (roughly Rs 50,000–100,000 to set up, Rs 30–75 per check, deferrable past launch), WhatsApp OTP as the free second factor, the fintech counsel's opinion letter (Rs 50,000–100,000), and the halqa.pk domain.</p>
+
+<div class="work">
+<p class="t">Worked example — MDR, and why the plan says Raast first</p>
+<p><b>MDR</b>, the Merchant Discount Rate, is the fee the aggregator keeps from each transaction. On a Rs 10,000 installment:</p>
+<p class="math">Card via Safepay:&nbsp;10,000 × 3.3% + 33 = 330 + 33 = Rs 363&nbsp;&nbsp;(3.63%)</p>
+<p class="math">Wallet (1.5–3%):&nbsp;&nbsp;Rs 150 – Rs 300</p>
+<p class="math">Raast:&nbsp;&nbsp;approximately Rs 0 — the state subsidises it to push digital payments</p>
+<p style="margin-bottom:0">Set that against the revenue model: members pay Halqa nothing, so a 3.63% rail cost on every installment would sink the economics, while Raast at roughly zero keeps free-for-members viable. The rail choice is not a technical preference. It is the arithmetic on which the business model closes. The whole plan totals <b>Rs 80,000–180,000 over four to eight weeks, with the application live throughout</b> — and the critical path (incorporate, then NTN, then the merchant agreement) is entirely commercial, because the software half of collection is already built and tested.</p>
+</div>
+
+<h3>The second stage — the Vault and the Float</h3>
+<p>Once the first cohorts are running, the savings products return under trustee custody (report §7). A member's savings are placed in a regulated Islamic money-market or income fund. The fund's assets are held by the <b>Central Depository Company (CDC)</b>, Pakistan's licensed trustee, with the units registered in the member's own name; a licensed digital <b>asset-management company (AMC)</b> manages the fund; Halqa distributes and keeps the record. The only licence this requires is an <b>SECP mutual-fund distributor registration</b> — a registration, not a heavy licence, because Halqa still holds nothing and deploys nothing. The pledged form of the vault is the second stage's contribution to default prevention: a member's units carry a lien in favour of their circle, so a missed installment is settled from the member's own units before the group is touched. No bank appears anywhere in this structure; the only account Halqa itself holds at any stage is its ordinary corporate account for fee revenue.</p>
+
+<div class="selftest">
+<p class="t">Self-test 10</p>
+<p>(a) Why must incorporation come before the merchant agreement? (b) What is the card MDR on a Rs 25,000 payment at 3.3% + Rs 33? (c) At the second stage, who holds a saver's money, who manages it, and what does Halqa do?</p>
+<p class="ans" style="margin-bottom:0">(a) The aggregator contracts with, and pays out to, a registered company holding a tax number and an operating account — not an individual. (b) 25,000 × 0.033 + 33 = 825 + 33 = Rs 858. (c) CDC holds it as trustee, in the member's own name; the licensed AMC manages it; Halqa distributes the funds and keeps the record, under an SECP distributor registration.</p>
+</div>
+</section>
+
+<!-- ============ CH 11 ============ -->
+<section class="brk">
+<h1>Chapter 11 · Money Fellows — the proof, and the differences</h1>
+
+<p>Money Fellows digitised Egypt's <i>gam'eya</i>, which is structurally identical to the kameti. Their company-reported figures: <b>8.5 million registered users, roughly 350,000 monthly actives, over US$1.5 billion processed, more than US$60 million raised, profitable in 2025</b>. Their existence answers the largest investor question — does a digital ROSCA work at national scale? — with a working example in a directly comparable market. Halqa deliberately shares about 75% of their mechanics, including the core defence: new users are denied early slots. Position-as-collateral is not Halqa's invention. Building it <i>without deposits and without custody</i> is.</p>
+
+<h3>The differences — each one structural</h3>
+<table>
+<tr><th></th><th>Money Fellows</th><th>Halqa</th></tr>
+<tr><td><b>Custody</b></td><td>Holds and moves the money under a regulated custody arrangement</td><td>Never holds it, at any stage — which removes both the licence requirement and the theft target in one stroke</td></tr>
+<tr><td><b>Who pays</b></td><td>Members pay slot-based service fees</td><td>Members pay nothing; revenue comes from late fees, marketplace margin, fill fees and consented leads</td></tr>
+<tr><td><b>Social structure</b></td><td>Assembles strangers into platform-made circles — trust must be manufactured</td><td>Keeps the real host and the real circle — the trust already exists, and the platform records it</td></tr>
+<tr><td><b>Signature product</b></td><td>A prepaid card</td><td>The Credit Passport — portable, independently verifiable proof of reliability</td></tr>
+</table>
+
+<div class="work">
+<p class="t">The caveat that must travel with their numbers</p>
+<p style="margin-bottom:0">Money Fellows publishes <b>no default rate</b>. A figure of 7–8% circulates and is widely misread as their loss rate. It is actually <b>empty-slot fill</b> — seats the platform funds itself, financed by a debt facility — an entirely different quantity. Two consequences follow. First, never quote 7–8% as their defaults; being precise about a competitor's numbers is a credibility test worth passing. Second, when the two prevention machines are compared, both sides are comparing <i>designs</i>, because neither has published measured <i>outcomes</i>. Theirs are undisclosed; Halqa's are simulations until the pilot.</p>
+</div>
+
+<p>Finally, the extension neither comparator has: <b>Goal Direct-Pay</b>. A twelve-member Hajj circle saving Rs 120,000 each is a single bulk buyer of roughly Rs 1.44 million with a known date. Halqa negotiates the package on the group's behalf. The member receives more than their money would have bought alone; the merchant gains a pre-qualified bulk customer and pays Halqa a commission. It is safe with the regulator because <b>the merchant invoices the member directly</b> — Halqa touches no payment and extends no credit, so no red line is crossed. It is commission on a referral, not finance.</p>
+
+<div class="selftest">
+<p class="t">Self-test 11</p>
+<p>(a) Why is Money Fellows a better benchmark than a Western fintech? (b) What does the 7–8% figure actually measure? (c) Why does Goal Direct-Pay require no licence?</p>
+<p class="ans" style="margin-bottom:0">(a) Same object, same informality, comparable market — it proves the category rather than an analogy. (b) Platform-funded empty-slot fill backed by a debt facility — not a default rate; they publish none. (c) The merchant invoices the member directly; Halqa holds no money and extends no credit — it earns a referral commission.</p>
+</div>
+</section>
+
+<!-- ============ PART II — GLOSSARY ============ -->
+<section class="brk">
+<h1>Part II · The glossary — define these without notes</h1>
+
+<h3>The committee itself</h3>
+<table class="gloss">
+<tr><td>ROSCA / kameti / BC</td><td>A rotating savings and credit association: a fixed group, a fixed contribution, the whole pool to one member per round, everyone collecting exactly once.</td></tr>
+<tr><td>Pot / pool</td><td>One round's total: contribution × number of members.</td></tr>
+<tr><td>Turn position (k)</td><td>The round in which a member collects. Early positions are borrowing; late positions are saving.</td></tr>
+<tr><td>Forward liability L(k)</td><td>What a collector still owes the circle: c × (n − k). The single quantity the entire defence manages.</td></tr>
+<tr><td>Post-payout default</td><td>Collecting the pot and then ceasing to pay — the one failure that matters.</td></tr>
+<tr><td>Riba</td><td>Interest, which is religiously prohibited. The committee's interest-free structure is part of why it is trusted.</td></tr>
+</table>
+
+<h3>Money and records</h3>
+<table class="gloss">
+<tr><td>Custody</td><td>Holding someone else's money. The one thing Halqa never does, at any stage; the trigger for the EMI licence.</td></tr>
+<tr><td>Ledger / double-entry</td><td>The ordered record of money events; double-entry writes each event as a matched debit and credit, which makes the ledger self-checking, like a conservation law.</td></tr>
+<tr><td>Idempotency key</td><td>A unique fingerprint on each money operation, so an accidental retry is recognised and applied once.</td></tr>
+<tr><td>Paisa / BigInt</td><td>Money stored as an integer count of the smallest unit (100 paisa to the rupee) in an exact, unlimited-size integer type — no floating point, no rounding drift.</td></tr>
+<tr><td>Basis point (bps)</td><td>0.01%. Fee arithmetic is always: amount × bps / 10,000.</td></tr>
+<tr><td>Payment rail</td><td>Any system that moves money: Raast, JazzCash, Easypaisa, an account transfer.</td></tr>
+<tr><td>Raast</td><td>Pakistan's state-built instant payment system, subsidised to near-zero cost — the reason the plan is Raast-first.</td></tr>
+<tr><td>MDR</td><td>The Merchant Discount Rate: the per-transaction fee an aggregator keeps (Safepay: 3.3% + Rs 33).</td></tr>
+<tr><td>Aggregator</td><td>A licensed company (PayFast, Safepay) offering many rails through one integration and one contract — a contract, not a licence.</td></tr>
+<tr><td>Auto-debit mandate</td><td>A standing, consented, timestamped authorisation to collect an installment automatically. Complete in software; execution awaits the merchant account.</td></tr>
+<tr><td>CDC</td><td>The Central Depository Company — Pakistan's licensed trustee, which legally holds the assets of regulated mutual funds. At the second stage, member savings sit with CDC in the member's own name.</td></tr>
+<tr><td>AMC</td><td>An asset-management company — the licensed manager of a mutual fund. The trustee holds; the AMC manages; Halqa distributes.</td></tr>
+<tr><td>Distributor registration</td><td>The SECP registration that permits distributing the funds of multiple AMCs — the only licence the second stage requires. Not an EMI, not an NBFC.</td></tr>
+<tr><td>Vault / Float</td><td>The second-stage savings products: money parked in a CDC-held fund (Growth Vault); the same holding pledged to the circle, so a miss settles from the member's own units (Safety Vault); and contributions earning fund yield between pay-in and payout (Float).</td></tr>
+<tr><td>Escrow</td><td>Money held by a neutral third party until conditions are met. Held for the second stage — not live.</td></tr>
+</table>
+
+<h3>Regulation</h3>
+<table class="gloss">
+<tr><td>SBP / SECP</td><td>The State Bank of Pakistan (central bank: money and payments) and the Securities and Exchange Commission (companies and non-bank finance).</td></tr>
+<tr><td>EMI licence</td><td>Permission to hold customers' electronic money. Rs 200 million capital. Triggered by custody — red line one.</td></tr>
+<tr><td>NBFC licence</td><td>Permission to lend, or to pool and deploy funds. Triggered by lending at scale — red line two.</td></tr>
+<tr><td>PSO / PSP</td><td>Permission to operate a payment system. The aggregator holds it; Halqa rides on it.</td></tr>
+<tr><td>Credit bureau / TASDEEQ / eCIB</td><td>Licensed keepers of repayment histories; eCIB is the State Bank's registry, closed to non-financial-institutions. Formal reporting is red line three.</td></tr>
+<tr><td>ETO 2002</td><td>The Electronic Transactions Ordinance — the statute that makes Halqa's timestamped records admissible in court. The law that works in Halqa's favour.</td></tr>
+<tr><td>AML 2010 / PECA 2016</td><td>The anti-money-laundering and cyber-crime statutes. They bind everyone, licence or not.</td></tr>
+<tr><td>NADRA / CNIC / Verisys</td><td>The national identity authority; the identity card number every obligation binds to; and NADRA's paid service confirming a CNIC is genuine and belongs to its holder.</td></tr>
+<tr><td>KYC</td><td>"Know Your Customer" — verifying who a user really is. Halqa's ladder: level 0, nothing; level 1, CNIC (unlocks hosting); level 2, account-verified — reserved for the custody-backed products of the second stage.</td></tr>
+</table>
+
+<h3>Engineering and security</h3>
+<table class="gloss">
+<tr><td>Serverless / cold start</td><td>Code runs in short-lived per-request instances rather than on an always-on server; a cold start is the delay while a fresh instance spins up.</td></tr>
+<tr><td>pgBouncer / connection pooling</td><td>A gatekeeper in front of the database that lends a small pool of real connections to many short-lived clients.</td></tr>
+<tr><td>Additive-only migration</td><td>A production schema change that only adds nullable columns — so old and new code both stay correct while a deployment is in progress.</td></tr>
+<tr><td>Hash / bcrypt cost 12</td><td>A one-way fingerprint of a password. bcrypt is deliberately slow — 2¹² = 4,096 rounds — to cap an attacker's guessing rate after a leak.</td></tr>
+<tr><td>JWT / refresh rotation</td><td>A short-lived signed access pass, plus a refresh token exchanged on every use; replaying a used token revokes the family, so theft becomes detectable.</td></tr>
+<tr><td>SQL injection / parameterised query</td><td>The attack of typing database commands into an input field — and its defence: input travels as data, never as query syntax. Prisma parameterises every query.</td></tr>
+<tr><td>Rate limiting / lockout</td><td>Thirty sign-in attempts per fifteen minutes; five wrong passwords lock the account. Together they make guessing hopeless.</td></tr>
+<tr><td>CSP / HSTS / TLS</td><td>The browser security headers: what a page may load; never connect unencrypted; and the encryption itself.</td></tr>
+<tr><td>Least privilege</td><td>Each component receives only the permissions it needs. The named gap: the application currently uses the master database role.</td></tr>
+<tr><td>OWASP Top 10</td><td>The standard list of the ten most critical web-application security risks — the framework of report §11.</td></tr>
+<tr><td>Idempotent (mathematical sense)</td><td>f(f(x)) = f(x): doing it again changes nothing. The property that makes retries safe.</td></tr>
+<tr><td>Monte-Carlo simulation</td><td>Running a randomised model many times to map the distribution of outcomes — the source of the 0.3–1.4% default figure. A model, not a measurement.</td></tr>
+</table>
+</section>
+
+<!-- ============ FACTS ============ -->
+<section class="brk">
+<h1>Part II · The facts sheet — know these from memory</h1>
+
+<table>
+<tr><th style="width:52mm">Fact</th><th>Value</th></tr>
+<tr><td>Score scale / opening score</td><td>300–850 / every account opens at 700</td></tr>
+<tr><td>Band cutoffs</td><td>550 · 650 · 750</td></tr>
+<tr><td>Hosting gate / marketplace gate</td><td>Score ≥ 700 / any non-BAD band (≥ 550)</td></tr>
+<tr><td>Tenure quarantine</td><td>New members take late seats only (never earlier than halfway) until <b>2 clean circles + manual verification</b></td></tr>
+<tr><td>Late-fee ladder</td><td>2% (days 1–3, the circle's own rate, capped at 10%) → 5% (day 4 to grace) → 10% (past grace = MISSED; after collecting = DEFAULT)</td></tr>
+<tr><td>Score damage</td><td>−10 / −20 / −40 on the same boundaries; a default can cost up to −200</td></tr>
+<tr><td>Grace window</td><td>max(2, min(14, round(period × 0.23) − 2)) — 30 days → 5; 45 days → 8; never shown to members</td></tr>
+<tr><td>Forward liability</td><td>L(k) = c × (n − k) — the one formula to write on a whiteboard from memory</td></tr>
+<tr><td>Newcomer worst case (12 × Rs 10,000)</td><td>Rs 20,000 = 16.7% of the pot — bounded and small; in general, two contributions</td></tr>
+<tr><td>Marketplace rules</td><td>Premium ≤ 50% of the payout · Halqa fee = 10% of the premium · Shariah tiers swap-only · lowest band may not buy</td></tr>
+<tr><td>Rehabilitation fee</td><td>10% on top of the outstanding amount plus penalties, to clear a recovery case</td></tr>
+<tr><td>EMI licence capital</td><td>Rs 200 million (SBP, 2019 regulations) — the licence avoided by never holding money</td></tr>
+<tr><td>The three red lines</td><td>No custody (EMI) · no lending at scale (NBFC) · no bureau reporting (FI status)</td></tr>
+<tr><td>The second stage</td><td>Vault and Float via CDC as trustee + a licensed digital AMC, under an SECP distributor registration; units in the member's own name; no bank at any stage</td></tr>
+<tr><td>Second-stage yields</td><td>Islamic money-market funds ~10–11% (mid-2026) against ~11–12% inflation; committee money today earns 0%</td></tr>
+<tr><td>Gate costs / timeline</td><td>Gate 1 ~Rs 20–30k · total Rs 80,000–180,000 · 4–8 weeks · the app live throughout</td></tr>
+<tr><td>Rail costs (Rs 10,000 example)</td><td>Card ~Rs 363 (3.3% + 33) · wallet Rs 150–300 · <b>Raast ≈ Rs 0</b></td></tr>
+<tr><td>NADRA Verisys</td><td>~Rs 50–100k setup · Rs 30–75 per check · deferrable past launch</td></tr>
+<tr><td>Money Fellows</td><td>8.5M registered · ~350k monthly active · US$1.5B+ processed · US$60M+ raised · profitable 2025 · publishes <b>no default rate</b> (the 7–8% is slot fill)</td></tr>
+<tr><td>Similarity scorecard</td><td>~75% mechanics · ~30% social architecture · ~35% business model · ~85% of their prevention machine</td></tr>
+<tr><td>Fraud precedents</td><td>Karachi, Rs 420m · Sidra Humaid, ~US$2m from ~200 women — both required a held pool</td></tr>
+<tr><td>Verified 28 July</td><td>53/53 unit tests · 349/349 integration checks · both packages type-clean · web and API live</td></tr>
+<tr><td>Default projection</td><td>0.3–1.4% post-payout, <b>modelled</b> (Monte-Carlo + a 120,000-agent simulation) — never say "measured"</td></tr>
+<tr><td>Security grade</td><td>B+, self-assessed; open items: credential rotation, master DB role, no 2FA yet, no alerting, no external pen-test</td></tr>
+<tr><td>TASDEEQ mapping</td><td>200–600 → 300–850, linear: halqa(t) = 300 + (t−200) × 550/400; cutoffs ≈ 382/455/527. Wired, not live</td></tr>
+</table>
+</section>
+
+<!-- ============ HARD QUESTIONS ============ -->
+<section class="brk">
+<h1>Part II · The hard questions — with model answers</h1>
+
+<p class="q">1 · "If you never touch the money, what stops a WhatsApp group and a notebook replacing you?"</p>
+<p>Three things a notebook cannot do. It cannot enforce a locked schedule with automatic escalation. It cannot restrict risky members to low-liability seats before anything goes wrong. And it cannot produce timestamped, CNIC-linked, court-admissible evidence when something does go wrong. The notebook is exactly what the informal system already is — and that system loses Rs 420 million at a time.</p>
+
+<p class="q">2 · "Your default rate of 0.3–1.4% — measured where?"</p>
+<p>Nowhere, and we say so ourselves. It is the output of a Monte-Carlo model and a 120,000-agent Pakistan-calibrated simulation, and it is labelled as modelled everywhere it appears. Producing the measured number under supervision is precisely what the pilot stage is for. We are not asking to be believed; we are asking to be measured.</p>
+
+<p class="q">3 · "A new member takes seat 10 of 12 and defaults after collecting. Who absorbs the Rs 20,000?"</p>
+<p>Today, the circle does — and that is the honest answer at this stage. What the system guarantees is that the loss is bounded (never more than about two contributions), priced (fees and severe score damage), and evidenced (a CNIC-linked recovery case on court-usable records, a feature lock, a public flag). At the second stage the answer improves structurally: a member with a pledged Safety Vault — their own money in a CDC-held fund, under lien to the circle — has the miss settled from their own units before the group is touched. Promising more than the current stage delivers would be claiming powers it does not have.</p>
+
+<p class="q">4 · "Why should members trust the host, when the host is the historic fraud vector?"</p>
+<p>Because the host never touches the pool either. Payouts settle member to member, so the classic organiser theft has no mechanism. What remains of host power is made visible instead: a permanent public track record — circles run, completion rate, ratings — shown to anyone before they join, and fund-the-gap removes the pressure that historically drove hosts to admit desperate strangers.</p>
+
+<p class="q">5 · "Members pay nothing. Where does the money come from, and does it scale?"</p>
+<p>Four live lines, each paid by whoever creates a cost or captures a value. Late fees, paid by the member who put the group at risk — deterrent first, revenue second. Ten percent of marketplace premiums. The management fee on circles where Halqa fills seats. And consented goal-intent leads. All four grow with circle volume, and the near-zero Raast rail keeps the cost side close to zero, which is what makes free-for-members sustainable. The second stage adds fund-distribution fees, and Goal Direct-Pay commissions extend the same volume without touching members at all.</p>
+
+<p class="q">6 · "What is the single biggest thing not working today?"</p>
+<p>Auto-debit execution. The mandate — consent, schedule, retry ladder, settlement path — is built and tested. The outbound debit against a real instrument needs the merchant agreement: a commercial step of one to three weeks once signed, not an engineering one. It is also why we have deliberately not opened to the public. We will not take people's commitments on rails we cannot yet enforce.</p>
+
+<p class="q">7 · "Isn't restricting new members to late seats just pushing the risk onto whoever joins late?"</p>
+<p>No — the late seats are where risk goes to die, for everyone. A late-seat member is owed money by the circle, not the other way round; their own forward liability is near zero. The people who could hurt them — early collectors — are precisely the ones the eligibility gates have screened. The quarantined newcomer in seat 11 is at once the least dangerous person in the circle and in the least dangerous position.</p>
+
+<p class="q">8 · "What about someone who games the score — pays perfectly in small circles to unlock a big early seat, then defaults?"</p>
+<p>That path is deliberately expensive. It requires two cleanly completed circles plus manual verification — months of real payments — and the payoff is capped by the one circle they attack, while the cost is a CNIC-bound default record, a platform-wide feature lock, a recovery case with penalties plus ten percent, and family- and device-linkage detection that blocks re-entry through relatives or shared phones. The fraud is possible. It is simply a bad trade, and making it a bad trade is the design goal.</p>
+
+<p class="q">9 · "Why is the grace window hidden? Is that not dishonest?"</p>
+<p>The due date shown to members is the real obligation. The window changes only whether a fee is charged, never the record — score damage runs from the first late day regardless. Disclosing the window would simply move the effective deadline later and protect no one. Concealing it protects the honest one-day slip while giving the calculating payer nothing to optimise against.</p>
+
+<p class="q">10 · "Prisma, BigInt, double-entry — why should a non-engineer care?"</p>
+<p>Because each one is a category of scandal that cannot happen. Integer paisa: no silent rounding drift, ever. Double-entry: a missing rupee is arithmetically visible, like a broken conservation law. Idempotency: a double-tapped payment charges once. Parameterised queries: the login box cannot be turned into a database console. These technical choices are trust decisions wearing engineering clothes.</p>
+
+<p class="q">11 · "What stops Money Fellows entering Pakistan and crushing you?"</p>
+<p>Nothing stops them entering. The question is what they would bring. Their model requires custody — a regulated e-money arrangement — and charges member fees; our structure deletes both. Their machine pools strangers; Pakistani kametis run on existing circles that already trust each other. We are not defending a head start. We are defending a different architecture that fits the local institution better.</p>
+
+<p class="q">12 · "Your security grade is self-assessed. Why should anyone accept it?"</p>
+<p>They should not accept the grade — they should read the gap list, which is why we publish one. Every named gap is checkable, priced in effort, and operational rather than architectural: the credential rotation, the master database role, the second factor, the alerting, the external test. A self-audit that names its own failures is evidence of process. When a counterparty requires an external certificate, it is already a listed Gate-2 item.</p>
+
+<p class="q">13 · "The marketplace sells turn positions. Is that not just selling loans at a premium?"</p>
+<p>It is a secondary market in a claim, and it is fenced accordingly. The premium is capped at half the payout, so it cannot become disguised high-cost credit. Bids must beat the open floor, so pricing is public rather than collusive. Members in the lowest band cannot buy, because purchasing an earlier turn would be a way around the seat restrictions. And Shariah-labelled circles permit only zero-premium swaps — the position may move, but it may not be sold — under the standing rule that a feature is never mislabelled as compliant.</p>
+
+<p class="q">14 · "Why launch record-only instead of waiting until the savings products are ready?"</p>
+<p>Because record-only is not a compromise. It is the stage that fixes the two things that actually kill committees — theft of the pool and unbounded early default — while requiring no licence, no capital and no counterparty. The savings features are built and tested behind their flag, and they return at the second stage through CDC trusteeship and a licensed asset-management company. Launching now means the ledger, the scores and the history — the assets everything later depends on — begin accumulating immediately.</p>
+
+<p class="q">15 · "What would make the whole thing fail?"</p>
+<p>Collection — and it deserves a straight answer. Every prevention layer assumes the installment can actually be collected, and true cross-bank auto-debit does not yet exist in Pakistan for anyone. Our mitigations are the waterfall of rails that work today, a mandate architecture that turns any future pull scheme into a configuration change, and the discipline of not scaling members before the rails are real. If collection stayed broken nationally for years, every company in this category would share the problem — and the one holding the ledger, the scores and zero custody risk is best placed to outlast it.</p>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Halqa Investor Brief</title>
+<style>
+:root{--black:#07160F;--gold:#D9A93C;--ivory:#EFEADD;--soft:#9DB3A4;--line:rgba(217,169,60,.28);--hair:rgba(246,241,228,.13)}
+@page{size:A4;margin:20mm 18mm 16mm;
+  @bottom-right{content:counter(page);font-family:"Segoe UI",Arial;font-size:8pt;color:#7A8F80}}
+@page:first{@bottom-right{content:""}}
+*{box-sizing:border-box}
+html{background:#07160F}
+body{margin:0;background:#07160F;color:#EFEADD;font-family:"Segoe UI",system-ui,Arial,sans-serif;
+  font-size:9.9pt;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-variant-numeric:tabular-nums}
+.bg{position:fixed;top:-40mm;left:-40mm;right:-40mm;bottom:-40mm;background:#07160F;z-index:-2}
+h1{font-size:14pt;font-weight:600;color:#D9A93C;margin:0 0 5mm;padding-bottom:2mm;
+  border-bottom:1px solid var(--line);page-break-before:always;page-break-after:avoid}
+h1.first{page-break-before:avoid}
+h2{font-size:10.6pt;font-weight:600;color:#EFEADD;margin:7mm 0 2mm;page-break-after:avoid}
+p{margin:0 0 3.2mm}
+ul,ol{margin:2mm 0 3.5mm;padding-left:6mm}li{margin:1.4mm 0}
+li::marker{color:#7A8F80}
+table{border-collapse:collapse;width:100%;margin:3mm 0 4mm;font-size:8.7pt;line-height:1.45}
+th{text-align:left;font-weight:600;color:#D9A93C;font-size:7.7pt;letter-spacing:.1em;text-transform:uppercase;
+  padding:0 3mm 1.6mm 0;border-bottom:1px solid var(--line);vertical-align:bottom}
+td{padding:2mm 3mm 2mm 0;border-bottom:1px solid var(--hair);vertical-align:top}
+th:last-child,td:last-child{padding-right:0}
+tr{page-break-inside:avoid}
+tbody tr:last-child td{border-bottom:1px solid var(--line)}
+.n{text-align:right;white-space:nowrap}
+.eq{margin:3mm 0 3.5mm 8mm;font-size:10.4pt;line-height:1.9}
+.eq i{color:#D9A93C;font-style:italic}
+.exh{font-size:8.1pt;color:#9DB3A4;margin:4mm 0 1.5mm}
+.exh b{color:#D9A93C;font-weight:600}
+figure{margin:2mm 0 5mm;page-break-inside:avoid}
+figure svg{width:100%;height:auto;display:block}
+.cover{height:250mm;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always}
+.cover svg{width:52px;height:52px;margin-bottom:14mm}
+.cover .wm{font-size:26pt;font-weight:600;letter-spacing:.26em;margin:0 0 12mm;color:#EFEADD}
+.cover h2{font-size:23pt;font-weight:600;line-height:1.15;margin:0 0 4mm;color:#EFEADD;letter-spacing:-.01em}
+.cover .sub{font-size:10.5pt;color:#9DB3A4;max-width:124mm;margin:0}
+.cover .rule{border:none;border-top:1px solid var(--line);margin:0 0 5mm}
+.cover .foot{font-size:8.4pt;color:#9DB3A4;letter-spacing:.08em}
+table.toc{margin-top:4mm;font-size:9.5pt}
+table.toc td{border-bottom:1px solid var(--hair);padding:2.3mm 3mm 2.3mm 0}
+table.toc td:first-child{width:10mm;color:#D9A93C}
+table.toc td:last-child{text-align:right;width:12mm;color:#9DB3A4}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<div class="cover">
+  <div>
+    <svg viewBox="0 0 100 100">
+      <g stroke="#EFEADD" stroke-width="6.5" stroke-linecap="round">
+        <line x1="50" y1="9" x2="50" y2="25"/><line x1="71" y1="13.6" x2="63" y2="27.5"/>
+        <line x1="86.4" y1="29" x2="72.5" y2="37"/><line x1="91" y1="50" x2="75" y2="50"/>
+        <line x1="86.4" y1="71" x2="72.5" y2="63"/><line x1="71" y1="86.4" x2="63" y2="72.5"/>
+        <line x1="50" y1="91" x2="50" y2="75"/><line x1="29" y1="86.4" x2="37" y2="72.5"/>
+        <line x1="13.6" y1="71" x2="27.5" y2="63"/>
+      </g>
+      <line x1="9" y1="50" x2="31" y2="50" stroke="#D9A93C" stroke-width="8.5" stroke-linecap="round"/>
+    </svg>
+    <p class="wm">HALQA</p>
+  </div>
+  <div>
+    <hr class="rule">
+    <h2>Investor Brief</h2>
+    <p class="sub">The committee is Pakistan's third largest savings channel and it has never been written down. This is the business of writing it down.</p>
+  </div>
+  <div>
+    <hr class="rule">
+    <p class="foot">12 August 2026 &nbsp;·&nbsp; Confidential</p>
+  </div>
+</div>
+
+<h1 class="first">Contents</h1>
+<table class="toc">
+<tr><td>1</td><td>The informal savings market</td><td>3</td></tr>
+<tr><td>2</td><td>The instrument and the platform</td><td>4</td></tr>
+<tr><td>3</td><td>Architecture</td><td>5</td></tr>
+<tr><td>4</td><td>Model framework</td><td>6</td></tr>
+<tr><td>5</td><td>Default prevention</td><td>7</td></tr>
+<tr><td>6</td><td>Collection</td><td>10</td></tr>
+<tr><td>7</td><td>Product range</td><td>11</td></tr>
+<tr><td>8</td><td>HYPER committees</td><td>14</td></tr>
+<tr><td>9</td><td>Retail partnerships and the rewards ladder</td><td>18</td></tr>
+<tr><td>10</td><td>Revenue</td><td>20</td></tr>
+<tr><td>11</td><td>Unit economics</td><td>21</td></tr>
+<tr><td>12</td><td>Past attempts at formalising ROSCAs</td><td>23</td></tr>
+<tr><td>13</td><td>Counterparties</td><td>26</td></tr>
+<tr><td>14</td><td>The platform as built</td><td>27</td></tr>
+<tr><td>15</td><td>Sequence and dependencies</td><td>28</td></tr>
+<tr><td>16</td><td>Performance measures</td><td>29</td></tr>
+</table>
+
+<h1>1 · The informal savings market</h1>
+
+<p>Committees, known across Pakistan as kameti or BC, are the country's oldest and most widely used savings arrangement. Roughly Rs 4 trillion rotates through them every year, making them the third largest savings channel in the country, and approximately 37 per cent of adults participate, which is some 52 million people. Against this, only 13 per cent of adults hold a bank account, and among those who do save, 63 per cent keep cash at home. The committee therefore is not competing with the banking system; it is competing with a cupboard.</p>
+
+<p>Every one of these arrangements produces a repayment record. A tailor who has paid Rs 8,000 on the first of the month for eleven consecutive months has demonstrated exactly the behaviour a lender spends money trying to establish, and yet that behaviour is recorded nowhere. It exists in a notebook, in a WhatsApp group, or in the memory of the organiser, and when the cycle ends it disappears. Consequently a household which has been financially reliable for a decade arrives at a bank as a stranger.</p>
+
+<p>Two problems follow from this, and they are the two the business addresses. The first is that the arrangement itself is fragile, since it depends entirely on one person holding the money and on the group's memory of who has paid. The second, and the more valuable, is that an entire class of credit data is being generated at national scale and then thrown away.</p>
+
+<p class="exh"><b>Exhibit 1</b>. Scale of the informal savings market. Figures are the published national estimates.</p>
+<table>
+<tr><th>Measure</th><th class="n">Value</th></tr>
+<tr><td>Estimated annual flow through committees</td><td class="n">Rs 4 trillion</td></tr>
+<tr><td>Adults participating</td><td class="n">37 per cent, approximately 52 million</td></tr>
+<tr><td>Adults holding a bank account</td><td class="n">13 per cent</td></tr>
+<tr><td>Savers who keep cash at home</td><td class="n">63 per cent</td></tr>
+<tr><td>Savers using a committee</td><td class="n">33 per cent</td></tr>
+</table>
+
+<p>It is to be noted that the participant is not the destitute household. The academic work on Pakistani committees is consistent that regular income is a precondition of membership, and that groups exclude the irregularly paid themselves. The member is the tailor on Rs 17,000 a month and the driver on Rs 22,000, whose income is modest but arrives on a predictable day. Committees filter on the regularity of income rather than on its level, and that distinction is what makes the resulting record a usable credit signal.</p>
+
+<h1>2 · The instrument and the platform</h1>
+
+<p>A committee is a fixed arrangement between a group of people. Each member pays the same amount every period, each period the entire pot is paid to one member, and after one full rotation every member has paid the same total and received the same total. Total inflow equals total outflow, so the arrangement requires no lender and no capital. Whoever collects early has received an advance which they repay in instalments at no charge; whoever collects late has saved under a commitment device. The same schedule delivers both, funded by the members themselves.</p>
+
+<p>Halqa records that arrangement. Contributions move directly from the paying member's account to the receiving member's account over Pakistan's domestic payment rails, Halqa observes each settlement, and writes it to a double entry ledger linked to the member's national identity number. The platform therefore performs three functions and no others.</p>
+
+<table>
+<tr><th style="width:32mm">Function</th><th>Description</th></tr>
+<tr><td>The record</td><td>Every settlement carries a receipt, a timestamp and an identity link. Electronic records of this kind are admissible under the Electronic Transactions Ordinance 2002</td></tr>
+<tr><td>The treasury</td><td>Scheduling, pricing, collection and settlement, without holding funds at any point</td></tr>
+<tr><td>The credit record</td><td>Payment history is converted into a portable score, Sakh, which the member can present outside the platform and which is intended to be furnished to a licensed credit bureau</td></tr>
+</table>
+
+<p>The strategic position follows from the third of these. Informal committee repayment history exists in no written form anywhere, so at scale Halqa becomes the only supplier of a class of credit data which the national credit system does not presently hold. Bureaux operate on reciprocity, so furnishing data earns access to it in return.</p>
+
+<p>Members pay nothing to join a circle and nothing to make a contribution, and that position is permanent. Revenue is described in section 9 and arises from optional priced services and from counterparties rather than from the member.</p>
+
+<h1>3 · Architecture</h1>
+
+<p>Halqa does not take possession of member money at any stage. When a member contributes, the funds travel from that member's account to the recipient's account, and the platform holds no balance and has no ability to spend member funds. Second stage savings sit with a licensed trustee in the member's own name.</p>
+
+<p>Two consequences follow. The first is commercial. Every large committee fraud recorded in Pakistan required one precondition, being a central pool of members' money under the control of a single person. Halqa has no such account, so the fraud which destroys committees cannot occur, and the protection cannot be weakened under commercial pressure because there is nothing there to weaken.</p>
+
+<p>The second is that the platform can be operated by a registered company without a financial licence, since it issues no balances, lends nothing, and operates no payment system of its own. The path to real money therefore runs through company registration and a merchant services agreement with a licensed payment aggregator, both of which are commercial steps.</p>
+
+<p>Researchers at Information Technology University Lahore and the University of Washington, funded by the Gates Foundation and Karandaaz Pakistan, published this same architecture in 2018, concluding that funds flowing through a committee application should be directed to an individual's own wallet with the application acting as a conduit. Halqa arrived at the design from the fraud angle and they arrived at it from the regulatory angle, and it is the same architecture.</p>
+
+<h1>4 · Model framework</h1>
+
+<p>The model is arranged on five pillars, and every feature in the product sits on one of them. The arrangement came out of direct guidance on how a savings and credit model of this kind should be constructed, and it is the structure used in all discussion of the business.</p>
+
+<table>
+<tr><th class="n" style="width:8mm"></th><th style="width:32mm">Pillar</th><th>What it governs</th></tr>
+<tr><td class="n">1</td><td>Onboarding</td><td>Who is admitted, what is verified, and what each member is permitted to see. Barriers are kept low and the filtering is invisible, so that a member is shown only the circles they are eligible for and can afford rather than being refused after applying</td></tr>
+<tr><td class="n">2</td><td>Collection</td><td>How money is actually taken. Collection is attempted on the member's payday rather than on the due date, because that is the point in the month at which the balance is highest</td></tr>
+<tr><td class="n">3</td><td>Pooling products</td><td>Where money sits when it is not moving. Halqa holds nothing, so idle savings are routed to a licensed asset manager with a trustee holding the assets in the member's own name</td></tr>
+<tr><td class="n">4</td><td>Prevention</td><td>The design principle that recovery machinery is the wrong thing to build. The correct thing to build is an arrangement in which there is no incentive to default, or in which the consequence is severe enough that nobody chooses it</td></tr>
+<tr><td class="n">5</td><td>Recovery</td><td>What actually happens when prevention fails, expressed as instruments which can be executed rather than as intentions</td></tr>
+</table>
+
+<p>Two further instructions cut across all five. The first is that consumers and savers are separated at the point of joining, since a member who takes the pot early to spend it and a member who waits in order to save are carrying opposite risks and should not be offered the same terms. The second is that filtering is to be preferred over enforcement in every case where both are available.</p>
+
+<h1>5 · Default prevention</h1>
+
+<p>The whole of the risk in a committee is a single quantity. At the moment a member collects, they hold the entire pot and still owe every contribution which remains, and that remaining obligation is the forward liability.</p>
+
+<p class="eq"><i>L</i>(<i>k</i>) = <i>c</i> ( <i>n</i> − <i>k</i> ) &nbsp;&nbsp;&nbsp; for a member at seat <i>k</i> in a circle of <i>n</i> members paying <i>c</i></p>
+
+<p>It is largest at the first seat, falls by exactly one contribution with each later seat, and is zero at the last. Risk in a committee is therefore not spread across the members at all; it is concentrated in the early seats and decays to nothing. Consequently the platform does not need a general system of judging members. It needs a system which determines which member may occupy which seat, and every control described below is an application of that.</p>
+
+<p class="exh"><b>Exhibit 2</b>. Forward liability by seat. Twelve members, contribution Rs 10,000, pot Rs 120,000.</p>
+<figure>
+<svg viewBox="0 0 720 268" xmlns="http://www.w3.org/2000/svg">
+  <line x1="52" y1="232" x2="690" y2="232" stroke="#4C6355" stroke-width="1"/>
+  <line x1="52" y1="57" x2="690" y2="57" stroke="#F6F1E4" stroke-width=".5" stroke-opacity=".12"/>
+  <line x1="52" y1="144.5" x2="690" y2="144.5" stroke="#F6F1E4" stroke-width=".5" stroke-opacity=".12"/>
+  <text x="46" y="60" text-anchor="end" fill="#9DB3A4" font-size="10" font-family="Segoe UI,Arial">110,000</text>
+  <text x="46" y="148" text-anchor="end" fill="#9DB3A4" font-size="10" font-family="Segoe UI,Arial">55,000</text>
+  <text x="46" y="236" text-anchor="end" fill="#9DB3A4" font-size="10" font-family="Segoe UI,Arial">0</text>
+  <g fill="#D9A93C">
+    <rect x="62" y="57" width="36" height="175"/><rect x="114" y="72.9" width="36" height="159.1"/>
+    <rect x="166" y="88.8" width="36" height="143.2"/><rect x="218" y="104.7" width="36" height="127.3"/>
+    <rect x="270" y="120.6" width="36" height="111.4"/><rect x="322" y="136.5" width="36" height="95.5"/>
+    <rect x="374" y="152.5" width="36" height="79.5"/><rect x="426" y="168.4" width="36" height="63.6"/>
+    <rect x="478" y="184.3" width="36" height="47.7"/><rect x="530" y="200.2" width="36" height="31.8"/>
+    <rect x="582" y="216.1" width="36" height="15.9"/><rect x="634" y="230" width="36" height="2"/>
+  </g>
+  <g fill="#9DB3A4" font-size="10" font-family="Segoe UI,Arial" text-anchor="middle">
+    <text x="80" y="248">1</text><text x="132" y="248">2</text><text x="184" y="248">3</text>
+    <text x="236" y="248">4</text><text x="288" y="248">5</text><text x="340" y="248">6</text>
+    <text x="392" y="248">7</text><text x="444" y="248">8</text><text x="496" y="248">9</text>
+    <text x="548" y="248">10</text><text x="600" y="248">11</text><text x="652" y="248">12</text>
+  </g>
+  <text x="371" y="264" text-anchor="middle" fill="#7A8F80" font-size="9.5" font-family="Segoe UI,Arial">Seat</text>
+</svg>
+</figure>
+
+<h2>5.1 Position</h2>
+<p>Each score band carries a ceiling on the forward liability a member may hold at the point of collection, expressed in contributions. A member in the lowest band may hold no more than two contributions of exposure, which places them in the last three seats. A member in the second band may hold no more than seven, which on a twelve member circle places them at seat five or later. The upper two bands may take any seat.</p>
+
+<p>Above this sits a rule which applies to every new member irrespective of score, since a new account's opening score records nothing. Every new member may take only one of the last three seats of any circle, of any size and any duration, and the restriction is released after two completed circles with clean payment records together with a manual verification step. The worst case exposure to a member the platform has never observed is therefore two contributions, which on a Rs 120,000 pot is Rs 20,000.</p>
+
+<h2>5.2 Incentive structure</h2>
+<p>A member who defaults after collecting gains the forward liability and loses a great deal more. They lose access to the platform, they lose the record which is the reason they joined, they carry a score reduction of 200 points which is visible to every circle they subsequently attempt to enter, and they face a recovery case for the outstanding amount plus penalties plus a rehabilitation fee of 10 per cent. Where an asset circle is involved, the asset itself is recovered by the party holding title.</p>
+
+<p>Alongside this sits the arithmetic of the seat, which is the more important half. A member restricted to the final seats has nothing to gain by defaulting, since by the time they collect they have already paid nearly everything they owe. The design therefore does not attempt to make defaulting difficult for everybody. It ensures that the members with the largest incentive to default are exactly the members who have earned the right not to be treated as a risk.</p>
+
+<h2>5.3 Affordability</h2>
+<p>Most default which is not fraud is over commitment, so three caps are applied at the point of joining and at circle creation, evaluated across every circle the member holds. Total contributions may not exceed 33 per cent of net monthly income; contributions together with known debt service may not exceed 40 per cent; and total forward liability, evaluated at the worst case in which every seat is early, may not exceed four times net monthly income. Concurrency is capped separately, at one circle for a member whose income is unverified and four where it is verified.</p>
+
+<p>The 40 per cent figure anchors to the State Bank's cap on the debt burden ratio for consumer financing, which was reduced from 50 per cent in 2021. Halqa sits stricter than that on contributions alone.</p>
+
+<p>A point of discipline applies here which the literature on progressive lending is consistent about. Escalating limits produce liquidity defaults once the limit outruns real capacity, and the member does not become dishonest so much as over committed. Good payment history therefore unlocks seats, additional circles and reduced friction, and it does not raise the money cap. Only new evidence of income raises the money cap.</p>
+
+<h2>5.4 Recovery</h2>
+<p>Recovery is expressed as instruments rather than as intentions. Every member signs an undertaking and an automatically executed mutual guarantee which runs member to member rather than to Halqa. Both qualify as a written contract for a fixed sum, which permits recovery by summary suit under Order XXXVII of the Code of Civil Procedure, where the defendant has ten days to seek leave to defend and a decree is executable against assets. Where a member holds pledged savings, a missed contribution settles from their own units under a pre signed redemption instruction. Where an asset circle is involved, the party holding title recovers the asset and the proceeds are paid into the circle so that the remaining members are completed.</p>
+
+<h2>5.5 The seven layers</h2>
+<p>The controls described above sit within a stack of seven, each independent of the others, so that no single failure exposes the circle.</p>
+<table>
+<tr><th class="n" style="width:8mm"></th><th style="width:30mm">Layer</th><th>Mechanism</th></tr>
+<tr><td class="n">1</td><td>Identity</td><td>Identity card captured at signup, home location pinned, and uniqueness enforced on the identity number, telephone number and electronic address, so that every obligation binds to a government identity</td></tr>
+<tr><td class="n">2</td><td>Position</td><td>Band and tenure define which seats may be claimed, holding worst case exposure to an unobserved member at two contributions</td></tr>
+<tr><td class="n">3</td><td>Schedule</td><td>Fixed dates, escalating reminders, a balance check the day before, and an internal grace window which is never displayed</td></tr>
+<tr><td class="n">4</td><td>Price</td><td>The late-fee ladder with matched score damage at every step, and a reduction of 200 points on a default after collection</td></tr>
+<tr><td class="n">5</td><td>Payout controls</td><td>A payout does not release while any contribution in that round is unpaid, a default on a linked account withholds it, and a security shortfall is withheld from the pot up to a ceiling of 60 per cent</td></tr>
+<tr><td class="n">6</td><td>Consequence</td><td>Platform wide lock, internal flag, and a recovery case for the outstanding amount plus penalties plus a rehabilitation fee of 10 per cent</td></tr>
+<tr><td class="n">7</td><td>Contract</td><td>The undertaking, renewed weekly, and the mutual guarantee executed at joining, which runs member to member rather than to Halqa</td></tr>
+</table>
+
+<h1>6 · Collection</h1>
+
+<p>Collection is the first rung of the business, since until contributions settle over a payment rail the ledger is recording assertions rather than settlements, and a record of assertions has no value as credit data.</p>
+
+<p>The collection event is the member's payday rather than the due date. On the evening before the declared payday a balance notice is sent, and on the payday morning, while the balance is at its monthly maximum and before the contribution is even due, the instruction executes. Where it fails, a retry ladder runs to the due date alongside a payment request and a message. Only where every attempt fails does the member meet the late fee ladder. The due date has therefore stopped being the collection event and has become the deadline for resolving failures.</p>
+
+<p>The declared payday is verified from evidence the platform legitimately holds rather than from open banking, which does not exist in Pakistan. The account title returned by the aggregator at linking must match the member's identity card. Every collection attempt is logged against a calendar day, so the first successful collection in each month marks a day on which funds were provably present, and two consistent months establish the payday. Where a member declares the wrong day, the retry ladder finds the correct one. This signal costs nothing and is the strongest of the four available.</p>
+
+<p>Rail economics decide the shape of the product. Members pay nothing, so every rupee of transaction cost is unrecovered.</p>
+
+<p class="exh"><b>Exhibit 3</b>. Cost to Halqa of collecting one contribution of Rs 20,000.</p>
+<table>
+<tr><th>Rail</th><th class="n">Cost</th><th>Position</th></tr>
+<tr><td>Raast, the State Bank's instant payment system</td><td class="n">≈ Rs 0</td><td>Default rail for every circle type</td></tr>
+<tr><td>Wallet to wallet within one network</td><td class="n">Rs 0</td><td>Used where both parties hold the same wallet</td></tr>
+<tr><td>Wallet debit under mandate</td><td class="n">Rs 300 to 600</td><td>Fallback below a Rs 10,000 contribution</td></tr>
+<tr><td>Card</td><td class="n">Rs 693</td><td>Not offered on standard circles</td></tr>
+</table>
+
+<p>A twelve member circle running one full cycle on card rails would incur 144 charges at Rs 693, being Rs 99,792 against no member revenue. Raast at approximately zero cost is therefore the only arithmetic under which a product which is free to members survives, and the entire collection design is built on it. Halqa reaches Raast as a merchant of a licensed payment aggregator, which is a commercial contract rather than a licence.</p>
+
+<h1>7 · Product range</h1>
+
+<p>Four circle types are offered, and they differ in who the members are, how heavily the platform verifies them, and who carries the loss where a member stops paying.</p>
+
+<table>
+<tr><th style="width:30mm">Product</th><th>Description and position</th></tr>
+<tr><td>Known circles</td><td>Formed by a host among people who already know one another, which is how committees work today. Verification is lighter, fines are lower, insurance is optional, and the group carries the loss. Authenticity is tested by confirming every link between the host and a member independently from both ends</td></tr>
+<tr><td>Open circles</td><td>Formed among strangers matched by the platform. Verification is heavier, the late fee ladder is steeper, insurance is mandatory, and the platform covers a missed contribution from the first round. This is the product which does not exist in the informal market at all, since strangers have no way to trust one another without a record</td></tr>
+<tr><td>HYPER committees</td><td>A fixed roster of four hundred members contributing daily over a fixed cycle of sixty days, with six or seven members collecting on each day and pots capped at Rs 15,000. Members have no visibility of one another, positions are set once by auction, and the product is priced to withstand a thirty per cent default rate. Set out in full in section 8</td></tr>
+<tr><td>Asset circles</td><td>The pot purchases a named item, typically a motorcycle, a rickshaw or a machine, and is paid directly to the dealer. The member takes possession at their turn while legal title is held by a security trustee until that member's obligation to the circle is discharged, at which point title transfers. Coverage improves every month because the obligation falls faster than the asset depreciates. Offered in known and open forms, described in section 7.2</td></tr>
+</table>
+
+<h2>7.1 Known and open forms</h2>
+<p>Every product other than HYPER is offered in two forms, and the difference between them is the same throughout the range. A known circle is formed by a host among people who already know one another, which is how committees work today; verification is lighter, fines are lower, insurance is optional and the group carries the loss. An open circle is formed among strangers matched by the platform; verification is heavier, the late fee ladder is steeper, insurance is mandatory and the platform covers a missed contribution from the first round. Asset circles follow the same division.</p>
+<table>
+<tr><th style="width:44mm">Parameter</th><th style="width:46mm">Open form</th><th>Known form</th></tr>
+<tr><td>Manual review</td><td>Random sample of 5 per cent</td><td>Random sample of 2 per cent</td></tr>
+<tr><td>Income detection</td><td>A filter. No established income pattern, no seat in the first half</td><td>A signal. Informs the display and does not block</td></tr>
+<tr><td>Early seat fee, share of pot</td><td>1.00 per cent at the first seat, tapering to zero</td><td>1.75 per cent at the first seat, tapering to zero</td></tr>
+<tr><td>Insurance premium</td><td>1.5 per cent of each contribution, mandatory</td><td>0.5 per cent, optional</td></tr>
+<tr><td>Late fee ladder</td><td>3, 7 and 12 per cent</td><td>1, 3 and 6 per cent</td></tr>
+<tr><td>Signed undertaking</td><td>Renewed weekly, and on asset circles covering the retention of title as well as the contribution</td><td>Signed once at formation, covering both</td></tr>
+<tr><td>Mutual guarantee</td><td>Required</td><td>Required</td></tr>
+<tr><td>Asset selection, on asset circles</td><td>Platform catalogue only, at a price agreed with the dealer in advance</td><td>The catalogue, or a dealer the host nominates and Halqa approves</td></tr>
+<tr><td>Ceiling</td><td>Set by the affordability caps alone</td><td>Rs 25,000 a month and a pot of Rs 300,000</td></tr>
+</table>
+
+<h2>7.2 Eligibility, and what a member is shown</h2>
+<p>The band ceilings apply unchanged across the range, since forward liability on an asset circle is the same quantity as on a cash circle. A member in the lowest band may hold no more than two contributions of exposure and therefore takes one of the last three seats, and a member in the second band no more than seven. The tenure rule applies whatever the score, so a new member takes a last three seat and the worst case exposure to an unproven member is two contributions.</p>
+<p>The affordability caps apply to the contribution rather than to the price of the asset, so what a member can reach is set by what they can pay each month and by the length of the circle. The discovery screen shows only those circles and assets for which the member has both an eligible free seat and sufficient headroom, so a member browsing motorcycles is shown the models their income supports and is not shown the others. There is no rejection message, because nothing ineligible is ever displayed.</p>
+<p class="exh"><b>Exhibit 4</b>. Worked eligibility. A member with net monthly income of Rs 45,000 and no other circles.</p>
+<table>
+<tr><th style="width:52mm">Step</th><th class="n">Value</th></tr>
+<tr><td>Monthly contribution ceiling at 33 per cent of income</td><td class="n">Rs 14,850</td></tr>
+<tr><td>Forward exposure ceiling at four times income</td><td class="n">Rs 180,000</td></tr>
+<tr><td>Longest circle offered</td><td class="n">12 months</td></tr>
+<tr><td>Asset value reachable</td><td class="n">Rs 178,200</td></tr>
+<tr><td>Seats displayed, member in the second band</td><td class="n">Seats 5 to 12 only</td></tr>
+</table>
+<p>Where a member's band or headroom changes during the life of a circle the seats already claimed are unaffected, a claimed seat being permanent. The filter governs what is offered and never what has already been agreed.</p>
+
+<h2>7.3 The time value spectrum</h2>
+<p>On known, open and asset circles the same economic difference is priced by a spectrum which the host sets at creation. Where it is enabled, a member taking a seat in the first half pays a premium which is distributed to the members taking later seats in proportion to the time each of them waits, with the premium at the first seat capped at 5 per cent of the pot and Halqa retaining 10 per cent of the pool. Where it is disabled, every seat costs the same. It is forced off on Shariah labelled tiers, where the passage of time may not be priced, and the price is displayed to every member before the confirmation window closes so that seat selection is made against a known figure.</p>
+
+<h2>7.4 Savings layer</h2>
+<p>Committee money earns nothing while it waits, which is a straightforward loss to the member against inflation running at 11 to 12 per cent. The savings layer routes voluntary savings into an Islamic money market fund, with the assets held by a trustee and the units registered in the member's own name, so Halqa still holds nothing.</p>
+
+<p>The same holding, when pledged, produces the strongest default control in the model. A member whose pledged units cover their forward liability cannot default up to the size of that holding, since a missed contribution settles from their own units under an irrevocable redemption instruction signed at the time of pledge. Every member who takes the savings product therefore reduces the exposure of every circle they sit in.</p>
+
+<h1>8 · HYPER committees</h1>
+
+<p>A HYPER committee takes daily contributions from a fixed roster of four hundred members over a fixed cycle of sixty days. Six or seven members collect on each day, positions are set once by auction, members have no visibility of one another, and there is no organiser. It is the product built for the daily wage earner, who is the largest excluded group in the market and has no savings instrument at all.</p>
+
+<h2>8.1 Structure</h2>
+<p>The roster and the cycle do not vary. Four hundred places are distributed across sixty days, being seven recipients on forty of the days and six on the remaining twenty, which allocates all four hundred exactly and averages 6.67 a day. The daily contribution sets the pot, which is sixty times that contribution and is capped at Rs 15,000.</p>
+<p class="exh"><b>Exhibit 5</b>. Configurations. The pot is capped at Rs 15,000, which is the level a member on an ordinary daily wage can carry.</p>
+<table>
+<tr><th class="n" style="width:30mm">Daily contribution</th><th class="n" style="width:26mm">Pot</th><th class="n" style="width:36mm">Collected each day across the roster</th><th class="n">Maximum forward liability</th></tr>
+<tr><td class="n">Rs 100</td><td class="n">Rs 6,000</td><td class="n">Rs 40,000</td><td class="n">Rs 5,900</td></tr>
+<tr><td class="n">Rs 150</td><td class="n">Rs 9,000</td><td class="n">Rs 60,000</td><td class="n">Rs 8,850</td></tr>
+<tr><td class="n">Rs 200</td><td class="n">Rs 12,000</td><td class="n">Rs 80,000</td><td class="n">Rs 11,800</td></tr>
+<tr><td class="n">Rs 250</td><td class="n">Rs 15,000</td><td class="n">Rs 100,000</td><td class="n">Rs 14,750</td></tr>
+</table>
+
+<h2>8.2 The default rate the product can bear</h2>
+<p>The rate the product absorbs follows from the premium and from the structure, and can be verified directly. Where <i>r</i> is the insurance premium as a share of each contribution, premium income per member over the cycle is sixty contributions multiplied by <i>r</i>, while expected loss per defaulting member at the mean day of collection is 29.5 contributions. Setting the two equal gives the rate at which premium income exactly meets loss.</p>
+<p class="eq">default rate absorbed by the premium &nbsp;=&nbsp; <i>r</i> × 60 ÷ 29.5 &nbsp;=&nbsp; 2.03 <i>r</i></p>
+<p class="exh"><b>Exhibit 6</b>. Absorption capacity by premium rate, on the four hundred member sixty day structure. The ratio of sixty to 29.5 is a property of the structure and does not change with contribution size, so the same rate holds at every tier.</p>
+<table>
+<tr><th class="n" style="width:44mm">Insurance premium, share of each contribution</th><th class="n" style="width:40mm">Default rate absorbed</th><th>Position</th></tr>
+<tr><td class="n">8 per cent</td><td class="n">16.3 per cent</td><td>Insufficient</td></tr>
+<tr><td class="n">10 per cent</td><td class="n">20.3 per cent</td><td>Insufficient</td></tr>
+<tr><td class="n">12 per cent</td><td class="n">24.4 per cent</td><td>Insufficient</td></tr>
+<tr><td class="n">15 per cent</td><td class="n">30.5 per cent</td><td>The setting</td></tr>
+<tr><td class="n">16 per cent</td><td class="n">32.5 per cent</td><td>Above the design point</td></tr>
+</table>
+<p>The premium is set at fifteen per cent of each contribution, absorbing 30.5 per cent on its own. The auction premiums in section 8.4 are received in full and contribute approximately 0.8 percentage points of further capacity at the modelled bid levels, and the fee uplift of forty five per cent above the open circle schedule contributes approximately 1.7 points. Total absorption before Halqa's own balance sheet is engaged is therefore approximately thirty three per cent, against a design point of thirty.</p>
+<p>The exposure is bounded by the size of the pot rather than by the size of the roster. At the largest tier the maximum a single default can cost is Rs 14,750 and the mean is Rs 7,375, which is what makes a thirty per cent assumption financeable at all.</p>
+
+<h2>8.3 Entry conditions</h2>
+<p>A daily contribution is a different obligation from a monthly one. A member paid on the first of the month does not hold a thousand rupees in a wallet on every day of the following month, so the product admits only members whose income itself arrives daily, or members who have set the whole of the exposure aside in advance. One of the two conditions below must be satisfied.</p>
+<table>
+<tr><th style="width:34mm">Condition</th><th>Evidence accepted</th></tr>
+<tr><td>Daily income</td><td>Two months of demonstrated daily earnings. Accepted evidence is an earnings statement from a ride hailing or delivery platform, being inDrive, Careem, Bykea, Foodpanda or an equivalent; an employer letter for daily wage work; a market or shop trading record; or two months of incoming credit alerts observed by the platform. Occupations typically qualifying are drivers, riders, waiters, market traders, daily wage labour and shop assistants</td></tr>
+<tr><td>Locked savings</td><td>A holding in the savings vault equal to the pot, locked for the full sixty days. On a pot of Rs 15,000 the requirement is Rs 15,000. The holding remains the member's own property, is registered in their own name with the trustee, and earns a return throughout</td></tr>
+</table>
+<p>Score of 650 or above, two completed circles with clean payment records, a verified Raast credential and manual review apply to every entrant in addition. The locked savings condition is expected to fall away once collection under a standing Raast instruction is live and proven, since the instruction removes the requirement for the member to hold the balance themselves on any given morning.</p>
+
+<h2>8.4 The opening auction</h2>
+<p>Positions are set once, at the start, by auction, and are fixed for the whole of the cycle thereafter. A position may not be sold, bought or altered once the auction has closed, and HYPER committees do not appear on the turn marketplace which operates across the rest of the platform.</p>
+<p>The window runs for twenty four hours from the point at which the roster of four hundred completes. A member bids for one single named day of the cycle, may raise that bid as often as they wish while the window is open, and may not bid across several days. The standing highest bid on each day is visible so that a position can be priced, and no bidder is identified. Each day carries six or seven places and the highest bids on that day take them. Members who placed no bid, and members who were outbid, are assigned to the remaining days by verifiable ballot. Only a winning bid is charged, and a bid is refused at the point of placing where the member's band or affordability does not permit the forward liability at that day.</p>
+<p>Every premium is paid to Halqa in full. There is no member to member premium and no commission split, so the platform receives the whole of the amount rather than a share of it.</p>
+
+<h2>8.5 Collection and cover</h2>
+<p>Collection runs on Raast under a standing daily instruction, which the arithmetic makes a requirement rather than a preference. At Rs 250 a day across four hundred members over sixty days, wallet debit at 1.5 per cent would produce Rs 90,000 of transaction cost against a pot of Rs 15,000.</p>
+<p>Where a member misses a day, Halqa pays that day's recipients from its own balance sheet within twelve hours, so that no recipient waits. The advance opens a recovery case for the contribution, an advance fee of two per cent and a late fee which rises from seven to fourteen to twenty two per cent at twelve, thirty six and sixty hours. Three consecutive misses remove the member, who is replaced from the standing queue so that the roster stays at four hundred, and where the locked savings condition was used at entry the holding is applied against the outstanding amount.</p>
+
+<h2>8.6 Daily settlement, and why the product needs no capital</h2>
+<p>A HYPER committee settles every day rather than once a month. At the top tier it collects Rs 100,000 across the roster and pays the same amount on the same morning, being seven pots of Rs 15,000 on forty of the days and six on the remaining twenty. The payout is fixed and the collection is not, so every member who misses creates a shortfall which Halqa fronts that morning, while the premium is collected on the same daily rhythm and only from members still paying.</p>
+
+<p class="exh"><b>Exhibit 7</b>. Daily position per committee at Rs 250 a day across four hundred members, on the design assumption that thirty per cent of the roster stops paying, arriving evenly across the cycle.</p>
+<table>
+<tr><th class="n" style="width:16mm">Day</th><th class="n" style="width:26mm">Not paying</th><th class="n" style="width:28mm">Shortfall fronted</th><th class="n" style="width:28mm">Premium collected</th><th class="n" style="width:26mm">Net that day</th><th class="n">Cumulative</th></tr>
+<tr><td class="n">1</td><td class="n">2</td><td class="n">Rs 500</td><td class="n">Rs 14,925</td><td class="n">Rs 14,425</td><td class="n">Rs 14,425</td></tr>
+<tr><td class="n">15</td><td class="n">30</td><td class="n">Rs 7,500</td><td class="n">Rs 13,875</td><td class="n">Rs 6,375</td><td class="n">Rs 154,000</td></tr>
+<tr><td class="n">26</td><td class="n">52</td><td class="n">Rs 13,000</td><td class="n">Rs 13,050</td><td class="n">Rs 50</td><td class="n">Rs 188,175</td></tr>
+<tr><td class="n">45</td><td class="n">90</td><td class="n">Rs 22,500</td><td class="n">Rs 11,625</td><td class="n">Rs 10,875 negative</td><td class="n">Rs 84,000</td></tr>
+<tr><td class="n">60</td><td class="n">120</td><td class="n">Rs 30,000</td><td class="n">Rs 10,500</td><td class="n">Rs 19,500 negative</td><td class="n">Rs 152,250 negative</td></tr>
+</table>
+
+<p>The premium runs ahead of the shortfall for the first twenty six days and behind it thereafter, so the surplus built in the first half of the cycle funds the deficit in the second half from within the committee itself. The position peaks at a surplus of Rs 188,175 and closes at a deficit of Rs 152,250, against total advances of Rs 915,000 across the cycle.</p>
+
+<p class="exh"><b>Exhibit 8</b>. Closing position per committee at the top tier, before any recovery on advances.</p>
+<table>
+<tr><th style="width:56mm">Line</th><th class="n">Amount</th></tr>
+<tr><td>Deficit at cycle close</td><td class="n">Rs 152,250 negative</td></tr>
+<tr><td>Auction premiums, collected before the cycle opens</td><td class="n">Rs 40,000</td></tr>
+<tr><td>Fee uplift of forty five per cent above the open circle schedule</td><td class="n">Rs 50,000</td></tr>
+<tr><td>Late fees on contributions paid after the due hour</td><td class="n">Rs 20,000</td></tr>
+<tr><td>Residual before recovery</td><td class="n">Rs 42,250 negative</td></tr>
+<tr><td>Advances outstanding and recoverable</td><td class="n">Rs 915,000</td></tr>
+<tr><td>Recovery rate at which the committee closes at zero</td><td class="n">4.6 per cent</td></tr>
+</table>
+
+<p>The committee funds itself. The premium, the fee uplift of forty five per cent, the auction premiums and the late fees together meet the shortfall inside the cycle, and the advances remain claims against the members who caused them rather than write offs, each carrying the contribution, an advance fee of two per cent and the late fee. Recovery above 4.6 per cent of advances closes the committee in surplus.</p>
+
+<p>What the product requires is therefore a revolving working balance rather than equity. The largest amount a single committee is behind at any point is Rs 152,250 at the top tier and proportionately less at the others, the auction premiums collected before the cycle opens and the surplus of the first twenty six days fund it, and each subsequent cycle rolls it forward. Members admitted under the locked savings condition draw nothing at all, since their shortfall is met from their own pledged holding.</p>
+
+<p>The figures above treat every missed contribution as a permanent stop. A proportion of misses are late payments which are subsequently made, and each of those reduces the shortfall and adds a late fee at the same time, so the position stated here is the worst case rather than the expected one.</p>
+
+<h2>8.7 Distribution</h2>
+<p>The channel is workplaces and platforms paying daily or weekly, being factories, market associations, transport depots, ride hailing and delivery fleets, and the floor staff of large retailers. The employer or the platform acts as an institutional anchor, verifying identity and income and fixing the payment day, and a single relationship supplies the whole roster of four hundred.</p>
+
+<h1>9 · Retail partnerships and the rewards ladder</h1>
+
+<h2>9.1 Definition</h2>
+<p>A rewards ladder attached to consecutive contributions paid on or before the due date, redeemable against discounts and goods at partner retailers, of which the largest in Pakistan is Daraz.</p>
+
+<h2>9.2 Purpose</h2>
+<p>On time payment is the single input on which the whole model rests, since expected loss, the insurance premium, the score, and the value of the data asset all move with it. The rewards ladder attaches a tangible and immediate benefit to the behaviour the business needs, and does so with money which comes from the retailer rather than from Halqa. It also gives the member a reason to open the application between contributions, which is otherwise a product they touch once a month.</p>
+
+<h2>9.3 Reward ladder</h2>
+<p>A streak counts consecutive rounds paid on or before the due date, across all of a member's circles, and a missed round resets it to zero. A contribution paid on a member's behalf by somebody else is neutral and neither builds nor breaks a streak, so that the ladder cannot be bought.</p>
+
+<p class="exh"><b>Exhibit 9</b>. Reward ladder. Retailer rewards are funded by the retailer as a promotional discount; platform rewards are waivers of Halqa's own charges. All figures are proposals.</p>
+<table>
+<tr><th class="n" style="width:26mm">Consecutive rounds</th><th style="width:56mm">Retailer reward</th><th>Platform reward, alternative</th></tr>
+<tr><td class="n">3</td><td>5 per cent discount code, capped at Rs 500</td><td>Nil</td></tr>
+<tr><td class="n">6</td><td>10 per cent discount code capped at Rs 1,000, and a delivery waiver</td><td>Nil</td></tr>
+<tr><td class="n">12</td><td>12 per cent discount code capped at Rs 2,000</td><td>One month of insurance premium waived</td></tr>
+<tr><td class="n">18</td><td>Category offer, capped at Rs 3,000</td><td>Seat placement fee waived on the next circle</td></tr>
+<tr><td class="n">24</td><td>15 per cent discount code capped at Rs 4,000</td><td>Early seat fee waived on the next circle</td></tr>
+<tr><td class="n">36</td><td>Highest tier offer, capped at Rs 6,000</td><td>Early seat fee and one month of premium waived</td></tr>
+<tr><td>Circle completed clean</td><td>Completion offer, capped at Rs 1,500</td><td>200 points</td></tr>
+</table>
+
+<p>A separate points balance accrues alongside the ladder, at ten points for a contribution paid on time and fifteen where it is paid three or more days early, with a multiplier of five per cent for each consecutive clean round capped at fifty per cent. Points buy the platform rewards listed above at published prices, so that a member who does not wish to shop is not excluded from the system.</p>
+
+<h2>9.4 Funding</h2>
+<p>The discount at every retailer tier is the retailer's own promotional discount, offered to an audience which has been qualified by twelve months of demonstrated payment behaviour, and it is therefore customer acquisition spend for them rather than a cost to Halqa. Halqa earns an affiliate commission on the resulting order, which in Pakistani marketplace programmes runs at roughly 3 to 12 per cent of order value depending on category. The arrangement is self funding by construction, since the reward is the retailer's discount and the revenue is the retailer's commission.</p>
+
+<p>The platform rewards on the right of the ladder are waivers of charges Halqa would otherwise collect, so they cost the platform their face value and are used at the tiers where the retention benefit is largest.</p>
+
+<h2>9.5 Implementation</h2>
+<table>
+<tr><th class="n" style="width:12mm">Phase</th><th style="width:38mm">Step</th><th>Requirement</th></tr>
+<tr><td class="n">1</td><td>Platform rewards only</td><td>No counterparty. Waivers of Halqa's own charges are built into the existing fee engine and can be released as soon as the ladder is built</td></tr>
+<tr><td class="n">2</td><td>Affiliate registration</td><td>Registration with the existing affiliate programmes operated by the large Pakistani marketplaces, which is a form rather than a negotiation. Product links carry an affiliate identifier, orders are attributed automatically, and commission is paid on attributed sales. This produces revenue and reward inventory without any relationship having to be built first</td></tr>
+<tr><td class="n">3</td><td>Direct merchant agreement</td><td>A negotiated rate card, discount codes exclusive to Halqa members, co branded placement inside the application, and category exclusivity where it can be obtained. This is where the discount values in Exhibit 4 become deliverable at scale</td></tr>
+<tr><td class="n">4</td><td>Direct payment to the retailer</td><td>The pot of a goal circle is paid straight to the retailer for a named item rather than to the member, and the retailer pays a commission of 1 to 3 per cent of the value brokered. This is the same mechanism as the asset circle in section 7 and converts the rewards relationship into a distribution channel</td></tr>
+</table>
+
+<p>Retailers to approach are the general marketplaces, being Daraz and the smaller electronics and home retailers such as Telemart, iShopping and HomeShopping; the grocery chains operating online, being Naheed, Alfatah and Imtiaz; and the delivery platforms. Offline chains follow once volume justifies a negotiated code.</p>
+
+<h2>9.6 Constraints</h2>
+<p>Rewards are never redeemable for cash at any tier, since a cash balance held for a member would be a stored value product and would change the regulatory position of the whole platform. A voucher is retailer credit and sits with the retailer.</p>
+
+<p>The reward is capped as a share of the member's contributions and is released only against contributions which have actually settled, so that the ladder cannot become the reason a member joins a circle they cannot afford. Halqa receives order attribution rather than basket contents, and purchase behaviour is not sold. Categories which conflict with a savings product, being gambling and consumer lending, are excluded from the catalogue.</p>
+
+<h1>10 · Revenue</h1>
+
+<p>Members pay nothing to join a circle and nothing to contribute, and every line below is either an optional priced service or is paid by a counterparty.</p>
+
+<table>
+<tr><th style="width:44mm">Line</th><th style="width:38mm">Basis</th><th>Payer</th></tr>
+<tr><td>Insurance premium on open circles</td><td>1.5 per cent of each contribution, capped at Rs 300</td><td>Member, against cover</td></tr>
+<tr><td>Early seat fee</td><td>1.00 per cent of the pot at the first seat on open circles, tapering to zero at the last seat</td><td>Member collecting early, from the pot</td></tr>
+<tr><td>Turn marketplace commission</td><td>10 per cent of the accepted premium where one member buys another's turn</td><td>Member, optional</td></tr>
+<tr><td>Late fees</td><td>3, 7 and 12 per cent of the contribution by lateness on open circles</td><td>Member in default of the schedule</td></tr>
+<tr><td>Retail affiliate commission</td><td>3 to 12 per cent of order value by category</td><td>Retailer</td></tr>
+<tr><td>Direct payment commission</td><td>1 to 3 per cent of the value brokered</td><td>Retailer or dealer</td></tr>
+<tr><td>Asset structure origination</td><td>2 to 4 per cent of asset value</td><td>Dealer or leasing counterparty</td></tr>
+<tr><td>Distribution trail on savings</td><td>0.5 to 1.5 per cent a year of assets under management</td><td>Asset manager</td></tr>
+<tr><td>Rewarded video</td><td>1.50 to 4.00 US dollars per thousand completed views</td><td>Advertiser, on one surface only</td></tr>
+</table>
+
+<p>Two of these deserve separate attention because they scale differently from the rest. The distribution trail is the durable line, since at Rs 1 billion of savings under management a trail of one per cent is Rs 10 million a year and it recurs without any further work. The retail commission is the line which grows with engagement rather than with flow, and it is the reason the rewards ladder in section 8 is a revenue feature rather than a cost.</p>
+
+<p>It is to be noted that the insurance premium is derived rather than chosen. Where <i>q</i> is the probability that a member defaults after collecting, and a three times loading is applied for adverse selection, operating cost and reinsurance, the premium rate is approximately 1.5<i>q</i> and is independent of circle size. The entire fee schedule therefore rests on one input, and the first hundred completed circles measure it.</p>
+
+<h1>11 · Unit economics</h1>
+
+<p class="exh"><b>Exhibit 10</b>. Contribution per committee and per member at the rates in section 10. Default is modelled at 1.0 per cent for monthly circles, being the rate observed in the committee literature, and at 30 per cent for HYPER committees, being the rate that product is priced to withstand. Neither is yet a Halqa measurement.</p>
+<table>
+<tr><th style="width:50mm">Measure</th><th class="n" style="width:34mm">Monthly circle</th><th class="n">HYPER committee</th></tr>
+<tr><td>Structure</td><td class="n">12 members, Rs 20,000, 12 months</td><td class="n">400 members, Rs 250 a day, 60 days</td></tr>
+<tr><td>Pot</td><td class="n">Rs 240,000</td><td class="n">Rs 15,000</td></tr>
+<tr><td>Flow per cycle</td><td class="n">Rs 2,880,000</td><td class="n">Rs 6,000,000</td></tr>
+<tr><td>Insurance premium collected</td><td class="n">Rs 43,200</td><td class="n">Rs 900,000</td></tr>
+<tr><td>Expected loss at the modelled rate</td><td class="n">Rs 13,200</td><td class="n">Rs 885,000</td></tr>
+<tr><td>Underwriting surplus</td><td class="n">Rs 30,000</td><td class="n">Rs 15,000</td></tr>
+<tr><td>Cycles a year</td><td class="n">1</td><td class="n">6</td></tr>
+</table>
+
+<p>The two products earn in different places. On a monthly circle the premium comfortably exceeds expected loss and the underwriting margin is the revenue, at approximately Rs 2,500 a member a year. On a HYPER committee the premium is set precisely at the design default rate, so the underwriting line is close to neutral by construction and the revenue is the opening auction, on which the whole of every premium is received rather than a commission on it. Per committee a year the two products are not comparable in scale, a HYPER committee producing approximately Rs 330,000 against Rs 30,000 for a monthly circle, since it carries four hundred members rather than twelve and runs six cycles rather than one.</p>
+
+<p class="exh"><b>Exhibit 11</b>. Opening auction, modelled on one hundred of the four hundred places being taken by a winning bid at a mean premium of Rs 400. The premium a member will pay is bounded by the value of earlier access to the pot, which against an informal lender at 10 per cent a month prices thirty days of acceleration on a Rs 15,000 pot at roughly Rs 1,500.</p>
+<table>
+<tr><th style="width:56mm">Measure</th><th class="n">Value</th></tr>
+<tr><td>Places taken by a winning bid, of 400</td><td class="n">100</td></tr>
+<tr><td>Mean winning premium, received in full by Halqa</td><td class="n">Rs 400</td></tr>
+<tr><td>Auction revenue per committee per cycle</td><td class="n">Rs 40,000</td></tr>
+<tr><td>Cycles a year</td><td class="n">6</td></tr>
+<tr><td>Auction revenue per committee a year</td><td class="n">Rs 240,000</td></tr>
+<tr><td>Per member a year</td><td class="n">Rs 600</td></tr>
+</table>
+
+<p class="exh"><b>Exhibit 12</b>. Platform take on flow, before the savings and retail lines.</p>
+<table>
+<tr><th style="width:52mm">Line</th><th class="n">Share of flow</th></tr>
+<tr><td>Insurance premium, open circles</td><td class="n">1.50 per cent</td></tr>
+<tr><td>Early seat fee, averaged across seats</td><td class="n">0.05 per cent</td></tr>
+<tr><td>Marketplace and placement fees</td><td class="n">0.05 to 0.15 per cent</td></tr>
+<tr><td>Late fees</td><td class="n">0.10 to 0.30 per cent</td></tr>
+<tr><td>Total, member facing</td><td class="n">1.70 to 2.00 per cent</td></tr>
+</table>
+
+<p>Against the Rs 4 trillion which rotates through committees annually, a one per cent share of that market carries Rs 40 billion of flow, on which the member facing take alone is between Rs 680 million and Rs 800 million a year, before the retail commission, the direct payment commission and the savings trail. The retail and savings lines are the ones which compound, since they grow with the number of members rather than with the number of circles.</p>
+
+<h1>12 · Past attempts at formalising ROSCAs</h1>
+
+<p>Twenty five attempts to formalise the rotating savings and credit association have been examined across Pakistan, the Middle East, India, Southeast Asia, Africa and the United States. Fifteen of them are set out below, being the cases which bear most directly on the design adopted here. Figures are as reported by the operators or in press coverage and have not been independently audited.</p>
+
+<p class="exh"><b>Exhibit 13</b>. Pakistan.</p>
+<table>
+<tr><th style="width:34mm">Operator</th><th style="width:28mm">Period</th><th style="width:56mm">Reported scale</th><th>Structure</th></tr>
+<tr><td>UBL Kommittee Account</td><td>Current</td><td>Contributions of Rs 5,000 to Rs 1,000,000 a month over terms of 12, 18 or 24 months</td><td>A bank deposit product carrying the committee name. Member money becomes a bank liability from the first day and there is no rotation between members, so the instrument itself has been removed and only the word retained</td></tr>
+<tr><td>Oraan</td><td>Founded 2018; $3 million seed raised in 2021</td><td>Its own research put participation at roughly 41 per cent of Pakistanis and about $5 billion rotating annually</td><td>Platform custody, with the operator collecting contributions and disbursing pots. Members are largely strangers, pooled and vetted by the platform, and weighted towards women</td></tr>
+<tr><td>Udhaar Book</td><td>Current</td><td>A committee register inside a digital ledger application used by retailers</td><td>No money moves through the application. The organiser records who has paid and sends payment requests, so the product records an assertion rather than a settlement</td></tr>
+<tr><td>DigiKhata</td><td>Current</td><td>A competing ledger application with comparable committee features</td><td>Architecturally indistinguishable from the above. Two independent Pakistani applications with real distribution stopped at the same wall</td></tr>
+<tr><td>The Sidra Humaid committees</td><td>Roughly seven to ten years, ending December 2022</td><td>Approximately Rs 420 million owed across 117 committees and roughly 200 contributors, kept without written records</td><td>Total and concentrated custody. Members from social media wired money to one individual and were connected to her rather than to each other. She announced she could not pay and went into hiding</td></tr>
+</table>
+
+<p class="exh"><b>Exhibit 14</b>. Middle East, India and Southeast Asia.</p>
+<table>
+<tr><th style="width:34mm">Operator</th><th style="width:28mm">Market and period</th><th style="width:56mm">Reported scale</th><th>Structure</th></tr>
+<tr><td>Money Fellows</td><td>Egypt; profitable in 2025, with a $13 million pre-Series C in May 2025 and entry to Morocco planned for 2026</td><td>8 million application downloads, over one million customers served, roughly 350,000 monthly active users, $1.5 billion processed across more than two million completed circles, and approximately $60 million raised</td><td>Platform custody, sitting between payer and recipient as digital trustee and matchmaker. The largest operator in the category anywhere</td></tr>
+<tr><td>Hakbah</td><td>Saudi Arabia</td><td>More than 1.3 million registered users, roughly 70 per cent of them young savers, and about $9 million raised</td><td>Platform operated savings groups under a Saudi Central Bank sandbox permit, with partnerships for prepaid cards and open banking</td></tr>
+<tr><td>Shriram Chits</td><td>India</td><td>More than 2.2 million subscribers, annual auction turnover approaching Rs 3,000 crore, 465 branches, roughly 6,000 employees and 65,000 agents</td><td>Statutory foreman under the Chit Funds Act, with a full security deposit lodged with the Registrar before a scheme may run. Ordering is by auction and distribution is by a commissioned agent force</td></tr>
+<tr><td>Margadarsi Chits</td><td>India; over sixty years</td><td>Turnover of about Rs 14,341 crore, having served over six million subscribers, with 131 branches across four states</td><td>Identical to the above. The two Indian operators together establish that custody committees endure at very large scale provided the operator is a regulated foreman</td></tr>
+<tr><td>Kerala State Financial Enterprises</td><td>India; established 1969</td><td>More than 680 branches, with chit values from Rs 1 lakh to Rs 50 lakh over terms of 25 to 60 months</td><td>A state owned non-banking finance company acting as foreman, with sovereign trust substituting for private reputation</td></tr>
+<tr><td>The Money Club</td><td>India; founded 2016</td><td>Over 200,000 users, around 17,000 clubs formed and roughly Rs 40 crore pooled, on $1.7 million of pre-Series A funding</td><td>Platform intermediated with same day payouts, underwriting by graduated trust, and members drawn from both existing circles and platform formed groups</td></tr>
+<tr><td>MyPaisaa</td><td>India</td><td>Approximately $980,000 raised across five rounds and roughly 20,000 installs in its first two years</td><td>India's first fully digital chit fund registered with the Registrar of Chits. The statutory model delivered through an application, which shows what full registration costs a young company in speed</td></tr>
+<tr><td>Mapan</td><td>Indonesia</td><td>Distribution built on community organisers at national scale</td><td>The organiser is treated as the growth engine rather than as an obstacle, which is the same position taken here</td></tr>
+</table>
+
+<p class="exh"><b>Exhibit 15</b>. Africa and the United States.</p>
+<table>
+<tr><th style="width:34mm">Operator</th><th style="width:28mm">Market and period</th><th style="width:56mm">Reported scale</th><th>Structure</th></tr>
+<tr><td>StokFella</td><td>South Africa; launched 2016</td><td>About 42,000 members on the platform as of 2025, in a market of roughly 800,000 groups and 11 million members holding around R50 billion</td><td>Group account management with platform held or platform adjacent funds, serving existing stokvel groups</td></tr>
+<tr><td>Tanda by Yahoo Finance</td><td>United States; January 2018 to May 2018</td><td>Approximately 37,000 installs across both platforms, never ranking in the top 1,500 of the finance category</td><td>Platform managed pooling in groups of five or nine. Closed after four months, with performance noted as encouraging in the Philippines and Mexico and poor in the United States</td></tr>
+<tr><td>eMoneyPool</td><td>United States; founded in Phoenix in 2010, ceased operations around November 2019</td><td>Nine years of operation</td><td>Platform managed pools which reported members' payment histories to credit bureaus. The operator substantially absorbed defaults itself, and the cost of standing behind every member is the reason the cover facility in this model is priced, capped and recovered</td></tr>
+<tr><td>Esusu</td><td>United States; incorporated 31 May 2018</td><td>A $130 million Series B led by SoftBank Vision Fund 2 in January 2022, at a valuation of $1 billion</td><td>Launched as a communal savings application, found the domestic market too thin, and pivoted to reporting on time rent payments to all three credit bureaus. The value was in the record rather than in the pooling</td></tr>
+<tr><td>Mission Asset Fund</td><td>United States</td><td>Groups of six to twelve members contributing $50 to $200 a month, with pots of $300 to $2,400</td><td>A non-profit which formalises peer contributions as documented zero interest loans, services them, and reports every monthly payment to all three credit bureaus. The clearest demonstration that the record is the measurable asset</td></tr>
+</table>
+
+<h2>12.1 What the set establishes</h2>
+<p>Four observations run through the whole of the evidence and each of them is reflected in the design set out in this document.</p>
+<p>Custody is the variable which determines the outcome, and its effect is binary. Every operator which held member money either carried the cost of a licence and a statutory deposit, as the Indian foremen do, or failed, as the concentrated Pakistani case did. Halqa holds nothing at any stage.</p>
+<p>The value is in the record and it has been measured. Two of the American cases abandoned the pooling entirely and built businesses on reporting payment behaviour to credit bureaus, one of them reaching a billion dollar valuation on that basis. The committee is the mechanism which generates the record, and the record is the asset.</p>
+<p>Distribution is agents rather than advertising. Every case which reached scale did so through commissioned organisers, whether the 65,000 agents of the Indian operator or the community organisers used in Indonesia. The host is therefore treated here as the acquisition channel.</p>
+<p>An unpriced guarantee is unbounded. The American operator which absorbed defaults on behalf of every member ran for nine years and closed. The facility in section 5 is priced against a stated default rate, capped at four separate levels, and recovered from the member as an advance rather than written off.</p>
+
+<h1>13 · Counterparties</h1>
+
+<p>The entities below are the specific candidates for each function. Licence status and current terms are to be confirmed with each before the relationship is relied upon.</p>
+
+<table>
+<tr><th style="width:38mm">Function</th><th style="width:52mm">Candidate</th><th>Note</th></tr>
+<tr><td>Fund trustee, holding member savings</td><td><b>Central Depository Company of Pakistan</b>; <b>Digital Custodian Company</b></td><td>The standard trustees for Pakistani mutual funds. Both are to be qualified, a single sourced trustee being a commercial exposure</td></tr>
+<tr><td>Security trustee, holding retained title on asset circles</td><td>The same two institutions</td><td>One relationship covering two mandates</td></tr>
+<tr><td>Digital asset manager</td><td><b>Mahaana Wealth</b></td><td>Pakistan's digital first asset manager</td></tr>
+<tr><td>Islamic money market funds</td><td><b>Al Meezan Investment Management</b>, for Meezan Rozana Amdani; <b>NBP Fund Management</b>, for NBP Islamic Daily Dividend; <b>UBL Fund Managers</b>, for Al-Ameen Islamic Cash; <b>Alfalah</b>, <b>HBL</b> and <b>Atlas Asset Management</b></td><td>Daily dividend funds are the instrument class, being built for same day and next day redemption</td></tr>
+<tr><td>Leasing counterparty for asset circles</td><td><b>Orix Modaraba</b>; <b>First Habib Modaraba</b>; <b>Allied Rental Modaraba</b></td><td>Registered modarabas can hold title and write a lease without Halqa holding a licence</td></tr>
+<tr><td>Takaful</td><td><b>Pak-Qatar Family Takaful</b>; <b>Salaam Takaful</b>; <b>Jubilee Life Window Takaful</b>; <b>EFU Life Window Takaful</b></td><td>Cover above the aggregate limit, and credit life at an estimated 0.2 to 0.5 per cent of exposure</td></tr>
+<tr><td>Credit bureau</td><td><b>TASDEEQ</b>; <b>DataCheck</b></td><td>Both accept data from non financial contributors, so no financial institution partner is required</td></tr>
+<tr><td>Identity</td><td><b>NADRA</b>, through the <b>Nishan Pakistan</b> portal</td><td>Multi biometric verification. The longest lead time of any external dependency</td></tr>
+<tr><td>Payment rails</td><td><b>1LINK</b> as switch operator; <b>PayFast</b> and <b>Safepay</b> as aggregators</td><td>A merchant services agreement, not a licence</td></tr>
+<tr><td>Messaging</td><td><b>WhatsApp Business Cloud API</b></td><td>Receipts and reminders</td></tr>
+<tr><td>Retail partners</td><td><b>Daraz</b>; <b>Telemart</b>, <b>iShopping</b>, <b>HomeShopping</b>; <b>Naheed</b>, <b>Alfatah</b>, <b>Imtiaz</b>; <b>Foodpanda</b>, <b>Bykea</b></td><td>Registration with the existing affiliate programmes is sufficient for the first phase</td></tr>
+<tr><td>Non dilutive funding</td><td><b>Karandaaz Pakistan</b>; <b>Ignite National Technology Fund</b>; <b>Pakistan Software Export Board</b></td><td>Karandaaz co funded the 2018 research which validates this architecture</td></tr>
+<tr><td>Regulator</td><td><b>SECP</b> regulatory sandbox</td><td>Identified as available for a model of this kind</td></tr>
+</table>
+
+<h1>14 · The platform as built</h1>
+
+<p>The platform is in production and has been since 20 July 2026. Both packages are type clean and the test suite stands at 60 unit tests and 352 integration tests, all passing.</p>
+
+<table>
+<tr><th style="width:40mm">Area</th><th>Position</th></tr>
+<tr><td>Onboarding and identity</td><td>Phone verification, application PIN on every open, identity card capture, address and occupation capture, and payment instrument linking with the account title check</td></tr>
+<tr><td>Circle lifecycle</td><td>Creation, joining, seat selection with band and tenure gating, rounds, payouts and completion</td></tr>
+<tr><td>Collection</td><td>Gateway style checkout across every rail, saved instruments, standing mandates enabled by default at joining, the daily delinquency process, and receipts issued on every settlement</td></tr>
+<tr><td>Payday collection</td><td>Balance notice, payday morning execution, the retry ladder, and the four layer verification of the declared payday</td></tr>
+<tr><td>Credit</td><td>The Sakh score with bands and events, the exportable credit record which verifies without a Halqa account, and the bureau export queue</td></tr>
+<tr><td>Legal</td><td>The signed undertaking with typed and drawn signature stored against a hash, the automatically executed mutual guarantee, and the full legal corpus in the application</td></tr>
+<tr><td>Anti default</td><td>Seat gating, tenure quarantine, linked account controls, the escalating delinquency ladder, recovery cases and payout controls</td></tr>
+<tr><td>Marketplace</td><td>Listing, bidding and acceptance for turn transfer, with the premium ceiling and commission applied</td></tr>
+<tr><td>Platform</td><td>Urdu and English, installable on the handset, regional greetings, an assistant, and the security stack described below</td></tr>
+</table>
+
+<p>All money is held as integer paisa, every movement is a double entry pair so the ledger is self checking, every write carries an idempotency key so a retried request applies once, and production migrations are additive so old and new code remain correct through a deployment. Passwords are hashed at cost twelve, refresh tokens rotate with reuse detection which burns the whole token family, accounts lock after five failures, and queries are parameterised throughout so injection is structurally unavailable.</p>
+
+<h1>15 · Sequence and dependencies</h1>
+
+<p>The business is a ladder and the rungs cannot be taken out of order, since each one is reachable only because the one below it exists.</p>
+
+<table>
+<tr><th class="n" style="width:8mm"></th><th style="width:32mm">Rung</th><th>What it unlocks</th></tr>
+<tr><td class="n">1</td><td>Collection</td><td>Settlement rather than assertion. Without it there is no credible record, therefore no data asset and no business. Requires company registration and a merchant services agreement</td></tr>
+<tr><td class="n">2</td><td>The record</td><td>Verified repayment at volume, which is the raw material for everything above. Measured in circles completed rather than in registrations</td></tr>
+<tr><td class="n">3</td><td>The bureau link</td><td>The record becomes a formal credit signal, the member gains a benefit they cannot obtain elsewhere, and Halqa becomes the supplier of a data class the system does not hold</td></tr>
+<tr><td class="n">4</td><td>Commerce</td><td>Retailers and institutions pay for access to outcomes. The rewards ladder, direct payment and asset circles all sit here, and this is where the revenue concentrates</td></tr>
+<tr><td class="n">5</td><td>The savings layer</td><td>Yield for the member, a trail for the platform, and a pledged buffer which cures default at source</td></tr>
+</table>
+
+<p>The near term work divides into engineering, which is under the company's own control, and counterparty work, which carries lead times measured in months and is therefore started in parallel rather than in sequence. The counterparty items are company registration, the merchant services agreement, identity verification through NADRA, the trustee and asset manager relationships, and the retail affiliate registrations.</p>
+
+<h1>16 · Performance measures</h1>
+
+<p>Most conventional metrics are misleading for this business, since registrations, downloads and total value committed can all be raised without the underlying arrangement working at all. Five measures determine whether it is working.</p>
+
+<table>
+<tr><th class="n" style="width:8mm"></th><th style="width:50mm">Measure</th><th>Why</th></tr>
+<tr><td class="n">1</td><td>Share of contributions settled digitally</td><td>The health of the collection rung, and the single most important figure in the company. A ledger of assertions is worth nothing</td></tr>
+<tr><td class="n">2</td><td>Circles completed clean</td><td>The atomic unit of value, since a circle which completes has produced a full record for every member in it</td></tr>
+<tr><td class="n">3</td><td>Circles per organiser</td><td>Whether the growth loop compounds or leaks</td></tr>
+<tr><td class="n">4</td><td>Measured default across the first hundred completed circles</td><td>The point at which the loss rate stops being modelled and becomes measured, and at which every price in the schedule is recomputed</td></tr>
+<tr><td class="n">5</td><td>Member to organiser conversion</td><td>The only growth loop internal to the product</td></tr>
+</table>
+
+<p>The market is established, the instrument is a thousand years old, and the participants number in the tens of millions. What has never existed is the record, and the record is what is being built.</p>
+
+<p style="margin-top:8mm;font-size:8.2pt;color:#7A8F80;border-top:1px solid var(--line);padding-top:3mm">
+Prepared 12 August 2026. All amounts in Pakistan Rupees. Fee levels are proposals and modelled figures are identified in place. Confidential.</p>
+</body>
+</html>

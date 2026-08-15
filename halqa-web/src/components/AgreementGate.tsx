@@ -9,7 +9,7 @@ type DocText = { doc: string; version: number; text: string; textHash: string };
 // first time an account signs in and again every seven days when the previous
 // signature lapses; also re-opened by any 428 UNDERTAKING_REQUIRED from the
 // API. Signing is a REAL adopted digital signature: the member types their
-// full legal name (verified against the account) and draws their signature —
+// full legal name (verified against the account) and draws their signature
 // both are required and stored with the document hash, IP and timestamp
 // (ETO 2002).
 export default function AgreementGate({ userName }: { userName: string }) {
@@ -42,7 +42,7 @@ export default function AgreementGate({ userName }: { userName: string }) {
   }, [check]);
 
   // Defensive: a stale cached session can carry a user object without
-  // fullName — the gate must degrade to a non-matching name, never crash
+  // fullName, the gate must degrade to a non-matching name, never crash
   // (it fronts every 428-gated action).
   const normalize = (value?: string) => (value ?? '').trim().replace(/\s+/g, ' ').toLowerCase();
   const nameMatches = normalize(typedName) === normalize(userName);
@@ -93,7 +93,7 @@ export default function AgreementGate({ userName }: { userName: string }) {
           <div>
             <span className="eyebrow">Renewed weekly · e-signed under ETO 2002</span>
             <h2><FileSignature size={18} style={{ verticalAlign: '-3px' }} /> Member undertaking</h2>
-            <p>Read it fully. This is the promise every Halqa member signs to every other member — creating, joining and paying stay locked until you sign.</p>
+            <p>Read it fully. This is the promise every Halqa member signs to every other member, creating, joining and paying stay locked until you sign.</p>
           </div>
           <ShieldCheck />
         </div>

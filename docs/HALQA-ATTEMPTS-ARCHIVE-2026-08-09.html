@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Halqa — The Attempts Archive</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  *{box-sizing:border-box}
+  body{background:#fff;color:#0E1512;font-family:Georgia,'Times New Roman',serif;font-size:10.1pt;line-height:1.52;margin:0;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  h1{font-size:15.5pt;font-weight:normal;margin:0 0 4mm;padding-bottom:2mm;border-bottom:1.5px solid #123D30;color:#123D30}
+  h2{font-size:11.2pt;margin:6mm 0 2mm;padding-bottom:1mm;border-bottom:1px solid #D9A93C}
+  h3{font-size:10.3pt;margin:5mm 0 1.5mm;font-weight:bold;color:#123D30}
+  p{margin:0 0 2.3mm}
+  ul,ol{margin:2mm 0 3mm;padding-left:6mm} li{margin:1.1mm 0}
+  code{font-family:Consolas,monospace;font-size:8.8pt;background:#F4EEE1;padding:0 1mm}
+  table{border-collapse:collapse;width:100%;margin:2mm 0 3.5mm}
+  th,td{border:1px solid #123D30;padding:1.5mm 2mm;font-size:8.6pt;vertical-align:top;text-align:left}
+  th{background:#123D30;color:#F6F1E4;font-weight:bold}
+  tr{page-break-inside:avoid}
+  .arch td:first-child{width:23mm;background:#F4EEE1;font-weight:bold;color:#123D30}
+  .arch{margin:1.5mm 0 4mm}
+  .case{page-break-inside:avoid;margin-bottom:1mm}
+  .verdict{font-weight:bold}
+  .win{color:#1B5140}
+  .dead{color:#8A2A22}
+  .brk{page-break-before:always}
+  .lede{font-size:10.9pt;line-height:1.56}
+  .box{border:1px solid #123D30;border-left:4px solid #D9A93C;padding:3.2mm 4.2mm;margin:3.5mm 0;page-break-inside:avoid;background:#FBF8F0}
+  .box .t{font-weight:bold;color:#123D30;margin-bottom:1.5mm}
+  .math{font-family:Consolas,monospace;font-size:8.9pt;margin:1.3mm 0;padding-left:4mm}
+  .flag{font-size:8.8pt;font-style:italic;color:#4C574F}
+  .exh{font-size:8.4pt;color:#4C574F;margin:0 0 3mm;font-style:italic}
+  .exh b{color:#123D30;font-style:normal;letter-spacing:.06em}
+  .cover{height:240mm;display:flex;flex-direction:column;justify-content:center;text-align:center;page-break-after:always}
+  .cover .m{font-size:32pt;letter-spacing:.2em;margin:0 0 4mm;color:#123D30}
+  .cover hr{width:52mm;border:none;border-top:1.5px solid #D9A93C;margin:0 auto 8mm}
+  .cover .t{font-size:15pt;margin:0 0 3mm}
+  .cover .d{font-size:10.5pt;font-style:italic;color:#4C574F;margin:0 0 12mm}
+  .cover .n{font-size:9.3pt;line-height:1.9;color:#4C574F}
+  .cover svg{width:58px;height:58px;margin:0 auto 6mm;display:block}
+  .num{font-weight:bold;color:#123D30}
+  .kill{font-family:Consolas,monospace;font-size:7.6pt;font-weight:bold;color:#8A2A22;border:1px solid #8A2A22;padding:.3mm 1.4mm;white-space:nowrap}
+  .kill.ok{color:#1B5140;border-color:#1B5140}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <svg viewBox="0 0 100 100">
+    <g stroke="#123D30" stroke-width="7" stroke-linecap="round">
+      <line x1="50" y1="9" x2="50" y2="25"/><line x1="71" y1="13.6" x2="63" y2="27.5"/>
+      <line x1="86.4" y1="29" x2="72.5" y2="37"/><line x1="91" y1="50" x2="75" y2="50"/>
+      <line x1="86.4" y1="71" x2="72.5" y2="63"/><line x1="71" y1="86.4" x2="63" y2="72.5"/>
+      <line x1="50" y1="91" x2="50" y2="75"/><line x1="29" y1="86.4" x2="37" y2="72.5"/>
+      <line x1="13.6" y1="71" x2="27.5" y2="63"/>
+    </g>
+    <line x1="9" y1="50" x2="31" y2="50" stroke="#D9A93C" stroke-width="9" stroke-linecap="round"/>
+  </svg>
+  <p class="m">HALQA</p><hr>
+  <p class="t">The Attempts Archive</p>
+  <p class="d">Twenty-five committee products, nine markets, one architecture question<br>9 August 2026 · Confidential</p>
+  <p class="n">
+    Every serious attempt to digitise or institutionalise the rotating committee<br>
+    that could be documented — what each one actually built, and what happened.<br><br>
+    Each case is reduced to the same six architectural questions,<br>
+    so that twenty-five different stories can be compared as one dataset.<br><br>
+    Third-party figures are as reported by the cited sources.<br>Verdicts and killers are analytical judgement.
+  </p>
+</div>
+
+<!-- =============== HOW TO READ =============== -->
+<section>
+<h1>How to read this archive</h1>
+
+<p class="lede">The earlier dossier counted twenty-one attempts. Deeper research took the archive to <b>twenty-five cases across nine markets</b> — including three that matter enormously and were missing: the regulated Indian chit giants, a state-owned committee operator, and an American non-profit that has already proved the single most important claim Halqa makes.</p>
+
+<p>Every case is reduced to the same six questions, because the differences between these companies are almost entirely architectural and almost never about execution quality.</p>
+
+<table>
+<tr><th style="width:24mm">Question</th><th>Why it decides the outcome</th></tr>
+<tr><td><b>Custody</b></td><td>Who physically holds member money between pay-in and payout. This one field predicts more outcomes than every other combined.</td></tr>
+<tr><td><b>Members</b></td><td>Whether the circle is a pre-existing social group, strangers matched by the platform, or a group assembled by a paid agent.</td></tr>
+<tr><td><b>Order</b></td><td>How turn position is decided: ballot, negotiation, auction, platform allocation, or purchase.</td></tr>
+<tr><td><b>Default</b></td><td>Who absorbs the loss when someone stops paying — the group, the organizer, the platform's balance sheet, or nobody (i.e. it is simply lost).</td></tr>
+<tr><td><b>Revenue</b></td><td>Who pays, for what. Whether the member is the customer or the product.</td></tr>
+<tr><td><b>Licence</b></td><td>The regulatory basis the model requires — and therefore the capital and compliance toll it must pay.</td></tr>
+</table>
+
+<p>Each case closes with a <span class="kill">KILLER</span> or an <span class="kill ok">ENABLER</span> drawn from the eight-part failure taxonomy established in the dossier: <b>1</b> custody · <b>2</b> guarantee burden · <b>3</b> stranger pooling · <b>4</b> amputating the credit half · <b>5</b> adding interest · <b>6</b> record without settlement · <b>7</b> monetising the member · <b>8</b> regulatory ambush.</p>
+
+<div class="box">
+<p class="t">The finding, before the evidence</p>
+<p style="margin-bottom:0">Of twenty-five attempts, <b>every single failure held member money, guaranteed member money, or removed the rotation that makes a committee a committee.</b> Every durable success either kept the money outside itself, or paid a full regulatory toll to hold it legitimately. There is no case in this archive of a well-executed no-custody committee product failing, and no case of an unlicensed custody product surviving. That is the entire argument for Halqa's architecture, drawn from other people's money rather than from our own reasoning.</p>
+</div>
+</section>
+
+<!-- =============== PAKISTAN =============== -->
+<section class="brk">
+<h1>Part I · Pakistan — six attempts at home</h1>
+
+<div class="case">
+<h3>1 · UBL Kommittee Account — the bank that kept the name and killed the instrument</h3>
+<p>United Bank Limited, one of Pakistan's largest banks, markets a deposit product under the committee name. Choose 12, 18 or 24 months; contribute Rs 5,000 to Rs 1,000,000 a month; receive your accumulated contributions at the end plus a "bank contribution" of one quarter, one half or one full monthly installment respectively. Early exit is permitted without penalty but forfeits the bonus, and missed months are forgiven through an "installment holiday."</p>
+<table class="arch">
+<tr><td>Custody</td><td>The bank, entirely. Member money becomes a bank liability from day one.</td></tr>
+<tr><td>Members</td><td>None. There is no group — each customer holds an individual account.</td></tr>
+<tr><td>Order</td><td>Not applicable. <b>Nobody receives a pot early.</b> Everyone waits the full term.</td></tr>
+<tr><td>Default</td><td>Cannot occur; missed months are simply forgiven.</td></tr>
+<tr><td>Revenue</td><td>The spread on deposits, as with any savings product.</td></tr>
+<tr><td>Licence</td><td>Full banking licence — which is precisely what makes the product shape inevitable.</td></tr>
+</table>
+<p>Three amputations happened in translation. <b>The rotation went</b>, deleting the credit half and with it the reason the early half of every real committee joins. <b>The peers went</b>, and with them the commitment device — hence a "holiday" feature no genuine committee could offer and remain itself. <b>And interest came in</b>, in exactly the form committee culture defines itself against.</p>
+<div class="box">
+<p class="t">The arithmetic the brochure does not print (modelled from the product literature)</p>
+<p class="math">24-month plan at Rs 100,000/month → pay in Rs 2,400,000, receive Rs 2,500,000</p>
+<p class="math">Rs 100,000 bonus on an average balance of ≈ Rs 1,250,000 over two years ≈ <span class="num">2% per annum</span></p>
+<p style="margin-bottom:0">The saver surrenders everything a committee provides — the early lump sum, the group, the discipline, the absence of interest — in exchange for materially less than an ordinary savings account was paying over the same period.</p>
+</div>
+<p><span class="kill">KILLER 4 + 5</span> &nbsp;<b>Verdict:</b> survives as a listing; never dented the informal market and structurally never could. <b>This is the most useful exhibit in the archive</b>, because it demonstrates rather than argues that a balance-sheet institution cannot digitise the committee — its value lives in exactly the things a balance sheet must remove. The same fact closes the category to JazzCash and Easypaisa.</p>
+</div>
+
+<div class="case">
+<h3>2 · Oraan — the well-executed custody committee, and where it had to go</h3>
+<p>Founded 2018 by Halima Iqbal, a former investment banker, with a focus on women's financial inclusion; raised $3 million in seed funding in 2021. Oraan's own research put ROSCA participation at roughly 41% of Pakistanis and about $5 billion rotating annually.</p>
+<table class="arch">
+<tr><td>Custody</td><td><b>Yes.</b> Oraan collects contributions and disburses pots — the classic operator-in-the-middle model.</td></tr>
+<tr><td>Members</td><td>Largely strangers, pooled and vetted by the platform, women-weighted.</td></tr>
+<tr><td>Order</td><td>Platform-allocated after screening; earlier slots to better-assessed members.</td></tr>
+<tr><td>Default</td><td>Absorbed by the platform, which underwrites the circles it assembles.</td></tr>
+<tr><td>Revenue</td><td><b>Member fees</b> on committee participation.</td></tr>
+<tr><td>Licence</td><td>Regulated financial-services footing, with the capital and compliance load that implies.</td></tr>
+</table>
+<p>Oraan is not a failure and this archive should not pretend otherwise. Through 2025–26 it launched fractional gold savings that reportedly grew around seventy-five times in seven months, signed a deal licensing its platform to a regional bank, and raised fresh funding from Epic Angels alongside Wavemaker and i2i Ventures in July 2026.</p>
+<p><b>But read where the growth came from.</b> The engine is gold savings and B2B licensing — not the custody committee the company was founded on. After roughly eight years, the fee-charging, default-absorbing, stranger-pooling committee product had not cracked the mass market, and the company's own capital allocation now says so.</p>
+<p><span class="kill">KILLER 1 + 3 + 7</span> &nbsp;<b>Verdict:</b> the strongest domestic evidence that <b>custody committees do not scale in Pakistan even when executed well.</b> Its pivot concedes the thesis, and its new direction independently validates two items already on Halqa's approved roadmap — gold-linked saving, and white-labelling to institutions.</p>
+</div>
+
+<div class="case">
+<h3>3 · Udhaar Book — the committee register inside a merchant ledger app</h3>
+<p>A digital khata (credit ledger) app for Pakistani retailers, with committee management built in under its monthly-payments menu. The organizer records who has paid, sends payment requests to all members with a single tap instead of knocking on doors, and can export PDF reports as proof.</p>
+<table class="arch">
+<tr><td>Custody</td><td>None — and this is not a design philosophy but an absence. Money moves entirely outside the app.</td></tr>
+<tr><td>Members</td><td>The organizer's existing offline circle.</td></tr>
+<tr><td>Order</td><td>Whatever the organizer already decided offline.</td></tr>
+<tr><td>Default</td><td>The group, exactly as before. The app changes nothing.</td></tr>
+<tr><td>Revenue</td><td>Free; the committee tool is a retention feature for the core khata product.</td></tr>
+<tr><td>Licence</td><td>None required — it is a notebook.</td></tr>
+</table>
+<p><b>The decisive limitation is one word: the payments are asserted, not settled.</b> The organizer types that Bilal paid; nothing verifies that Bilal paid. This is precisely the model that the ITU Lahore / University of Washington researchers examined in 2018 and warned about — payment legitimacy "can be questioned and subject to fraud, limiting usefulness for credit rating."</p>
+<p><span class="kill">KILLER 6</span> &nbsp;<b>Verdict:</b> alive, useful, and permanently incapable of producing a credit history. Simultaneously validation that committee record-keeping is wanted, a warning that a register without settlement is only a nicer notebook, and — should one ever bolt on real settlement — the most plausible fast follower, since these apps already hold millions of merchant relationships.</p>
+</div>
+
+<div class="case">
+<h3>4 · DigiKhata — the same category, the same ceiling</h3>
+<p>A competing Pakistani digital khata product with comparable committee and monthly-collection features. Architecturally indistinguishable from case 3 on all six questions: no custody because no money moves, the organizer's own circle, offline ordering, group-borne default, free to use, no licence.</p>
+<p><span class="kill">KILLER 6</span> &nbsp;<b>Verdict:</b> included because the pattern matters more than either company. Two independent Pakistani apps with real distribution both stopped at exactly the same wall — <b>the wall is not ambition or engineering, it is that recording an assertion and recording a settlement are different products.</b> Halqa's ledger records settlements. That single word is the moat.</p>
+</div>
+
+<div class="case">
+<h3>5 · The Sidra Humaid committees — informal digitisation, and the fraud template</h3>
+<p>A Karachi home-business owner ran monthly ballot committees through Facebook groups for roughly seven to ten years. In December 2022 she announced she could not pay. Reported figures: around <b>Rs 420 million</b> owed across <b>117 committees</b> and roughly 200 contributors, kept without written records. She subsequently went into hiding.</p>
+<table class="arch">
+<tr><td>Custody</td><td><b>Total and concentrated.</b> Members wired money to one individual.</td></tr>
+<tr><td>Members</td><td>Strangers from social media, connected to her and not to each other.</td></tr>
+<tr><td>Order</td><td>Ballot, drawn and announced by the organizer with no verifiability.</td></tr>
+<tr><td>Default</td><td>The members, absolutely, with no recourse.</td></tr>
+<tr><td>Revenue</td><td>Organizer's margin, opaque; latterly new money paying old obligations.</td></tr>
+<tr><td>Licence</td><td>None. Entirely outside any regulatory perimeter.</td></tr>
+</table>
+<p>This is digitisation of a kind — the reach of the internet applied to the committee, with none of its controls. It generalises into a template with two necessary preconditions: <b>custody concentrated in one party, and trust extended beyond the radius where members can verify each other.</b> The traditional committee caps the second through locality — Kamran's informant: "if he is local, then we know he lives here. His house and shop are here" — and caps the first through rotation.</p>
+<p><span class="kill">KILLER 1 + 3</span> &nbsp;<b>Verdict:</b> the clearest statement of what digitisation must not do. Removing locality without replacing verification, or recreating central custody at internet scale, industrialises the fraud rather than the committee. In Halqa, identity, position gates and the ledger replace locality; no-custody removes the pool; and the 12% of Pakistani committee users who report losing money to fraud are the acquisition wedge.</p>
+</div>
+
+<div class="case">
+<h3>6 · The Punjab cooperative societies — the institutional precursor, and the memory</h3>
+<p>In 1991–92 four Punjab-based financial cooperatives failed together amid allegations of misappropriation. Reported losses ran <b>Rs 10–23 billion across as many as 2.6 million accounts</b>, a very large share of them small savers.</p>
+<table class="arch">
+<tr><td>Custody</td><td>Institutional pooling of community savings at national scale.</td></tr>
+<tr><td>Members</td><td>The general public, through cooperative membership.</td></tr>
+<tr><td>Order</td><td>Not rotational — deposits and lending, not a committee.</td></tr>
+<tr><td>Default</td><td>The depositors, when the institutions collapsed.</td></tr>
+<tr><td>Revenue</td><td>Lending spread.</td></tr>
+<tr><td>Licence</td><td>Cooperative registration, with supervision that proved inadequate.</td></tr>
+</table>
+<p><span class="kill">KILLER 1</span> &nbsp;<b>Verdict:</b> included because it is the background radiation of this entire market. The cooperatives were the last formal attempt to institutionalise community savings in Pakistan, and their collapse taught two generations that <b>handing the pool to an institution is how you lose it.</b> This is why "your money never touches us" is not a compliance line here — it is the most persuasive sentence a Pakistani savings product can say, and only a no-custody operator can say it truthfully.</p>
+</div>
+</section>
+
+<!-- =============== MENA =============== -->
+<section class="brk">
+<h1>Part II · Middle East and North Africa — the two biggest successes</h1>
+
+<div class="case">
+<h3>7 · Money Fellows (Egypt) — custody done properly, at the price custody costs</h3>
+<p>The category's giant. Reported: <b>8 million app downloads, over a million customers served, roughly 350,000 monthly actives, $1.5 billion in transactions processed across more than 2 million completed circles, and profitability reached in 2025.</b> Around $60 million raised in total, including a $13 million pre-Series C in May 2025 co-led by Al Mada Ventures, with Morocco entry planned for Q1 2026 alongside Attijariwafa Bank.</p>
+<table class="arch">
+<tr><td>Custody</td><td><b>Yes</b> — the platform sits between payer and recipient, acting as digital trustee and matchmaker.</td></tr>
+<tr><td>Members</td><td>Strangers, matched by the platform and vetted with credit scoring and behavioural analytics.</td></tr>
+<tr><td>Order</td><td><b>Slot position is priced.</b> The service fee scales with how early you collect — the fee <i>is</i> the price of liquidity.</td></tr>
+<tr><td>Default</td><td><b>The platform.</b> It fills unsold slots and covers defaults from its own capital, with a reported <b>under 8% of active slots</b> requiring that injection.</td></tr>
+<tr><td>Revenue</td><td>Member service fees by slot, plus a prepaid card partnership with Banque Misr.</td></tr>
+<tr><td>Licence</td><td>Entered the <b>Central Bank of Egypt regulatory sandbox</b>, moving from an informal grey market to formal recognition — which is what unlocked the bank partnerships.</td></tr>
+</table>
+<p><b>What it proves for us:</b> digitised committees scale to millions and to profit; pricing the slot position works and is the same economic logic as Halqa's band-gated seats and turn marketplace; credit-scoring the order works; and a sandbox is the door out of the grey market.</p>
+<p><b>What it carries that we refuse:</b> being the circle's counterparty is a permanent balance-sheet exposure that took years of licensing and capital to make safe. It monetises members. And it pools strangers, which is <i>why</i> it must underwrite them — the three choices are one choice, made three times. Egypt's urban, app-tolerant committee culture absorbs this; Pakistan's would meet the cooperative memory, the riba lens on fees, and SBP.</p>
+<p><span class="kill ok">ENABLER — instrument kept intact, position priced, regulator engaged early</span></p>
+</div>
+
+<div class="case">
+<h3>8 · Hakbah (Saudi Arabia) — the regulator as first partner</h3>
+<p>Reported: more than <b>1.3 million registered users</b>, roughly 70% of them young savers; about $9 million raised; operating under a <b>Saudi Central Bank (SAMA) sandbox permit</b>; partnerships with Visa for prepaid cards and Tarabut for open banking.</p>
+<table class="arch">
+<tr><td>Custody</td><td>Platform-operated jam'iyya savings groups under regulatory permission.</td></tr>
+<tr><td>Members</td><td>Mixed — existing social groups and platform-formed groups.</td></tr>
+<tr><td>Order</td><td>Platform-managed allocation across the group's cycle.</td></tr>
+<tr><td>Default</td><td>Platform-managed, supported by open-banking data for assessment.</td></tr>
+<tr><td>Revenue</td><td>Light service fees, positioned as savings-habit infrastructure rather than a credit product.</td></tr>
+<tr><td>Licence</td><td><b>SAMA regulatory sandbox</b> — obtained before scale, not after.</td></tr>
+</table>
+<p>Hakbah's insight was institutional rather than mechanical. It treated the jam'iyya as a cultural institution to be respected rather than a market to be disrupted, and it made the central bank its first partner instead of its eventual problem.</p>
+<p><span class="kill ok">ENABLER — sandbox before scale</span> &nbsp;<b>Verdict:</b> the closest existing analogue to the posture Halqa intends with SECP, and evidence that a Gulf-Islamic market rewards the committee treated with deference.</p>
+</div>
+</section>
+
+<!-- =============== INDIA =============== -->
+<section class="brk">
+<h1>Part III · India — where the state built the cage</h1>
+
+<p class="lede">India is the controlled experiment. The auction committee — the chit fund — has been governed by statute for four decades, so India shows what full regulation does to this instrument: it protects members and freezes innovation, in the same motion.</p>
+
+<div class="case">
+<h3>9 · Shriram Chits — the largest chit operator in India</h3>
+<p>Reported: annual auction turnover approaching <b>Rs 3,000 crore</b>, more than <b>2.2 million subscribers</b>, 465 branches, roughly 6,000 employees and <b>65,000 agents</b>, operating across Andhra Pradesh, Karnataka, Maharashtra, Puducherry and Tamil Nadu.</p>
+<table class="arch">
+<tr><td>Custody</td><td><b>Yes</b>, as statutory foreman, with a 100% security deposit lodged with the Registrar before a scheme may run.</td></tr>
+<tr><td>Members</td><td>Strangers, recruited by a vast commissioned agent force.</td></tr>
+<tr><td>Order</td><td><b>Auction.</b> Each round the subscriber accepting the largest discount takes the pot; the discount is distributed to the others as dividend.</td></tr>
+<tr><td>Default</td><td>The foreman, backed by the security deposit and by legal recovery against subscribers.</td></tr>
+<tr><td>Revenue</td><td>Foreman's commission, capped by statute at 5% (raised to 7% by the 2019 amendment).</td></tr>
+<tr><td>Licence</td><td>Per-scheme sanction from the state Registrar of Chits under the Chit Funds Act 1982.</td></tr>
+</table>
+<p><span class="kill ok">ENABLER — agent-led distribution at scale</span> &nbsp;<b>Verdict:</b> the single best proof anywhere that <b>committee distribution is an agent business, not a marketing business.</b> Sixty-five thousand agents, not an advertising budget, built 2.2 million subscribers. This is Mapan's lesson (case 15) and Halqa's organizer strategy, confirmed at national scale by a company that has done it for decades.</p>
+</div>
+
+<div class="case">
+<h3>10 · Margadarsi Chits — sixty years of the same machine</h3>
+<p>Reported: turnover of about <b>Rs 14,341 crore</b>, having served over <b>6 million subscribers across sixty-plus years</b>, with 40 branches in Andhra Pradesh, 44 in Telangana, 29 in Karnataka and 18 in Tamil Nadu.</p>
+<p>Architecturally identical to case 9 — registered foreman, statutory deposit, auction ordering, commission capped, branch-and-agent distribution.</p>
+<p><span class="kill ok">ENABLER — longevity through regulated custody</span> &nbsp;<b>Verdict:</b> the two Indian giants together establish something important and uncomfortable: <b>custody committees can absolutely endure at enormous scale — provided the operator pays the full statutory toll</b>, which means per-scheme sanction, a 100% security deposit, capped commission and a branch network. That is a viable business. It is not a startup, it is not capital-light, and it is not available in Pakistan, where no such framework exists to buy legitimacy from.</p>
+</div>
+
+<div class="case">
+<h3>11 · KSFE (Kerala) — the state as foreman</h3>
+<p>Kerala State Financial Enterprises, established 1969 and owned by the Kerala government, operates chitties under the Chit Funds Act 1982 through <b>more than 680 branches</b>. Its Pravasi Chitty targets non-resident Keralites, with chit values from ₹1 lakh to ₹50 lakh over 25 to 60 months. A 40-month chitty has 40 subscribers including KSFE itself as foreman.</p>
+<table class="arch">
+<tr><td>Custody</td><td>A state-owned NBFC as foreman — sovereign-adjacent trust substituting for private reputation.</td></tr>
+<tr><td>Members</td><td>The general public, including a dedicated diaspora product.</td></tr>
+<tr><td>Order</td><td>Auction, under statute.</td></tr>
+<tr><td>Default</td><td>The foreman, i.e. ultimately the state.</td></tr>
+<tr><td>Revenue</td><td>Statutory commission.</td></tr>
+<tr><td>Licence</td><td>Chit Funds Act 1982, as a government undertaking.</td></tr>
+</table>
+<div class="box">
+<p class="t">The detail worth stealing</p>
+<p style="margin-bottom:0">On the death of a subscriber, <b>future liability for the remaining installments on a prized chitty is waived, up to a stated limit (typically ₹10 lakh).</b> That is precisely the death convention this project identified from field practice — the deceased who had already collected is not pursued — implemented formally by a state operator, and priced as insurance rather than left to discretion. It confirms both the convention and the mechanism: this is a takaful event, and it belongs in the circle-level cover at Halqa's second stage rather than in an organizer's goodwill.</p>
+</div>
+<p><span class="kill ok">ENABLER — sovereign trust + formal death cover</span> &nbsp;<b>Verdict:</b> proof that the diaspora committee is a real product (relevant to Halqa's approved remittance-committee direction), and the best existing template for handling death with dignity and arithmetic instead of improvisation.</p>
+</div>
+
+<div class="case">
+<h3>12 · The Money Club — graduated trust as underwriting</h3>
+<p>Founded 2016 by two IIT Kharagpur alumni, Manuraj Jain and Surajit Ray; raised a $1.7 million pre-Series A from SOSV, Venture Catalysts and others. Reported at last disclosure: over 200,000 users, around 17,000 clubs formed, and roughly Rs 40 crore pooled, with AI-based underwriting of high-frequency micro-pooling.</p>
+<table class="arch">
+<tr><td>Custody</td><td>Platform-intermediated, with same-day payouts to winning bidders.</td></tr>
+<tr><td>Members</td><td><b>Both</b> — the user's own trusted circle (friends, colleagues, relatives) and platform-formed verified clubs.</td></tr>
+<tr><td>Order</td><td>Bidding within the club, at high frequency and small amounts.</td></tr>
+<tr><td>Default</td><td>Platform-managed, mitigated by graduated exposure.</td></tr>
+<tr><td>Revenue</td><td>Platform fee on pooling.</td></tr>
+<tr><td>Licence</td><td>Operates with users pooling into government-registered funds.</td></tr>
+</table>
+<p><b>The durable idea is graduated exposure:</b> members start in tiny clubs with small amounts, and only sustained clean behaviour unlocks larger clubs and larger sums. Underwriting by demonstrated history rather than by documents — which is exactly the right instrument in a market where documents are scarce and history is abundant.</p>
+<p><span class="kill ok">ENABLER — history-based underwriting</span> &nbsp;<b>Verdict:</b> independent convergence on Halqa's tenure quarantine and band ladder, in a second market. Their refinement, which we adopt: <b>the permitted amounts should scale with history, not only the permitted seats.</b></p>
+</div>
+
+<div class="case">
+<h3>13 · MyPaisaa — what full regulation costs a startup</h3>
+<p>India's first fully digital chit fund registered with the Registrar of Chits, based in Telangana. Reported: total funding of about <b>$980,000</b> across five rounds, and roughly <b>20,000 app installs</b> in its first two years, with two-minute onboarding and 24-hour payout of net chit value.</p>
+<p>Architecture is the statutory chit model of cases 9–11, delivered through an app: registered foreman, auction ordering, capped commission, Registrar sanction per scheme.</p>
+<p><span class="kill">KILLER 8 (inverted)</span> &nbsp;<b>Verdict:</b> the most instructive number in Part III. In a chit sector estimated above <b>$50 billion</b>, the first fully digital registered operator has raised under a million dollars and counts installs in the tens of thousands. <b>When every scheme requires a sanction and a 100% security deposit, digital scale moves at the Registrar's pace.</b> Regulation of this shape protects members and freezes innovation simultaneously — which is the strongest possible argument for engaging Pakistan's regulator <i>before</i> the framework is drafted rather than after.</p>
+</div>
+
+<div class="case">
+<h3>14 · Saradha — the collapse that wrote the law</h3>
+<p>A West Bengal deposit scheme that collapsed in 2013 with reported losses around <b>₹2,500 crore</b> affecting roughly <b>1.7 million depositors</b>. Not a chit fund in substance — a Ponzi scheme using the chit vocabulary and the public's familiarity with it.</p>
+<p>Its consequence is the point: Saradha produced the <b>Banning of Unregulated Deposit Schemes Act 2019</b>, criminalising deposit-taking outside licensed forms across India.</p>
+<p><span class="kill">KILLER 1 → 8</span> &nbsp;<b>Verdict:</b> establishes the sequence that Pakistan has not yet run. <b>India regulated after Saradha. SECP built the digital-lending whitelist after the nano-lending deaths. Pakistan will regulate digital committees after its first large platform fraud</b> — and the rules will be drafted around whichever operator is most visible at that moment. That is the entire case for the first-clean-actor strategy, and this case is the evidence for it.</p>
+</div>
+</section>
+
+<!-- =============== SEA =============== -->
+<section class="brk">
+<h1>Part IV · Southeast Asia</h1>
+
+<div class="case">
+<h3>15 · Mapan (Indonesia) — the organizer as the growth engine</h3>
+<p>Founded 2009 as RUMA, later Mapan ("steady"). It digitised the Indonesian arisan and was acquired by GO-JEK in 2017 as the ride-hailing group's route into rural areas, later scaling past a million users with a $15 million round.</p>
+<table class="arch">
+<tr><td>Custody</td><td>Platform-intermediated, but the pot is frequently <b>delivered as goods rather than cash</b>.</td></tr>
+<tr><td>Members</td><td><b>Recruited by village leader-agents</b> — largely women — who form and run circles in their own communities.</td></tr>
+<tr><td>Order</td><td>Group-determined within the agent-run circle, following arisan custom.</td></tr>
+<tr><td>Default</td><td>Group and agent, with the agent's local standing as the enforcement mechanism.</td></tr>
+<tr><td>Revenue</td><td><b>Margin on the goods</b>, shared with agents as commission — reported around 10% on electronics and 5% on other categories.</td></tr>
+<tr><td>Licence</td><td>Commerce-led rather than credit-led, which kept the regulatory surface small.</td></tr>
+</table>
+<p>Two findings, both directly applicable. First, <b>the unit of growth is the organizer, compensated for organising</b> — tens of thousands of leader-agents grew the network village by village, which is the atomic-network strategy proved in the field. Second, <b>a goods pot suppresses default</b>: a member repaying "the refrigerator in the house" behaves better than one repaying an abstraction, and a delivered good cannot be re-lent, re-hidden, or claimed by relatives.</p>
+<p><span class="kill ok">ENABLER — paid organizers + goods pots</span> &nbsp;<b>Verdict:</b> the template for Halqa's organizer incentives and for the gold-goal committee. What Mapan needed that Halqa does not: inventory, logistics, and the goods margin itself.</p>
+</div>
+</section>
+
+<!-- =============== AFRICA =============== -->
+<section class="brk">
+<h1>Part V · Africa — a large market, no killer app</h1>
+
+<div class="case">
+<h3>16 · StokFella (South Africa) — a decade, and a ceiling</h3>
+<p>Launched 2016 into a stokvel market of roughly <b>800,000 groups and 11 million members holding around R50 billion</b>. Reported: about <b>42,000 members</b> on the platform as of 2025, with one community group having raised over R15 million through the app.</p>
+<table class="arch">
+<tr><td>Custody</td><td>Group-account management with platform-held or platform-adjacent funds.</td></tr>
+<tr><td>Members</td><td>Existing stokvel groups.</td></tr>
+<tr><td>Order</td><td>Group-determined; many stokvels are accumulating rather than strictly rotating.</td></tr>
+<tr><td>Default</td><td>The group.</td></tr>
+<tr><td>Revenue</td><td>Platform fees on group administration.</td></tr>
+<tr><td>Licence</td><td>Financial-services registration within South Africa's framework.</td></tr>
+</table>
+<p><span class="kill">Ceiling, not a killer</span> &nbsp;<b>Verdict:</b> not a failure — a positioning lesson. Forty-two thousand members in a market of eleven million is what happens when a product occupies the narrow space between the banks' group accounts (case 17) and a free notebook. <b>Be the rail and the record, or be squeezed between them.</b></p>
+</div>
+
+<div class="case">
+<h3>17 · FNB Stokvel accounts (South Africa) — the bank product that works, and why</h3>
+<p>First National Bank has taken stokvel banking fully digital, targeting the R50 billion group-savings market with dedicated group accounts — multiple signatories, group visibility, interest paid on balances.</p>
+<table class="arch">
+<tr><td>Custody</td><td>The bank.</td></tr>
+<tr><td>Members</td><td>The group's own existing membership.</td></tr>
+<tr><td>Order</td><td><b>None — and this is the crucial difference.</b> The account holds the group's pooled savings; it does not rotate a pot.</td></tr>
+<tr><td>Default</td><td>Not applicable — no credit is extended.</td></tr>
+<tr><td>Revenue</td><td>Deposit spread and fees.</td></tr>
+<tr><td>Licence</td><td>Banking licence.</td></tr>
+</table>
+<p><b>Set this beside UBL (case 1) and the pattern completes itself.</b> Both are banks serving group savings. FNB succeeds because South African stokvels are frequently <i>accumulating</i> clubs — everyone saves, everyone gets paid out at year end — so a bank account genuinely serves the instrument. UBL failed because the Pakistani committee is <i>rotating</i>, and a bank cannot provide the early pot without becoming a lender to eleven people it never underwrote.</p>
+<p><span class="kill ok">ENABLER — the instrument happened to fit a bank account</span> &nbsp;<b>Verdict:</b> the most precise statement in this archive of where the boundary runs. <b>Banks can hold group savings. Banks cannot rotate group credit.</b> Halqa's entire opportunity lives in that second sentence.</p>
+</div>
+
+<div class="case">
+<h3>18 · Chamasoft (Kenya) — the pivot to bookkeeping</h3>
+<p>Kenya's chamas — investment and savings groups — are numerous and substantial, and contributions already move perfectly well over M-Pesa. Chamasoft serves them as a management tool: invoicing, member statements, cashbooks, and an e-wallet linked to M-Pesa and bank accounts.</p>
+<p><b>The instructive fact is what did not happen.</b> No consumer chama app has won Kenya. Where an excellent payment rail already exists, the platform layer that survives is <b>the record</b>, sold to groups as administration.</p>
+<p><span class="kill ok">ENABLER — record layer where the rail already exists</span> &nbsp;<b>Verdict:</b> a preview of Pakistan after Raast matures. When the rail is free and universal, the defensible business is not moving money — it is recording it, and turning the record into something a member can use elsewhere.</p>
+</div>
+
+<div class="case">
+<h3>19 · The Nigerian cohort — Thrifto, Adashi, CircleFunds, Ajo App</h3>
+<p>Four current platforms digitising ajo, esusu and adashe for a country where more than 38 million adults remain outside the formal financial sector. Thrifto (founded by Sulaimon Biodun Durojaiye) offers a bank-integrated web app for creating groups, setting contributions, cycles and payouts. Adashi (Ahmed Idris and Umar Zakari) digitises the traditional thrift collector, serving both collectors and savers. CircleFunds automates payment schedules with real-time tracking. Ajo App serves Nigeria and Ghana.</p>
+<table class="arch">
+<tr><td>Custody</td><td>Mixed — most are bank-integrated rather than holding funds directly.</td></tr>
+<tr><td>Members</td><td>Existing groups, and in Adashi's case the <b>collector's</b> existing book — the closest analogue anywhere to Halqa's organizer.</td></tr>
+<tr><td>Order</td><td>Group-set cycles.</td></tr>
+<tr><td>Default</td><td>The group and the collector.</td></tr>
+<tr><td>Revenue</td><td>Platform fees; collector commissions.</td></tr>
+<tr><td>Licence</td><td>Varies; largely operating through banking partners.</td></tr>
+</table>
+<p><span class="kill">Too early to judge</span> &nbsp;<b>Verdict:</b> included because the cohort shows the category is live and contested globally in 2025–26 — this is not an unclaimed idea. Adashi's decision to digitise <b>the collector rather than the saver</b> is the same strategic bet as Halqa's organizer focus, being run simultaneously in another market. Worth monitoring as the closest live comparable to our distribution thesis.</p>
+</div>
+</section>
+
+<!-- =============== USA =============== -->
+<section class="brk">
+<h1>Part VI · United States — six attempts, one survivor, one pivot</h1>
+
+<div class="case">
+<h3>20 · Tanda by Yahoo Finance — four months</h3>
+<p>Launched January 2018 by Yahoo Finance: groups of five or nine people saving together, everyone contributing a fixed monthly amount, one member taking the pot each month. Shut down in May 2018. Reported: around <b>37,000 installs</b> across iOS and Android, never ranking in the top 1,500 of the App Store's Finance category. Performance was noted as encouraging in the Philippines and Mexico, and poor in the United States.</p>
+<table class="arch">
+<tr><td>Custody</td><td>Platform-managed pooling.</td></tr>
+<tr><td>Members</td><td><b>Strangers, or thin social groups assembled in-app.</b></td></tr>
+<tr><td>Order</td><td>Platform-assigned rotation.</td></tr>
+<tr><td>Default</td><td>Unresolved at the scale reached.</td></tr>
+<tr><td>Revenue</td><td>None established.</td></tr>
+<tr><td>Licence</td><td>Not reached.</td></tr>
+</table>
+<p><span class="kill">KILLER 3</span> &nbsp;<b>Verdict:</b> a global brand with unlimited distribution could not make Americans rotate money with people they did not know. <b>The trust graph is a precondition, not an output</b> — and the detail that it worked better in the Philippines and Mexico proves the constraint is cultural rather than technical. Halqa inherits its trust graph from circles that already exist; that is the difference, and it is the whole difference.</p>
+</div>
+
+<div class="case">
+<h3>21 · eMoneyPool — nine years, and the cost of standing behind everyone</h3>
+<p>Founded in Phoenix, Arizona in 2010 by brothers Francisco and Luis Cervera to digitise tandas and cundinas for Latino communities. It reported members' payment histories to credit bureaus, creating a path from informal saving to mainstream financial products. Ceased operations around November 2019.</p>
+<table class="arch">
+<tr><td>Custody</td><td>Platform-managed pools.</td></tr>
+<tr><td>Members</td><td>Community groups plus platform-matched savers.</td></tr>
+<tr><td>Order</td><td>Platform-managed rotation.</td></tr>
+<tr><td>Default</td><td><b>Substantially the platform</b>, which stood behind the pools it operated.</td></tr>
+<tr><td>Revenue</td><td>Member fees.</td></tr>
+<tr><td>Licence</td><td>State money-transmitter obligations — a heavy and fragmented burden in the US.</td></tr>
+</table>
+<p><span class="kill">KILLER 2</span> &nbsp;<b>Verdict:</b> the most sympathetic failure in the archive, because <b>its core idea was right and is now Halqa's rung three</b> — turn informal repayment into formal credit history. What killed it was standing behind the pools with its own balance sheet while charging members too little to fund the guarantee. Nine years is a long time to be right about the destination and wrong about the vehicle.</p>
+</div>
+
+<div class="case">
+<h3>22 · Esusu — the pivot that became a unicorn</h3>
+<p>Incorporated 31 May 2018 by Abbey Wemimo and Samir Goel, named for the West African rotating savings practice, and launched as a communal savings app. Finding the US ROSCA market too thin, the founders pivoted to integrating with property-management software and reporting <b>on-time rent payments</b> to Equifax, Experian and TransUnion. In January 2022 the company raised a <b>$130 million Series B led by SoftBank Vision Fund 2 at a $1 billion valuation.</b></p>
+<div class="box">
+<p class="t">The single most important case in this archive</p>
+<p style="margin-bottom:0">Esusu abandoned moving the money and kept only the recording of it — and that is where all the value turned out to be. <b>They did not build a savings product. They built a machine that converts an obligation people already honour into a formal credit record</b>, and that machine was worth a billion dollars.</p>
+<p class="math" style="margin-top:2mm;margin-bottom:0">In America the obligation people already honour is rent. <b>In Pakistan it is the committee</b> — an obligation Kamran's informants rank <i>above</i> rent.</p>
+</div>
+<p><span class="kill ok">ENABLER — record the obligation, do not carry it</span> &nbsp;<b>Verdict:</b> Halqa is the Esusu thesis applied to the largest un-recorded obligation stream in Pakistan. The strategic instruction that follows is the one already in the strategy report: the committee is the funnel; <b>the credit record is the company.</b></p>
+</div>
+
+<div class="case">
+<h3>23 · Braid — killed by the bank in the middle</h3>
+<p>A San Francisco group-payments startup founded 2018–19 by Amanda Peyton, backed by Index and Accel, building multi-user accounts where groups could pool money, set permissions and spend from a shared card. Shut down September 2023. Its sponsor bank issue left the company, in the founder's words, "effectively in a coma from July 2022 to January 2023" — a payments company processing zero payment volume — after which macro conditions and the SVB collapse closed the funding path.</p>
+<table class="arch">
+<tr><td>Custody</td><td><b>By proxy</b> — funds sat with a sponsor bank on which the entire product depended.</td></tr>
+<tr><td>Members</td><td>Any self-formed group; not committee-specific.</td></tr>
+<tr><td>Order</td><td>Not rotational — shared pooling rather than a committee.</td></tr>
+<tr><td>Default</td><td>Not applicable.</td></tr>
+<tr><td>Revenue</td><td>Interchange and fees.</td></tr>
+<tr><td>Licence</td><td>Operated under the sponsor bank's licence — the dependency that proved fatal.</td></tr>
+</table>
+<p><span class="kill">KILLER 1 (by proxy)</span> &nbsp;<b>Verdict:</b> a competent, well-funded team destroyed by an organ it did not control. <b>Any architecture that requires someone else to hold the money inherits that party's ability to switch you off.</b> A record-only design has no such organ — and this is the specific, concrete answer to anyone who calls Halqa's no-custody stance ideological.</p>
+</div>
+
+<div class="case">
+<h3>24 · Puddle — adverse selection, on schedule</h3>
+<p>An early-2010s US platform letting people pool small amounts and draw credit lines against the pool, with strangers able to participate.</p>
+<p>Architecture: platform-managed pool, stranger membership, on-demand rather than rotational draws, losses socialised across the pool, member fees, no licence perimeter established.</p>
+<p><span class="kill">KILLER 3</span> &nbsp;<b>Verdict:</b> the textbook outcome. When the pool is anonymous and the social bond is zero, the members most eager to draw are the least likely to repay, and the good risks leave first. It is the cleanest demonstration that <b>a committee's underwriting is its membership</b> — remove the social selection and no amount of product design replaces it.</p>
+</div>
+
+<div class="case">
+<h3>25 · Mission Asset Fund — the proof that the thesis is measurable</h3>
+<p>A San Francisco non-profit running "Lending Circles" based on the Mexican tanda. Groups of <b>6 to 12 people</b>; each contributes monthly, typically <b>$50–$200</b>; each month one member receives the pot as a <b>zero-interest loan</b> of <b>$300 to $2,400</b>. MAF formalises the arrangement as a loan, services it, and <b>reports every monthly payment to all three major credit bureaus.</b></p>
+<table class="arch">
+<tr><td>Custody</td><td>Non-profit servicer, formalising peer contributions as documented zero-interest loans.</td></tr>
+<tr><td>Members</td><td><b>Existing social circles</b>, recruited through community organisations.</td></tr>
+<tr><td>Order</td><td>Group-agreed rotation.</td></tr>
+<tr><td>Default</td><td>Group and servicer, mitigated by the social bond and by financial education.</td></tr>
+<tr><td>Revenue</td><td><b>Philanthropic funding</b> — members are not the revenue source.</td></tr>
+<tr><td>Licence</td><td>Non-profit lender status with bureau-furnisher obligations.</td></tr>
+</table>
+<div class="box">
+<p class="t">The number to put in front of every investor and every regulator</p>
+<p class="math">Reported average credit score increase for participants: <span class="num">+168 points</span></p>
+<p style="margin-bottom:0">This is the entire Sakh and Credit Passport thesis, already measured, in a different country, by an organisation with no incentive to overstate it. <b>Rotating committee participation, recorded properly and furnished to a bureau, moves a person's formal creditworthiness by a very large margin.</b> Halqa has argued this from first principles; MAF has the number.</p>
+</div>
+<p><span class="kill ok">ENABLER — existing circles + bureau furnishing</span> &nbsp;<b>Verdict:</b> the closest philosophical relative Halqa has anywhere. Its one limitation is the one Halqa is built to solve: MAF depends on philanthropy because it serves small numbers at high touch. <b>The unsolved problem it leaves is how to do this at commercial scale without charging the member</b> — which is precisely the question Halqa's merchant-and-institution revenue model answers.</p>
+</div>
+</section>
+
+<!-- =============== SYNTHESIS =============== -->
+<section class="brk">
+<h1>Part VII · What twenty-five cases say</h1>
+
+<p class="exh"><b>EXHIBIT — The archive as one table.</b> Sorted by custody, which is the field that predicts the outcome.</p>
+<table>
+<tr><th style="width:34mm">Case</th><th style="width:22mm">Custody</th><th style="width:24mm">Members</th><th>Outcome</th></tr>
+<tr><td>UBL Kommittee (PK)</td><td>Bank</td><td>None — no group</td><td>Listing only; instrument amputated</td></tr>
+<tr><td>Oraan (PK)</td><td>Platform</td><td>Strangers</td><td>Alive; grew by leaving the committee</td></tr>
+<tr><td>Sidra Humaid (PK)</td><td>One person</td><td>Strangers online</td><td>Rs 420M fraud, 117 circles</td></tr>
+<tr><td>Punjab co-ops (PK)</td><td>Institution</td><td>Public</td><td>Collapse; Rs 10–23bn, 2.6M accounts</td></tr>
+<tr><td>Money Fellows (EG)</td><td>Platform, licensed</td><td>Strangers</td><td><b>Profitable; $1.5bn processed</b></td></tr>
+<tr><td>Hakbah (SA)</td><td>Platform, sandbox</td><td>Mixed</td><td>1.3M users</td></tr>
+<tr><td>Shriram / Margadarsi (IN)</td><td>Foreman, statutory</td><td>Agent-recruited</td><td><b>Decades; millions of subscribers</b></td></tr>
+<tr><td>KSFE (IN)</td><td>State foreman</td><td>Public + diaspora</td><td>680 branches; formal death cover</td></tr>
+<tr><td>The Money Club (IN)</td><td>Platform</td><td>Own circle + verified</td><td>Alive; graduated exposure works</td></tr>
+<tr><td>MyPaisaa (IN)</td><td>Foreman, statutory</td><td>Public</td><td>Sub-scale under full regulation</td></tr>
+<tr><td>Saradha (IN)</td><td>One operator</td><td>Public</td><td>₹2,500cr collapse → BUDS Act 2019</td></tr>
+<tr><td>Mapan (ID)</td><td>Platform, goods</td><td><b>Agent-recruited</b></td><td><b>Acquired; national scale</b></td></tr>
+<tr><td>StokFella (ZA)</td><td>Platform</td><td>Existing groups</td><td>~42k members — a ceiling</td></tr>
+<tr><td>FNB stokvel (ZA)</td><td>Bank</td><td>Existing groups</td><td><b>Works — but no rotation</b></td></tr>
+<tr><td>Chamasoft (KE)</td><td><b>None</b> — M-Pesa rails</td><td>Existing groups</td><td>Alive as the record layer</td></tr>
+<tr><td>Nigerian cohort</td><td>Bank-integrated</td><td>Groups + collectors</td><td>Too early; contested</td></tr>
+<tr><td>Yahoo Tanda (US)</td><td>Platform</td><td>Strangers</td><td>Dead in 4 months</td></tr>
+<tr><td>eMoneyPool (US)</td><td>Platform + guarantee</td><td>Community + matched</td><td>Dead after 9 years</td></tr>
+<tr><td>Esusu (US)</td><td><b>None after pivot</b></td><td>N/A — rent stream</td><td><b>$1bn valuation</b></td></tr>
+<tr><td>Braid (US)</td><td>Sponsor bank</td><td>Any group</td><td>Dead; bank froze it</td></tr>
+<tr><td>Puddle (US)</td><td>Platform</td><td>Strangers</td><td>Dead; adverse selection</td></tr>
+<tr><td>Mission Asset Fund (US)</td><td>Non-profit servicer</td><td><b>Existing circles</b></td><td><b>+168 credit points</b>; philanthropy-funded</td></tr>
+</table>
+
+<h2>The five conclusions</h2>
+
+<h3>1 · Custody is the variable, and it is binary in effect</h3>
+<p>Every failure in this archive held member money, guaranteed member money, or depended on a third party that did. Every enduring custodian — Shriram, Margadarsi, KSFE, Money Fellows, Hakbah — <b>paid the full regulatory toll first</b>: statutory sanction, security deposits, capped commissions, sandbox supervision, branch networks. There is no middle path in the record. An operator either stays out of the money entirely, or buys legitimacy at a price that is not available in Pakistan, because no such framework exists here to buy it from.</p>
+
+<h3>2 · The trust graph is inherited, never manufactured</h3>
+<p>Tanda and Puddle died of stranger pooling with excellent funding. Money Fellows survives stranger pooling only by underwriting it with its own capital. Mapan, MAF, the Nigerian collectors, Shriram's agents and the Indian chit branches all begin from a group or a person that already existed. <b>The winners did not create trust; they found it and instrumented it.</b></p>
+
+<h3>3 · Distribution is agents, not advertising</h3>
+<p>Shriram's 65,000 agents. Mapan's village leaders. Adashi's thrift collectors. MAF's community organisations. Margadarsi's branch network across four states. Not one case in this archive grew by acquiring individual users through marketing. <b>The committee is sold by a person to their own circle</b> — which makes the offline organizer the correct acquisition target and field sales the correct motion, however unfashionable that reads in a pitch.</p>
+
+<h3>4 · The value is in the record, and it has been measured</h3>
+<p>Esusu abandoned the money and kept the record, and became a unicorn. eMoneyPool had the right idea and died carrying the money. Chamasoft survives as the record where M-Pesa carries the money. MAF's participants gained an average of 168 credit points from a properly furnished record. <b>Four independent cases, one conclusion: recording the obligation is worth more than moving it, and it is measurably worth it.</b></p>
+
+<h3>5 · Regulation arrives after the scandal, and shapes itself around whoever is visible</h3>
+<p>India regulated after Saradha, and the resulting framework is so heavy that its first digital-native operator remains sub-scale in a $50 billion sector. SECP built its lending whitelist after the nano-lending deaths. <b>Pakistan will write rules for digital committees after its first large platform fraud</b>, and those rules will be drafted around the model the regulator understands best at that moment. Money Fellows and Hakbah both bought their legitimacy cheaply by entering a sandbox before scale. That door is currently open in Pakistan and will not stay open.</p>
+
+<div class="box">
+<p class="t">What the archive says about Halqa, in one paragraph</p>
+<p style="margin-bottom:0">Halqa's design occupies the only quadrant with no failures in it: <b>an intact rotating instrument, inherited social circles, zero custody, zero member fees, agent-led distribution, and a settled record furnished to a bureau.</b> Each element is independently validated by a success in this archive — the instrument by Money Fellows, the circles by Mission Asset Fund, the no-custody rail by Chamasoft, the agents by Mapan and Shriram, the record-as-product by Esusu, the early regulator by Hakbah. <b>No company in the archive holds all six at once.</b> That combination is the position, and the twenty-five cases here are the argument that it is the right one.</p>
+</div>
+
+<p class="flag" style="margin-top:6mm">Prepared 9 August 2026. Sources: UBL product literature; Dawn, Geo News, The Friday Times, Vice and ProPakistani on the Humaid case; SBP, Data Darbar and Profit on the EMI sector; TechCrunch, PYMNTS and FinTech Futures on Tanda, Braid and Esusu; Crunchbase and Tracxn on eMoneyPool and MyPaisaa; LaunchBase Africa, Wamda and company disclosures on Money Fellows; MENAbytes and Zawya on Hakbah; TechCrunch and Patamar Capital on Mapan; company and press disclosures on Shriram Chits, Margadarsi and KSFE; Financial Health Network and Mission Asset Fund on Lending Circles; Nigeria Communications Week, ITEdgeNews and TechNext on the Nigerian cohort; Mail &amp; Guardian and Ecofin Agency on stokvels; the Chit Funds Act 1982 and its 2019 amendment. Architectural classifications and verdicts are analytical judgement based on those sources, not statements by the companies concerned.</p>
+</section>
+
+</body>
+</html>

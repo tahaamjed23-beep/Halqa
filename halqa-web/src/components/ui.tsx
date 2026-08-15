@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
-import { Coins, Sparkles } from 'lucide-react';
+import { Coins } from 'lucide-react';
 import { money } from '../api';
 
-// Turn-pricing chip — the single label used on EVERY committee surface
+// Turn-pricing chip, the single label used on EVERY committee surface
 // (Discover, Marketplace, own-circle cards, committee header) so a member
 // always sees whether early seats pay a fee that flows to later seats (the
 // "late premium" spectrum) or the circle is flat. Accepts either the discover
@@ -10,13 +10,13 @@ import { money } from '../api';
 export type TurnPricing={kind:'EARLY_FEE'|'FLAT';earlyFeeBps:number;pooled?:boolean};
 export const pricingOf=(earlyFeeBps?:number):TurnPricing=>earlyFeeBps&&earlyFeeBps>0?{kind:'EARLY_FEE',earlyFeeBps}:{kind:'FLAT',earlyFeeBps:0};
 export function TurnPricingChip({pricing}:{pricing:TurnPricing}){
-  if(pricing.kind!=='EARLY_FEE')return <span className="pricing-chip flat"><Coins size={12}/>Flat — no turn pricing</span>;
+  if(pricing.kind!=='EARLY_FEE')return <span className="pricing-chip flat"><Coins size={12}/>Flat, no turn pricing</span>;
   return <span className="pricing-chip premium"><Coins size={12}/>Turn pricing · {(pricing.earlyFeeBps/100).toFixed(pricing.earlyFeeBps%100?1:0)}% early fee → late bonus</span>;
 }
 
 export const scoreColor=(score:number)=>score>=750?'#22a865':score>=700?'#0a7cff':score>=650?'#e58900':'#e43d36';
 export const modeName={ROTATING:'Rotating payout',HYBRID:'Rotating payout',INVESTMENT:'Investment circle'} as const;
-// Engines AND credit-weighted ordering were both dropped — nobody is reordered
+// Engines AND credit-weighted ordering were both dropped, nobody is reordered
 // by score now; members pick a band-eligible seat (score-bands). So every
 // rotating/hybrid circle simply shows "Rotating payout"; the differentiators
 // members actually care about (turn pricing, goal) render as their own chips.
@@ -28,14 +28,34 @@ export const cadenceName:Record<string,string>={VERY_SHORT:'Very short',SHORT:'S
 export const tierLabel:Record<string,string>={CLASSIC:'Basic',SUKOON:'Earn',BAZAAR:'Earn & Share',PRIORITY:'Early Access',SIGMA:'Maximum'};
 export const tierName=(t?:string)=>tierLabel[t??'CLASSIC']??'Basic';
 
-export function Logo(){return <div className="brand"><div className="brand-mark">ح</div><div><strong>Halqa</strong><small>Committee infrastructure</small></div></div>}
+// The Register, Halqa's mark. Ten tally strokes in a ring: the organizer's
+// notebook bent into the shape of the word halqa (circle). Nine ivory strokes
+// are the members who have paid; the tenth, gold and reaching inward, is whose
+// turn it is now. Survives down to 24px because the eye catches the one stroke
+// that breaks the pattern before it reads any detail.
+export function RegisterMark({size=26}:{size?:number}){return (
+  <svg viewBox="0 0 100 100" width={size} height={size} aria-hidden="true" style={{width:size,height:size,strokeWidth:'unset'}}>
+    <g stroke="currentColor" strokeWidth="7" strokeLinecap="round">
+      <line x1="50" y1="9" x2="50" y2="25"/><line x1="71" y1="13.6" x2="63" y2="27.5"/>
+      <line x1="86.4" y1="29" x2="72.5" y2="37"/><line x1="91" y1="50" x2="75" y2="50"/>
+      <line x1="86.4" y1="71" x2="72.5" y2="63"/><line x1="71" y1="86.4" x2="63" y2="72.5"/>
+      <line x1="50" y1="91" x2="50" y2="75"/><line x1="29" y1="86.4" x2="37" y2="72.5"/>
+      <line x1="13.6" y1="71" x2="27.5" y2="63"/>
+    </g>
+    {/* The one long spoke is the mark's accent. It follows the member's chosen
+        accent colour (--mark-accent), which defaults to the lime family, so the
+        logo sits inside the same palette as everything else instead of
+        carrying the old gold. */}
+    <line x1="9" y1="50" x2="31" y2="50" stroke="var(--mark-accent,#A9E76A)" strokeWidth="9" strokeLinecap="round"/>
+  </svg>)}
+export function Logo(){return <div className="brand"><div className="brand-mark"><RegisterMark size={26}/></div><div><strong>Halqa</strong><small>Committee infrastructure</small></div></div>}
 export function IconButton({label,children,onClick}:{label:string;children:ReactNode;onClick?:()=>void}){return <button aria-label={label} title={label} className="icon-button" onClick={onClick}>{children}</button>}
 export function Metric({label,value,detail,tone='blue'}:{label:string;value:string;detail?:string;tone?:'blue'|'green'|'amber'|'ink'}){return <article className={`metric metric-${tone}`}><span>{label}</span><strong className="money">{value}</strong>{detail&&<small>{detail}</small>}</article>}
 export function Mini({label,value}:{label:string;value:string}){return <div className="mini"><span>{label}</span><strong>{value}</strong></div>}
 export function Field({label,children,hint}:{label:string;children:ReactNode;hint?:string}){return <label className="field-wrap"><span>{label}</span>{children}{hint&&<small>{hint}</small>}</label>}
-export function Empty({text}:{text:string}){return <div className="empty"><Sparkles/><p>{text}</p></div>}
+export function Empty({text}:{text:string}){return <div className="empty"><p>{text}</p></div>}
 export function ScoreRing({score}:{score:number}){return <div className="score-ring" style={{'--score':`${Math.max(0,Math.min(100,(score-300)/5.5))}%`,'--score-color':scoreColor(score)} as React.CSSProperties}><div><strong>{score}</strong><span>{score>=750?'Excellent':score>=700?'Good':score>=650?'Fair':'Build'}</span></div></div>}
-export function HalqaOrb(){return <div className="orb-scene" aria-hidden="true"><div className="orb"><i/><i/><i/><b>ح</b></div></div>}
+export function HalqaOrb(){return <div className="orb-scene" aria-hidden="true"><div className="orb"><i/><i/><i/><b><RegisterMark size={34}/></b></div></div>}
 export function formatDuration(date?:string|null){if(!date)return 'Not scheduled';const ms=new Date(date).getTime()-Date.now();if(ms<=0)return 'Due now';const days=Math.floor(ms/86400000);const hours=Math.floor((ms%86400000)/3600000);if(days>0)return `${days}d ${hours}h`;const minutes=Math.max(1,Math.floor((ms%3600000)/60000));return `${hours}h ${minutes}m`}
 export function profitProjection(principalRupees:number,rate:number,days:number){return principalRupees*rate/100*days/365}
 export const RATE_STALE_AFTER_DAYS=45;

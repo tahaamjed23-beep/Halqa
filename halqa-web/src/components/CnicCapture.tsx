@@ -3,7 +3,7 @@ import { Camera, Check, RotateCcw, X } from 'lucide-react';
 
 // CNIC camera capture (Oraan-style): scan the whole card with the device camera.
 // A full-frame photo is taken against a card-shaped guide; the image stays on
-// the device for now (we record only that a capture happened) — real OCR of the
+// the device for now (we record only that a capture happened), real OCR of the
 // number and NADRA Verisys are licensed-stage upgrades. Manual entry always
 // remains as the fallback, so a camera-less device is never blocked.
 export default function CnicCapture({ onCaptured, onClose }: { onCaptured: (dataUrl: string) => void; onClose: () => void }) {
@@ -20,7 +20,7 @@ export default function CnicCapture({ onCaptured, onClose }: { onCaptured: (data
         if (cancelled) { stream.getTracks().forEach(t => t.stop()); return; }
         streamRef.current = stream;
         if (videoRef.current) { videoRef.current.srcObject = stream; await videoRef.current.play().catch(() => {}); }
-      } catch { setError('Camera unavailable — you can type the number instead.'); }
+      } catch { setError('Camera unavailable, you can type the number instead.'); }
     })();
     return () => { cancelled = true; streamRef.current?.getTracks().forEach(t => t.stop()); };
   }, []);

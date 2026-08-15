@@ -4,7 +4,7 @@ import { api, money } from '../api';
 import type { User } from '../types';
 import { ScoreRing } from '../components/ui';
 
-// The credit profile, as its own page — a proper bureau-style dashboard built
+// The credit profile, as its own page, a proper bureau-style dashboard built
 // from the member's real Halqa record: score gauge and band, month-by-month
 // payment history, score movement, and the factors behind it. Everything here
 // derives from data the member can already see; nothing new is collected.
@@ -13,7 +13,7 @@ type CreditEvent={id:string;reason:string;scoredAt:string;delta:number};
 type PaymentRow={id:string;amountPaisa:string;status:string;paidAt?:string|null;round:{roundNumber:number;committee:{name:string}}};
 
 const BAND=(score:number)=>score>=760?{label:'Excellent',color:'#3f7d4e',note:'Top-tier reliability. Early turns and hosting are open to you.'}
-  :score>=700?{label:'Good',color:'#7a9a3f',note:'Solid standing — hosting unlocked, strong slot ranking.'}
+  :score>=700?{label:'Good',color:'#7a9a3f',note:'Solid standing, hosting unlocked, strong slot ranking.'}
   :score>=640?{label:'Fair',color:'#c28f1f',note:'Building. On-time rounds lift you toward hosting rights at 700.'}
   :{label:'Needs work',color:'#b3563a',note:'Recent misses are weighing. Every on-time round recovers ground.'};
 
@@ -31,7 +31,7 @@ export default function CreditPage({user,back}:{user:User;back:()=>void}){
   const negatives=events.filter(e=>e.delta<0).length;const positives=events.filter(e=>e.delta>0).length;
   return <div className="page narrow enter">
     <button className="back-link" onClick={back}><ChevronLeft/>Back to profile</button>
-    <div className="page-head"><div><span className="eyebrow">Your credit profile</span><h1>Halqa reliability report</h1><p>Built from your real committee record — the same score circles use to rank turn order.</p></div></div>
+    <div className="page-head"><div><span className="eyebrow">Your credit profile</span><h1>Halqa reliability report</h1><p>Built from your real committee record, the same score circles use to rank turn order.</p></div></div>
 
     <section className="panel credit-hero">
       <div className="credit-gauge"><ScoreRing score={user.creditScore}/><div className="credit-band" style={{color:band.color}}><b>{band.label}</b><span>{band.note}</span></div></div>
@@ -43,11 +43,11 @@ export default function CreditPage({user,back}:{user:User;back:()=>void}){
     </section>
 
     <section className="panel"><div className="panel-head"><div><span className="eyebrow">Payment history</span><h2>Your last {recent.length||12} installments</h2><p>Green is on time. This row is what a host sees when they rank turns.</p></div><ShieldCheck/></div>
-      <div className="history-dots">{recent.length?recent.map(p=>{const d=DOT(p.status);return <div key={p.id} className="history-dot" title={`${p.round.committee.name} · round ${p.round.roundNumber} · ${money(p.amountPaisa)} · ${d.t}`} style={{background:d.c}}/>}):<p className="muted">No installments recorded yet — join a circle to start your history.</p>}</div>
+      <div className="history-dots">{recent.length?recent.map(p=>{const d=DOT(p.status);return <div key={p.id} className="history-dot" title={`${p.round.committee.name} · round ${p.round.roundNumber} · ${money(p.amountPaisa)} · ${d.t}`} style={{background:d.c}}/>}):<p className="muted">No installments recorded yet, join a circle to start your history.</p>}</div>
       <div className="dot-legend"><span><i style={{background:'#3f7d4e'}}/>On time</span><span><i style={{background:'#c28f1f'}}/>Late</span><span><i style={{background:'#b3563a'}}/>Missed</span><span><i style={{background:'#d8d2bd'}}/>Pending</span></div>
     </section>
 
-    <section className="panel"><div className="panel-head"><div><span className="eyebrow">Score movement</span><h2>How your score has moved</h2><p>Each bar is a score event — payments, completions, penalties.</p></div><TrendingUp/></div>
+    <section className="panel"><div className="panel-head"><div><span className="eyebrow">Score movement</span><h2>How your score has moved</h2><p>Each bar is a score event, payments, completions, penalties.</p></div><TrendingUp/></div>
       <div className="trend-bars">{trend.map((p,i)=><div key={i} className="trend-bar" title={`${p.score}`}><i style={{height:`${Math.max(8,(p.score-min)/(max-min||1)*100)}%`,background:i===trend.length-1?'#b08d2f':'#e2d7b8'}}/><span>{i===trend.length-1?'Now':''}</span></div>)}</div>
     </section>
 

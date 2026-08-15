@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Halqa — Explained</title>
+<style>
+  @page { size: A4; margin: 19mm 17mm; }
+  *{box-sizing:border-box}
+  body{background:#fff;color:#0E1512;font-family:Georgia,'Times New Roman',serif;font-size:10.4pt;line-height:1.58;margin:0;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  h1{font-size:15.5pt;font-weight:normal;margin:0 0 4mm;padding-bottom:2mm;border-bottom:1.5px solid #123D30;color:#123D30}
+  h2{font-size:11.4pt;margin:7mm 0 2.5mm;padding-bottom:1mm;border-bottom:1px solid #D9A93C}
+  h3{font-size:10.4pt;margin:5mm 0 1.5mm;font-weight:bold}
+  p{margin:0 0 2.6mm}
+  ul,ol{margin:2mm 0 3mm;padding-left:6mm} li{margin:1.3mm 0}
+  code{font-family:Consolas,monospace;font-size:9pt;background:#F4EEE1;padding:0 1mm}
+  table{border-collapse:collapse;width:100%;margin:3mm 0 4mm}
+  th,td{border:1px solid #123D30;padding:1.8mm 2.3mm;font-size:9pt;vertical-align:top;text-align:left}
+  th{background:#123D30;color:#F6F1E4;font-weight:bold}
+  tr{page-break-inside:avoid}
+  .brk{page-break-before:always}
+  .work{border:1px solid #123D30;padding:3.5mm 4.5mm;margin:4mm 0;page-break-inside:avoid;background:#FBF8F0}
+  .work .t{font-weight:bold;color:#123D30;margin-bottom:1.5mm}
+  .math{font-family:Consolas,monospace;font-size:9.3pt;margin:1.5mm 0;padding-left:4mm}
+  .test{border:1.5px solid #123D30;padding:3.5mm 4.5mm;margin:5mm 0;page-break-inside:avoid}
+  .test .t{font-weight:bold;margin-bottom:1.5mm}
+  .ans{font-size:9.2pt;font-style:italic;color:#3A4A40}
+  .quote{border-left:3px solid #D9A93C;padding:1.5mm 0 1.5mm 5mm;margin:3.5mm 0;font-style:italic;color:#2C3A31}
+  .quote .who{display:block;font-style:normal;font-size:9pt;color:#5A6A5E;margin-top:1.5mm}
+  .flag{font-size:9pt;font-style:italic;color:#4C574F}
+  .cover{height:238mm;display:flex;flex-direction:column;justify-content:center;text-align:center;page-break-after:always}
+  .cover .m{font-size:32pt;letter-spacing:.2em;margin:0 0 5mm;color:#123D30}
+  .cover hr{width:52mm;border:none;border-top:1.5px solid #D9A93C;margin:0 auto 8mm}
+  .cover .t{font-size:15pt;margin:0 0 3mm}
+  .cover .d{font-size:10.5pt;font-style:italic;color:#4C574F;margin:0 0 12mm}
+  .cover .n{font-size:9.4pt;line-height:1.9;color:#4C574F}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="m">HALQA</p><hr>
+  <p class="t">Explained</p>
+  <p class="d">Everything that changed, taught from first principles<br>2 August 2026</p>
+  <p class="n">
+    Six chapters on what is new: what the academic research found,<br>
+    why payday collection is the most important thing we built,<br>
+    and the strategy frameworks behind the eight moves.<br><br>
+    Every term is defined the first time it appears.<br>Every number can be recomputed with a pen.
+  </p>
+</div>
+
+<!-- ============ 1 ============ -->
+<section>
+<h1>1 · The uncomfortable thing the research found</h1>
+
+<p>We read five academic studies. Two of them say something that contradicts what we have been telling people, and it is better that you hear it from me than from someone in a meeting.</p>
+
+<h3>The claim we were making</h3>
+<p>"Committees serve 100 million unbanked Pakistanis, and Halqa serves the poor." It sounds right. It is half wrong.</p>
+
+<h3>What the studies actually found</h3>
+<p><b>Khan (2013)</b>, doing fieldwork in Dera Ghazi Khan, found that a committee requires <b>regular income</b> to work. If your earnings are unpredictable, you cannot commit to a fixed monthly instalment — so groups refuse to admit you. She concludes ROSCAs "cannot provide funding for the poor people and thus cannot substitute microfinance."</p>
+<p><b>Kamran (2017)</b>, interviewing 30 unbanked Pakistanis, found the opposite mood entirely: committees give people real control over their money, and <b>none of his thirty informants had ever experienced a member default.</b></p>
+
+<div class="work">
+<p class="t">So which is it? Both — and here is the resolution</p>
+<p>The two studies are describing different people. Split "the poor" into two groups and both findings hold at once:</p>
+<p class="math"><b>The destitute</b> — irregular income → the group refuses them → Khan is right</p>
+<p class="math"><b>The regularly-earning unbanked</b> — a tailor on Rs 17,000/month, a driver on Rs 22,000 → served well → Kamran is right</p>
+<p style="margin-bottom:0">The committee filters on income <b>regularity</b>, not income <b>level</b>. A poor person with a steady wage is welcome. A better-off person with erratic earnings is not.</p>
+</div>
+
+<h3>Why admitting this makes us stronger, not weaker</h3>
+<p>Three reasons. First, our market is still tens of millions of people, so we lose nothing. Second, a regulator or an investor can check this in ten minutes, and being caught overclaiming financial inclusion is far more damaging than narrowing the claim ourselves. Third — and this is the good part — <b>the literature says the deciding variable is income regularity, and our payday engine is a direct attack on exactly that variable.</b> We did not build it from this research. We built it because a chacha said "I pay as soon as my pay arrives." The academics were pointing at the same thing.</p>
+
+<div class="test">
+<p class="t">Check yourself</p>
+<p>Someone says: "Your own sources say committees exclude the poor. So your inclusion story is fake." What is your answer?</p>
+<p class="ans" style="margin-bottom:0">They exclude people with <i>irregular</i> income, not low income. Our market is the regularly-earning unbanked — tens of millions with a steady modest wage and no bank account. And we go further than any competitor by naming that limit ourselves rather than hiding it.</p>
+</div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="brk">
+<h1>2 · The four findings that changed how I think about the product</h1>
+
+<h3>One — the committee protects money from your relatives</h3>
+<div class="quote">If you keep the money yourself, then when someone asks for money, you cannot refuse them… When the money is in someone else's possession, then people cannot ask for the money.<span class="who">Sami, 22, grocery shopkeeper</span></div>
+<p>I expected the committee to be a way of protecting money from <i>yourself</i> — from impulse spending. That is only half of it. In a society where refusing a relative's request for a loan is socially costly, money sitting at home is not really yours; anyone with a hardship can claim it. Putting it into a committee makes it <b>legitimately unavailable</b>, and gives you a socially acceptable way to say no.</p>
+<p><b>What this changes:</b> the fact that committee money is locked, and <i>visibly</i> locked, is a feature people are actively buying. Anything that makes a member's commitment more evident to their family strengthens the exact thing they joined for.</p>
+
+<h3>Two — committee payments outrank rent</h3>
+<div class="quote">I know that I have to pay the Committee instalment; it is necessary. We can compromise on rent or [utility] bills, but Committee [instalments] should not be missed.<span class="who">Bano, 36, housemaid, Rs 15,000/month</span></div>
+<p>Read that twice. A woman earning Rs 15,000 a month puts her committee obligation <b>above her rent and her electricity</b>. The committee cannot evict her. But failing her group is socially worse than being late to a landlord.</p>
+<p><b>What this changes:</b> everything about how we pitch the Sakh. Committee repayment is not a weak signal that banks should treat cautiously — it is the household's <b>highest-priority</b> obligation, and therefore an unusually strong predictor. The Credit Passport is not exporting a soft signal. It is exporting the hardest one a family has.</p>
+
+<h3>Three — the organizer pays out of his own pocket</h3>
+<div class="quote">They are our neighbours. They do not run away… Even if someone does run away, then the person who created the first Committee is responsible. It is his job to decide whether to accept someone into the Committee.<span class="who">Khan, 44, taxi driver</span></div>
+<p>In the traditional system, if a member defaults, <b>the organizer covers it himself.</b> Look at how clean that incentive is: the person who <i>chooses</i> the members bears the loss when they fail. No bank's underwriting department has alignment that tight.</p>
+<p><b>The uncomfortable part:</b> our platform removes the organizer's custody, which is correct — but it removes this guarantee too. On Halqa today, a default is absorbed by the circle. Kamran's informants say that guarantee is their main reason for feeling safe. We need a deliberate answer: reproduce it, or say plainly that seat arithmetic replaces it. This is listed as an open question in the main report, because pretending it isn't there would be dishonest.</p>
+
+<h3>Four — the neighbours watching is a real fear</h3>
+<p>Members fear carrying the pot home, and fear that neighbours <i>know</i> it arrived and will come asking for loans. Digital settlement solves both — no cash journey, no visible event. Nobody on our side would have listed this as a benefit. They raise it unprompted.</p>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="brk">
+<h1>3 · Payday collection — why this is the most important thing we built</h1>
+
+<p>Almost all committee default is what I would call <b>passive</b>: the money arrived, sat in the account, and got spent on something else before the due date. Nobody set out to cheat anyone. The month simply ate the money.</p>
+
+<p>Payday collection deletes that entire category. Instead of asking for the installment on the 10th, we take it on the 1st — the morning the salary lands, while the balance is at its highest point of the month.</p>
+
+<div class="work">
+<p class="t">The timeline, concretely</p>
+<p class="math">31st evening — balance-check notice: "your installment collects tomorrow"</p>
+<p class="math">1st morning — the mandate executes. Salary landed hours ago. Money is there.</p>
+<p class="math">If it fails — retry ladder runs to the due date, with Raast one-tap and WhatsApp alongside</p>
+<p class="math">10th — the due date, now only a deadline for failures rather than the collection event</p>
+<p style="margin-bottom:0">Note what this does to the late-fee ladder: a member whose mandate works <b>never encounters it at all.</b></p>
+</div>
+
+<h3>The clever part — the payday proves itself</h3>
+<p>We cannot see inside anyone's bank account. Pakistan has no open banking, and by your directive we have no bank partner. So how do we know a member's declared payday is true?</p>
+<p><b>We use our own collection attempts as the evidence.</b> Every attempt is logged with its calendar day and whether it succeeded. Take the first success of each month: that is a day money was provably present. Two or three consistent months, and the payday is proven — by observed reality, not by a form.</p>
+
+<div class="work">
+<p class="t">Worked example — a member who declares the wrong day</p>
+<p>Ahmed says he is paid on the 1st. He is actually paid on the 5th.</p>
+<p class="math">Month 1 — pull on the 1st fails. Retries on the 2nd, 3rd, 4th fail. The 5th succeeds.</p>
+<p class="math">Month 2 — same pattern. First success: the 5th.</p>
+<p class="math">The system now knows: declared 1st, observed 5th. Distance = 4 days, beyond the 3-day tolerance.</p>
+<p style="margin-bottom:0">Consequence: verification cleared, salary discount stops, −15 recorded with the reason, and Ahmed is told plainly what happened and how to fix it. <b>And the retry ladder has already found his real payday for us.</b> The system corrects itself whether he cooperates or not.</p>
+</div>
+
+<h3>The honest limit</h3>
+<p>I will not tell you a member "can't do anything about it." Three escapes always survive: keep the account empty, reroute the salary somewhere we can't see, or revoke the mandate at the bank. What matters is that each of those is a <b>deliberate act</b>, timestamped against a signed consent — which turns "I forgot" into documented bad faith. And realistically, most members do not know these options exist. Passive default dies; active evasion becomes rare, visible, and evidenced.</p>
+
+<div class="test">
+<p class="t">Check yourself</p>
+<p>Why does the system not need the member to tell the truth about their payday?</p>
+<p class="ans" style="margin-bottom:0">Because the retry ladder discovers it. The day on which retries start succeeding <i>is</i> the payday, month after month. A false declaration is detected and corrected automatically — and separately penalised.</p>
+</div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="brk">
+<h1>4 · Two strategy ideas worth understanding properly</h1>
+
+<p>The strategy report uses two frameworks that are worth having in your head, because they answer the two hardest questions anyone will ask you.</p>
+
+<h3>Counter-positioning — the answer to "what stops a big company copying you?"</h3>
+<p>Most people answer that question badly: "we'll move faster," "we have better design." Those are not defences. The real defence is <b>counter-positioning</b>: a position the incumbent <i>could</i> copy but would damage themselves by copying.</p>
+
+<div class="work">
+<p class="t">Applied to Halqa, three times over</p>
+<p><b>Oraan and Money Fellows</b> hold customer money. That float, and the licence they bought to hold it, are assets on their books. Copying no-custody means writing both off. They can add features; they cannot subtract their own business model.</p>
+<p><b>A bank</b> cannot offer a zero-fee committee. It would cannibalise the deposits and loans the committee competes with. The committee is structurally anti-bank — interest-free credit and forced savings with no balance sheet.</p>
+<p style="margin-bottom:0"><b>JazzCash and Easypaisa</b> are Electronic Money Institutions. Holding balances <i>is</i> their licence and their business. A no-custody product is a contradiction for them.</p>
+</div>
+<p><b>The line to remember:</b> every serious competitor makes money by <i>holding</i> money. We make money by <i>recording</i> it. That is not a feature difference — it is a different business with a different regulator.</p>
+
+<h3>The atomic network — the answer to "how will you grow?"</h3>
+<p>Most apps that connect people die of the <b>cold-start problem</b>: nobody joins because nobody has joined. A marketplace with no sellers has no buyers, and vice versa.</p>
+<p>Halqa does not have this problem, and the reason is worth stating precisely. A committee is a <b>pre-formed network</b>: ten to fifteen people who already trust each other, already do this monthly, and already have a leader. We are not assembling a network. We are digitising one that arrives complete.</p>
+
+<div class="work">
+<p class="t">What follows from that — and it changes every number we report</p>
+<table>
+<tr><th style="width:40mm">Everyone measures</th><th>We should measure</th></tr>
+<tr><td>Cost per user</td><td><b>Cost per organizer</b> — one organizer delivers 10–15 pre-trusting members at once</td></tr>
+<tr><td>Monthly active users</td><td><b>Circles completed clean</b> — the real unit of value</td></tr>
+<tr><td>User retention</td><td><b>Circles per organizer</b> — his second circle re-acquires his whole group for free</td></tr>
+</table>
+<p style="margin-bottom:0"><b>The unglamorous conclusion:</b> the best growth spend is probably a small field-sales team converting people who already run committees on paper. Every digital-first fintech will ignore this because it doesn't scale elegantly. That is exactly why it is available to us.</p>
+</div>
+
+<div class="test">
+<p class="t">Check yourself</p>
+<p>An investor asks why Easypaisa, with 40 million users, cannot simply build this next quarter. Give the two-part answer.</p>
+<p class="ans" style="margin-bottom:0">One: their licence is the obstacle — as an EMI, holding balances is the business; a no-custody committee contradicts the model, and a custody one imports deposit-taking scrutiny. Two: their users are individuals, not circles — they would have to pool strangers, which is the Money Fellows problem in a market organised around pre-existing groups.</p>
+</div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="brk">
+<h1>5 · The risk I want you to take seriously</h1>
+
+<p>The strategy report contains a pre-mortem — an exercise where you pretend the company has already failed and work backwards to why. One item on that list is genuinely under-managed, and it is not the one you would expect.</p>
+
+<h3>Credibility-by-proxy</h3>
+<p>Halqa's core product is manufactured, verifiable credibility. A member builds a clean record; the Credit Passport proves it to anyone.</p>
+<p><b>That is precisely what a fraudster needs most, and we hand it over for free.</b></p>
+<p>Consider the scenario: someone runs three clean circles on Halqa. Their Sakh reaches 780. They then show the app to twenty people as proof of trustworthiness — and run a large committee <b>off</b> the platform, with cash, and disappear. The headline writes itself: <i>"App used to defraud savers."</i></p>
+<p>Look at the history: every large Pakistani committee fraud ran on borrowed credibility. Sidra Humaid had social standing. The Karachi operators had online reputation. We are building a credibility-issuing machine, and we have not yet built the abuse detection that must accompany one.</p>
+
+<h3>What to do about it, concretely</h3>
+<ul>
+<li><b>Cap concurrent circles per organizer.</b> A person running eleven simultaneous circles is either a professional or a problem.</li>
+<li><b>Flag implausible growth</b> — a circle far larger than the organizer's social plausibility, or member counts rising abnormally fast.</li>
+<li><b>Watch member concentration</b> across circles: the same faces appearing repeatedly under one organizer.</li>
+<li><b>Scope the Passport explicitly.</b> Its wording must make clear it certifies <i>on-platform</i> history only, and endorses no outside arrangement.</li>
+</ul>
+<p class="flag">This is cheap to build and it protects the one asset that cannot be rebuilt. The company is far more sensitive to a single fraud story than to a year of slow growth.</p>
+
+<div class="test">
+<p class="t">Check yourself</p>
+<p>Why is this risk specific to Halqa rather than to any app?</p>
+<p class="ans" style="margin-bottom:0">Because our product literally is credibility. Most apps leak data or money when abused; we would leak <i>trust</i> — the exact input a committee fraud requires. The better our record becomes, the more valuable it is to someone planning a scam.</p>
+</div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section class="brk">
+<h1>6 · Where all of this leaves the company</h1>
+
+<h3>The ladder — and why the order cannot be changed</h3>
+<p>Each rung is only reachable because the one below exists. This is the single most useful thing in the strategy report.</p>
+<table>
+<tr><th style="width:22mm">Rung</th><th>What it unlocks</th></tr>
+<tr><td><b>1 · Collection</b></td><td>Settlement rather than assertion. Without it there is no credible record — and therefore no data asset, no bureau link, and no business. Gate 2 is the gate.</td></tr>
+<tr><td><b>2 · The record</b></td><td>Verified repayment at volume. This is the raw material for everything above it, and it only accumulates through <i>completed</i> circles.</td></tr>
+<tr><td><b>3 · The bureau</b></td><td>TASDEEQ ingests our data; the member gains formal credit; we become the only supplier of a data class that exists nowhere else.</td></tr>
+<tr><td><b>4 · Commerce and the on-ramp</b></td><td>Merchants and institutions pay for access to outcomes. This is where the real revenue is — Goal Direct-Pay commission alone roughly matches the entire member-facing fee stack.</td></tr>
+<tr><td><b>5 · Savings</b></td><td>Vault and Float via CDC trusteeship. Yield for savers, and a pledged buffer that self-cures default.</td></tr>
+</table>
+
+<h3>The five numbers that actually tell us if it is working</h3>
+<ol>
+<li><b>Share of installments digitally settled</b> — the health of rung 1, and the most important number in the company. A ledger of assertions is worth nothing.</li>
+<li><b>Circles completed clean</b> — signups are vanity; a completed circle is the atomic unit of value.</li>
+<li><b>Circles per organizer</b> — whether growth compounds or leaks.</li>
+<li><b>Measured default in the first 100 completed circles</b> — the moment 0.3–1.4% stops being a model and becomes a fact.</li>
+<li><b>Member-to-organizer conversion</b> — the only growth loop that runs by itself.</li>
+</ol>
+
+<h3>What I would do next, in order</h3>
+<ol>
+<li><b>Apply the two migrations and push the four commits.</b> Everything else is blocked behind a working production.</li>
+<li><b>Gate 1 and Gate 2.</b> Collection is rung 1; nothing above it exists until the merchant agreement is signed.</li>
+<li><b>Build abuse detection</b> before opening to the public, not after the first incident.</li>
+<li><b>Approach SECP voluntarily</b> as the first clean actor in digital committees, while the regulator is still deciding what the rules should be.</li>
+<li><b>Start field sales to existing offline organizers</b> — the highest-return growth motion available, and the one competitors will not run.</li>
+</ol>
+
+<p class="flag" style="margin-top:6mm">Prepared 2 August 2026. Companion to the Full Project Report and the Strategy report. Academic quotations from Kamran (2017); market figures from Financial Inclusion Insights, Global Findex and SBP; product mechanics read from the running source code.</p>
+</section>
+
+</body>
+</html>

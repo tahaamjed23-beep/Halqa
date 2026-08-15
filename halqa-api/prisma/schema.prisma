@@ -221,6 +221,35 @@ model User {
   referredBy User? @relation("Referrals", fields:[referredById], references:[id])
   referrals User[] @relation("Referrals")
   paymentStreak Int @default(0)
+  // Longest clean run ever achieved. paymentStreak resets on a miss; this does
+  // not, so the ladder can still show what a member has already proved.
+  longestStreak Int @default(0)
+  // Loyalty points. Strictly separate from creditScore: points buy partner
+  // discounts, score gates positions. Points never buy score and score is never
+  // sold (lib/rewards.ts). Never redeemable for cash — a cash-redeemable
+  // balance is a stored-value instrument and therefore regulated activity.
+  rewardPoints Int @default(0)
+  // Score gained from on-time payments in the current cycle, against the
+  // per-cycle cap that stops the score being farmed with tiny circles.
+  scoreGainedThisCycle Int @default(0)
+  // --- Personalisation. A committee is a personal arrangement between people
+  // who mostly know each other; an app that looks like a bank statement gets
+  // opened once. None of this touches verification: displayName is what other
+  // members see, fullName stays the legal name matched against the CNIC.
+  avatarUrl String?
+  displayName String?
+  accentColor String @default("lime")
+  themePref String @default("system")
+  langPref String @default("en")
+  textScale Int @default(100)
+  highContrast Boolean @default(false)
+  // Per-channel notification preferences {push,whatsapp,email,quietFrom,quietTo}.
+  // A reminder that arrives at two in the morning is not a reminder, it is a
+  // reason to turn notifications off entirely.
+  notifyPrefsJson Json?
+  rewardEvents RewardEvent[]
+  exitRequests ExitRequest[] @relation("ExitRequester")
+  exitVotes ExitVote[]
   averageRating Float @default(0)
   ratingCount Int @default(0)
   createdAt DateTime @default(now())
@@ -327,6 +356,17 @@ model Committee {
   recoveryCases RecoveryCase[]
   waitlist CommitteeWaitlist[]
   agreementSignatures AgreementSignature[]
+  exitRequests ExitRequest[]
+  // Gold-goal circles: the host sets the target in grams rather than rupees.
+  // Contributions are still rupees; the app sizes them to the gram target at
+  // the live price and settles at SPOT on payout day. Nothing is deferred, so
+  // it stays clear of the bay al-sarf problem that a price lock creates.
+  goldGoalGrams Float?
+  // Latest computed exposure score (lib/exposure-score.ts), cached for display
+  // and for the automatic band actions. Recomputed on every settlement.
+  exposureScore Float @default(0)
+  exposureBand String @default("SELF_FUNDING")
+  exposureAt DateTime?
 }
 
 model CommitteeWaitlist {
@@ -820,4 +860,110 @@ model SecurityEvent {
   @@index([userId])
   @@index([type])
   @@index([createdAt])
+}
+
+// --- Rewards ledger -------------------------------------------------------
+// Every points movement is a row, never an in-place counter update. The
+// balance on User is a cached sum; this table is the evidence behind it, so a
+// member can be shown exactly why they hold what they hold.
+enum RewardKind {
+  PAID_ON_TIME
+  PAID_EARLY
+  CIRCLE_COMPLETED_CLEAN
+  PAID_FOR_ANOTHER
+  MISSED
+}
+
+model RewardEvent {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  committeeId String?
+  roundId String?
+  kind RewardKind
+  points Int @default(0)
+  scoreDelta Int @default(0)
+  streakAfter Int @default(0)
+  multiplier Float @default(1)
+  reason String
+  createdAt DateTime @default(now())
+  @@index([userId, createdAt])
+}
+
+// --- Exit ladder ----------------------------------------------------------
+// There is no cancel button. Five rungs, and the arithmetic that makes a
+// leaver whole without Halqa holding a pool (lib/exit-ladder.ts).
+enum ExitRung {
+  WINDOW
+  SUBSTITUTION
+  GROUP_VOTE
+  HARDSHIP
+  ABANDONMENT
+}
+
+enum ExitStatus {
+  OPEN
+  APPROVED
+  DECLINED
+  ESCALATED
+  WITHDRAWN
+  SETTLED
+}
+
+model ExitRequest {
+  id String @id @default(cuid())
+  committeeId String
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
+  memberId String
+  userId String
+  user User @relation("ExitRequester", fields:[userId], references:[id])
+  rung ExitRung
+  status ExitStatus @default(OPEN)
+  reason String?
+  // Voice note option: only about a third of this population reads a text
+  // message, so a recorded reason must be as valid as a typed one.
+  voiceNoteUrl String?
+  installmentsPaid Int @default(0)
+  // Restitution computed at approval and settled at cycle close. Held here so
+  // the figure a member was promised is the figure they are paid.
+  restitutionDuePaisa BigInt @default(0)
+  finePaisa BigInt @default(0)
+  fineToMembersPaisa BigInt @default(0)
+  fineToPlatformPaisa BigInt @default(0)
+  substituteUserId String?
+  votesFor Int @default(0)
+  votesAgainst Int @default(0)
+  quorumMet Boolean @default(false)
+  closesAt DateTime?
+  decidedAt DateTime?
+  settledAt DateTime?
+  createdAt DateTime @default(now())
+  votes ExitVote[]
+  debts RestitutionDebt[]
+  @@index([committeeId, status])
+}
+
+model ExitVote {
+  id String @id @default(cuid())
+  requestId String
+  request ExitRequest @relation(fields:[requestId], references:[id], onDelete:Cascade)
+  userId String
+  user User @relation(fields:[userId], references:[id])
+  approve Boolean
+  createdAt DateTime @default(now())
+  @@unique([requestId, userId])
+}
+
+// One row per earlier recipient who owes the leaver exactly one contribution,
+// because their pot was one contribution larger than everybody's after them.
+model RestitutionDebt {
+  id String @id @default(cuid())
+  requestId String
+  request ExitRequest @relation(fields:[requestId], references:[id], onDelete:Cascade)
+  debtorUserId String
+  roundNumber Int
+  amountPaisa BigInt
+  settledAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([requestId])
 }

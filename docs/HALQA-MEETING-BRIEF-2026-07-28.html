@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Halqa — Meeting Brief · Akif Saeed, Chairman SECP · 28 July 2026</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 16mm 16mm; }
+
+  :root{
+    --ink:#14201b;
+    --ink-soft:#4a5a53;
+    --gold:#8a6a1f;
+    --gold-line:#d8c48a;
+    --gold-wash:#fdf8ec;
+    --rule:#dfe6e2;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    font-family:Georgia,'Times New Roman',serif;
+    color:var(--ink);
+    font-size:10.4pt;
+    line-height:1.5;
+    margin:0;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+
+  /* ---------- cover ---------- */
+  .cover{height:246mm;display:flex;flex-direction:column;justify-content:center;text-align:center;page-break-after:always}
+  .cover .mark{font-size:44pt;letter-spacing:.22em;color:var(--ink);margin:0 0 2mm 0;font-weight:normal}
+  .cover .rule{width:52mm;height:2px;background:var(--gold);margin:6mm auto}
+  .cover .sub{font-size:13pt;color:var(--ink);margin:0 0 3mm}
+  .cover .who{font-size:11pt;color:var(--ink-soft);font-style:italic;margin:0 0 14mm}
+  .cover .line{font-size:12.5pt;color:var(--gold);font-style:italic;max-width:120mm;margin:0 auto 16mm;line-height:1.6}
+  .cover .meta{font-size:9.5pt;color:var(--ink-soft);letter-spacing:.06em}
+
+  /* ---------- structure ---------- */
+  h1{font-size:15pt;color:var(--ink);margin:0 0 5mm;padding-bottom:2mm;border-bottom:2px solid var(--gold);font-weight:normal;letter-spacing:.01em}
+  h2{font-size:11.6pt;color:var(--ink);margin:8mm 0 2.5mm;font-weight:bold}
+  h2 .n{color:var(--gold);font-weight:normal;margin-right:2mm}
+  h3{font-size:10.4pt;color:var(--gold);margin:5mm 0 1.5mm;font-weight:bold;font-style:normal}
+  p{margin:0 0 2.6mm}
+  .kicker{font-size:8pt;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 2mm;font-family:Arial,Helvetica,sans-serif}
+  .lede{font-size:11pt;line-height:1.6;color:var(--ink)}
+  section{page-break-inside:auto}
+  .brk{page-break-before:always}
+
+  /* ---------- tables ---------- */
+  table{border-collapse:collapse;width:100%;margin:3mm 0 4mm;page-break-inside:auto}
+  th,td{border:1px solid var(--rule);padding:2.1mm 2.6mm;font-size:9.2pt;vertical-align:top;text-align:left}
+  th{background:var(--gold-wash);color:var(--ink);font-weight:bold;border-bottom:1.5px solid var(--gold-line)}
+  tr{page-break-inside:avoid}
+  td.said{width:34%}
+  td.tag{width:16%;white-space:nowrap}
+
+  /* ---------- callouts ---------- */
+  .box{border:1.5px solid var(--gold-line);background:var(--gold-wash);padding:4mm 5mm;margin:4mm 0;page-break-inside:avoid}
+  .box h3{margin-top:0}
+  .plain{border:1px solid var(--rule);background:none;padding:4mm 5mm;margin:4mm 0;page-break-inside:avoid}
+  .ask{border-left:3px solid var(--gold);padding:0 0 0 4mm;margin:3.5mm 0;page-break-inside:avoid}
+  .ask b{color:var(--ink)}
+
+  ul,ol{margin:2mm 0 3mm;padding-left:5.5mm}
+  li{margin:1.4mm 0}
+  ul.tight li{margin:.9mm 0}
+
+  .num{font-size:9pt;color:var(--ink-soft)}
+  .q{font-weight:bold;color:var(--ink)}
+  .a{margin:0 0 3mm}
+  .src{font-size:8.4pt;color:var(--ink-soft);font-style:italic}
+  .foot{margin-top:8mm;padding-top:2.5mm;border-top:1px solid var(--rule);font-size:8.4pt;color:var(--ink-soft);font-style:italic}
+
+  /* stat strip */
+  .stats{display:flex;gap:0;margin:4mm 0;border-top:1.5px solid var(--gold-line);border-bottom:1.5px solid var(--gold-line);page-break-inside:avoid}
+  .stat{flex:1;padding:3mm 3mm;text-align:center;border-right:1px solid var(--rule)}
+  .stat:last-child{border-right:none}
+  .stat .big{font-size:15pt;color:var(--gold);display:block;line-height:1.2}
+  .stat .cap{font-size:8pt;color:var(--ink-soft);letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+  <p class="mark">HALQA</p>
+  <div class="rule"></div>
+  <p class="sub">Meeting Brief</p>
+  <p class="who">Akif Saeed · Chairman, Securities &amp; Exchange Commission of Pakistan<br>Third meeting · 28 July 2026</p>
+  <p class="line">“You gave us a brief. This is what came back — including three places<br>where the research corrected us, and one where it corrected you.”</p>
+  <p class="meta">PREPARED BY TAHA AMJED · CONFIDENTIAL · 12 PAGES</p>
+</div>
+
+<!-- ============ ONE PAGE ============ -->
+<section>
+<h1>If you read one page, read this one</h1>
+
+<p class="lede"><b>Halqa digitises the Pakistani committee (<i>kameti</i> / ROSCA) without ever holding the pot.</b> Money moves member-to-member on a double-entry ledger; savings sit with CDC as trustee in the member's own name. We keep the record. That single structural choice removes the cause of every mass committee fraud, and it is why we sit outside the EMI and NBFC-lending regimes today.</p>
+
+<div class="stats">
+  <div class="stat"><span class="big">Rs 4tn</span><span class="cap">rotates informally each year<br>3rd-largest savings channel</span></div>
+  <div class="stat"><span class="big">0.3–1.4%</span><span class="cap">simulated post-payout default<br>(a model, not evidence)</span></div>
+  <div class="stat"><span class="big">1</span><span class="cap">real member on production<br>we have not launched</span></div>
+</div>
+
+<p>Those three numbers are the whole conversation. The market is proven, our loss model is unproven, and we have deliberately not opened to the public because collection is not yet real. We want to fix the middle number in the one place where being wrong is safe.</p>
+
+<div class="box">
+<h3>The direction we have chosen — and would like you to try to break</h3>
+<p style="margin-bottom:2mm"><b>Structure:</b> the <b>saver / consumer split</b> as the architecture (not a feature), delivered through <b>vault-collateral</b> and a <b>first-loss guarantee</b>, proved inside a <b>supervised sandbox</b> before any scale. In the menu of seven structures we put to you, that is <b>#4 delivered via #3 + #2, piloted through #6.</b></p>
+<p style="margin-bottom:0"><b>Sequencing:</b> one product ships first — the record-only committee with eligibility filtering and position quarantine. The Vault, asset committees, the tradeable-turn market and the float product are <b>built but held</b>, each behind a named gate. We would rather ship one product that works than five that are explainable.</p>
+</div>
+
+<h3>The three asks, in order of value</h3>
+<div class="ask"><b>1 · A sandbox cohort</b> — or a named path to one. This is the only thing on our roadmap that nobody else can give us, and it is how the middle number above stops being a simulation.</div>
+<div class="ask"><b>2 · Two introductions</b> — an AMC/CDC for the vault, and a bank or PSP for collection. These unlock the things SECP does not control.</div>
+<div class="ask"><b>3 · Your read on four lines</b> we cannot resolve ourselves (§8) — chiefly where “Halqa covers defaults” stops being a business cost and starts needing a licence.</div>
+
+<p class="foot">Everything in this brief is either mechanism or sourced fact. Where a claim is a projection it says so. Where we do not know, it says that too.</p>
+</section>
+
+<!-- ============ 1 · YOU SAID / WE DID ============ -->
+<section class="brk">
+<h1>1 · Since 23 July — you said, we did</h1>
+<p>You gave thirteen directives in the second meeting. This is the line-by-line.</p>
+
+<table>
+<tr><th class="said">What you said</th><th>What we did</th><th class="tag">Status</th></tr>
+
+<tr><td>Don't worry about licensing, insurance or the TASDEEQ bureau for now.</td><td>Parked as instructed — but we researched all three anyway so the answers are ready the moment you want them. Two of them turned out to change the model (§2).</td><td class="tag">Done</td></tr>
+
+<tr><td>Investigate the investment rails — CDC, mutual funds, MTS, the first online AMC.</td><td>Confirmed: <b>CDC legally holds all fund money</b> as trustee under the NBFC Regulations 2008; the AMC only manages. The online AMC you named is <b>Mahaana Wealth</b> — CDC-custodied, Islamic Cash Fund minimum Rs 1,000. Distribution needs a light <b>SECP distributor registration</b>, not an NBFC.</td><td class="tag">Done</td></tr>
+
+<tr><td>Bring the Vault back — a member with money parked cannot really default.</td><td>Restored, restructured so it does not breach our custody principle: money goes <b>member → CDC collection account → units in the member's own name</b>. Two modes — <b>Growth</b> (idle savings earn ~10–11% instead of dying to ~11–12% inflation) and <b>Safety</b> (pledged, liened to the committee, so a miss self-cures from their own units). Live precedent: CDC's own Emlaak Financials.</td><td class="tag">Done</td></tr>
+
+<tr><td>Does auto-debit <i>truly</i> work? Raast may be getting it.</td><td>Checked hard. <b>You were right about Raast</b> — PISP “pull payment” is in testing and “launching very soon” per the Raast CEO, June 2026. You were also right to be sceptical: <b>true cross-bank auto-debit does not exist today for anyone in Pakistan, including Oraan.</b> We build on RTP + card-on-file now and architect so PISP is a config change.</td><td class="tag">Done</td></tr>
+
+<tr><td>The SECP sandbox can work for you.</td><td>It is now our primary ask (§7). We have confirmed unregistered start-ups intending to register are explicitly eligible.</td><td class="tag">Adopted</td></tr>
+
+<tr><td>Halqa must cover defaults on its own balance sheet — and insure that exposure.</td><td>Adopted, with <b>one correction you should know about</b>: takaful covers death and disability, <b>not wilful default</b>. The instrument that covers actual default is a <b>credit guarantee</b> — and Pakistan now has one (NCGCL, 2024). Detail in §2.</td><td class="tag">Adopted<br>+ corrected</td></tr>
+
+<tr><td>Filtering: only show a member the committees they qualify for.</td><td>Built as the <b>first and cheapest layer</b> of prevention. You cannot default on a commitment you were never shown. A student never sees the Rs 50,000/month circle.</td><td class="tag">Built</td></tr>
+
+<tr><td>Keep barriers to entry low — simple, not paperwork.</td><td>Savers need only CNIC, home locality and job — <b>no personal guarantee</b>. All the friction is concentrated on early-turn consumers, who carry all the risk. The saver's experience is an ordinary committee.</td><td class="tag">Built</td></tr>
+
+<tr><td>Separate consumers from savers.</td><td>This is now <b>the spine of the whole model</b>, not a feature — §3. The user never sees the jargon; they choose when they want their money, and the system assigns the risk treatment silently.</td><td class="tag">Architecture</td></tr>
+
+<tr><td>Study Money Fellows and Egypt — what regulation let it exist.</td><td>Done, and the finding is the most useful thing we learned: <b>Egypt never legalised the gam'eya.</b> The Central Bank dedicated a <b>sandbox cohort to ROSCAs</b>, and <b>Banque Misr — a state bank — holds the money.</b> Money Fellows is the tech layer. It validates our structure exactly.</td><td class="tag">Done</td></tr>
+
+<tr><td>Build the spine: onboarding → collection → pooling → prevention → recovery.</td><td>The full product report is organised on precisely that spine.</td><td class="tag">Done</td></tr>
+
+<tr><td>Look at margin trading.</td><td>We read this as pointing at the <b>clearing and settlement machinery</b> a market in turn-positions would need, rather than MTS itself. <b>We would like to confirm we understood you correctly</b> — it is the one instruction we are not certain we read right.</td><td class="tag">Needs<br>your read</td></tr>
+
+<tr><td>A full product report in ~2 weeks, and be able to answer anything on it.</td><td>Delivered — three reports. Report 1 is the spine and is the document behind this brief.</td><td class="tag">Done</td></tr>
+</table>
+</section>
+
+<!-- ============ 2 · CORRECTIONS ============ -->
+<section class="brk">
+<h1>2 · Three things the research corrected</h1>
+<p>You sent us to check. Two of these correct assumptions we were carrying, and one corrects something said in the meeting. We would rather bring them to you than let you find them later.</p>
+
+<h3>Takaful does not cover default — a credit guarantee does</h3>
+<p>You told us to insure the default exposure. Takaful operators (EFU, Pak-Qatar, Salaam) cover <b>death and disability only</b>; no takaful or conventional insurer covers <b>wilful default</b> on a savings obligation. The correct instrument is a <b>credit guarantee</b>, and Pakistan has a dedicated vehicle: <b>NCGCL</b> — the National Credit Guarantee Company, established 2024 by Karandaaz with the Ministry of Finance — with a live <b>Rs 2.0bn PMIC–NCGCL portfolio guarantee</b> precedent from January 2026.</p>
+<p><b>So the corrected stack is:</b> Halqa first-loss → NCGCL-style guarantee for the tail → credit-life takaful sitting on top as a <i>member benefit</i>, not as our backstop. This is a better answer than the one we came in with, and we got to it because you pushed on insurance.</p>
+
+<h3>Oraan is SECP-licensed</h3>
+<p>In the meeting the working assumption was that Oraan operates without an SECP licence. It holds an <b>NBFC “Investment Finance Services” licence, <span class="num">SECP/LRD/107/OFSPL/2023</span></b>, granted 2023; before that it ran <b>inside the SECP sandbox</b>. The uncertainty most likely attaches to the earlier phase, or to the SBP-side payment flow, which is genuinely opaque.</p>
+<p><b>Why this matters to us:</b> it changes our positioning from “they are unlicensed and we are careful” to something stronger and true — <b>we will walk the same ladder Oraan walked, sandbox → licence, but start guarantee-backed and CDC-custodied from day one.</b> We have stopped saying the other thing.</p>
+
+<h3>Money Fellows' “7–8%” is not a default rate</h3>
+<p>The figure circulating publicly is widely read as their default rate. It is not. <b>Money Fellows publishes no default rate at all.</b> The 7–8% is <b>empty-slot fill</b> — positions the platform funds itself — financed by a <b>US$2.25m Symbiotics debt facility</b>. Their disclosed scale is real (~US$1.5bn processed, ~350k monthly actives, profitable in 2025); the loss number is simply not public.</p>
+<p><b>The consequence is awkward and worth saying out loud:</b> the promise we are making — that Halqa covers member losses — goes <b>further than the benchmark actually does</b>. We should be precise about that rather than claim parity.</p>
+</section>
+
+<!-- ============ 3 · THE MODEL ============ -->
+<section class="brk">
+<h1>3 · The direction — a committee is two different people</h1>
+
+<p class="lede">Every committee is two transactions wearing one coat. Reading them as one is why informal committees fail and why one-size-fits-all rules cannot fix them.</p>
+
+<table>
+<tr><th>&nbsp;</th><th>The Saver — late turn</th><th>The Consumer — early turn</th></tr>
+<tr><th>What they are doing</th><td>Saving with discipline. Paying in for months, collecting at the end.</td><td>Borrowing from the group. Receiving the lump sum before paying most of it in.</td></tr>
+<tr><th>Risk to the group</th><td><b>Near zero.</b> By the time they could walk away they have already paid in more than they will receive.</td><td><b>Effectively all of it.</b> Their forward liability is the whole exposure of the circle.</td></tr>
+<tr><th>Their real complaint</th><td>Their money sat dead for a year while inflation ate it.</td><td>Nothing — they got what they came for.</td></tr>
+<tr><th>What we give them</th><td>A return (Vault, CDC-held) and near-zero friction. CNIC, locality, job. No guarantee required.</td><td>Verified income, banding to what they can service, a personal guarantee, and a pledged buffer or a secured asset.</td></tr>
+</table>
+
+<p><b>Worked example.</b> Ten members, Rs 10,000 a month, a Rs 100,000 pot. Turn 1 collects Rs 100,000 having paid Rs 10,000 — <b>Rs 90,000 of forward liability</b>. Turn 10 pays for nine months then collects; they cannot meaningfully default. Same circle, same rules, two completely different credit events.</p>
+
+<div class="plain">
+<p style="margin-bottom:1.5mm"><b>The test we hold ourselves to — your warning, in our words.</b></p>
+<p style="margin-bottom:0">Every control above is either <b>invisible</b> (position, pricing, banding) or <b>opt-in</b> (the products). A saver joining a circle still experiences an ordinary committee: pick a circle, pay each month, collect your turn. If a member ever has to understand the words “saver” or “consumer,” we have over-engineered it away from a real committee — which is the line you told us not to cross.</p>
+</div>
+
+<h3>Prevention does roughly ninety percent of the work</h3>
+<p>Your mentor's doctrine — <i>don't build enforcement, build a system where default is irrational</i> — is the organising principle, not a slogan. In order of cost to us:</p>
+<ol class="tight">
+<li><b>Eligibility filtering.</b> Members are only shown circles their verified means can service. Free, invisible, and it does a collections team's job before there is anything to collect.</li>
+<li><b>Cross-product collateral.</b> Every member in a pledged Vault or an asset committee is pre-secured; a miss self-cures from their own units. We drive adoption with fee discounts and price honestly for everyone else.</li>
+<li><b>Position quarantine.</b> New members take late turns only until two clean completed circles plus verification. New risk never starts at the front. <b>Position is the collateral</b> — and it costs nobody a rupee of deposit.</li>
+<li><b>Identity and reputation.</b> Consented CNIC, home locality and public job; a reliability record built from real payment events.</li>
+</ol>
+
+<h3>Recovery is a ladder, and enforcement is its smallest rung</h3>
+<table>
+<tr><th class="tag">Rung</th><th>Mechanism</th><th>Who absorbs it</th></tr>
+<tr><td class="tag"><b>0 · Prevented</b></td><td>Eligibility + quarantine + pledged buffer mean most exposure is secured before default is possible.</td><td>Nobody</td></tr>
+<tr><td class="tag"><b>1 · Self-cure</b></td><td>Collection retries, then draw from the defaulter's <i>own</i> pledged Vault units, or repossess the financed asset.</td><td>The defaulter</td></tr>
+<tr><td class="tag"><b>2 · Halqa covers</b></td><td>First-loss fund pays the group immediately — members never lose a rupee. This is the trust product.</td><td>Halqa</td></tr>
+<tr><td class="tag"><b>3 · Guarantee</b></td><td>The unexpected spike is ceded to an NCGCL-style credit guarantee. Credit-life takaful sits on top as a member benefit.</td><td>The guarantor</td></tr>
+<tr><td class="tag"><b>4 · Legal</b></td><td>E-signed undertaking (<i>iqrarnama</i>) + mutual member-to-member PG → Order XXXVII CPC summary suit → decree → attachment and sale. Bureau reporting once lawfully permitted.</td><td>The courts</td></tr>
+</table>
+<p><b>Read it as:</b> rungs 0–1 remove the incidence, rungs 2–3 remove the fear, rung 4 removes the temptation. We are not building a collections agency.</p>
+</section>
+
+<!-- ============ 4 · MONEY + GATES ============ -->
+<section class="brk">
+<h1>4 · Where the money actually sits</h1>
+<p>The question underneath every regulatory question. There are only three pools, and we touch one.</p>
+
+<table>
+<tr><th>Money</th><th>Who holds it</th><th>In whose name</th><th>Halqa's role</th></tr>
+<tr><td>Committee contributions</td><td><b>Nobody.</b> It moves member → member on the rails.</td><td>—</td><td>Records the obligation on a double-entry ledger</td></tr>
+<tr><td>Vault savings</td><td><b>CDC</b> as trustee</td><td>The member's own name</td><td>Distributor. Never touches it.</td></tr>
+<tr><td>Fees, late fees, guarantee premium</td><td>Halqa's own merchant account</td><td>Halqa</td><td>This is revenue, not custody</td></tr>
+</table>
+<p><b>The consequence:</b> there is no pot to abscond with. The Karachi Rs 420m case and the Sidra Humaid case — roughly US$2m from 200 women — both required a central pool held by an operator. Structurally, we cannot reproduce them.</p>
+
+<h1 style="margin-top:10mm">What it takes to ship each piece</h1>
+<p>Nothing below is a wish-list. Each item is tagged by the single thing that gates it.</p>
+<table>
+<tr><th class="tag">Gate</th><th>What it unlocks</th></tr>
+<tr><td class="tag"><b>TODAY</b></td><td>Private limited company + NTN; record-only committees; the saver/consumer split; eligibility filtering; position quarantine; our own reliability score; e-signed undertaking and mutual PG; CNIC capture, PIN, biometric; the app in Urdu and English.</td></tr>
+<tr><td class="tag"><b>PARTNER</b></td><td>The Vault (AMC + CDC); card-on-file and wallet auto-collection (PSP/acquirer); bureau <i>reads</i> (TASDEEQ/DataCheck); credit-life takaful.</td></tr>
+<tr><td class="tag"><b>LICENCE</b></td><td>SECP multi-AMC distributor registration (Vault); Raast PISP participant status (true auto-debit); NBFC Investment Finance (asset finance, guarantee at scale, bureau <i>write</i>).</td></tr>
+<tr><td class="tag"><b>SANDBOX</b></td><td>The guarantee model itself; the high-volume balloted “Bazaar” committee; the float product. <b>None of these ship outside supervision.</b></td></tr>
+<tr><td class="tag"><b>CAPITAL</b></td><td>The first-loss fund; asset-finance working capital; NBFC minimum equity; premiums; go-to-market.</td></tr>
+</table>
+</section>
+
+<!-- ============ 5 · ASKS + QUESTIONS ============ -->
+<section class="brk">
+<h1>5 · The asks, and the questions only you can answer</h1>
+
+<h3>Ask 1 — a sandbox cohort, or a named path to one</h3>
+<p>This is the highest-value door in the whole plan and the only one we cannot open by paying someone or hiring someone. The precedent is exact: Egypt's central bank ran a <b>dedicated ROSCA cohort</b>, and that is what let Money Fellows exist and reach profitability. SECP's fourth cohort theme was Islamic micro- and nano-finance and “new takaful models” — essentially a description of us. We would pilot the <b>guarantee model</b>, capped and supervised, to replace our simulated default number with a real one before anyone's savings are at scale.</p>
+
+<h3>Ask 2 — two introductions</h3>
+<p>An <b>AMC or CDC</b> contact for the Vault, and a <b>bank or PSP</b> for collection. Both are commercial conversations rather than regulatory ones, which is exactly why a warm introduction is worth more than anything else you could hand us. Collection in particular is our binding constraint and sits outside SECP's remit entirely.</p>
+
+<h3>Ask 3 — your read on four lines</h3>
+<div class="ask"><b>1 · The balance-sheet line.</b> Where exactly does “Halqa covers defaults from its own funds” stop being an ordinary business cost and start requiring an NBFC or insurance licence? This is the single question that most changes what we build next.</div>
+<div class="ask"><b>2 · Reach inside the sandbox.</b> Can we access an NCGCL-style guarantee and bureau/eCIB reporting <i>within</i> a sandbox, or only after an NBFC licence? The answer decides whether the pilot proves the real model or a stripped one.</div>
+<div class="ask"><b>3 · The float-backstop — the sensitive one.</b> May savers' consented, return-paying Vault float part-fund the first-loss guarantee for consumers? We think this is capital-efficient and we think it is close to a line. <b>We are raising it rather than quietly building it.</b></div>
+<div class="ask"><b>4 · Distributor or our own NBFC.</b> Given where you want this to go, do you prefer we sit as a distributor to an existing AMC such as Mahaana, or build toward our own NBFC? We will sequence to your answer.</div>
+
+<p class="src">Two smaller ones if there is time: the CIS / lottery / derivative classification of the high-volume balloted committee with tradeable positions (we assume sandbox-only and will not ship it otherwise), and whether we read your margin-trading comment correctly.</p>
+</section>
+
+<!-- ============ 6 · HARD QUESTIONS ============ -->
+<section class="brk">
+<h1>6 · Hard questions, answered straight</h1>
+<p>The ones we expect, with the answers we will actually give.</p>
+
+<p class="q">“How many real members do you have?”</p>
+<p class="a"><b>One.</b> The platform is live on the internet and has been since 20 July, but we have not opened it to the public, because collection is not yet real and we will not take people's commitments on rails we cannot enforce. We would rather show you one honest user than a thousand we cannot collect from.</p>
+
+<p class="q">“Your default numbers are a simulation.”</p>
+<p class="a">Yes — a Pakistan-calibrated agent-based model, and we label it a simulation everywhere it appears. That is precisely the ask. A supervised pilot is how it stops being a model. We are not asking to be believed; we are asking to be measured.</p>
+
+<p class="q">“You say you cover defaults. With whose money?”</p>
+<p class="a">The fee spread, late fees, and a guarantee fee on protected circles — sized against an expected loss, provisioned the way a bank provisions. It is bounded, because early-turn exposure is itself bounded by eligibility banding and quarantine. The unexpected tail goes to a credit guarantee. If the pilot says the provision is wrong, we reprice rather than absorb it quietly.</p>
+
+<p class="q">“What stops you becoming the next Rs 420m Karachi case?”</p>
+<p class="a">There is no pot. Not a policy, not a control we could relax under pressure — there is simply no account into which member money accumulates. Vault savings sit with CDC in the member's own name. The fraud you are describing requires custody we do not have.</p>
+
+<p class="q">“What if Raast PISP slips?”</p>
+<p class="a">Then we run on the waterfall that works today — Raast RTP one-tap approval, card-on-file recurring for salaried consumers, wallet deduct via 1LINK. PISP is upside, not a dependency. We have architected so switching it on is a configuration change.</p>
+
+<p class="q">“Who is your lawyer?”</p>
+<p class="a">We do not have retained counsel yet — it is budgeted and it is the next thing we buy. Our undertaking and personal-guarantee texts are <b>lawyer-unreviewed templates</b> today, and we flag that in every document rather than let it pass. We would not scale on unreviewed instruments.</p>
+
+<p class="q">“Why hasn't a bank done this?”</p>
+<p class="a">Because the people in committees have no formal credit footprint to underwrite, and the ticket sizes are far below a bank's cost to serve. The committee already solved that with social collateral. We are not competing with the committee — we are giving it a record, a schedule, and a backstop.</p>
+</section>
+
+<!-- ============ 7 · RED LINES + WEAKNESSES ============ -->
+<section class="brk">
+<h1>7 · Our red lines, and our weaknesses</h1>
+
+<div class="box">
+<h3>Lines we will not cross — stated before anyone asks us to</h3>
+<ul class="tight" style="margin-bottom:0">
+<li><b>We will not hold the pot.</b> If a design requires custody of member money, we do not build it — we find the licensed custodian who should hold it instead.</li>
+<li><b>We will not surveil members or use out-of-court pressure.</b> Deterrence stays legal and transparent: courts, guarantees, bureau reporting once permitted, and a platform record. Anything else is the behaviour of the fraudsters we are displacing, and it is unlawful under PECA and the data framework.</li>
+<li><b>We will not launch the balloted, tradeable-position “Bazaar” committee outside a sandbox.</b> We can see it looks like a collective investment scheme, a lottery and a securities market at once. It stays unbuilt until a regulator says the words.</li>
+<li><b>We will not label a product Shariah-compliant until it has been reviewed.</b> Products with a conventional early-access fee say so plainly in the consent text.</li>
+<li><b>We will not report to a credit bureau until we are lawfully permitted to.</b> We queue the records; we do not file them.</li>
+</ul>
+</div>
+
+<h3>What is genuinely weak right now</h3>
+<table>
+<tr><th>Weakness</th><th>What we are doing about it</th></tr>
+<tr><td>No company, no licence, no partner yet</td><td>Incorporation is administrative and imminent; the partners are Ask 2.</td></tr>
+<tr><td>Undertaking and PG are lawyer-unreviewed templates</td><td>Counsel is the next spend. Nothing scales on them until reviewed.</td></tr>
+<tr><td>The default numbers are a simulation</td><td>Ask 1 — this is what the sandbox is for.</td></tr>
+<tr><td>Collection is not yet real — the mandate is captured, execution is not</td><td>Ask 2. It is our true binding constraint, and it sits with SBP and the PSPs, not SECP.</td></tr>
+<tr><td>One live member</td><td>Deliberate. We open when collection is real, not before.</td></tr>
+<tr><td>More product is built than is validated</td><td>Acknowledged. Everything beyond the core committee is behind a named gate (§4) and we are holding the line on shipping order.</td></tr>
+</table>
+
+<p class="foot">Our candour about this list is not modesty — it is the reason the rest of the document should be believed. Every figure here is either sourced or labelled as a projection. Full citations sit in Report 3; the model detail sits in Report 1.</p>
+
+<div class="plain" style="margin-top:8mm;text-align:center">
+<p style="margin-bottom:1.5mm;font-size:11pt"><b>The close</b></p>
+<p style="margin-bottom:0;font-style:italic">“The committee is already how Pakistan saves — four trillion rupees a year of it. We are not asking permission to invent something. We are asking for a supervised place to prove that it can be made safe, made to grow, and written down. What would you need to see before you would consider it credible to pilot?”</p>
+</div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,663 @@
+<meta charset="utf-8"><style>
+@page { size: A4; margin: 20mm 18mm 18mm 18mm; }
+* { box-sizing: border-box; }
+body { font-family: "Segoe UI", system-ui, sans-serif; font-size: 10.5pt; line-height: 1.62;
+       color: #26301F; margin: 0; }
+h1 { font-size: 27pt; font-weight: 700; color: #0C1408; margin: 0 0 6pt; letter-spacing: -0.4pt; }
+h2 { font-size: 16pt; font-weight: 700; color: #0C1408; margin: 26pt 0 8pt;
+     padding-top: 10pt; border-top: 2px solid #6DC72A; page-break-after: avoid; }
+h3 { font-size: 12pt; font-weight: 700; color: #41801A; margin: 16pt 0 5pt; page-break-after: avoid; }
+h4 { font-size: 10.5pt; font-weight: 700; color: #0C1408; margin: 12pt 0 3pt; page-break-after: avoid; }
+p { margin: 0 0 8pt; }
+.lead { font-size: 11.5pt; color: #26301F; }
+.eyebrow { font-size: 8pt; font-weight: 700; letter-spacing: 1.1pt; text-transform: uppercase;
+           color: #41801A; margin: 0 0 4pt; }
+.sub { color: #6F7B68; font-size: 11pt; margin: 0 0 4pt; }
+.rule { height: 2px; background: #6DC72A; width: 54pt; margin: 12pt 0 16pt; }
+table { width: 100%; border-collapse: collapse; margin: 9pt 0 12pt; font-size: 9pt;
+        page-break-inside: avoid; }
+th { text-align: left; font-size: 7.6pt; font-weight: 700; letter-spacing: 0.7pt;
+     text-transform: uppercase; color: #41801A; border-bottom: 1.4px solid #41801A;
+     padding: 4pt 7pt 4pt 0; vertical-align: bottom; }
+td { padding: 5pt 7pt 5pt 0; border-bottom: 0.6px solid #DCE3D6; vertical-align: top; }
+td.n, th.n { text-align: right; white-space: nowrap; }
+.box { background: #F3FCE7; border-left: 3px solid #6DC72A; padding: 9pt 12pt; margin: 10pt 0 12pt;
+       page-break-inside: avoid; }
+.box p { margin: 0 0 5pt; } .box p:last-child { margin: 0; }
+.plain { border-left: 3px solid #B9D69A; background: #FAFDF5; padding: 9pt 12pt; margin: 10pt 0;
+         page-break-inside: avoid; }
+.tech { border-left: 3px solid #9AA694; background: #F7F8F6; padding: 9pt 12pt; margin: 10pt 0;
+        page-break-inside: avoid; }
+.tag { font-size: 7.6pt; font-weight: 700; letter-spacing: 1pt; text-transform: uppercase;
+       color: #41801A; display: block; margin-bottom: 4pt; }
+.tech .tag { color: #6F7B68; }
+.f { font-family: "Segoe UI", sans-serif; background: #F3FCE7; border-left: 3px solid #6DC72A;
+     padding: 8pt 12pt; margin: 9pt 0; font-size: 11pt; font-weight: 700; color: #22450C;
+     page-break-inside: avoid; }
+.worked { margin: 8pt 0 10pt; padding-left: 12pt; border-left: 2px solid #DCE3D6;
+          page-break-inside: avoid; }
+.worked div { margin-bottom: 2pt; }
+.k { color: #6F7B68; }
+.pb { page-break-before: always; }
+ol, ul { margin: 0 0 9pt; padding-left: 16pt; } li { margin-bottom: 4pt; }
+.foot { border-top: 0.6px solid #DCE3D6; margin-top: 22pt; padding-top: 7pt;
+        font-size: 8.5pt; color: #9AA694; }
+img { max-width: 100%; margin: 8pt 0; }
+</style>
+
+<p class="eyebrow">Halqa &nbsp;·&nbsp; internal</p>
+<h1>The models and algorithms, explained</h1>
+<div class="rule"></div>
+<p class="sub">Every algorithm, model and scoring system in the platform. Each one is explained twice:
+once in plain terms with a worked example, and once in the terms an engineer or a bank's risk team
+would use.</p>
+<p class="sub">13 August 2026</p>
+
+<div class="box">
+<p><b>How to read this.</b> Each section opens with a green panel headed <i>in plain terms</i>. If you
+read only those, you will understand what every part of the platform does and why. The grey panels
+headed <i>technically</i> contain the same thing written for somebody who has to build it or audit it.</p>
+<p>There are seven systems in total: the credit score, eligibility, pricing, collection, default
+protection, time value, and rewards. Everything else in the product is built out of these seven.</p>
+</div>
+
+<h2>1 &nbsp; The credit score</h2>
+
+<div class="plain"><span class="tag">In plain terms</span>
+<p>The score answers one question: how much can this person be trusted to owe? It runs from 300 to
+850, the same range a bank in most countries would recognise, and it decides which positions in a
+circle a member is allowed to claim.</p>
+<p>It is not a tally of points that go up and down. It is recalculated from scratch every time
+something happens, from five things about the member's behaviour. Think of it as five separate marks
+out of ten, each worth a different amount, added together and scaled onto the 300 to 850 range.</p>
+</div>
+
+<h3>The five inputs, and why each one is there</h3>
+
+<p><b>Payment record, worth about two fifths.</b> Every contribution the member has ever made, but
+weighted so recent behaviour counts far more than old behaviour. A payment missed last month counts
+roughly twice as heavily as one missed a year ago. This is deliberate. A person who had a bad six
+months and then paid perfectly for a year has demonstrably changed, and a scoring system that cannot
+see that is punishing history rather than measuring risk.</p>
+
+<p><b>How much is currently owed, worth about a quarter.</b> Not how much they have borrowed in total,
+but how much they owe their circles right now measured against what they can afford. Somebody carrying
+a small obligation relative to their income is safe almost regardless of history, because they can
+absorb a bad month. Somebody carrying a large one is fragile even with a good history.</p>
+
+<p><b>How long we have watched them, worth about a fifth.</b> Circles completed and months on the
+platform, with completions counting much more heavily. A completed circle is worth more than a year of
+good months, because a completion proves the member kept paying <i>after</i> they collected the pot,
+which is the only moment their incentives were genuinely tested.</p>
+
+<p><b>How many circles were joined recently, worth a tenth.</b> This one runs backwards: joining three
+circles in three months lowers the score. In consumer credit this pattern is one of the most reliable
+early warnings there is. Somebody suddenly reaching for several sources of money at once is usually
+in trouble, not doing well.</p>
+
+<p><b>Which products have been used, worth a twentieth.</b> Breadth of behaviour, weighted lightly
+because it is the weakest of the five and should never dominate.</p>
+
+<div class="tech"><span class="tag">Technically</span>
+<p>The score is a weighted linear model over five normalised components, each bounded to the interval
+zero to one, mapped onto the 300 to 850 range:</p>
+<div class="f">score = 300 + 550 × [ 0.40·P + 0.25·U + 0.20·H + 0.10·C + 0.05·M ]</div>
+<p><b>P, payment record.</b> An exponentially weighted mean of on-time outcomes, with the weight on an
+observation decaying by a factor of 0.95 for each month of age. A miss twelve months old therefore
+carries about 0.54 of the weight of one last month. Computed as the sum of decayed on-time indicators
+over the sum of decayed weights, so it is a true proportion rather than a raw count.</p>
+<p><b>U, liability utilisation.</b> One minus current forward liability divided by the affordability
+ceiling, clamped to the unit interval. Forward liability means what the member still owes across all
+live circles, which for a member who has collected is their remaining contributions and for one who
+has not is zero.</p>
+<p><b>H, history.</b> A blend, sixty per cent on completed circles capped at five, forty per cent on
+months observed capped at twenty four.</p>
+<p><b>C, concurrency.</b> One minus circles joined in the trailing ninety days divided by three,
+floored at zero.</p>
+<p><b>M, product mix.</b> Distinct product types used over four.</p>
+<p>The visible plus and minus events are reason codes, generated by ranking each component's
+contribution to the gap between the member's score and the band ceiling above them. This mirrors how
+a bureau scorecard emits adverse action codes: the model produces the number, the reason codes explain
+the largest negative contributors.</p>
+</div>
+
+<h3>A worked example</h3>
+<div class="worked">
+<div><span class="k">A member with:</span> 90 per cent of payments on time once weighted for recency,
+owing Rs 60,000 against a Rs 200,000 ceiling, two circles completed of five, fourteen months observed,
+one circle joined in the last quarter, and two product types used.</div>
+<div>&nbsp;</div>
+<div>P = 0.90 &nbsp;→&nbsp; 0.40 × 0.90 = 0.360</div>
+<div>U = 1 − (60,000 ÷ 200,000) = 0.70 &nbsp;→&nbsp; 0.25 × 0.70 = 0.175</div>
+<div>H = 0.6 × (2÷5) + 0.4 × (14÷24) = 0.473 &nbsp;→&nbsp; 0.20 × 0.473 = 0.095</div>
+<div>C = 1 − (1÷3) = 0.667 &nbsp;→&nbsp; 0.10 × 0.667 = 0.067</div>
+<div>M = 2÷4 = 0.50 &nbsp;→&nbsp; 0.05 × 0.50 = 0.025</div>
+<div>&nbsp;</div>
+<div><b>Total 0.722&nbsp;&nbsp;→&nbsp;&nbsp;300 + 550 × 0.722 = 697, the Good band.</b></div>
+</div>
+
+<p>Notice what would move that member most. Lifting the payment record from 0.90 to 0.95 adds eleven
+points. Paying down half the outstanding liability adds nineteen. Completing one more circle adds
+twelve. Those three numbers are the reason codes the member sees, ranked in that order, so the advice
+the application gives them is the same advice the model would give itself.</p>
+
+<h3>The bands, and what they are for</h3>
+<table>
+<tr><th>Band</th><th>Range</th><th>What it unlocks</th></tr>
+<tr><td>Rebuilding</td><td>Below 550</td><td>The last two positions only. May not buy a position on the marketplace</td></tr>
+<tr><td>Fair</td><td>550 to 649</td><td>The second half of the order. May buy</td></tr>
+<tr><td>Good</td><td>650 to 749</td><td>Any position. May buy</td></tr>
+<tr><td>Excellent</td><td>750 and above</td><td>Any position, and preferential fees</td></tr>
+</table>
+
+<p>Above every band sits one rule that ignores the score entirely: every brand new member is confined
+to the last three positions until they have completed two circles cleanly and passed a manual check.
+The reason is in section 5. A member the platform has never observed is not low risk or high risk,
+they are <i>unmeasured</i>, and the correct response to an unmeasured risk is to bound it rather than
+to guess at it.</p>
+
+<h3>Mapping to the credit bureau</h3>
+<div class="plain"><span class="tag">In plain terms</span>
+<p>Halqa's score is not the score a bank will see. A bank sees the bureau's own score, computed by the
+bureau from the data everybody furnishes to it. Halqa's job is to send good data, not to send its
+own opinion.</p>
+</div>
+<p>TASDEEQ, which is the trading name of Aequitas Information Services Limited and the first bureau
+licensed under the Credit Bureaus Act 2015, publishes a score running from 200 for very poor to 600
+for excellent. It builds that score from six inputs: overdues, demographics, loan size, multiple
+borrowing, credit history length, and institution type.</p>
+<p>Five of those six are things Halqa already captures. Overdues come from the lateness ladder,
+credit history length from the join date, loan size from the total commitment, multiple borrowing from
+the concurrency cap, and institution type from how Halqa registers as a furnisher. The sixth,
+demographics, the bureau derives itself from the identity number. So the alignment is close to exact,
+which is unusual and worth saying out loud in a partnership conversation.</p>
+<div class="tech"><span class="tag">Technically</span>
+<p>For display purposes only, a linear map exists between the two ranges:</p>
+<div class="f">bureau equivalent = 200 + (score − 300) × 400 ÷ 550</div>
+<p>This is presentational, not predictive. The bureau computes its own score from its own model over
+the full market's data, and Halqa's furnished tradelines are one input among many. Nothing in the
+platform should ever branch on a predicted bureau score.</p>
+<p>The furnishing schema treats a circle position as an installment obligation. Original amount is the
+contribution multiplied by the number of rounds, the installment is the contribution, the term is the
+number of rounds, and the current balance is the forward liability. Status maps Halqa's finer internal
+ladder onto the bureau's standard buckets of current, one to twenty nine days, thirty to fifty nine,
+sixty to eighty nine, ninety plus, and written off.</p>
+<p>The opened date is the join date, not the collection date. This is the single most consequential
+field in the whole integration and is discussed below.</p>
+</div>
+
+<div class="box">
+<p><b>Why the join date matters more than anything else in this section.</b> A member who joins in
+January and collects in November has, by the time they collect, eleven months of perfect payment
+behaviour. If the tradeline opens on the join date, all eleven months are formally reported and the
+member has a real credit history before they have received a rupee.</p>
+<p>If it opens on the collection date, which is what a careful accountant would choose because that is
+when a balance first exists, every one of those eleven months is discarded. The member gets one month
+of history instead of eleven.</p>
+<p>That single field is the difference between a credit building product and a payment ledger.</p>
+</div>
+
+<h2 class="pb">2 &nbsp; Eligibility, and how positions are gated</h2>
+
+<div class="plain"><span class="tag">In plain terms</span>
+<p>Two separate gates, and a member must pass both. The first asks whether they can afford it at all.
+The second asks which position in the order they have earned the right to take.</p>
+<p>The second gate is the important one, and the reason is worth understanding properly, because
+everything else in the risk model follows from it.</p>
+</div>
+
+<h3>Why position is the whole game</h3>
+<p>When a member collects the pot, they receive the entire amount and still owe every contribution
+that remains. That remaining obligation is the only thing at risk anywhere in the arrangement. It is
+largest for whoever collects first, falls by one contribution with each later position, and is
+literally nothing for whoever collects last.</p>
+<p>So risk is not spread evenly across a circle. It sits almost entirely in the early positions and
+decays to zero. A member in the last position cannot cost anybody anything, no matter who they are.
+A member in the first position can cost nearly the whole pot.</p>
+<p>This changes what the platform needs to build. It does not need a system for judging whether
+somebody is a good person, which is hard, subjective and easy to get wrong. It needs a system that
+decides which member may occupy which position, which is narrow, measurable and testable.</p>
+
+<div class="tech"><span class="tag">Technically</span>
+<p>Each band carries a ceiling on forward liability at the moment of collection, expressed in
+contributions rather than in rupees so that one rule works for a circle of any size:</p>
+<div class="f">earliest position = number of rounds − band ceiling</div>
+<table>
+<tr><th>Band</th><th class="n">Ceiling, in contributions</th><th class="n">Earliest position on a twelve round circle</th></tr>
+<tr><td>Rebuilding</td><td class="n">2</td><td class="n">10</td></tr>
+<tr><td>Fair</td><td class="n">7</td><td class="n">5</td></tr>
+<tr><td>Good and Excellent</td><td class="n">no ceiling</td><td class="n">1</td></tr>
+<tr><td>Any new member, whatever the band</td><td class="n">2</td><td class="n">10</td></tr>
+</table>
+<p>Two ceilings, two and seven, produce the entire schedule for every circle size in the product. This
+is why "position five of twelve" appears in the interface without a lookup table behind it.</p>
+<p>The gate is applied at render time, not at submit time. Positions a member cannot hold are not
+displayed, so the rule produces almost no visible refusals and no rejection experience.</p>
+</div>
+
+<h3>The affordability gate</h3>
+<p>Four conditions, all of which must hold. None of them produces a refusal message; they govern what
+the discovery screen displays.</p>
+<table>
+<tr><th>Condition</th><th class="n">Limit</th><th>Where the number comes from</th></tr>
+<tr><td>Total contributions as a share of net monthly income</td><td class="n">33%</td><td>Halqa's own ceiling, deliberately stricter than the regulated benchmark</td></tr>
+<tr><td>Contributions plus known debt service</td><td class="n">40%</td><td>Anchored to the State Bank's cap on the debt burden ratio for consumer financing, reduced from 50 per cent in 2021</td></tr>
+<tr><td>Forward exposure if every position were the earliest</td><td class="n">4× monthly income</td><td>A stress test rather than an expected case</td></tr>
+<tr><td>Concurrent circles, income unverified</td><td class="n">1</td><td>Bounding exposure to an unobserved member</td></tr>
+<tr><td>Concurrent circles, income verified</td><td class="n">4</td><td>Verification raises the count, never the money cap</td></tr>
+<tr><td>Concurrent circles as a host, no completions</td><td class="n">2</td><td>The control against one person assembling an artificial network of circles</td></tr>
+</table>
+
+<div class="box">
+<p><b>One rule that is easy to get wrong and expensive when you do.</b> A good payment history unlocks
+more positions, more circles and less friction. It never raises the money cap. Only fresh evidence of
+income does that.</p>
+<p>Lenders who let limits escalate on good behaviour alone create the defaults they later complain
+about, because a member's capacity to pay has not changed just because their willingness has been
+demonstrated. Willingness and capacity are different variables and must be gated by different
+evidence.</p>
+</div>
+
+<h3>The daily product's entry test</h3>
+<p>The daily committee admits people paid daily, who by construction have no payslip and no fixed pay
+date. Two routes in, and a member needs only one.</p>
+<p><b>Demonstrated daily earning.</b> Two months of evidence, from any one of: a ride hailing or
+delivery platform account showing daily earnings history, a photographed trading licence or shop
+registration together with two months of daily takings recorded in the app, or two months of Halqa's
+own collection record showing money present on most days.</p>
+<p><b>The vault alternative.</b> Where a member cannot demonstrate daily income, they may instead lock
+a holding equal to the full pot for the whole sixty days. The money remains theirs, is held by a
+trustee in their own name, earns a return while it sits there, and is released untouched at the end
+if they have paid.</p>
+<div class="tech"><span class="tag">Technically</span>
+<p>The vault is a pledge with a charge in favour of the circle's members and an irrevocable redemption
+instruction signed at the moment of pledging. It reduces that member's expected loss contribution to
+zero by construction, because any shortfall settles from their own units under an instruction that
+predates the shortfall. Halqa never receives the proceeds; the trustee pays the round's recipient
+directly.</p>
+<p>The requirement is expected to become unnecessary once automatic collection on the instant payment
+rail is universal, because the collection record then constitutes the daily income evidence directly.
+It is retained as the conservative path and as the route for members the record cannot yet vouch for.</p>
+</div>
+
+<h2 class="pb">3 &nbsp; Pricing</h2>
+
+<div class="plain"><span class="tag">In plain terms</span>
+<p>Pricing answers one question: what does Halqa have to charge so that the money it collects in fees
+covers the money it loses to people who do not pay?</p>
+<p>The honest position is that nobody knows the default rate yet, because no circle has completed.
+Every price in the business is therefore a model with one unmeasured input, and the first hundred
+completed circles will measure it and reprice everything.</p>
+</div>
+
+<h3>What a single default actually costs</h3>
+<p>Take a member who collects and then stops paying. They have already paid in some contributions and
+some fees. What they cost is what they still owe, less what they have already paid in fees.</p>
+<div class="f">cost of one default = contribution × rounds remaining − fee × rounds paid</div>
+<div class="worked">
+<div><span class="k">A twelve month circle at Rs 20,000 a month, with a Rs 100 fee per contribution.
+The member collects in round four and stops.</span></div>
+<div>&nbsp;</div>
+<div>Still owed: Rs 20,000 × (12 − 4) = Rs 160,000</div>
+<div>Fees already paid: Rs 100 × 4 = Rs 400</div>
+<div><b>Net cost: Rs 159,600</b></div>
+</div>
+<p>Now the same member collecting in round eleven instead: they owe Rs 20,000 and have paid Rs 1,100
+in fees, so they cost Rs 18,900. The same person under the same rules costs eight times more depending
+only on when they collected. That single fact is why position gating exists.</p>
+
+<h3>The point at which a member becomes free</h3>
+<p>There is a position late enough that the fees a member has already paid exceed anything they could
+still cost. Beyond that point they are, in risk terms, free.</p>
+<div class="f">break-even position = contribution × rounds ÷ (contribution + fee)</div>
+<table>
+<tr><th>Product</th><th>Break-even point</th><th>Positions that carry no risk</th></tr>
+<tr><td>Monthly circles</td><td>Round 11.9 of 12</td><td>Only the last one</td></tr>
+<tr><td>Asset circles</td><td>Round 4.0 of 12</td><td>Nine of twelve, because the item can be sold</td></tr>
+<tr><td>Daily circles</td><td>Day 52 of 60</td><td>Eight of sixty</td></tr>
+</table>
+<p>The monthly row is the uncomfortable one and should be read carefully. On a monthly circle the fee
+is so small relative to the pot that essentially no position is self funding. The protection has to
+come from somewhere other than price, which is exactly what sections 4 and 5 are about.</p>
+
+<div class="tech"><span class="tag">Technically</span>
+<p>Writing N for members, T for rounds, c for the contribution, φ for the fee per contribution, d for
+the default rate and m for the round on which defaults land on average, the platform's net position on
+one circle is:</p>
+<div class="f">net = φN[(1−d)T + dm] − N·d·c(T − m)</div>
+<p>Fees from every member who paid, less what was fronted for those who did not. Setting it to zero
+gives the tolerated default rate and the required fee:</p>
+<div class="f">tolerated rate = φT ÷ [(c + φ)(T − m)]<br>required fee = d·c·(T − m) ÷ [T − d(T − m)]</div>
+<table>
+<tr><th>Product</th><th class="n">Rate assumed</th><th class="n">Break-even fee</th><th class="n">Fee for 3× cover</th><th class="n">Currently charged</th><th class="n">Cover achieved</th></tr>
+<tr><td>Known monthly</td><td class="n">0.3%</td><td class="n">Rs 28</td><td class="n">Rs 83</td><td class="n">Rs 100</td><td class="n">3.6×</td></tr>
+<tr><td>Open monthly</td><td class="n">1.0%</td><td class="n">Rs 92</td><td class="n">Rs 276</td><td class="n">Rs 100</td><td class="n">1.1×</td></tr>
+<tr><td>Asset circle</td><td class="n">1.0%</td><td class="n">Rs 46</td><td class="n">Rs 138</td><td class="n">Rs 100</td><td class="n">2.2×</td></tr>
+<tr><td>Daily circle</td><td class="n">30.0%</td><td class="n">18% of contribution</td><td class="n">not affordable</td><td class="n">15%</td><td class="n">0.8×</td></tr>
+</table>
+<p>Two rows are thin by construction. Open monthly at Rs 100 and the daily product at 15 per cent sit
+at or slightly below break even on the fee line alone, and the shortfall is met by the opening
+auction, the marketplace commission and late fees. That is a defensible commercial choice but it
+should be a stated one rather than an accident.</p>
+</div>
+
+<div class="box">
+<p><b>The decision this leaves open.</b> Rs 100 flat on every monthly circle is simple, memorable and
+member friendly. On known circles it gives 3.6 times cover and is comfortably right. On open circles
+it gives 1.1 times, which is break even with no margin.</p>
+<p>Raising the open circle fee to Rs 275 gives roughly three times cover. The member experiences that
+as Rs 3,300 a year instead of Rs 1,200, against Rs 240,000 of money moved. Whether that is worth it is
+a judgement about how much of the first year's risk the company wants to carry on its own balance
+sheet rather than in its pricing.</p>
+</div>
+
+<h2 class="pb">4 &nbsp; Collection</h2>
+
+<div class="plain"><span class="tag">In plain terms</span>
+<p>The most effective decision in the entire product is not a formula. It is <i>when to ask</i>.</p>
+<p>Halqa does not collect on the due date. It collects on the morning the member's pay arrives, which
+is the moment in the month when their account balance is at its highest. The due date becomes the
+deadline for fixing failures rather than the moment of the attempt.</p>
+<p>This removes an entire category of default. If the money arrived and was spent before the due date,
+that is a failure the platform caused by asking too late. Once you ask on payday, what remains is
+somebody deliberately refusing, which is a completely different problem and a much smaller one.</p>
+</div>
+
+<h3>Finding out when payday actually is</h3>
+<p>Pakistan has no open banking regime and Halqa has no bank partner, so payday has to be established
+from evidence the platform legitimately owns. Four routes, in ascending order of strength.</p>
+<table>
+<tr><th>Route</th><th>What it needs from the member</th><th>Strength</th></tr>
+<tr><td>Salary slip</td><td>One photograph, reduced on the device before upload</td><td>Documentary, immediate</td></tr>
+<tr><td>The platform's own collection record</td><td>Nothing at all</td><td>The strongest of the four, and free</td></tr>
+<tr><td>Credit alert reading</td><td>Optional consent. Three fields leave the handset: a day, a coarse amount band, a source class</td><td>Strong, narrow by design</td></tr>
+<tr><td>Account title</td><td>Handled at linking</td><td>Supporting only</td></tr>
+</table>
+
+<div class="tech"><span class="tag">Technically</span>
+<p>The collection record route is the interesting one because it costs nothing and improves by itself.
+Every collection attempt is logged against a calendar day. The first success in each month marks a day
+on which money was provably present in the account. Taking the modal day across observed months, and
+requiring agreement across two consecutive months, establishes the payday with no document and no
+integration.</p>
+<div class="f">payday = mode of { first successful collection day, per month }<br>
+confidence = count of the mode ÷ months observed &nbsp;&nbsp;·&nbsp;&nbsp; verified at ≥ 2 of 2</div>
+<p>The elegant property is that a member who declares the wrong day is corrected automatically. The
+retry ladder attempts collection across the following days, finds the real one, and the modal
+calculation converges on it. A false declaration therefore does not need to be detected and punished;
+it simply fails to be confirmed, which removes the fee discount and records a single score event with
+its reason attached, once per window so the same error is never punished twice.</p>
+</div>
+
+<h3>Why a payment cannot happen twice</h3>
+<div class="plain"><span class="tag">In plain terms</span>
+<p>A member on a weak signal taps pay, sees nothing happen, and taps again. The handset may well have
+sent both requests. On most systems that is two debits and an apology.</p>
+<p>Every instruction Halqa issues carries a unique reference naming the exact thing being attempted:
+this member, this circle, this round, this purpose. When the payment succeeds, the reference is stored
+with the record. If a second request arrives carrying a reference that is already stored, the system
+returns the original receipt and moves no money.</p>
+</div>
+<div class="tech"><span class="tag">Technically</span>
+<p>This is idempotency, and it is applied to every write in the money path rather than only to
+payments. The key is deterministic and derived rather than random, so a retry from a client that has
+lost its state reconstructs the same key:</p>
+<div class="f">key = member · circle · round · purpose</div>
+<table>
+<tr><th>Attempt</th><th>Key already stored</th><th>Behaviour</th></tr>
+<tr><td>First request</td><td>No</td><td>Charge, write settlement, persist key inside the same transaction</td></tr>
+<tr><td>Duplicate request</td><td>Yes</td><td>Return the stored result. No side effects</td></tr>
+<tr><td>Network retry after timeout</td><td>Yes</td><td>Identical. The retry is free</td></tr>
+<tr><td>Genuine second payment</td><td>No, different purpose</td><td>Charge. The member intended it</td></tr>
+</table>
+<p>The same discipline covers payout release, so a retried disbursement cannot pay a member twice, and
+it covers the reconciliation job, which queries the aggregator by key before it retries anything. A
+payment that quietly succeeded but whose callback was lost is therefore never charged again.</p>
+<p>Retries are the normal condition on Pakistani mobile networks and under serverless execution
+timeouts. A payment system without this property is not partly correct; it is wrong on its most
+ordinary day.</p>
+</div>
+
+<h3>The eleven steps, and where the money is at each one</h3>
+<p>Schedule written, notice sent, instruction fired, aggregator presents, rail settles, result returns,
+settlement written, receipt issued, round checked, payout released, record furnished.</p>
+<p>The property worth noticing is that in none of those eleven steps does the money sit with Halqa. It
+is with the paying member, then in transit on the rail, then with the receiving member. Halqa holds an
+instruction and writes a record.</p>
+<div class="tech"><span class="tag">Technically</span>
+<p>Step seven is a single database transaction that writes four things or none: the debit ledger
+entry, the credit ledger entry, the receipt row, and the outbound message queue row. This makes three
+guarantees structurally rather than by convention. A receipt cannot exist without a settlement, a
+settlement cannot exist without a receipt, and a notification cannot be sent for a settlement that
+did not commit.</p>
+<p>Amounts are integer paisa held as big integers throughout. No floating point value appears anywhere
+in the money path, and rates are applied as integer basis points with integer division. Binary
+floating point cannot represent most decimal fractions exactly, and the residue is invisible until a
+reconciliation fails months later. Removing the representation removes the entire class of error.</p>
+<p>Ledger entries are written in pairs that must sum to zero. A one sided write is rejected by the
+database rather than discovered by an auditor.</p>
+</div>
+
+<h2 class="pb">5 &nbsp; The default protection model</h2>
+
+<div class="plain"><span class="tag">In plain terms</span>
+<p>The model does not try to make defaulting difficult for everybody. It tries to make it pointless
+for almost everybody, and to ensure that the few members who could genuinely cost something are the
+ones who have most to lose.</p>
+<p>Ask the question from the member's side. What do I gain by walking away? For a member in the last
+positions, where every new member is placed, the honest answer is nothing at all: by the time they
+collect they have already paid in almost everything they owe. For a member in the early positions, the
+gain is real, but those positions are only available to people with a long clean record they would be
+destroying.</p>
+</div>
+
+<h3>The seven independent layers</h3>
+<table>
+<tr><th class="n">&nbsp;</th><th>Layer</th><th>What it does</th></tr>
+<tr><td class="n">1</td><td>Identity</td><td>Card captured at signup, home location pinned, uniqueness enforced on identity number, telephone and electronic address. Every obligation binds to a government identity</td></tr>
+<tr><td class="n">2</td><td>Position</td><td>Band and tenure decide which positions may be claimed, bounding the worst case exposure to an unobserved member</td></tr>
+<tr><td class="n">3</td><td>Schedule</td><td>Collection on payday, escalating reminders, a balance check the evening before, and an internal grace window never shown to the member</td></tr>
+<tr><td class="n">4</td><td>Price</td><td>The late fee ladder, with matched score damage at every step so money cost and record cost move together</td></tr>
+<tr><td class="n">5</td><td>Payout controls</td><td>No payout releases while a contribution in that round is unpaid; a default on a linked circle withholds it; a shortfall is withheld from the pot up to a ceiling so a turn is never emptied</td></tr>
+<tr><td class="n">6</td><td>Consequence</td><td>Platform wide feature lock, an internal flag, and a recovery case for the outstanding amount plus penalties plus a rehabilitation fee</td></tr>
+<tr><td class="n">7</td><td>Contract</td><td>The signed undertaking, renewed weekly on open circles, and the mutual guarantee executed automatically at joining, running member to member and never to Halqa</td></tr>
+</table>
+<p>They are independent by design. A member who gets past identity still meets position. One who gets
+past position still meets the payout gate. No single failure exposes a circle.</p>
+
+<h3>How the four products differ</h3>
+<table>
+<tr><th>&nbsp;</th><th>Known</th><th>Open</th><th>Asset</th><th>Daily</th></tr>
+<tr><td>Who covers a missed contribution</td><td>The other members</td><td>Halqa</td><td>Trustee sells the item, Halqa covers any residual</td><td>Halqa</td></tr>
+<tr><td>Cover compulsory</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Income evidence</td><td>Not required</td><td>Required for the first half</td><td>Required</td><td>Two months daily, or a vault holding</td></tr>
+<tr><td>Undertaking</td><td>Once at formation</td><td>Renewed weekly</td><td>Renewed weekly</td><td>Renewed weekly</td></tr>
+<tr><td>Positions</td><td>Agreed by the group</td><td>Claimed, band gated</td><td>Claimed, band gated</td><td>Set once by auction, then fixed</td></tr>
+<tr><td>Tradeable later</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td></tr>
+<tr><td>Security held</td><td>None</td><td>None</td><td>Legal title to the item</td><td>The vault holding, where required</td></tr>
+</table>
+
+<div class="box">
+<p><b>The asymmetry a banker will spot immediately.</b> On a known circle Halqa fronts nothing, so a
+default costs the platform nothing and costs the other members roughly the missing contributions
+divided between them. On an open circle Halqa covers it, so the members lose nothing and the platform
+carries the whole amount.</p>
+<p>With one flat fee on both products, the open circle member is receiving cover for free while the
+known circle member pays the same fee for none. That is the strongest single argument for splitting
+the two prices, and it is a fairness argument rather than a revenue one.</p>
+</div>
+
+<h3>The cover facility, and the four properties that bound it</h3>
+<p>An operator in the United States guaranteed every member's default itself, without pricing or
+capping the guarantee. It ran nine years and closed. Four properties prevent a repeat.</p>
+<p><b>Priced.</b> The fee is set against the default rate the product is expected to carry. If the
+rate proves higher, the price changes rather than the promise.</p>
+<p><b>Capped at four levels.</b> Per circle, per host, per member, and in aggregate against the
+platform's own capital. No single circle, organiser or bad month can consume the facility.</p>
+<p><b>An advance, not a payment.</b> Halqa steps into the circle's claim against the member who
+failed. The obligation changes hands rather than disappearing, and it is pursued.</p>
+<p><b>Reinsured above the cap.</b> Beyond the aggregate ceiling the exposure passes to a takaful
+operator, so an abnormal year does not fall on the company.</p>
+
+<h2 class="pb">6 &nbsp; Time value, and why position is worth money</h2>
+
+<div class="plain"><span class="tag">In plain terms</span>
+<p>Every member pays the same total and receives the same total, so on paper nobody gains anything.
+That is true in rupees and false in economics.</p>
+<p>Receiving a lump sum in month one is worth more than receiving the same sum in month twelve,
+because you have the use of the money for eleven extra months. Every member already knows this
+instinctively, which is exactly why they compete for early turns and why informal committees have
+always had quiet arguments about who goes first.</p>
+<p>The question for a formal platform is not whether that value exists. It is whether the arrangement
+prices it openly or pretends it does not.</p>
+</div>
+
+<h3>What the spectrum actually looks like</h3>
+<p>Take a twelve month circle at Rs 20,000 a month, and discount at twelve per cent a year, which is
+roughly what money costs an ordinary Pakistani household.</p>
+<table>
+<tr><th class="n">Position</th><th class="n">Present value of the pot received</th><th class="n">Present value of everything paid in</th><th class="n">Net value of that position</th></tr>
+<tr><td class="n">1</td><td class="n">Rs 237,745</td><td class="n">Rs 225,829</td><td class="n">plus Rs 11,916</td></tr>
+<tr><td class="n">4</td><td class="n">Rs 231,077</td><td class="n">Rs 225,829</td><td class="n">plus Rs 5,248</td></tr>
+<tr><td class="n">6</td><td class="n">Rs 226,769</td><td class="n">Rs 225,829</td><td class="n">plus Rs 940</td></tr>
+<tr><td class="n">7</td><td class="n">Rs 224,637</td><td class="n">Rs 225,829</td><td class="n">minus Rs 1,192</td></tr>
+<tr><td class="n">12</td><td class="n">Rs 214,286</td><td class="n">Rs 225,829</td><td class="n">minus Rs 11,543</td></tr>
+</table>
+<p>The spread between first and last is Rs 23,459, which is 9.8 per cent of the pot. That value is not
+created by Halqa and it is not destroyed. It moves from the late members to the early ones.</p>
+
+<div class="tech"><span class="tag">Technically</span>
+<p>Writing P for the pot, c for the contribution, T for the term, k for the position and i for the
+monthly discount rate:</p>
+<div class="f">value of position k = P ÷ (1 + i)<sup>k</sup> &nbsp;−&nbsp; c · [1 − (1+i)<sup>−T</sup>] ÷ i</div>
+<p>The second term is an ordinary annuity present value and does not depend on k, so the whole
+spectrum is driven by the first term alone. Setting the expression to zero and solving for k gives the
+position at which the arrangement is economically neutral:</p>
+<div class="f">neutral position ≈ 6.4 of 12, at twelve per cent a year</div>
+<p>The neutral position moves with the discount rate. At two per cent a year the order is nearly flat
+and position barely matters. At thirty per cent, which is close to what informal credit costs in this
+market, the first position is worth over Rs 25,000 and the last costs about the same. So the same
+circle is a very different proposition to two members with different costs of money.</p>
+</div>
+
+<div class="box">
+<p><b>A finding worth acting on.</b> The early position fee currently tapers to zero at the <i>last</i>
+position. It should taper to zero at the <i>neutral</i> position, around 6.4 of 12.</p>
+<p>At its steepest the fee captures about Rs 4,200 of the Rs 11,916 the first position is worth, which
+is roughly a third. The correction is one line of logic: taper to zero at the neutral position, and
+credit the positions beyond it out of what the early positions paid.</p>
+<p>The circle then settles its own time value internally, and the arrangement becomes provably fair
+rather than conventionally fair. That is a much stronger thing to be able to say to a regulator.</p>
+</div>
+
+<h3>Why the marketplace exists</h3>
+<p>Members do not value their positions identically, because they do not face the same cost of money.
+A member with a cash need this month and a member saving for a wedding next year sit on opposite sides
+of this spectrum. Letting them trade makes both better off, and Halqa takes a commission on the
+premium rather than a position in the trade.</p>
+<p>The daily product is the exception. Its positions are set once by auction and are never tradeable
+afterwards, because a sixty day cycle with several collections a day does not have enough time for a
+secondary market to clear honestly.</p>
+
+<h2 class="pb">7 &nbsp; The reward system</h2>
+
+<div class="plain"><span class="tag">In plain terms</span>
+<p>On time payment is the single input the whole business rests on. Expected loss, the price, the
+score and the value of the data asset all move with it. So the reward system is attached to that one
+behaviour and to nothing else.</p>
+<p>The clever part is who pays for it. The discount at every tier is the retailer's own promotional
+discount, offered to an audience that has been qualified by a year or more of demonstrated payment
+behaviour. For the retailer that is customer acquisition spend reaching a segment they cannot
+otherwise identify. Halqa earns a commission on the resulting order. So the reward is the retailer's
+discount, the revenue is the retailer's commission, and the system funds itself.</p>
+</div>
+
+<h3>The design rules, and why each exists</h3>
+<table>
+<tr><th>Rule</th><th>Why</th></tr>
+<tr><td>Points and score are strictly separate</td><td>Points buy discounts. Score gates positions. Points never buy score and score is never sold. Blur this and the score stops measuring risk</td></tr>
+<tr><td>Paying for another member earns points but no streak and no score</td><td>A wealthier friend cannot buy anybody a credit record. This is the single most important exclusion in the system</td></tr>
+<tr><td>The score gain per cycle is capped</td><td>Otherwise a member could farm score by joining many tiny circles</td></tr>
+<tr><td>A missed contribution resets the streak but confiscates nothing already earned</td><td>The punishment is the fee ladder and the score. Clawing back rewards on top is punitive and teaches nothing</td></tr>
+<tr><td>Rewards release only against contributions that have actually settled</td><td>A reward against an unsettled payment is a reward for an assertion</td></tr>
+<tr><td>Never redeemable for cash</td><td>Cash redeemable points are a stored value instrument, which is regulated activity. This one rule keeps the whole scheme outside that perimeter</td></tr>
+</table>
+
+<div class="tech"><span class="tag">Technically</span>
+<p>The ladder is a step function on consecutive clean rounds, with a multiplier on points that
+compounds to a ceiling. Tiers sit at three, six, twelve, eighteen, twenty four and thirty six rounds,
+plus a completion award. Each tier offers either a partner discount capped in rupees or a Halqa charge
+waived, and the member chooses.</p>
+<p>Rollout is four staged phases, ordered by counterparty dependency: charges waived, which needs no
+counterparty and ships immediately; affiliate registration, which is a form rather than a negotiation;
+direct merchant agreements with exclusive codes and in-app placement; and direct payment, where a goal
+circle's pot is paid to a retailer for a named item and the retailer pays a commission on the value
+brokered.</p>
+<p>Halqa receives order attribution only, never basket contents. Purchase behaviour is not sold.</p>
+</div>
+
+<h2 class="pb">8 &nbsp; The security model</h2>
+
+<div class="plain"><span class="tag">In plain terms</span>
+<p>Holding no member money removes the biggest prize an attacker could go after, but not the others.
+Six attacks are worth defending against, and the useful way to rank them is by what they would
+actually be worth to somebody attempting them, not by how alarming they sound.</p>
+</div>
+<table>
+<tr><th class="n">&nbsp;</th><th>Attack</th><th>What stops it</th></tr>
+<tr><td class="n">1</td><td>An impersonated exit or hardship claim</td><td>Facial verification on every exit request, the application PIN, and a manual review sample</td></tr>
+<tr><td class="n">2</td><td>Account takeover with a stolen credential</td><td>Rotating refresh tokens, reuse of an old token burning the entire family, a facial check on any new device, PIN held only in memory</td></tr>
+<tr><td class="n">3</td><td>A synthetic or borrowed identity at signup</td><td>Card capture, account title match, national database verification and biometrics, uniqueness on three separate identifiers</td></tr>
+<tr><td class="n">4</td><td>One person assembling an artificial circle</td><td>Host concurrency ceilings, the host link confirmed from both ends, new members confined to the last positions</td></tr>
+<tr><td class="n">5</td><td>A double charge or double payout through a retry</td><td>The idempotency key on every write, and reconciliation by key before any retry</td></tr>
+<tr><td class="n">6</td><td>Data exfiltration</td><td>Parameterised queries throughout, no raw biometrics or card numbers stored at all, append only audit log, encryption in transit and at rest</td></tr>
+</table>
+
+<div class="tech"><span class="tag">Technically</span>
+<p>Passwords are hashed with bcrypt at cost twelve, and secret strength is asserted at boot so the
+service refuses to start with weak secrets rather than starting insecurely. Sessions use short lived
+access tokens with rotating refresh tokens; presenting a previously rotated refresh token is treated
+as compromise and burns the entire token family.</p>
+<p>Rate limiting locks an account for fifteen minutes after five failed attempts and blocks globally
+at thirty attempts in fifteen minutes. Login timing is held constant so accounts cannot be enumerated
+by measuring response times.</p>
+<p>Every database query is parameterised through a typed data layer, so constructing a query by string
+concatenation is structurally unavailable rather than merely discouraged. An append only audit log and
+a separate security event table record every consent, signature and administrative action with an
+actor and a timestamp.</p>
+<p>Posture is assessed internally at B plus. The gap to A is an external penetration test and a formal
+secure code review, both scheduled before public launch and named here rather than omitted.</p>
+</div>
+
+<h3>What the platform refuses to collect, and why that is a security decision</h3>
+<p>Roughly four hundred lending applications were removed from Pakistani app stores for the
+permissions they demanded rather than for the money they lent. Every item below would improve Halqa's
+underwriting. Every one is refused.</p>
+<table>
+<tr><th>Refused</th><th>Why</th></tr>
+<tr><td>Contact list access</td><td>The practice most associated with the removals, and the one the regulator named</td></tr>
+<tr><td>Photo gallery access</td><td>No proportionate purpose, impossible to justify to a store reviewer</td></tr>
+<tr><td>Message reading</td><td>Reads every private message a person has, to obtain a handful of numbers</td></tr>
+<tr><td>Accessibility service screen scraping</td><td>Live bank balances with no partnership needed. Rejected early. It is the delisting trap</td></tr>
+<tr><td>Background location</td><td>One precise pin at signup, with consent, is sufficient and defensible</td></tr>
+<tr><td>Full card numbers and security codes</td><td>Never persisted. Brand, last four, expiry and holder only</td></tr>
+<tr><td>Raw biometric templates and facial images</td><td>Only the result and a reference are kept. The template stays with the national authority</td></tr>
+</table>
+<p>The permissions a lender demands are the fastest signal a regulator has for how it intends to
+collect. Halqa asks for less than a food delivery application does, and that is a deliberate
+positioning decision as much as a technical one.</p>
+
+<h2 class="pb">9 &nbsp; What has not been measured yet</h2>
+<div class="box">
+<p>Every price in this document depends on one number nobody has: the rate at which members actually
+default. The figures used throughout are modelled from the academic literature on Pakistani
+committees, from the published experience of operators in comparable markets, and from the design
+points of each product.</p>
+<p>The first hundred completed circles will measure it. At that point every fee, every band ceiling
+and every cover cap is recomputed against evidence rather than assumption.</p>
+<p>Saying that plainly is a stronger position than presenting the figures as settled, because it
+describes the pricing as a model with one named input rather than as a guess. Anybody serious will ask
+the question, and the answer should be ready before they do.</p>
+</div>
+
+<div class="foot">Halqa &nbsp;·&nbsp; Models and algorithms &nbsp;·&nbsp; 13 August 2026 &nbsp;·&nbsp; Confidential</div>

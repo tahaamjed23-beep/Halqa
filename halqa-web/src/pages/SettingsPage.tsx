@@ -7,8 +7,11 @@ import LegalFooter, { LegalDocModal } from '../components/LegalFooter';
 import { LinkedAccountsManager, RAIL_META } from '../components/LinkedAccounts';
 import { LEGAL_DOCS, TERMS_VERSION, type DocId } from '../legal/content';
 import { useLang } from '../lib/i18n';
+import { AppearancePanel } from '../components/Appearance';
+import { CollectionOrder } from '../components/CollectionOrder';
+import { SecurityPanel } from '../components/SecurityPanel';
 
-// The Settings hub — the sectioned "gear" screen every payment app has.
+// The Settings hub, the sectioned "gear" screen every payment app has.
 // Sections: Sign in & security · Account preferences · Data privacy ·
 // Advertising data · Notifications · Payments · Legal & policies · Help.
 
@@ -34,7 +37,7 @@ function Toggle({ label, hint, checked, onChange, disabled }: { label: string; h
   return <label className="settings-toggle"><input type="checkbox" checked={checked} disabled={disabled} onChange={e => onChange(e.target.checked)} /><span><b>{label}</b><small>{hint}</small></span></label>;
 }
 
-// Linked collection accounts now live in components/LinkedAccounts.tsx —
+// Linked collection accounts now live in components/LinkedAccounts.tsx
 // bank-branded cards + the stepped SadaPay-style add flow, shared with
 // Profile and the signup wizard. Re-exported under the old name so existing
 // imports keep working.
@@ -64,14 +67,17 @@ export default function SettingsPage({ user }: { user: User }) {
   ];
 
   return <div className="page narrow enter">
-    <div className="page-head"><div><span className="eyebrow">Account center</span><h1>Settings</h1><p>Everything about your account, your data, and your choices — in one place.</p></div></div>
+    <div className="page-head"><div><span className="eyebrow">Account center</span><h1>Settings</h1><p>Everything about your account, your data, and your choices, in one place.</p></div></div>
     <div className="settings-list">
       {sections.map(s => <section key={s.id} className={`panel settings-section ${open === s.id ? 'open' : ''}`}>
         <button className="settings-row" onClick={() => setOpen(open === s.id ? null : s.id)}>{s.icon}<span className="settings-row-text"><b>{s.title}</b><small>{s.sub}</small></span><ChevronRight className={`chev ${open === s.id ? 'down' : ''}`} /></button>
         {open === s.id && <div className="settings-body">
           {s.id === 'security' && <>
             <ChangePassword />
-            <div className="info-stack"><div><span>Two-step verification</span><b>Coming with WhatsApp OTP</b></div><div><span>Failed sign-in lockout</span><b>On — locks after repeated failures</b></div><div><span>Sessions</span><b>Changing your password signs out all other devices</b></div></div>
+            {/* App PIN and device biometric. The PIN is a second lock asked on
+                every open, separate from the password. */}
+            <SecurityPanel />
+            <div className="info-stack"><div><span>Two-step verification</span><b>Coming with WhatsApp OTP</b></div><div><span>Failed sign-in lockout</span><b>On, locks after repeated failures</b></div><div><span>Sessions</span><b>Changing your password signs out all other devices</b></div></div>
           </>}
           {s.id === 'account' && <>
             <div className="info-stack">
@@ -79,33 +85,37 @@ export default function SettingsPage({ user }: { user: User }) {
               <div><span>Username</span><b>@{user.username}</b></div>
               <div><span>Mobile</span><b>{user.phone}</b></div>
               <div><span>Email</span><b>{user.email}</b></div>
-              <div><span>CNIC</span><b>{user.cnic ? `•••••••••${user.cnic.slice(-4)} · verified identity on file` : 'Not on file — add it to rank higher in turn order'}</b></div>
+              <div><span>CNIC</span><b>{user.cnic ? `•••••••••${user.cnic.slice(-4)} · verified identity on file` : 'Not on file, add it to rank higher in turn order'}</b></div>
             </div>
             <div className="settings-block"><Toggle label={lang === 'en' ? 'اردو interface' : 'English interface'} hint="Switch the app language." checked={lang === 'ur'} onChange={v => setLang(v ? 'ur' : 'en')} /></div>
-            <p className="muted" style={{ fontSize: 12 }}>Name, phone, email or CNIC wrong? Contact support@halqa.pk with proof of identity — identity fields are audit-locked and can't be self-edited once circles are running.</p>
+            <p className="muted" style={{ fontSize: 12 }}>Name, phone, email or CNIC wrong? Contact support@halqa.pk with proof of identity, identity fields are audit-locked and can't be self-edited once circles are running.</p>
+            {/* Photo, display name, accent, theme, text size and reminder
+                preferences. None of it touches the verified identity above. */}
+            <AppearancePanel />
           </>}
           {s.id === 'privacy' && <>
-            <Toggle label="Share my goal interest with relevant partners" hint="Only your name, number, city and goal category — never your ledger, score, CNIC or circle history. Off means nothing is ever shared. You can change this any time." checked={consent === true} disabled={consent === null || consentBusy} onChange={saveConsent} />
-            <div className="info-stack"><div><span>Your ledger & score</span><b>Never sold, never shared with partners</b></div><div><span>Other members see</span><b>Name, reliability, payment status in shared circles only</b></div><div><span>Download my data</span><b>Generate a Credit Passport from Profile, or email privacy@halqa.pk</b></div><div><span>Delete my account</span><b>Email privacy@halqa.pk — honoured after active circles settle</b></div></div>
+            <Toggle label="Share my goal interest with relevant partners" hint="Only your name, number, city and goal category, never your ledger, score, CNIC or circle history. Off means nothing is ever shared. You can change this any time." checked={consent === true} disabled={consent === null || consentBusy} onChange={saveConsent} />
+            <div className="info-stack"><div><span>Your ledger & score</span><b>Never sold, never shared with partners</b></div><div><span>Other members see</span><b>Name, reliability, payment status in shared circles only</b></div><div><span>Download my data</span><b>Generate a Credit Passport from Profile, or email privacy@halqa.pk</b></div><div><span>Delete my account</span><b>Email privacy@halqa.pk, honoured after active circles settle</b></div></div>
             <button className="text-action" onClick={() => setDoc('privacy')}>Read the full Privacy Policy</button>
           </>}
           {s.id === 'ads' && <>
-            <Toggle label="Goal-intent sharing (the only 'advertising data' we use)" hint="This is the same switch as Data privacy — one consent, one switch, no dark patterns. Sponsored content, if ever shown, will be labelled." checked={consent === true} disabled={consent === null || consentBusy} onChange={saveConsent} />
+            <Toggle label="Goal-intent sharing (the only 'advertising data' we use)" hint="This is the same switch as Data privacy, one consent, one switch, no dark patterns. Sponsored content, if ever shown, will be labelled." checked={consent === true} disabled={consent === null || consentBusy} onChange={saveConsent} />
             <div className="info-stack"><div><span>Third-party ad trackers</span><b>None in the app</b></div><div><span>Your CNIC & ledger</span><b>Never available to advertisers</b></div></div>
             <button className="text-action" onClick={() => setDoc('ads')}>Read Advertising & Ad Choices</button>
           </>}
           {s.id === 'notifications' && <>
             <Toggle label="Payment reminders" hint="Due-date nudges for your installments." checked={notif.reminders} onChange={v => setN('reminders', v)} />
             <Toggle label="Round updates" hint="Payout releases, round openings, circle milestones." checked={notif.rounds} onChange={v => setN('rounds', v)} />
-            <Toggle label="News & offers from Halqa" hint="Off by default. Product news only — we don't spam." checked={notif.marketing} onChange={v => setN('marketing', v)} />
+            <Toggle label="News & offers from Halqa" hint="Off by default. Product news only, we don't spam." checked={notif.marketing} onChange={v => setN('marketing', v)} />
             <p className="muted" style={{ fontSize: 12 }}>Preferences apply on this device. Critical security alerts are always delivered.</p>
           </>}
           {s.id === 'payments' && <>
+            <CollectionOrder />
             <LinkedAccountsManager />
             <Field label="Fallback rail" hint="Used when none of your linked methods fits.">
               <div className="rail-grid">{['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER', 'CASH'].map(r => { const meta = RAIL_META[r]; return <button key={r} className={`rail-chip ${rail === r ? 'on' : ''}`} onClick={() => { setRail(r); pref.set('payments.rail', r); }}>{meta && <i className="chip-logo" style={{ background: meta.color }}>{meta.mono}</i>}{meta ? meta.name : 'Cash'}</button>; })}</div>
             </Field>
-            <div className="info-stack"><div><span>Digital confirmations</span><b>Sandbox mode — clearly marked until live rails switch on</b></div><div><span>Fees Halqa charges</span><b>Only what's in the Fees & Payments Policy</b></div><div><span>Payment history</span><b>Profile → Recorded installments</b></div></div>
+            <div className="info-stack"><div><span>Digital confirmations</span><b>Sandbox mode, clearly marked until live rails switch on</b></div><div><span>Fees Halqa charges</span><b>Only what's in the Fees & Payments Policy</b></div><div><span>Payment history</span><b>Profile → Recorded installments</b></div></div>
             <button className="text-action" onClick={() => setDoc('fees')}>Read Fees & Payments Policy</button>
           </>}
           {s.id === 'legal' && <>

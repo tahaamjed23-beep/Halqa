@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-// Urdu localisation — foundation pass (chairman-approved). Covers the
+// Urdu localisation, foundation pass (chairman-approved). Covers the
 // first-touch surfaces (navigation, auth story, home hero, trust banner,
 // Rafa starters/tour titles); deep pages roll out next. The dictionary is
 // deliberately tiny and typed so adding strings stays trivial.
@@ -16,7 +16,7 @@ const STRINGS: Record<string, { en: string; ur: string }> = {
   nav_profile: { en: 'Profile', ur: 'پروفائل' },
   nav_vault: { en: 'Vault', ur: 'والٹ' },
   hero_greeting: { en: 'Assalam-o-Alaikum', ur: 'السلام علیکم' },
-  hero_sub: { en: 'Your committees, obligations and growth—at a glance.', ur: 'آپ کی کمیٹیاں، واجبات اور منافع — ایک نظر میں۔' },
+  hero_sub: { en: 'Your committees, obligations and growthat a glance.', ur: 'آپ کی کمیٹیاں، واجبات اور منافع, ایک نظر میں۔' },
   hero_host: { en: 'Host a committee', ur: 'کمیٹی شروع کریں' },
   hero_savings: { en: 'Your recorded savings', ur: 'آپ کی درج شدہ بچت' },
   trust_title: { en: 'Record-only prototype', ur: 'صرف ریکارڈ رکھنے والا پروٹوٹائپ' },
@@ -24,7 +24,7 @@ const STRINGS: Record<string, { en: string; ur: string }> = {
   streak: { en: 'Streak', ur: 'تسلسل' },
   everything_current: { en: 'Everything is current', ur: 'سب کچھ تازہ ہے' },
   updates_waiting: { en: 'updates waiting', ur: 'اطلاعات موجود ہیں' },
-  rafa_hint: { en: "Hi! I'm Rafa — tap me if you need help 👋", ur: 'السلام علیکم! میں رافع ہوں — مدد کے لیے مجھے دبائیں 👋' },
+  rafa_hint: { en: "Hi! I'm Rafa, tap me if you need help 👋", ur: 'السلام علیکم! میں رافع ہوں, مدد کے لیے مجھے دبائیں 👋' },
 };
 
 export const t = (key: string, lang: Lang): string => STRINGS[key]?.[lang] ?? STRINGS[key]?.en ?? key;

@@ -6,7 +6,7 @@ import { scoreColor } from './ui';
 export type Reputation={userId:string;fullName:string;username:string;creditScore:number;paymentStreak:number;memberSince:string;hostedCompleted:number;hostedActive:number;cleanCompletions:number;paymentsResolved:number;onTimePct:number|null;missedPayments:number;defaultFlag:boolean;isBanned:boolean;city?:string|null;locality?:string|null;occupationType?:string|null;jobTitle?:string|null};
 
 const OCC_LABEL:Record<string,string>={EMPLOYED:'Employed',BUSINESS_OWNER:'Business owner',SELF_EMPLOYED:'Self-employed',HOUSEWIFE:'Housewife',STUDENT:'Student',RETIRED:'Retired',OTHER:''};
-// The public trust line — broad location (city + area, never the house number)
+// The public trust line, broad location (city + area, never the house number)
 // and the member's job (never the employer). For a housewife jobTitle holds the
 // husband's job, so we prefix it.
 function placeLine(r:Reputation){return [r.city,r.locality].filter(Boolean).join(' · ')}

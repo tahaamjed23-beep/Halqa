@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { createHash, randomInt } from 'node:crypto';
 import { z } from 'zod';
+import type { Prisma } from '@prisma/client';
 import { prisma } from '../db';
 import { requireAuth } from '../lib/auth';
 import { reputationFor } from '../lib/reputation';
@@ -344,6 +345,109 @@ router.get('/leads/summary', async (req, res) => {
     consentedMembers: await prisma.committeeMember.count({ where: { committee: { goalType: g.goalType }, status: 'ACTIVE', user: { dataConsent: true } } }),
   })));
   res.json({ goals: consentedByGoal });
+});
+
+// --- Personalisation ------------------------------------------------------
+// A committee is a personal arrangement between people who mostly know each
+// other; an application that looks like a bank statement gets opened once.
+// None of this touches verification: displayName is what other members see,
+// fullName remains the legal name matched against the CNIC.
+const ACCENTS = ['lime', 'pine', 'sand', 'clay', 'indigo', 'plum'] as const;
+
+const appearanceSchema = z.object({
+  displayName: z.string().trim().min(2).max(40).nullable().optional(),
+  avatarUrl: z.string().max(300_000).nullable().optional(),   // data URI or hosted URL
+  accentColor: z.enum(ACCENTS).optional(),
+  themePref: z.enum(['system', 'light', 'dark']).optional(),
+  langPref: z.enum(['en', 'ur']).optional(),
+  textScale: z.number().int().min(90).max(140).optional(),
+  highContrast: z.boolean().optional(),
+  notifyPrefs: z.object({
+    push: z.boolean().optional(),
+    whatsapp: z.boolean().optional(),
+    email: z.boolean().optional(),
+    // A reminder that arrives at two in the morning is not a reminder, it is a
+    // reason to turn notifications off entirely. Quiet hours are 0-23 local.
+    quietFrom: z.number().int().min(0).max(23).optional(),
+    quietTo: z.number().int().min(0).max(23).optional(),
+  }).optional(),
+});
+
+router.get('/appearance', requireAuth, async (req, res, next) => {
+  try {
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id: req.auth!.userId },
+      select: {
+        displayName: true, avatarUrl: true, accentColor: true, themePref: true,
+        langPref: true, textScale: true, highContrast: true, notifyPrefsJson: true,
+      },
+    });
+    res.json({ ...user, accents: ACCENTS });
+  } catch (error) { next(error); }
+});
+
+router.patch('/appearance', requireAuth, async (req, res, next) => {
+  try {
+    const input = appearanceSchema.parse(req.body);
+    const { notifyPrefs, ...rest } = input;
+    const user = await prisma.user.update({
+      where: { id: req.auth!.userId },
+      data: {
+        ...rest,
+        ...(notifyPrefs ? { notifyPrefsJson: notifyPrefs } : {}),
+      },
+      select: {
+        displayName: true, avatarUrl: true, accentColor: true, themePref: true,
+        langPref: true, textScale: true, highContrast: true, notifyPrefsJson: true,
+      },
+    });
+    await audit(prisma, req.auth!.userId, 'APPEARANCE_UPDATED', 'User', req.auth!.userId, { keys: Object.keys(input) });
+    res.json(user);
+  } catch (error) { next(error); }
+});
+
+// --- Collection order -----------------------------------------------------
+// The member knows which of their accounts has money in it on which day; the
+// platform does not. So they set the order the rails are tried in, and the
+// first one that clears wins. One account is marked as the salary account,
+// because collecting on payday from the account the salary lands in is the
+// most certain collection there is.
+const orderSchema = z.object({
+  order: z.array(z.string()).min(1),          // method ids, most-preferred first
+  salaryMethodId: z.string().nullable().optional(),
+});
+
+router.patch('/payment-methods/order', requireAuth, async (req, res, next) => {
+  try {
+    const input = orderSchema.parse(req.body);
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id: req.auth!.userId }, select: { paymentMethodsJson: true },
+    });
+    const methods = (Array.isArray(user.paymentMethodsJson) ? user.paymentMethodsJson : []) as LinkedMethod[];
+
+    // Rank by the submitted order; anything not named keeps its relative place
+    // at the end, so a stale client cannot silently drop a method.
+    const rank = new Map(input.order.map((id, i) => [id, i]));
+    const next = [...methods]
+      .sort((a, b) => (rank.get(a.id) ?? 999) - (rank.get(b.id) ?? 999))
+      .map((m, i) => ({ ...m, order: i, preferred: i === 0 }));
+
+    const salaryMethod = input.salaryMethodId ? next.find(m => m.id === input.salaryMethodId) : undefined;
+
+    await prisma.user.update({
+      where: { id: req.auth!.userId },
+      data: {
+        paymentMethodsJson: next as unknown as Prisma.InputJsonValue,
+        ...(input.salaryMethodId !== undefined ? {
+          salaryAccountLinked: Boolean(salaryMethod),
+          salaryAccountRef: salaryMethod?.id ?? null,
+        } : {}),
+      },
+    });
+    await audit(prisma, req.auth!.userId, 'COLLECTION_ORDER_SET', 'User', req.auth!.userId,
+      { order: next.map(m => m.id), salaryMethodId: input.salaryMethodId ?? null });
+    res.json({ methods: next, salaryMethodId: salaryMethod?.id ?? null });
+  } catch (error) { next(error); }
 });
 
 export default router;

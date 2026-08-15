@@ -1,76 +1,89 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Bell, CircleDollarSign, Home, Landmark, LogOut, PiggyBank, Settings, Users, Wallet } from 'lucide-react';
+import { Gift, Home, UserPlus, User as UserIcon, Users, X, Bell } from 'lucide-react';
+import { JoinSheet } from '../components/JoinSheet';
 import { api } from '../api';
 import type { Notice, Page, User } from '../types';
-import { Logo } from '../components/ui';
 import RafaBot from '../components/RafaBot';
 import ErrorBoundary from '../components/ErrorBoundary';
-import { SIMPLE_MODE } from '../config';
-import { t, useLang } from '../lib/i18n';
+
+// Cash-app frame: pages own their own header, the shell owns the bottom tab
+// bar, the notification sheet and the account-lock banner. Five slots with a
+// raised centre action, which is the layout every Pakistani wallet uses and
+// therefore the one a member already knows how to drive.
+const TABS:[Page,string,ReactNode][]=[
+  ['home','Home',<Home key="h"/>],
+  ['circles','Committees',<Users key="c"/>],
+  ['rewards','Rewards',<Gift key="r"/>],
+  ['profile','Account',<UserIcon key="p"/>],
+];
 
 export default function Shell({user,page,setPage,onLogout,children}:{user:User;page:Page;setPage:(page:Page)=>void;onLogout:()=>void;children:ReactNode}){
-  const [notices,setNotices]=useState<Notice[]>([]);const [show,setShow]=useState(false);
-  const [lang,setLang]=useLang();
-  useEffect(()=>{void api<Notice[]>('/notifications').then(setNotices)},[]);
-  const unread=notices.filter(notice=>!notice.isRead).length;
-  // Simple mode (Kazi pivot) shows only the "just lend and pay" surfaces —
-  // Market/Terminal/Vault stay in the code, hidden from the nav.
-  const fullNav:[Page,string,ReactNode][]=[['home',t('nav_home',lang),<Home key="1"/>],['circles',t('nav_circles',lang),<Users key="2"/>],['market',t('nav_market',lang),<CircleDollarSign key="3"/>],['terminal',t('nav_terminal',lang),<Landmark key="4"/>],['vault',t('nav_vault',lang),<PiggyBank key="6"/>],['profile',t('nav_profile',lang),<Wallet key="5"/>],['settings',lang==='ur'?'ترتیبات':'Settings',<Settings key="7"/>]];
-  // Simple mode keeps the turn marketplace (buy/sell positions — even across
-  // circles) alongside the core surfaces; only the investment layer stays hidden.
-  const nav=SIMPLE_MODE?fullNav.filter(([id])=>['home','circles','market','profile','settings'].includes(id)):fullNav;
-  const openNotices=()=>{setShow(!show);if(unread)void api('/notifications/read-all',{method:'PATCH'}).then(()=>setNotices(items=>items.map(item=>({...item,isRead:true}))))};
+  const [notices,setNotices]=useState<Notice[]>([]);
+  const [showNotices,setShowNotices]=useState(false);
+  const [joinOpen,setJoinOpen]=useState(false);
+  useEffect(()=>{void api<Notice[]>('/notifications').then(setNotices).catch(()=>{})},[]);
+  const unread=notices.filter(n=>!n.isRead).length;
+  const openNotices=()=>{
+    setShowNotices(true);
+    if(unread)void api('/notifications/read-all',{method:'PATCH'}).then(()=>setNotices(items=>items.map(i=>({...i,isRead:true})))).catch(()=>{});
+  };
+  useEffect(()=>{
+    const handler=()=>openNotices();
+    window.addEventListener('halqa:open-notices',handler);
+    return()=>window.removeEventListener('halqa:open-notices',handler);
+  });
 
   return (
-    <div className="app-shell sidebar-layout">
-      <aside className="sidebar">
-        <div className="sidebar-top">
-          <button className="logo-link" onClick={()=>setPage('about')} title="About Halqa"><Logo/></button>
-          <div className="account-box">
-            <div className="account-avatar">{user.fullName.charAt(0)}</div>
-            <div className="account-meta">
-              <strong>{user.fullName}</strong>
-              <span>🔥 {user.paymentStreak || 0} {t('streak',lang)}</span>
-            </div>
-          </div>
-          <nav className="side-nav">
-            {nav.map(([id,label,icon])=>(
-              <button key={id} className={page===id?'active':''} onClick={()=>setPage(id)}>
-                {icon}<span>{label}</span>
-              </button>
-            ))}
-          </nav>
-        </div>
-        <div className="sidebar-bottom">
-          <div className="sidebar-actions">
-            <div className="notice-wrap">
-              <button className={`action-btn ${show?'active':''}`} onClick={openNotices}>
-                <Bell size={20}/>
-                {unread>0&&<i className="badge"/>}
-              </button>
-              {show&&<aside className="notice-panel">{notices.length?notices.map(notice=><article key={notice.id}><b>{notice.type.replaceAll('_',' ')}</b><p>{notice.message}</p></article>):<p className="muted">No updates</p>}</aside>}
-            </div>
-            <button className="action-btn lang-btn" title={lang==='en'?'اردو میں دیکھیں':'Switch to English'} onClick={()=>setLang(lang==='en'?'ur':'en')}>{lang==='en'?'اردو':'EN'}</button>
-            <button className="action-btn" onClick={()=>{if(window.confirm(lang==='ur'?'کیا آپ واقعی سائن آؤٹ کرنا چاہتے ہیں؟':'Are you sure you want to sign out?'))onLogout()}}><LogOut size={20}/></button>
-          </div>
-        </div>
-      </aside>
-      <main className="content bento-content">
-        <header className="mobile-topbar">
-          <Logo/>
-          <button onClick={openNotices}><Bell size={20}/>{unread>0&&<i className="badge"/>}</button>
-        </header>
-        {user.isBanned&&<div className="account-lock-banner"><strong>Account in default recovery</strong><span>{user.banReason||'Clear open recovery cases from Profile to restore access.'}</span><button onClick={()=>setPage('profile')}>Open recovery</button></div>}
+    <div className="app-shell">
+      <main className="content">
+        {user.isBanned&&<div className="banner bad" style={{margin:'12px 14px'}}>
+          <X/><div><b>Account in recovery</b><p>{user.banReason||'Clear open recovery cases from Account to restore access.'}</p></div>
+        </div>}
         {children}
       </main>
+
+      {showNotices&&<div className="rcpt-wrap" onClick={()=>setShowNotices(false)}>
+        <div className="rcpt" onClick={e=>e.stopPropagation()}>
+          <div className="topbar" style={{borderRadius:'26px 26px 0 0'}}>
+            <h1>Notifications</h1>
+            <button className="back" onClick={()=>setShowNotices(false)}><X/></button>
+          </div>
+          <div style={{padding:14}}>
+            {notices.length?<div className="list">{notices.map(n=>(
+              <div className="row" key={n.id}>
+                <div className="row-ic"><Bell/></div>
+                <div className="row-body">
+                  <strong>{n.type.replaceAll('_',' ').toLowerCase().replace(/^\w/,c=>c.toUpperCase())}</strong>
+                  <span>{n.message}</span>
+                </div>
+              </div>
+            ))}</div>:<Blank/>}
+          </div>
+        </div>
+      </div>}
+
       <ErrorBoundary scoped label="Rafa"><RafaBot page={page} setPage={setPage}/></ErrorBoundary>
-      <nav className="mobile-nav">
-        {nav.map(([id,label,icon])=>(
-          <button key={id} className={page===id?'active':''} onClick={()=>setPage(id)}>
-            {icon}<span>{label}</span>
-          </button>
+
+      {joinOpen&&<JoinSheet onClose={()=>setJoinOpen(false)} onJoined={()=>{setJoinOpen(false);setPage('circles')}}/>}
+
+      <nav className="tabs">
+        {TABS.slice(0,2).map(([id,label,icon])=>(
+          <button key={id} className={`tab ${page===id?'on':''}`} onClick={()=>setPage(id)}>{icon}<span>{label}</span></button>
+        ))}
+        {/* Joining is what most members do most of the time; hosting is the
+            rarer act and lives on the Committees screen. So the biggest thing
+            in the bar is Join. */}
+        <div className="tab-fab">
+          <button className="fab" aria-label="Join a committee" onClick={()=>setJoinOpen(true)}><UserPlus size={26}/></button>
+          <span className="fab-label">Join</span>
+        </div>
+        {TABS.slice(2).map(([id,label,icon])=>(
+          <button key={id} className={`tab ${page===id?'on':''}`} onClick={()=>setPage(id)}>{icon}<span>{label}</span></button>
         ))}
       </nav>
+      <button hidden onClick={onLogout}/>
     </div>
   );
 }
+
+function Blank(){return <div className="empty"><div className="empty-ic"><Bell/></div><strong>Nothing yet</strong><p>Payment receipts, payout alerts and committee updates land here.</p></div>}

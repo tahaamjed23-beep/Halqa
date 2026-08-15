@@ -5,7 +5,7 @@ import { RAFA_STARTERS, matchRafa } from './rafa-knowledge';
 import type { HalqaAction } from '../lib/events';
 import { SIMPLE_MODE } from '../config';
 
-// Rafa — Halqa's little guide bot. A floating animated mascot that (1) answers
+// Rafa, Halqa's little guide bot. A floating animated mascot that (1) answers
 // questions from a curated knowledge base and (2) runs a real-time walkthrough
 // that follows the user around the app: the coach card always reflects the page
 // they're actually on, and can walk them to the next one. No forced modal.
@@ -28,7 +28,7 @@ export function RafaBot3D({ size = 46, talking = false, mood = 'idle' as RafaMoo
       {/* Shadow beneath character */}
       <div className="rafa3d-shadow" />
 
-      {/* Body — main rounded robot torso with 3D tilt */}
+      {/* Body, main rounded robot torso with 3D tilt */}
       <div className="rafa3d-body">
         {/* Shine layer */}
         <div className="rafa3d-shine" />
@@ -44,7 +44,7 @@ export function RafaBot3D({ size = 46, talking = false, mood = 'idle' as RafaMoo
               <div className="rafa3d-pupil" />
             </div>
           </div>
-          {/* Mouth — changes with mood */}
+          {/* Mouth, changes with mood */}
           <div className={`rafa3d-mouth rafa3d-mouth--${effectiveMood}`} />
         </div>
 
@@ -64,15 +64,15 @@ export function RafaBot3D({ size = 46, talking = false, mood = 'idle' as RafaMoo
         <div className="rafa3d-antenna-tip" />
       </div>
 
-      {/* Right arm — only visible during wave/celebrate */}
+      {/* Right arm, only visible during wave/celebrate */}
       <div className="rafa3d-arm rafa3d-arm--right" />
       {/* Left arm */}
       <div className="rafa3d-arm rafa3d-arm--left" />
 
-      {/* Coin — floats up during coin animation */}
+      {/* Coin, floats up during coin animation */}
       <div className="rafa3d-coin" aria-hidden="true">💰</div>
 
-      {/* Sparkles — celebrate */}
+      {/* Sparkles, celebrate */}
       <div className="rafa3d-sparks" aria-hidden="true">
         <span className="rafa3d-spark rafa3d-spark--1">✦</span>
         <span className="rafa3d-spark rafa3d-spark--2">✦</span>
@@ -106,15 +106,15 @@ const ACTION_MOOD: Record<HalqaAction, RafaMood> = {
 type Msg = { from: 'rafa' | 'you'; text: string; go?: Page };
 
 const TOUR: Partial<Record<Page, { title: string; body: string; cta?: { label: string; page: Page } }>> = {
-  home: { title: "You're on the Dashboard", body: 'This is home base — your next installment, your next payout and all your circles at a glance. Shall we look at your committees?', cta: { label: 'Open Circles →', page: 'circles' } },
+  home: { title: "You're on the Dashboard", body: 'This is home base, your next installment, your next payout and all your circles at a glance. Shall we look at your committees?', cta: { label: 'Open Circles →', page: 'circles' } },
   circles: { title: "These are your Circles", body: "Every committee you host or joined shows here. Tap Create to host a new one, or paste an invite code to join a friend's.", cta: { label: 'Create a circle →', page: 'create' } },
   create: SIMPLE_MODE
-    ? { title: 'Building a circle', body: 'Set the name, members, amount, period and a goal — then share the invite code. The engine switches are optional; the defaults are fine.' }
-    : { title: 'Building a circle', body: "Set members, contribution and period. Pick a Low / Medium / High risk level — I auto-choose the best scheme — then tick the profit levers and I'll name your tier. The early fee is always capped at 10%." },
-  market: { title: 'The Turn Market', body: SIMPLE_MODE ? 'Need your payout sooner? Members auction future turns here at a premium — you can even buy a turn in another circle.' : 'Need cash sooner, or happy to wait and earn? Members trade turns here. Halal circles (Earn / Earn & Share) allow free swaps only.' },
+    ? { title: 'Building a circle', body: 'Set the name, members, amount, period and a goal, then share the invite code. The engine switches are optional; the defaults are fine.' }
+    : { title: 'Building a circle', body: "Set members, contribution and period. Pick a Low / Medium / High risk level, I auto-choose the best scheme, then tick the profit levers and I'll name your tier. The early fee is always capped at 10%." },
+  market: { title: 'The Turn Market', body: SIMPLE_MODE ? 'Need your payout sooner? Members auction future turns here at a premium, you can even buy a turn in another circle.' : 'Need cash sooner, or happy to wait and earn? Members trade turns here. Halal circles (Earn / Earn & Share) allow free swaps only.' },
   terminal: { title: 'The Scheme Terminal', body: 'Explore every investment scheme with its dated rate, risk and liquidity. This is where your bonus profit actually comes from.' },
   profile: { title: 'Your Profile', body: SIMPLE_MODE ? 'Your reliability score, payment history and your shareable Credit Passport all live here. Settings has your privacy and auto-pay controls.' : 'Your reliability score, the Vault (save any amount and earn), and your shareable Credit Passport all live here.' },
-  settings: { title: 'Settings', body: 'Security, privacy, notifications, payment preferences and every policy — all in one place. The data-sharing switch is yours alone to flip.' },
+  settings: { title: 'Settings', body: 'Security, privacy, notifications, payment preferences and every policy, all in one place. The data-sharing switch is yours alone to flip.' },
 };
 
 export default function RafaBot({ page, setPage }: { page: Page; setPage: (page: Page) => void }) {
@@ -156,8 +156,8 @@ export default function RafaBot({ page, setPage }: { page: Page; setPage: (page:
     return () => window.removeEventListener('halqa:action', handler);
   }, []);
 
-  // Every ~3 minutes Rafa gets bored and does a random quirky stunt — a dance,
-  // kick, shake, 3D spin, hop or roll — and wanders to a new spot on screen for
+  // Every ~3 minutes Rafa gets bored and does a random quirky stunt, a dance,
+  // kick, shake, 3D spin, hop or roll, and wanders to a new spot on screen for
   // a moment before floating back. Skipped while the chat is open.
   useEffect(() => {
     const STUNTS = ['dance', 'kick', 'shake', 'spin', 'hop', 'roll'];
@@ -202,16 +202,16 @@ export default function RafaBot({ page, setPage }: { page: Page; setPage: (page:
       } catch { /* fall through to the honest KB fallback */ }
     }
     say(SIMPLE_MODE
-      ? "I'm not sure about that one yet — I know committees, joining & hosting, payments & auto-pay, safety & defaults, the turn market and your account. Try one of those, or tap a suggestion below."
-      : "I'm not sure about that one yet — I know committees, joining & hosting, the profit engines and the 10% fee, safety & defaults, the vault, the turn market and your account. Try one of those, or tap a suggestion below.");
+      ? "I'm not sure about that one yet, I know committees, joining & hosting, payments & auto-pay, safety & defaults, the turn market and your account. Try one of those, or tap a suggestion below."
+      : "I'm not sure about that one yet, I know committees, joining & hosting, the profit engines and the 10% fee, safety & defaults, the vault, the turn market and your account. Try one of those, or tap a suggestion below.");
   };
 
   const tip = TOUR[page];
   return (
     <>
-      {hint && !open && <button className="rafa-hint" onClick={openBot}>Hi! I'm Rafa — tap me if you need help 👋</button>}
+      {hint && !open && <button className="rafa-hint" onClick={openBot}>Hi! I'm Rafa, tap me if you need help 👋</button>}
 
-      {/* Reaction bubble — shown outside the chat panel so it's visible even when closed */}
+      {/* Reaction bubble, shown outside the chat panel so it's visible even when closed */}
       {reaction && <div className="rafa-reaction" aria-live="polite">{reaction}</div>}
 
       <button className="rafa-fab" style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }} title="Ask Rafa" onClick={() => (open ? setOpen(false) : openBot())}>
@@ -227,7 +227,7 @@ export default function RafaBot({ page, setPage }: { page: Page; setPage: (page:
           </header>
 
           <button className={`rafa-tour-toggle ${tour ? 'on' : ''}`} onClick={() => setTour(t => !t)}>
-            <Sparkles size={14} />{tour ? 'Walkthrough on — following you' : 'Show me around (live walkthrough)'}
+            <Sparkles size={14} />{tour ? 'Walkthrough on, following you' : 'Show me around (live walkthrough)'}
           </button>
 
           <div className="rafa-msgs">

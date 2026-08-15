@@ -4,7 +4,7 @@ import { Field } from './ui';
 
 // Linked collection accounts, wallet-app style: every linked method renders as
 // a bank-branded card (logo, holder name, masked number, verified/preferred
-// badges) and adding one is a stepped flow — rail → bank → details — with a
+// badges) and adding one is a stepped flow, rail → bank → details, with a
 // live preview card that fills in as you type. Pointers only, always: the
 // server masks numbers on the way out; no balances, no card numbers.
 
@@ -18,12 +18,12 @@ export const RAIL_META: Record<string, BrandMeta> = {
   BANK_TRANSFER: { name: 'Bank account', mono: 'BK', color: '#5b6472', dark: '#39404b' },
   CARD: { name: 'Debit / credit card', mono: '💳', color: '#2b2f45', dark: '#14162a' },
 };
-// Card brand from leading digits — display only; the PAN never leaves the form.
+// Card brand from leading digits, display only; the PAN never leaves the form.
 export const cardBrand = (digits: string) => /^4/.test(digits) ? 'Visa' : /^(5[1-5]|2[2-7])/.test(digits) ? 'Mastercard' : /^3[47]/.test(digits) ? 'Amex' : /^(60|65|81|82)/.test(digits) ? 'PayPak' : 'Card';
 export const formatCard = (raw: string) => raw.replace(/\D/g, '').slice(0, 19).replace(/(.{4})/g, '$1 ').trim();
 export const formatExpiry = (raw: string) => { const d = raw.replace(/\D/g, '').slice(0, 4); return d.length >= 3 ? `${d.slice(0, 2)}/${d.slice(2)}` : d; };
 
-// Indicative brand palette for the demo bank directory — avatar colors, not
+// Indicative brand palette for the demo bank directory, avatar colors, not
 // official assets. "Other bank" keeps the neutral slate.
 export const PK_BANKS: BrandMeta[] = [
   { name: 'HBL', mono: 'HBL', color: '#007a3d', dark: '#004d26' },
@@ -75,7 +75,7 @@ export function AccountCard({ rail, bankName, accountTitle, accountNo, label, ve
     </div>
     <div className="acct-card-no mono">{cardLine || '•••• •••• ••••'}</div>
     <div className="acct-card-holder">
-      <div><span>{isCard ? 'Cardholder' : 'Account holder'}</span><b>{accountTitle || label || '—'}</b></div>
+      <div><span>{isCard ? 'Cardholder' : 'Account holder'}</span><b>{accountTitle || label || ''}</b></div>
       {isCard && <div className="acct-card-exp"><span>Expires</span><b>{expiry || 'MM/YY'}</b></div>}
     </div>
     {footer}
@@ -88,7 +88,7 @@ export function LinkedAccountsManager() {
   const [adding, setAdding] = useState(false); const [rail, setRail] = useState('RAAST'); const [bank, setBank] = useState('HBL');
   const [accountNo, setAccountNo] = useState(''); const [accountTitle, setAccountTitle] = useState('');
   // Card-only fields. CVC is kept in local state only and NEVER sent onward
-  // once the (sandbox) link is made — real processing is the partner's job.
+  // once the (sandbox) link is made, real processing is the partner's job.
   const [cardNumber, setCardNumber] = useState(''); const [expiry, setExpiry] = useState(''); const [cvc, setCvc] = useState('');
   const [billingAddress, setBillingAddress] = useState(''); const [billingCity, setBillingCity] = useState('');
   const [busy, setBusy] = useState(false); const [error, setError] = useState('');
@@ -103,7 +103,7 @@ export function LinkedAccountsManager() {
   ]).catch(() => {});
   const setSalaryDay = async (value: string) => { try { await api('/profile/salary-day', { method: 'POST', body: JSON.stringify({ day: value ? Number(value) : null }) }); await load(); } catch { /* refresh next open */ } };
   // One payslip, one photo. Downscaled on-device to a small JPEG so the upload
-  // is instant on any connection — nobody fights a form for a discount.
+  // is instant on any connection, nobody fights a form for a discount.
   const uploadPayslip = async (file: File) => { setPayslipBusy(true); try {
     const img = await new Promise<HTMLImageElement>((resolve, reject) => { const i = new Image(); i.onload = () => resolve(i); i.onerror = reject; i.src = URL.createObjectURL(file); });
     const scale = Math.min(1, 1000 / Math.max(img.width, img.height));
@@ -138,8 +138,8 @@ export function LinkedAccountsManager() {
       <b>Salary day{salary.salaryVerifiedAt ? ' · Verified ✓' : salary.payslip?.status === 'PENDING' ? ' · Payslip under review' : ''}</b>
       <span>
         {salary.salaryVerifiedAt
-          ? `Verified ${salary.salaryVerifyMethod === 'PATTERN' ? 'from your payment history' : salary.salaryVerifyMethod === 'ALERTS' ? 'from your credit alerts' : salary.salaryVerifyMethod === 'PAYSLIP' ? 'by payslip' : 'for the pilot'} — collection runs on your payday${salary.salaryDayLearned ? ` (around the ${salary.salaryDayLearned}th)` : ''}, before it is even due.`
-          : 'Set the day your pay arrives and collection runs that morning — while the money is there. It verifies itself from your payment history, or instantly with one payslip photo.'}
+          ? `Verified ${salary.salaryVerifyMethod === 'PATTERN' ? 'from your payment history' : salary.salaryVerifyMethod === 'ALERTS' ? 'from your credit alerts' : salary.salaryVerifyMethod === 'PAYSLIP' ? 'by payslip' : 'for the pilot'}, collection runs on your payday${salary.salaryDayLearned ? ` (around the ${salary.salaryDayLearned}th)` : ''}, before it is even due.`
+          : 'Set the day your pay arrives and collection runs that morning, while the money is there. It verifies itself from your payment history, or instantly with one payslip photo.'}
       </span>
       <div style={{ display: 'flex', gap: 8, marginTop: 8, flexWrap: 'wrap', alignItems: 'center' }}>
         <select className="field" style={{ maxWidth: 220, margin: 0 }} value={salary.salaryDay ?? ''} onChange={e => void setSalaryDay(e.target.value)}>
@@ -163,7 +163,7 @@ export function LinkedAccountsManager() {
           {m.id !== salaryRef && <button className="card-action danger" onClick={() => void remove(m.id)}>Remove</button>}
         </div>} />)}
       {otpError && <div className="error-box">{otpError}</div>}
-      {!methods.length && !adding && <p className="muted" style={{ fontSize: 12.5 }}>Nothing linked yet. Link your wallet, Raast ID or bank account once — auto-collection pulls from it and checkout pre-fills it.</p>}
+      {!methods.length && !adding && <p className="muted" style={{ fontSize: 12.5 }}>Nothing linked yet. Link your wallet, Raast ID or bank account once, auto-collection pulls from it and checkout pre-fills it.</p>}
     </div>
     {adding ? <div className="add-method">
       <span className="eyebrow">Step 1 · Where should collections pull from?</span>
@@ -187,7 +187,7 @@ export function LinkedAccountsManager() {
         <div style={{ margin: '10px 0' }}><AccountCard draft rail="CARD" accountTitle={accountTitle} accountNo={cardDigits} brand={cardDigits ? cardBrand(cardDigits) : undefined} expiry={expiry} /></div>
         {error && <div className="error-box">{error}</div>}
         <div className="form-actions"><button className="secondary" onClick={() => { setAdding(false); setError(''); }}>Cancel</button><button className="primary" disabled={busy || !cardValid} onClick={add}>{busy ? 'Linking…' : 'Link card'}</button></div>
-        <p className="muted" style={{ fontSize: 11.5 }}>🔒 Halqa stores only your card's <b>brand, last 4 digits, expiry and billing address</b> — never the full number, never the CVC. Real card charges run on the licensed payment partner's own PCI-secure page when live rails switch on.</p>
+        <p className="muted" style={{ fontSize: 11.5 }}>🔒 Halqa stores only your card's <b>brand, last 4 digits, expiry and billing address</b>, never the full number, never the CVC. Real card charges run on the licensed payment partner's own PCI-secure page when live rails switch on.</p>
       </> : <>
         <span className="eyebrow">{rail === 'BANK_TRANSFER' ? 'Step 3' : 'Step 2'} · Account details</span>
         <div style={{ marginTop: 8 }}>
@@ -197,7 +197,7 @@ export function LinkedAccountsManager() {
         <div style={{ margin: '10px 0' }}><AccountCard draft rail={rail} bankName={rail === 'BANK_TRANSFER' ? bank : undefined} accountTitle={accountTitle} accountNo={accountNo} /></div>
         {error && <div className="error-box">{error}</div>}
         <div className="form-actions"><button className="secondary" onClick={() => { setAdding(false); setError(''); }}>Cancel</button><button className="primary" disabled={busy || accountNo.replace(/[\s•]+/g, '').length < 10 || accountTitle.trim().length < 3} onClick={add}>{busy ? 'Linking…' : 'Link account'}</button></div>
-        <p className="muted" style={{ fontSize: 11.5 }}>A one-time WhatsApp code confirms the mandate. Halqa stores the identifier only — never balances, never cards. Cards will be entered on the licensed payment partner's own secure page when live rails switch on.</p>
+        <p className="muted" style={{ fontSize: 11.5 }}>A one-time WhatsApp code confirms the mandate. Halqa stores the identifier only, never balances, never cards. Cards will be entered on the licensed payment partner's own secure page when live rails switch on.</p>
       </>}
     </div> : methods.length < 5 && <button className="secondary" style={{ marginTop: 10, padding: '9px 14px', borderRadius: 12, fontSize: 12.5, fontWeight: 700 }} onClick={() => setAdding(true)}>+ Link an account</button>}
   </div>;

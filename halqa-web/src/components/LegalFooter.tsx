@@ -30,9 +30,9 @@ export default function LegalFooter() {
   const [open, setOpen] = useState<DocId | null>(null);
   const [info, setInfo] = useState('');
   const plain: Record<string, string> = {
-    About: 'Halqa is Pakistan\'s digital committee network — create, join, pay and collect kametis with full records and portable trust.',
+    About: 'Halqa is Pakistan\'s digital committee network, create, join, pay and collect kametis with full records and portable trust.',
     Accessibility: 'Halqa supports system font scaling, screen-reader labels on core flows, and اردو across the app. Report accessibility issues from Help Center.',
-    'Help Center': 'Questions or complaints: email support@halqa.pk — we answer within 2 working days. Security reports: security@halqa.pk.',
+    'Help Center': 'Questions or complaints: email support@halqa.pk, we answer within 2 working days. Security reports: security@halqa.pk.',
   };
   return <footer className="legal-footer">
     <nav>{LINKS.map(([label, doc]) => <button key={label} className="footer-link" onClick={() => doc ? setOpen(doc) : setInfo(info === label ? '' : label)}>{label}</button>)}</nav>

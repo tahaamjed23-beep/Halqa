@@ -6,7 +6,7 @@ import { Component, type ReactNode } from 'react';
 //  - scoped (compact): a small inline card, used to wrap a single panel (Rafa,
 //    committee chat, an individual page) so one component failing never blanks
 //    the rest of the app.
-// `resetKey` lets a parent force recovery on navigation — when the key changes
+// `resetKey` lets a parent force recovery on navigation, when the key changes
 // (e.g. the current page), the boundary clears its error and retries.
 type Props = { children: ReactNode; scoped?: boolean; label?: string; resetKey?: string | number };
 export default class ErrorBoundary extends Component<Props, { error: Error | null }> {
@@ -30,7 +30,7 @@ export default class ErrorBoundary extends Component<Props, { error: Error | nul
     return (
       <div className="blocked-page">
         <h2>Something broke on this screen</h2>
-        <p>Your data is safe — this is a display error, not a ledger one. Reload to continue.</p>
+        <p>Your data is safe, this is a display error, not a ledger one. Reload to continue.</p>
         <button className="primary" onClick={() => { this.setState({ error: null }); window.location.reload(); }}>Reload Halqa</button>
       </div>
     );

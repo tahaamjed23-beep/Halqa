@@ -36,14 +36,14 @@ export default function MemberStatus({ user }: { user: User }) {
 
   return <section className="panel">
     <div className="panel-head"><div><span className="eyebrow">Your standing</span><h2>Turn access & rewards</h2><p>Earn cheaper fees and earlier turns by proving you're reliable.</p></div><BadgeCheck /></div>
-    <div className="tenure-note" style={{ background: '#fdecec', borderColor: '#f0b8b8', color: '#8a1d1d' }}>⚠ Be honest — every claim here is checked against your documents when we review your account. Misrepresenting your income, employer or cheque will get you removed and blacklisted.</div>
+    <div className="tenure-note" style={{ background: '#fdecec', borderColor: '#f0b8b8', color: '#8a1d1d' }}>⚠ Be honest, every claim here is checked against your documents when we review your account. Misrepresenting your income, employer or cheque will get you removed and blacklisted.</div>
 
     {/* Tenure */}
     <div className="tenure-note">
       {unlocked ? <Unlock size={18} /> : <Lock size={18} />}
       <div>{unlocked
         ? <><b>Established member.</b> You can take any turn in a circle.</>
-        : <><b>New member — last turns only.</b> You can join circles but only in a late seat until you finish <b>2 circles cleanly</b> and we verify you. Progress: <b>{Math.min(clean, 2)}/2</b> clean circles{clean >= 2 ? ' — verification pending.' : '.'}</>}</div>
+        : <><b>New member, last turns only.</b> You can join circles but only in a late seat until you finish <b>2 circles cleanly</b> and we verify you. Progress: <b>{Math.min(clean, 2)}/2</b> clean circles{clean >= 2 ? ', verification pending.' : '.'}</>}</div>
     </div>
 
     {/* Discount + verifications */}

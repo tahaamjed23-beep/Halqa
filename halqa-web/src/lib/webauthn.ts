@@ -1,6 +1,6 @@
 // Optional biometric unlock via the WebAuthn platform authenticator (the
 // device's fingerprint / Face gate). Prototype-grade: it's a convenience layer
-// over the app PIN — the private key never leaves the device, and we persist
+// over the app PIN, the private key never leaves the device, and we persist
 // only the credential id (locally + a server "enabled" flag). The PIN remains
 // the fallback everywhere, so a device without biometrics is never blocked.
 const CRED_KEY = 'halqa_biometric_cred';

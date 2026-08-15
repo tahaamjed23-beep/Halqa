@@ -1,3 +1,5 @@
+import { PREVIEW, previewRoute } from './preview';
+
 const configured=(import.meta.env.VITE_API_URL as string|undefined)?.replace(/\/$/,'');
 const nativeShell=window.location.protocol==='capacitor:'||window.location.protocol==='ionic:';
 const nativeDevApi='http://10.0.2.2:4101';
@@ -25,16 +27,18 @@ async function request<T>(path:string,init:RequestInit,retried:boolean):Promise<
   if(!response.ok)throw new Error(data.error||`Request failed (${response.status})`);
   return data as T;
 }
-export const api=<T>(path:string,init:RequestInit={})=>request<T>(path,init,false);
+export const api=<T>(path:string,init:RequestInit={}):Promise<T>=>PREVIEW
+  ?new Promise(resolve=>setTimeout(()=>resolve(previewRoute(path) as T),120))
+  :request<T>(path,init,false);
 // Keep the serverless function warm. A cold Vercel function + cross-region
 // Supabase pooler is the real cause of the "super slow" first action, and it
-// re-freezes after a few idle minutes — so a one-shot ping at load isn't
+// re-freezes after a few idle minutes, so a one-shot ping at load isn't
 // enough. We ping /health (a) at load, (b) every 4 minutes while the tab is
 // open, and (c) the instant the tab regains focus (the classic "came back and
 // it's slow" case). Vercel Hobby cron is daily-only, so this client-side
 // warmer is what actually protects an active session. Fire-and-forget, and
 // paused while the tab is hidden so we never ping in the background forever.
-const warm=()=>{try{fetch(`${BASE}/health`,{cache:'no-store'}).catch(()=>{})}catch{/* SSR / no fetch */}};
+const warm=()=>{if(PREVIEW)return;try{fetch(`${BASE}/health`,{cache:'no-store'}).catch(()=>{})}catch{/* SSR / no fetch */}};
 warm();
 if(typeof window!=='undefined'){
   let lastWarm=Date.now();

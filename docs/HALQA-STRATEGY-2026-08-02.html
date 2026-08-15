@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Halqa — Strategy</title>
+<style>
+  @page { size: A4; margin: 19mm 17mm; }
+  *{box-sizing:border-box}
+  body{background:#fff;color:#0E1512;font-family:Georgia,'Times New Roman',serif;font-size:10.3pt;line-height:1.55;margin:0;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  h1{font-size:15.5pt;font-weight:normal;margin:0 0 4mm;padding-bottom:2mm;border-bottom:1.5px solid #123D30;color:#123D30}
+  h2{font-size:11.4pt;margin:7mm 0 2.5mm;padding-bottom:1mm;border-bottom:1px solid #D9A93C}
+  h3{font-size:10.4pt;margin:5mm 0 1.5mm;font-weight:bold}
+  p{margin:0 0 2.5mm}
+  ul,ol{margin:2mm 0 3mm;padding-left:6mm} li{margin:1.2mm 0}
+  code{font-family:Consolas,monospace;font-size:9pt;background:#F4EEE1;padding:0 1mm}
+  table{border-collapse:collapse;width:100%;margin:3mm 0 4mm}
+  th,td{border:1px solid #123D30;padding:1.8mm 2.3mm;font-size:9pt;vertical-align:top;text-align:left}
+  th{background:#123D30;color:#F6F1E4;font-weight:bold}
+  tr{page-break-inside:avoid}
+  .brk{page-break-before:always}
+  .lede{font-size:11pt;line-height:1.58}
+  .box{border:1px solid #123D30;border-left:4px solid #D9A93C;padding:3.5mm 4.5mm;margin:4mm 0;page-break-inside:avoid;background:#FBF8F0}
+  .box .t{font-weight:bold;color:#123D30;margin-bottom:1.5mm}
+  .math{font-family:Consolas,monospace;font-size:9.2pt;margin:1.5mm 0;padding-left:4mm}
+  .flag{font-size:9pt;font-style:italic;color:#4C574F}
+  .cover{height:238mm;display:flex;flex-direction:column;justify-content:center;text-align:center;page-break-after:always}
+  .cover .m{font-size:32pt;letter-spacing:.2em;margin:0 0 5mm;color:#123D30}
+  .cover hr{width:52mm;border:none;border-top:1.5px solid #D9A93C;margin:0 auto 8mm}
+  .cover .t{font-size:15pt;margin:0 0 3mm}
+  .cover .d{font-size:10.5pt;font-style:italic;color:#4C574F;margin:0 0 12mm}
+  .cover .n{font-size:9.4pt;line-height:1.9;color:#4C574F}
+  .stat{display:flex;border-top:1.5px solid #123D30;border-bottom:1.5px solid #123D30;margin:4mm 0;page-break-inside:avoid}
+  .stat>div{flex:1;padding:3mm 2mm;text-align:center;border-right:1px solid #D9A93C}
+  .stat>div:last-child{border-right:none}
+  .stat .v{display:block;font-size:14pt;font-weight:bold;color:#123D30;line-height:1.2}
+  .stat .k{font-size:7.6pt;color:#4C574F}
+  .num{font-weight:bold;color:#123D30}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="m">HALQA</p><hr>
+  <p class="t">Strategy</p>
+  <p class="d">Market structure, competitive power, and the eight moves that matter<br>2 August 2026 · Confidential</p>
+  <p class="n">
+    This document does not restate the product. It asks four questions:<br>
+    how big is this actually, what makes it defensible, what kills it,<br>and what should we do next that we are not already doing.
+  </p>
+</div>
+
+<!-- ============ 1 THESIS ============ -->
+<section>
+<h1>1 · The thesis in one page</h1>
+
+<p class="lede">Halqa is not a savings app. It is an attempt to become <b>the record layer of Pakistan's informal economy</b> — starting with the one informal institution that already has 50 million participants, a fixed schedule, and a repayment obligation people rank above their rent.</p>
+
+<p>The strategic logic runs in three steps, and each one is only possible because of the step before it:</p>
+
+<ol>
+<li><b>Digitise the committee</b> — not to make it better, but to make it <i>recorded</i>. The product wedge is a free tool for an activity 37% of adults already perform.</li>
+<li><b>Own the resulting data class</b> — informal repayment history, which no bank, bureau, or competitor can obtain from any other source, because it does not exist anywhere else in written form.</li>
+<li><b>Sell access to the outcomes, never the people</b> — merchants pay for pre-qualified bulk demand, institutions pay for a credit signal they cannot generate, and members pay nothing at any point.</li>
+</ol>
+
+<div class="stat">
+  <div><span class="v">~52M</span><span class="k">Pakistani adults using committees<br>(37% of adults, SBP 2021)</span></div>
+  <div><span class="v">Rs 4tn</span><span class="k">flowing through them annually<br>3rd-largest savings channel</span></div>
+  <div><span class="v">13%</span><span class="k">of adults hold a bank account<br>(Global Findex)</span></div>
+  <div><span class="v">Rs 0</span><span class="k">the price our member pays,<br>permanently</span></div>
+</div>
+
+<p><b>The one-sentence version for an investor:</b> we are building the credit bureau of the informal economy, and the committee is how we get the data for free.</p>
+</section>
+
+<!-- ============ 2 MARKET ============ -->
+<section class="brk">
+<h1>2 · The market, sized honestly</h1>
+
+<p>Most decks in this category quote the Rs 4 trillion figure and stop. That number is the <i>flow</i>, not the opportunity, and the gap between them is where the analysis lives.</p>
+
+<h3>The addressable population — with a correction we should make ourselves</h3>
+<p>The academic literature forces a narrowing that most competitors do not make. Khan (2013) finds regular income is a <i>precondition</i> for committee participation, and that the genuinely poor are excluded as bad risks. Kamran's dissertation (2018) concurs that committees cannot substitute for formal finance. So:</p>
+
+<table>
+<tr><th style="width:44mm">Segment</th><th>Size</th><th>Serviceable?</th></tr>
+<tr><td>Pakistani adults (15+)</td><td>~157 million</td><td>—</td></tr>
+<tr><td>Committee participants</td><td>~52 million (34–41% range)</td><td>The total institution</td></tr>
+<tr><td><b>With regular, predictable income</b> — salaried, shopkeepers, drivers, tailors</td><td><b>Our real market</b></td><td><b>Yes — this is where committees work</b></td></tr>
+<tr><td>With irregular income</td><td>Excluded by the groups themselves</td><td>No — and we should stop implying otherwise</td></tr>
+</table>
+
+<p><b>Why volunteering this narrowing is strategically correct.</b> It costs us nothing — the serviceable segment is still tens of millions — and it buys three things: credibility with a regulator who can check, immunity from the "fintech overclaims inclusion" critique, and a sharper product focus. Our payday-collection engine only works on regular income, so the honest market definition and the technical design already agree.</p>
+
+<h3>Revenue at scale — the arithmetic</h3>
+<div class="box">
+<p class="t">Two revenue engines, one of which is much larger than the other</p>
+<p class="math">Stage-one take rate (late fees + marketplace + fill): <span class="num">0.27–0.65%</span> of flow</p>
+<p class="math">At 10% market penetration (Rs 400bn flow): <span class="num">Rs 1.1–2.6bn / year</span></p>
+<p class="math">Goal Direct-Pay commission, merchant-paid: <span class="num">1–3%</span> of brokered purchase value</p>
+<p class="math">If 30% of circles are goal circles and we broker half of those:<br>0.30 × 0.50 × 1–3% = <span class="num">0.15–0.45%</span> of total flow → <span class="num">Rs 0.6–1.8bn</span> at the same penetration</p>
+<p style="margin-bottom:0"><b>Read:</b> merchant commission roughly matches or exceeds the entire member-facing fee stack — while costing members nothing and touching no regulated activity. The commerce layer is not a side business; it is a second engine of comparable size to the first.</p>
+</div>
+</section>
+
+<!-- ============ 3 POWER ============ -->
+<section class="brk">
+<h1>3 · Where the defensibility actually comes from</h1>
+
+<p>Assessed against Helmer's taxonomy of durable competitive power, Halqa holds three of the seven, has a credible path to a fourth, and has none of the rest. Naming which is which prevents us from believing our own marketing.</p>
+
+<table>
+<tr><th style="width:34mm">Power</th><th>Do we have it?</th></tr>
+<tr><td><b>Counter-positioning</b></td><td><b>Yes — and it is our strongest.</b> See below.</td></tr>
+<tr><td><b>Cornered resource</b></td><td><b>Emerging.</b> Informal repayment data exists nowhere else in recorded form. Once TASDEEQ ingests it, we are the monopoly supplier of a data class.</td></tr>
+<tr><td><b>Switching costs</b></td><td><b>Yes, and they compound.</b> A member's Sakh is portable out of the platform but not reproducible on a competitor's — leaving means restarting a credit history.</td></tr>
+<tr><td><b>Network economies</b></td><td><b>Partial.</b> Within a circle, strong. Across circles, weak until the marketplace and public tier have liquidity. Do not overclaim this one.</td></tr>
+<tr><td>Scale economies</td><td>No. Our costs are near-linear.</td></tr>
+<tr><td>Branding</td><td>Not yet. Years away.</td></tr>
+<tr><td>Process power</td><td>No.</td></tr>
+</table>
+
+<h3>Counter-positioning — why the incumbents rationally will not copy us</h3>
+<p>The strongest form of competitive power is a position the incumbent <i>could</i> copy but would damage themselves by copying. We have it, three times over:</p>
+<ul>
+<li><b>Against custody-based competitors (Oraan, Money Fellows).</b> Their float and their regulatory investment are assets on their balance sheet. Adopting no-custody would write both off. They can add features; they cannot subtract their own model.</li>
+<li><b>Against banks.</b> A bank cannot offer a zero-fee, zero-margin committee — it would cannibalise the deposit and lending products the committee competes with. The committee is structurally anti-bank: it delivers interest-free credit and forced savings without a balance sheet.</li>
+<li><b>Against the wallets (this is the real one — see §6).</b> JazzCash and Easypaisa are EMIs. Their entire licence, compliance stack and business model presume holding customer balances. A no-custody product is a strategic contradiction for them.</li>
+</ul>
+
+<div class="box">
+<p class="t">The insight worth carrying into every investor meeting</p>
+<p style="margin-bottom:0">Every serious competitor in this market makes money by <i>holding</i> money. We make money by <i>recording</i> it. That is not a feature difference — it is a different business, with a different regulator, a different cost structure and a different failure mode. When someone asks "what stops Easypaisa doing this," the answer is not "nothing"; it is "their own licence and their own P&amp;L."</p>
+</div>
+</section>
+
+<!-- ============ 4 ATOMIC NETWORK ============ -->
+<section class="brk">
+<h1>4 · The atomic network — and why our growth math is different</h1>
+
+<p class="lede">Most marketplaces die of the cold-start problem: no supply without demand, no demand without supply. Halqa does not have a cold-start problem, and understanding exactly why should change how we measure the company.</p>
+
+<h3>The unit of growth is the organizer, not the user</h3>
+<p>A committee is a <b>pre-formed atomic network</b>. Ten to fifteen people who already trust each other, already perform this activity monthly, and already have a leader coordinating them. We are not assembling a network; we are digitising one that arrived complete.</p>
+
+<p>The consequence is that almost every metric the industry uses is the wrong one for us:</p>
+
+<table>
+<tr><th style="width:44mm">Conventional metric</th><th>What we should measure instead</th></tr>
+<tr><td>Cost per user acquired</td><td><b>Cost per organizer acquired.</b> One organizer delivers 10–15 members at once, pre-vetted, pre-trusting.</td></tr>
+<tr><td>Monthly active users</td><td><b>Circles started and circles completed clean.</b> A completed circle is the atomic unit of value creation; an active user inside a dying circle is worth little.</td></tr>
+<tr><td>User retention</td><td><b>Organizer retention and circles-per-organizer.</b> An organizer who runs their second circle has effectively re-acquired their whole group for free.</td></tr>
+<tr><td>Viral coefficient</td><td><b>Invitation-graph depth</b> — how many members become organizers themselves. This is the only compounding loop we have.</td></tr>
+</table>
+
+<div class="box">
+<p class="t">The unglamorous conclusion</p>
+<p style="margin-bottom:0">Because the atomic network is offline and pre-existing, the highest-return growth motion is almost certainly <b>field sales to existing committee organizers</b> — the aunties, shopkeepers and office coordinators already running circles on paper. Every digital-first fintech in Pakistan will ignore this because it does not scale elegantly. That is precisely why it is available. One organizer converted is a 10–15 member cohort with zero paid acquisition and pre-installed trust.</p>
+</div>
+</section>
+
+<!-- ============ 5 FLYWHEEL ============ -->
+<section class="brk">
+<h1>5 · The data flywheel, and what it is actually worth</h1>
+
+<p>The loop is simple enough to state in one line: <b>completed circles produce repayment records → records improve the Sakh score → better scores let members take earlier seats and larger circles → larger circles produce more records.</b> Standard enough. What makes it valuable is an asymmetry in the inputs.</p>
+
+<h3>The asymmetry: we are the only possible source</h3>
+<p>Bank repayment data is contested — every bank has some, bureaus aggregate it, and it is commoditised. Informal committee repayment data is different: <b>it currently exists in no written form anywhere on earth.</b> Kamran's informants keep it in an organizer's notebook or in memory. There is no legacy dataset for a competitor to buy, licence, or scrape.</p>
+
+<p>That makes us, at scale, a monopoly supplier of a class of data that Pakistan's credit system genuinely lacks — and it explains why the TASDEEQ relationship should be treated as a strategic priority rather than a compliance feature. Being the sole contributor of an entire data category to a national bureau is a structurally stronger position than being one of forty lenders reporting defaults.</p>
+
+<h3>What the flywheel is not</h3>
+<p class="flag">It is not a moat on day one. With one circle, the data is worthless. The flywheel only becomes defensible after the ledger reaches a scale where a competitor starting today would need years of completed circles to match it. That crossover point — not user count — is the real milestone to plan toward, and we should be explicit that we have not reached it.</p>
+</section>
+
+<!-- ============ 6 COMPETITION ============ -->
+<section class="brk">
+<h1>6 · The competitive map — and the threat we have been naming wrongly</h1>
+
+<p>Every document we have written treats Oraan as the domestic competitor and Money Fellows as the benchmark. Both are wrong about where the danger is.</p>
+
+<table>
+<tr><th style="width:32mm">Player</th><th>Real threat level</th><th>Why</th></tr>
+<tr><td><b>Oraan</b></td><td>Low</td><td>Custody model, NBFC licence, member fees, stranger-pooling. Every structural choice is one we deliberately inverted. They are a proof of category, not a competitor for our position.</td></tr>
+<tr><td><b>Money Fellows</b></td><td>Low, near-term</td><td>Would enter with a custody model requiring a Pakistani licensing programme and a bank partner. Slow, capital-heavy, and their stranger-pooling machine does not fit a market organised around pre-existing circles.</td></tr>
+<tr><td><b>Notebook apps</b> (ledger-only trackers)</td><td>Low on substance, real on mindshare</td><td>They cannot produce a credit history — the payments are asserted, not settled (Mehmood et al., 2018). But they are free, simple, and already installed. They shape what users expect a "committee app" to be.</td></tr>
+<tr><td><b>JazzCash / Easypaisa</b></td><td><b>HIGH — this is the real one</b></td><td>Tens of millions of users, the wallet the money already sits in, a payments licence, agent networks, and brand trust. If either ships a committee module, they start with distribution we cannot match.</td></tr>
+</table>
+
+<h3>The wallet threat, assessed properly</h3>
+<p><b>Why they would win if they tried:</b> distribution, existing KYC, an installed wallet, zero marginal cost of collection, and a brand every shopkeeper already trusts.</p>
+<p><b>Why they probably will not, and what to do about it:</b></p>
+<ul>
+<li><b>Their licence is the obstacle.</b> As EMIs, holding balances is the business. Running a committee on a no-custody basis contradicts the model; running it <i>with</i> custody imports the exact deposit-taking scrutiny that makes committee products legally fraught for a licensed institution.</li>
+<li><b>Their user base is not organised in circles.</b> They have individuals; the committee needs pre-formed groups with an organizer. They would have to pool strangers — the Money Fellows problem, in a market that resists it.</li>
+<li><b>Social products are not their competence.</b> Telco-adjacent wallets are transaction rails. A product whose core asset is a trust graph and a discretionary host is a different discipline.</li>
+</ul>
+<p><b>The defensive move:</b> become the layer they would rather integrate than rebuild. If Halqa is the committee rail with the data, the natural outcome is a partnership where the wallet supplies collection and we supply the ledger and the graph. That is the argument for shipping the <b>Committee-as-a-Service API</b> (§8, move 3) earlier than instinct suggests — an integration path is a defence.</p>
+</section>
+
+<!-- ============ 7 PRE-MORTEM ============ -->
+<section class="brk">
+<h1>7 · Pre-mortem — it is 2029 and Halqa failed. What happened?</h1>
+
+<p>Written as though the failure already occurred, which is the only way this exercise produces honest answers.</p>
+
+<table>
+<tr><th style="width:38mm">Cause of death</th><th>Mechanism, and the early-warning signal</th></tr>
+<tr><td><b>Collection never became real</b></td><td>Raast PISP slipped repeatedly; card-on-file proved too narrow for a cash-native base; wallet MDR negotiations failed the Rs 300 ceiling. Members went back to cash and the ledger recorded assertions, not settlement — which destroyed the credit-data thesis. <b>Watch:</b> share of installments settled digitally vs. recorded by reference.</td></tr>
+<tr><td><b>An organizer ran a Ponzi using our credibility</b></td><td>Someone built a clean record on Halqa, showed the app to victims as proof of trustworthiness, then ran a large offline scheme. Press coverage read "app used to defraud." <b>This risk is currently unmanaged.</b> <b>Watch:</b> organizers running many simultaneous circles, unusual member concentration, circles growing far beyond social plausibility.</td></tr>
+<tr><td><b>The wallets shipped it</b></td><td>See §6. Distribution beat product. <b>Watch:</b> any committee feature appearing in a wallet release note.</td></tr>
+<tr><td><b>Regulatory reclassification</b></td><td>A high-profile committee fraud (not ours) triggered SECP to regulate digital committees broadly, and the rules were written for custody-based operators without a carve-out for record-only facilitators. <b>Watch:</b> consultation papers; and see move 4 below.</td></tr>
+<tr><td><b>We scaled before the loss model was real</b></td><td>The 0.3–1.4% default figure stayed modelled, never measured; we grew, real losses landed outside the modelled band, and the guarantee promise broke. <b>Watch:</b> measured post-payout default in the first hundred completed circles.</td></tr>
+<tr><td><b>The founder ran out of runway doing everything</b></td><td>The most common cause. Product, regulation, partnerships, research, brand — a single person's attention became the binding constraint.</td></tr>
+</table>
+
+<div class="box">
+<p class="t">The one in that list that should change behaviour this month</p>
+<p style="margin-bottom:0"><b>The Ponzi-by-proxy risk.</b> Halqa's core value proposition is manufactured credibility — a verifiable record that says "this person is reliable." That is precisely what a fraudster needs most, and we hand it over free. Every fraud in Pakistani committee history relied on borrowed credibility (Sidra Humaid's social standing; the Karachi operators' online reputation). We are building a credibility-issuing machine and have not yet built the abuse-detection that must accompany it. Concretely: cap simultaneous circles per organizer, flag implausible growth, and never let the Credit Passport be presentable as an endorsement of an <i>off-platform</i> arrangement.</p>
+</div>
+</section>
+
+<!-- ============ 8 MOVES ============ -->
+<section class="brk">
+<h1>8 · Eight moves</h1>
+<p>Ordered by expected value, not by ease. Each is new — none is already in the plan.</p>
+
+<h3>1 · Restructure every metric around the organizer</h3>
+<p>Not a feature: a change in how the company is measured and therefore managed. Cost per organizer, circles per organizer, organizer retention, member-to-organizer conversion rate. This single reframing changes hiring (field sales, not performance marketing), the investor narrative (cohort economics that look far better per unit), and product priority (organizer tools over member features). <b>Cost: zero. Impact: reorders everything.</b></p>
+
+<h3>2 · Field sales to existing offline organizers</h3>
+<p>The unglamorous growth engine competitors will not run. A small team converting people who <i>already</i> run committees on paper — each conversion delivering a full pre-trusting cohort. Pair with the organizer incentive stack already approved. <b>This is probably the highest-ROI spend available before Gate 2 completes.</b></p>
+
+<h3>3 · Committee-as-a-Service: ship the API earlier than instinct says</h3>
+<p>Let wallets, microfinance banks, retailers and employers embed committees powered by our engine and our ledger. Three effects at once: it converts the wallet threat (§6) into a partnership path, it makes us infrastructure rather than an app, and it monetises B2B with the partner carrying the regulatory burden. The instinct is "not yet, we haven't won consumer." The strategic read is that the integration path <i>is</i> the consumer defence.</p>
+
+<h3>4 · Become the "first clean actor" with SECP, before regulation arrives</h3>
+<p>SECP has just spent two years killing 400 predatory apps and building a whitelist. There is a narrow window in which a company can walk in voluntarily, disclose its entire architecture, and help write the rules for digital committees — rather than being written about by them. Regulators reward the first cooperative actor in a category they are nervous about. <b>The cost is a few meetings; the prize is rules shaped around a record-only model instead of a custody model.</b></p>
+
+<h3>5 · Publish the data as a national public good</h3>
+<p>Aggregate, anonymised statistics on Pakistan's informal savings — the first real numbers anyone has ever had. Release it as a periodic report to press, SBP, and development institutions. It costs almost nothing, it is the cleanest possible use of the dataset, it makes us the authority on the sector, and it builds the government relationship that move 4 depends on. The Karandaaz/Gates-funded academic work proves the appetite exists.</p>
+
+<h3>6 · Build the abuse-detection layer now, not after the first incident</h3>
+<p>Directly from the pre-mortem. Concurrent-circle caps, implausible-growth flags, cross-circle member-concentration alerts, and explicit Passport wording that scopes it to on-platform history. <b>The company's survival is more sensitive to one fraud story than to a year of slow growth.</b></p>
+
+<h3>7 · Own a corridor, not a country: pick one city, one occupation</h3>
+<p>Committees are occupational and geographic — a Lahore garment market, a Karachi school district. Winning 60% of one dense corridor produces referral density, local reputation and word-of-mouth that 1% national penetration never will. Density is the only thing that makes a trust product spread. Choose the corridor deliberately rather than accepting whoever signs up.</p>
+
+<h3>8 · Treat the Sakh score as the product, and the committee as the funnel</h3>
+<p>The long-run company is not a committee app; it is the credit identity of the informal economy. That reframing changes what we build (everything that thickens the record), what we sell (access to outcomes, never people), and who we partner with (bureaus, AMCs, lenders). The committee is how we acquire the data for free — which is a means, not the mission. <b>Every roadmap decision should be tested against: does this make the record richer or more portable?</b></p>
+</section>
+
+<!-- ============ 9 SEQUENCE ============ -->
+<section class="brk">
+<h1>9 · The sequence, and what to watch</h1>
+
+<p>Each rung is only available because the one below it exists. Attempting them out of order is the most common way companies in this category waste a year.</p>
+
+<table>
+<tr><th style="width:24mm">Rung</th><th>What it unlocks</th><th style="width:40mm">The gate</th></tr>
+<tr><td><b>1 · Collection</b></td><td>Settlement, not assertion. Without it there is no credible record and therefore no data asset.</td><td>Gate-2 merchant agreement</td></tr>
+<tr><td><b>2 · The record</b></td><td>A ledger of verified repayment at volume — the raw material of everything above.</td><td>Completed circles, not signups</td></tr>
+<tr><td><b>3 · The bureau link</b></td><td>The record becomes a formal credit signal; members gain real-world benefit; we gain monopoly-supplier status.</td><td>TASDEEQ contributor agreement</td></tr>
+<tr><td><b>4 · The on-ramp &amp; commerce</b></td><td>Institutions and merchants pay for access to outcomes. This is where the revenue actually is.</td><td>Referral and merchant partnerships</td></tr>
+<tr><td><b>5 · The savings layer</b></td><td>Vault and Float via CDC trusteeship — yield, and a pledged buffer that self-cures default.</td><td>SECP distributor registration</td></tr>
+</table>
+
+<h3>The five numbers that tell us whether this is working</h3>
+<ul>
+<li><b>Share of installments digitally settled</b> — the health of rung 1, and the single most important number in the company.</li>
+<li><b>Circles completed clean</b> — the atomic unit of value; signups are vanity.</li>
+<li><b>Circles per organizer</b> — whether the growth loop compounds or leaks.</li>
+<li><b>Measured post-payout default in the first 100 completed circles</b> — the moment 0.3–1.4% stops being modelled.</li>
+<li><b>Member-to-organizer conversion</b> — the only endogenous growth we have.</li>
+</ul>
+
+<p class="flag" style="margin-top:6mm">Prepared 2 August 2026. Market figures from SBP, Global Findex, Karandaaz K-FIS and the academic sources in the ROSCA literature report. Revenue arithmetic is modelled from the platform's own live parameters and is labelled as projection throughout. Competitive assessments are analytical judgement, not disclosed fact.</p>
+</section>
+
+</body>
+</html>

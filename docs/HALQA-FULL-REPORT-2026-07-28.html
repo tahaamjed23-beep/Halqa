@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Halqa — Full Project Report · 28 July 2026</title>
+<style>
+  @page { size: A4; margin: 20mm 18mm; }
+  *{box-sizing:border-box}
+  body{
+    background:#fff; color:#000;
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:10.3pt; line-height:1.54; margin:0;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  h1{font-size:16pt;font-weight:normal;margin:0 0 4mm;padding-bottom:2mm;border-bottom:1.5px solid #000}
+  h2{font-size:12pt;margin:8mm 0 2.5mm;padding-bottom:1mm;border-bottom:1px solid #000}
+  h3{font-size:10.5pt;margin:5mm 0 1.5mm;font-weight:bold}
+  p{margin:0 0 2.4mm}
+  ul,ol{margin:2mm 0 3mm;padding-left:6mm}
+  li{margin:1.3mm 0}
+  code{font-family:Consolas,'Courier New',monospace;font-size:9.2pt;background:#f2f2f2;padding:0 1mm}
+  table{border-collapse:collapse;width:100%;margin:3mm 0 4mm}
+  th,td{border:1px solid #000;padding:1.9mm 2.4mm;font-size:9.1pt;vertical-align:top;text-align:left}
+  th{background:#e8e8e8;font-weight:bold}
+  tr{page-break-inside:avoid}
+  .lede{font-size:11pt;line-height:1.6}
+  .brk{page-break-before:always}
+  .fig{margin:5mm 0 6mm;page-break-inside:avoid;text-align:center}
+  .fig svg{max-width:100%;height:auto}
+  .cap{font-size:8.6pt;margin-top:1.5mm;text-align:left}
+  .math{font-family:Consolas,'Courier New',monospace;font-size:9.2pt;margin:2mm 0 3mm;padding-left:4mm}
+  .stats{display:flex;margin:4mm 0;border-top:1.5px solid #000;border-bottom:1.5px solid #000;page-break-inside:avoid}
+  .stat{flex:1;padding:3mm 2mm;text-align:center;border-right:1px solid #999}
+  .stat:last-child{border-right:none}
+  .stat .big{font-size:13.5pt;display:block;line-height:1.25;font-weight:bold}
+  .stat .cap2{font-size:7.8pt}
+  .cover{height:240mm;display:flex;flex-direction:column;justify-content:center;text-align:center;page-break-after:always}
+  .cover .m{font-size:38pt;letter-spacing:.22em;margin:0 0 6mm}
+  .cover hr{width:60mm;border:none;border-top:1.5px solid #000;margin:0 auto 8mm}
+  .cover .t{font-size:14pt;margin:0 0 3mm}
+  .cover .d{font-size:10.5pt;margin:0 0 14mm}
+  .cover .n{font-size:9.4pt;line-height:1.9}
+  .toc td{border:none;padding:1.1mm 0;font-size:9.6pt}
+  .toc td:first-child{width:12mm}
+  .glance th{width:36mm}
+  .src{font-size:8.4pt;color:#333;margin-top:4mm;padding-top:1.5mm;border-top:1px solid #999}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="m">HALQA</p>
+  <hr>
+  <p class="t">Full Project Report</p>
+  <p class="d">28 July 2026</p>
+  <p class="n">
+    The committee, digitised. The money, never held.<br><br>
+    Live web · halqa-seven.vercel.app<br>
+    Live API · halqa-api-delta.vercel.app<br><br>
+    Strictly confidential.<br>
+    Every mechanism in this report was read from the running source code.<br>
+    Measured figures are marked <b>verified</b>. Projections are marked <b>modelled</b>.
+  </p>
+</div>
+
+<!-- ================= AT A GLANCE ================= -->
+<section>
+<h1>Halqa at a glance</h1>
+
+<table class="glance">
+<tr><th>What it is</th><td>Digital infrastructure for the Pakistani committee (<i>kameti</i> / ROSCA). Halqa records, schedules, prices and enforces rotating savings circles, and turns each member's payment history into a portable proof of reliability.</td></tr>
+<tr><th>The one structural fact</th><td><b>Halqa never holds member money.</b> Contributions move directly from payer to recipient over Pakistan's own payment rails. Halqa keeps the ledger. This single decision is at once the fraud control, the legal strategy, and the moat.</td></tr>
+<tr><th>Stage</th><td>Live in production since 20 July; both applications healthy (verified 28 July). Not yet opened to the public, by choice: one real member on the production database, pending live collection rails.</td></tr>
+<tr><th>Who pays</th><td>Members pay nothing. Revenue comes from progressive late fees, a 10% margin on turn-marketplace trades, a management fee where Halqa fills empty seats, and consent-gated goal-intent leads.</td></tr>
+<tr><th>Legal position</th><td>No financial licence is required while three lines hold: no custody of funds, no lending at scale, no credit-bureau reporting. Each line corresponds to exactly one licence, and each is avoided by architecture rather than by undertaking.</td></tr>
+<tr><th>The second stage</th><td>Savings products — the Vault and the Float — return through <b>CDC as trustee and a licensed digital asset-management company</b>, under an SECP mutual-fund distributor registration. Member savings sit with CDC in the member's own name. <b>No bank is involved at any stage of this plan.</b> Detail in §7.</td></tr>
+<tr><th>Cost to fully operational</th><td>Rs 80,000–180,000 and 4–8 weeks: incorporation in days, a merchant agreement with a licensed aggregator in 1–3 weeks, then the Raast integration, WhatsApp OTP, and final hardening.</td></tr>
+<tr><th>Benchmark</th><td>Money Fellows of Egypt: over US$1.5 billion processed, roughly 350,000 monthly active users, profitable in 2025. Halqa runs about 85% of its default-prevention machinery — without custody, without deposits, and without charging members.</td></tr>
+<tr><th>Engineering state</th><td>Strict TypeScript throughout, both packages type-clean. 53 of 53 unit tests and 349 of 349 integration checks passing (verified 28 July). All money is integer paisa on a double-entry ledger with idempotency keys. Security self-assessed at B+, with the open items listed in §11.</td></tr>
+<tr><th>The one gated piece</th><td>Auto-debit execution. The mandate, consent record, retry ladder and settlement path are built and tested; the outbound debit itself waits on the merchant account. A commercial dependency, not an engineering one.</td></tr>
+</table>
+
+<div class="stats">
+  <div class="stat"><span class="big">Rs 0</span><span class="cap2">member money held — by architecture, not policy</span></div>
+  <div class="stat"><span class="big">Rs 0</span><span class="cap2">what a member ever pays Halqa</span></div>
+  <div class="stat"><span class="big">402 / 402</span><span class="cap2">unit and integration checks passing, verified 28 July</span></div>
+  <div class="stat"><span class="big">B+</span><span class="cap2">security posture, self-assessed, open items listed</span></div>
+  <div class="stat"><span class="big">4–8 wks</span><span class="cap2">and Rs 80–180k to fully operational</span></div>
+</div>
+</section>
+
+<!-- ================= EXEC SUMMARY ================= -->
+<section class="brk">
+<h1>Executive summary</h1>
+
+<h3>The problem</h3>
+<p>The committee is already how Pakistan saves. A fixed group contributes the same amount each round; one member takes the whole pool; the cycle ends when everyone has collected once. It is interest-free, culturally trusted, and available to people no bank will serve. It also fails in two well-documented ways. The first is the organiser who disappears with the pool — Rs 420 million in the Karachi case, and roughly US$2 million taken from about 200 women in the Sidra Humaid case. The second is the member who collects early and then stops paying. A member who takes the pot in round 2 of 12 still owes ten installments, and in an informal committee nothing but social pressure makes them pay. There is no record, no legal recourse, and no return on the money while it waits.</p>
+
+<h3>The solution</h3>
+<p>Halqa does not replace the committee. It records it. Circles form, lock, and run on a schedule that no one can quietly rewrite. Every payment becomes a timestamped, CNIC-linked entry on a double-entry ledger — evidence that is admissible in court under the Electronic Transactions Ordinance 2002, and precisely what an informal committee can never produce. The first failure is removed by structure: there is no pool to steal, because Halqa never holds one. The second is removed by arithmetic: turn position itself is the collateral. An unproven member may only take late seats, where they must pay in almost everything before they collect. No deposit is required, because the seat does the work a deposit would do.</p>
+
+<h3>Why no licence is needed</h3>
+<p>Pakistan's heavy financial licences each regulate a specific activity. The EMI licence governs holding customers' electronic money, and demands Rs 200 million in capital. The NBFC licence governs lending, or pooling other people's funds and deploying them. PSO/PSP authorisation governs operating a payment system. Halqa performs none of these three activities. It rides a licensed aggregator's rails for its own revenue, and it observes member-to-member transfers to which it is never a party. Halqa is not avoiding regulation; the regulated activities simply do not occur anywhere in its architecture. Three red lines — custody, lending at scale, and bureau reporting — mark where that would change, and the design of every stage, including the second, keeps all three uncrossed.</p>
+
+<h3>How it earns while members pay nothing</h3>
+<p>Every revenue line is paid by whoever creates a cost or captures a value — never by the ordinary saver. Late fees (2%, 5%, 10% by tier) are paid by the member who put the group at risk, and they deter as much as they earn. The turn marketplace, where a future payout position can be sold at a premium, yields Halqa 10% of that premium. Circles where Halqa fills empty seats carry a disclosed management fee. Members who declare a savings goal — Hajj, a wedding, school fees — can consent to being introduced to relevant merchants, which makes the intent data itself a product, released only with explicit, revocable permission. At the second stage, fund distribution adds a trailer-fee line (§7). The natural extension, Goal Direct-Pay, treats a twelve-member Hajj circle as one bulk buyer and earns commission from the merchant, who invoices the member directly. No licence is involved at any point in that chain.</p>
+
+<h3>Where it stands today</h3>
+<p>The full product is live on the internet: multi-step signup with CNIC camera capture and GPS home location, the complete circle lifecycle with group chat, a gateway-style checkout across five rails, stored payment methods, standing auto-collection mandates, the turn marketplace, the credit report, and the Credit Passport, in Urdu and English. As of 28 July, both packages are type-clean, all 53 unit tests pass, and all 349 integration checks pass — the harness exercises the whole lifecycle end to end, including attack scenarios. Security is self-assessed at B+ with the open items listed in §11. What is not yet real is collection execution: the software half of auto-debit is complete, and the debit itself waits on the Gate-2 merchant agreement. This is why the platform holds one real member. Halqa will not take people's commitments on rails it cannot yet enforce.</p>
+
+<h3>The plan</h3>
+<p>Gate 1 makes Halqa a company: SECP incorporation, the NTN tax number, sales-tax registration, a corporate account, and the trademark filing — roughly Rs 20–30k and two weeks, mostly waiting. Gate 2 turns on real money: a Merchant Services Agreement with PayFast or Safepay, which is a commercial contract rather than a licence; NADRA Verisys for identity verification (deferrable); WhatsApp OTP as the free second factor; and a fintech counsel's opinion letter. The total is Rs 80,000–180,000 over 4–8 weeks, with the application live throughout. Nothing on the critical path is engineering work; the software is already deployed. The second stage — savings through CDC trusteeship and a digital asset-management company, under an SECP distributor registration — follows once the first cohorts are running (§7).</p>
+
+<h3>Why this wins</h3>
+<p>Money Fellows proved at national scale that a digitised ROSCA works, and Halqa deliberately shares about 75% of its mechanics. The differences are structural, and each one favours Halqa. Money Fellows holds the money; Halqa cannot lose or steal what it never holds. Money Fellows charges members slot fees; Halqa's savers pay nothing. Money Fellows assembles strangers into circles; Halqa keeps the real host and the real social circle, which is how Pakistani kametis actually form. And Halqa builds the one artifact neither comparator has: the Credit Passport, a portable, independently verifiable record of reliability, for the roughly 100 million Pakistanis who have committee discipline but no formal credit history. The record is the product.</p>
+</section>
+
+<!-- ================= CONTENTS ================= -->
+<section class="brk">
+<h1>Contents</h1>
+<table class="toc">
+<tr><td>—</td><td>Halqa at a glance · Executive summary</td></tr>
+<tr><td>0</td><td>What Halqa is, and why the structure is the product — Exhibit 1</td></tr>
+<tr><td>1</td><td>Mechanics — how a circle runs</td></tr>
+<tr><td>2</td><td>What is live today</td></tr>
+<tr><td>3</td><td>Default prevention — the seven controls in operational detail — Exhibits 2, 3</td></tr>
+<tr><td>4</td><td>The credit system</td></tr>
+<tr><td>5</td><td>Engineering architecture</td></tr>
+<tr><td>6</td><td>Payments and settlement</td></tr>
+<tr><td>7</td><td>The second stage — savings under trustee custody: the Vault and the Float</td></tr>
+<tr><td>8</td><td>Security</td></tr>
+<tr><td>9</td><td>The plan to operational — Exhibit 4</td></tr>
+<tr><td>10</td><td>Market — Money Fellows and the comparison</td></tr>
+<tr><td>11</td><td>Vulnerability assessment</td></tr>
+<tr><td>—</td><td>Sources</td></tr>
+</table>
+</section>
+
+<!-- ================= 0 ================= -->
+<section class="brk">
+<h1>0 · What Halqa is, and why the structure is the product</h1>
+
+<p class="lede">Halqa is digital infrastructure for the Pakistani committee: the <i>kameti</i>, known internationally as a ROSCA, a rotating savings and credit association. A fixed group contributes an identical amount each round. One member collects the entire pool each round. The cycle ends when every member has collected exactly once. Halqa does not change this arrangement. It records it, schedules it, prices it, and turns each member's payment history into a portable record of reliability.</p>
+
+<p><b>Everything else in this report follows from one decision: Halqa never takes possession of member money.</b> When a member pays an installment, the money travels from their account directly to the recipient's account over Pakistan's own payment rails. Halqa observes that the payment happened and writes it into the ledger. That is the entire relationship between Halqa and the money — and it remains the relationship at every planned stage, including the second, where savings are held by a licensed trustee in the member's own name rather than by Halqa (§7).</p>
+
+<p>This is a legal position, not a slogan. Each of Pakistan's heavy financial licences regulates possession or deployment of other people's money; none regulates record-keeping:</p>
+<ul>
+<li>An <b>EMI licence</b> (State Bank of Pakistan, <i>Regulations for Electronic Money Institutions, 2019</i>) is required to issue or hold electronic money — a stored balance a customer can redeem. It demands Rs 200 million in capital. Halqa issues no balances and holds none, at any stage.</li>
+<li>An <b>NBFC licence</b> for Investment Finance Services (SECP, <i>NBFC &amp; Notified Entities Regulations, 2008</i>) is required to lend, or to pool and deploy funds. Halqa lends nothing and pools nothing; the members fund each other, and second-stage savings are deployed only by a licensed asset-management company into regulated funds, never by Halqa.</li>
+<li><b>PSO/PSP authorisation</b> (SBP, <i>Payment Systems and Electronic Fund Transfers Act, 2007</i>) is required to operate a payment system. Halqa operates none. It initiates payments over systems run by licensed operators.</li>
+</ul>
+<p>The direction of the logic matters. Halqa is not engineering its way around regulation. The regulated activities do not occur anywhere in the system, so the licences that govern them cannot apply. That position was designed in from the first line of code, and it survives scrutiny because it is architectural rather than contractual.</p>
+
+<p><b>The same decision is the primary fraud control.</b> Every major committee fraud in Pakistan required one precondition: a central pool under one person's control. The Karachi case (Rs 420 million) and the Sidra Humaid case (about US$2 million from some 200 women) were both possible only because member money accumulated in an account someone could empty. In Halqa, no such account exists. This protection cannot be weakened under pressure or relaxed by a future policy change, because there is nothing to relax. The pool a fraudster would steal is simply not there.</p>
+
+<div class="fig">
+<svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif">
+  <rect x="20" y="30" width="150" height="52" fill="#fff" stroke="#000"/>
+  <text x="95" y="52" font-size="11" text-anchor="middle">Paying member</text>
+  <text x="95" y="68" font-size="9" text-anchor="middle" font-style="italic">Raast · wallet · transfer</text>
+
+  <rect x="470" y="30" width="150" height="52" fill="#fff" stroke="#000"/>
+  <text x="545" y="52" font-size="11" text-anchor="middle">Collecting member</text>
+  <text x="545" y="68" font-size="9" text-anchor="middle" font-style="italic">this round's recipient</text>
+
+  <line x1="170" y1="56" x2="462" y2="56" stroke="#000" stroke-width="1.6"/>
+  <polygon points="470,56 460,51 460,61" fill="#000"/>
+  <text x="316" y="45" font-size="10" text-anchor="middle">contribution — full value, settles member to member</text>
+  <text x="316" y="76" font-size="9" text-anchor="middle" font-style="italic">Halqa is never a party to this transfer</text>
+
+  <rect x="200" y="150" width="240" height="58" fill="#f2f2f2" stroke="#000"/>
+  <text x="320" y="172" font-size="11" text-anchor="middle">HALQA — double-entry ledger</text>
+  <text x="320" y="188" font-size="9" text-anchor="middle" font-style="italic">records the obligation and the settlement</text>
+  <text x="320" y="201" font-size="9" text-anchor="middle" font-style="italic">balance held: zero</text>
+
+  <line x1="95" y1="82" x2="240" y2="148" stroke="#000" stroke-dasharray="4,3"/>
+  <line x1="545" y1="82" x2="400" y2="148" stroke="#000" stroke-dasharray="4,3"/>
+  <text x="140" y="128" font-size="8.5" font-style="italic">debit event</text>
+  <text x="452" y="128" font-size="8.5" font-style="italic">credit event</text>
+
+  <rect x="470" y="150" width="150" height="58" fill="#fff" stroke="#000" stroke-dasharray="3,2"/>
+  <text x="545" y="172" font-size="10" text-anchor="middle">Merchant account</text>
+  <text x="545" y="187" font-size="8.5" text-anchor="middle" font-style="italic">late fees, marketplace</text>
+  <text x="545" y="199" font-size="8.5" text-anchor="middle" font-style="italic">margin — revenue only</text>
+</svg>
+<p class="cap"><b>Exhibit 1 — Settlement topology.</b> The solid line carries value; the dashed lines carry information. Halqa's only cash account receives its own revenue — late fees and marketplace margin — an ordinary merchant relationship, not custody. There is no point in this diagram where member money rests with Halqa.</p>
+</div>
+</section>
+
+<!-- ================= 1 ================= -->
+<section class="brk">
+<h1>1 · Mechanics — how a circle runs</h1>
+
+<table>
+<tr><th style="width:22mm">State</th><th>What is true in it</th><th style="width:44mm">How it ends</th></tr>
+<tr><td><b>FORMING</b></td><td>Members join by invite code, up to the cap. Nothing is committed: anyone may leave, and no money has moved. The host's minimum-to-start is a floor below which the Start action is refused — it locks nothing.</td><td><b>Start</b> — initiated by the host, at or above the minimum</td></tr>
+<tr><td><b>ACTIVE</b></td><td>The turn order is frozen, every round exists with its due and payout dates, and round 1's installments are open. Join requests are refused. Each round, members pay, the host releases the payout to that round's recipient, and the circle advances.</td><td>The final round settles</td></tr>
+<tr><td><b>COMPLETED</b></td><td>Everyone has contributed equally and collected exactly once. A clean completion raises the member's score and counts toward unlocking earlier turns.</td><td>—</td></tr>
+<tr><td><b>CANCELLED</b></td><td>Possible only from FORMING, because nothing is owed there.</td><td>—</td></tr>
+</table>
+
+<h3>Start is a single atomic step</h3>
+<p>Start runs inside one database transaction. In that transaction the seat order is computed and frozen, every round is created with its dates, round 1's installments are generated, and the status changes to ACTIVE. A half-applied start would be dangerous in a specific way: a circle with a frozen order but no rounds, or rounds but an unfrozen order, is a circle in which turn position — the collateral of the whole model — could be disputed. Making the step atomic makes the order final. The transaction budget is set to 25 seconds because this is the largest write in the system and it crosses a connection pooler (§5).</p>
+
+<h3>How a member gets a turn</h3>
+<p><b>Members choose their own seat, from a permitted set.</b> When joining, a member picks the turn they want. The set of turns available to them is computed by <code>eligiblePositions()</code> in <code>src/lib/score-bands.ts</code> from two facts: their score band and their tenure on the platform (§3.2, layer 2). A request for a seat outside the permitted set is refused with the specific reason — for example, that new members may take only the last turns of a circle until they complete two circles cleanly. No member is ever silently moved, and a claimed seat is never taken away. The Discover screen applies the same rule in advance: it shows a member only the circles in which at least one seat is genuinely available to them.</p>
+
+<p><b>Starting under capacity cannot break the rule.</b> If a circle starts with fewer members than its cap, the seats compact into a continuous sequence. The sort in <code>startOrder()</code> orders members by band first, then by each member's chosen position, then by join time. Safer members absorb the earlier seats, so the eligibility guarantee holds against the circle's actual size, not its planned one.</p>
+
+<p><b>Chosen seats, rather than platform-assigned ranking, are a deliberate product decision.</b> A ranking reshuffles people without warning. In a product built on existing social trust, that reads as the platform overriding the group. Letting members choose preserves the experience of a real committee — a member takes the month they need — while the permitted set performs the same risk control invisibly.</p>
+
+<h3>Seats Halqa fills itself</h3>
+<p>A host may allow Halqa to subscribe to unfilled seats so the circle can start full. Halqa takes the earliest seats: those carry the largest forward liability (§3.1), so Halqa absorbs the riskiest positions itself and every real member holds a strictly safer seat. Halqa then pays its share into every later round automatically, on the same schedule as any member. These circles carry a higher management fee, shown to the host before confirmation.</p>
+</section>
+
+<!-- ================= 2 ================= -->
+<section class="brk">
+<h1>2 · What is live today</h1>
+
+<p>Everything in this section is deployed and reachable on the public internet. It is a shipped product, not a roadmap.</p>
+
+<h3>For members</h3>
+<table>
+<tr><th style="width:38mm">Capability</th><th>Detail</th></tr>
+<tr><td>Onboarding</td><td>Multi-step signup: phone, name, contact, CNIC, password, review. An international dialling selector (+92 default, 51 countries). The CNIC is captured with the device camera; the home location is pinned from device GPS and reverse-geocoded to an address. An app PIN is set at signup and requested on every open, with optional fingerprint or face unlock (WebAuthn). Terms are accepted against a recorded version string and timestamp. Uniqueness is enforced on CNIC, phone and email at the database level; a duplicate is refused.</td></tr>
+<tr><td>Circle lifecycle</td><td>Create, discover, join, pay, collect, and group chat, across the full state machine of §1. Goal circles carry a named purpose — Hajj, education, wedding, home, business — and a target amount.</td></tr>
+<tr><td>Checkout</td><td>A gateway-style flow: order summary, branded rail cards (Raast, JazzCash, Easypaisa, bank transfer, cash), a processing state, a receipt, and an explicit failure screen that leaves the installment untouched rather than half-paid.</td></tr>
+<tr><td>Saved payment methods</td><td>A Raast ID, wallet number or IBAN, captured once, masked at rest, and reused at checkout and by auto-collection. Linking a method issues a one-time verification code; the method is marked verified only after the code is confirmed.</td></tr>
+<tr><td>Auto-collection</td><td>A standing per-circle mandate, on by default from the moment of joining, using the member's preferred rail. Consent is recorded with a timestamp. The daily sweep attempts collection before any penalty is considered (§3.3), and every settlement writes a numbered receipt notification (prefixed RCPT-) inside the same database transaction as the payment itself.</td></tr>
+<tr><td>Turn marketplace</td><td>A member lists a future turn; others bid; the seller accepts. The premium is capped at 50% of the payout, each bid must exceed the standing floor, and Halqa's fee is 10% of the accepted premium. Shariah-labelled circles permit zero-premium swaps only (§6).</td></tr>
+<tr><td>Credit record</td><td>A score gauge with band, installment history, a score-movement chart, and a factor breakdown. The Credit Passport exports a signed summary — clean completions, on-time percentage, total recorded, expiry — that any third party can verify without a Halqa account (§4).</td></tr>
+<tr><td>Agreements</td><td>A weekly e-signed platform undertaking and a mutual member-to-member guarantee, described in operational detail in §3.2, layer 7. Circle actions are blocked until the current undertaking is signed.</td></tr>
+<tr><td>Settings and legal</td><td>Sign-in and security, preferences, data privacy, notifications, payment methods, and a six-document legal corpus accepted at signup.</td></tr>
+<tr><td>Language and platform</td><td>Urdu and English, rotating regional greetings, mobile-first, installable as a PWA.</td></tr>
+</table>
+
+<h3>Revenue, live</h3>
+<ul>
+<li><b>Progressive late fees</b> — the three-tier ladder of §3.3, paid by the member who created the risk.</li>
+<li><b>Turn-marketplace margin</b> — 10% of each accepted premium.</li>
+<li><b>Halqa-fill management fee</b> — on circles where Halqa subscribes to open seats.</li>
+<li><b>Consent-gated goal-intent leads</b> — a member with a declared goal may consent, per purpose and revocably, to introduction to relevant merchants. Nothing is shared without that consent.</li>
+</ul>
+
+<h3>Built and held for the second stage</h3>
+<p>The savings and yield features — the Vault sleeves, the earning engines, the scheme terminal and the escrow treasury — are complete in the codebase, covered by the test suite, and switched off behind a single feature flag. They are not exposed at this stage because, switched on today, several would amount to pooling or deploying member funds — the activity the NBFC regime regulates. They return at the second stage under the trustee structure of §7, where custody sits with CDC and deployment sits with a licensed asset-management company, and Halqa's role remains distribution and record-keeping.</p>
+</section>
+
+<!-- ================= 3 ================= -->
+<section class="brk">
+<h1>3 · Default prevention — the seven controls in operational detail</h1>
+
+<p class="lede">A committee platform has exactly one failure that matters: a member collects the pool, then stops contributing. Everything else can be recovered from. This section states the arithmetic of that exposure, then describes each control at the level of what the system actually does — which request is refused, what is withheld, what is written, and what it costs.</p>
+
+<h3>3.1 Forward liability — the number being managed</h3>
+<p>At the moment a member collects, their <b>forward liability</b> is what they still owe the circle:</p>
+<div class="math">L(k) = c × (n − k)</div>
+<p>where <code>n</code> is the number of members, <code>c</code> the contribution per round, and <code>k</code> the member's turn position. By their turn, the member in seat <code>k</code> has paid <code>c × k</code> and received <code>c × n</code>; the difference is the credit the group has extended to them.</p>
+
+<p>Two consequences shape the design. First, risk is not spread across the circle: it is largest at seat 1, falls by exactly one contribution per seat, and reaches zero at the last seat. Second, a committee is two financial products in one structure. The early seats are borrowing from the group and repaying over the rest of the cycle; the late seats are saving under a commitment device and cannot meaningfully default. Informal committees fail partly because they apply one set of rules to both kinds of member.</p>
+
+<div class="fig">
+<svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif">
+  <line x1="70" y1="250" x2="620" y2="250" stroke="#000" stroke-width="1.2"/>
+  <line x1="70" y1="30" x2="70" y2="250" stroke="#000" stroke-width="1.2"/>
+  <text x="70" y="22" font-size="9" text-anchor="middle">Rs</text>
+  <text x="64" y="34" font-size="8.5" text-anchor="end">110,000</text>
+  <text x="64" y="144" font-size="8.5" text-anchor="end">55,000</text>
+  <text x="64" y="253" font-size="8.5" text-anchor="end">0</text>
+  <line x1="66" y1="30" x2="70" y2="30" stroke="#000"/>
+  <line x1="66" y1="140" x2="70" y2="140" stroke="#000"/>
+
+  <rect x="74" y="30"  width="38" height="220" fill="#444"/>
+  <rect x="120" y="50"  width="38" height="200" fill="#444"/>
+  <rect x="166" y="70"  width="38" height="180" fill="#444"/>
+  <rect x="211" y="90"  width="38" height="160" fill="#444"/>
+  <rect x="257" y="110" width="38" height="140" fill="#444"/>
+  <rect x="303" y="130" width="38" height="120" fill="#444"/>
+  <rect x="349" y="150" width="38" height="100" fill="#777"/>
+  <rect x="395" y="170" width="38" height="80"  fill="#777"/>
+  <rect x="440" y="190" width="38" height="60"  fill="#777"/>
+  <rect x="486" y="210" width="38" height="40"  fill="#bbb"/>
+  <rect x="532" y="230" width="38" height="20"  fill="#bbb"/>
+  <rect x="578" y="249" width="38" height="1"   fill="#bbb"/>
+
+  <text x="93"  y="263" font-size="8.5" text-anchor="middle">1</text>
+  <text x="139" y="263" font-size="8.5" text-anchor="middle">2</text>
+  <text x="185" y="263" font-size="8.5" text-anchor="middle">3</text>
+  <text x="230" y="263" font-size="8.5" text-anchor="middle">4</text>
+  <text x="276" y="263" font-size="8.5" text-anchor="middle">5</text>
+  <text x="322" y="263" font-size="8.5" text-anchor="middle">6</text>
+  <text x="368" y="263" font-size="8.5" text-anchor="middle">7</text>
+  <text x="414" y="263" font-size="8.5" text-anchor="middle">8</text>
+  <text x="459" y="263" font-size="8.5" text-anchor="middle">9</text>
+  <text x="505" y="263" font-size="8.5" text-anchor="middle">10</text>
+  <text x="551" y="263" font-size="8.5" text-anchor="middle">11</text>
+  <text x="597" y="263" font-size="8.5" text-anchor="middle">12</text>
+  <text x="345" y="279" font-size="9" text-anchor="middle" font-style="italic">turn position (k)</text>
+
+  <line x1="74" y1="300" x2="616" y2="300" stroke="#000" stroke-width="1"/>
+  <line x1="74" y1="296" x2="74" y2="304" stroke="#000"/>
+  <line x1="616" y1="296" x2="616" y2="304" stroke="#000"/>
+  <text x="345" y="294" font-size="8.6" text-anchor="middle">GOOD / EXCELLENT — any seat · max exposure Rs 110,000</text>
+
+  <line x1="349" y1="330" x2="616" y2="330" stroke="#000" stroke-width="1"/>
+  <line x1="349" y1="326" x2="349" y2="334" stroke="#000"/>
+  <line x1="616" y1="326" x2="616" y2="334" stroke="#000"/>
+  <text x="482" y="324" font-size="8.6" text-anchor="middle">DECENT — second half only · max Rs 50,000</text>
+
+  <line x1="486" y1="360" x2="616" y2="360" stroke="#000" stroke-width="1"/>
+  <line x1="486" y1="356" x2="486" y2="364" stroke="#000"/>
+  <line x1="616" y1="356" x2="616" y2="364" stroke="#000"/>
+  <text x="551" y="354" font-size="8.6" text-anchor="middle">NEW or BAD — last seats · max Rs 20,000</text>
+
+  <text x="74" y="384" font-size="8.4" font-style="italic">12 members · Rs 10,000 per round · Rs 120,000 pot</text>
+</svg>
+<p class="cap"><b>Exhibit 2 — Forward liability by seat, and which seats each class of member may claim.</b> The bars show what a member in that seat could walk away owing. The brackets show the seats open to each eligibility class. Restricting risky members to late seats does not change how often defaults occur; it caps how large one can possibly be. For an unproven member the cap has a closed form: in any circle of six or more members, the worst case is exactly two contributions — here Rs 20,000, or 16.7% of the pot.</p>
+</div>
+
+<h3>3.2 The seven controls</h3>
+
+<table>
+<tr><th style="width:26mm">Layer</th><th>What the system does, precisely</th></tr>
+<tr><td><b>1 · Identity</b></td><td>Signup records name, phone, email and CNIC, with the CNIC photographed by the device camera and the home location pinned by GPS. Uniqueness is enforced on CNIC, phone and email — a second account on any of the three is refused. Every obligation therefore binds to a government identity that cannot be abandoned the way a username can. This is also the foundation for the evidence in layer 6.</td></tr>
+<tr><td><b>2 · Position</b></td><td>Score band and tenure define the claimable seat set. Members below a score of 550, and all new members regardless of score, may claim only the last three seats, never earlier than halfway; members between 550 and 649 may claim the second half; members at 650 and above may claim any free seat. A new member graduates to earlier seats only after two cleanly completed circles and a manual verification recorded by the team. The worst-case exposure to an unproven member is two contributions (Exhibit 2). This is the highest-leverage control in the system, and it requires no capital and no deposit.</td></tr>
+<tr><td><b>3 · Schedule</b></td><td>Due dates are fixed for every round at Start and cannot be renegotiated. Reminders escalate as the due date approaches, and a balance-check notice is sent the day before the collection sweep so the member can fund their account. An internal grace window — computed from the circle's period and never shown in the interface — separates an honest slip from real delinquency (§3.3).</td></tr>
+<tr><td><b>4 · Price</b></td><td>The three-tier late fee of §3.3, with matched score damage of −10, −20 and −40 points. The fee recovers part of the cost; its main function is to remove the economic case for paying late.</td></tr>
+<tr><td><b>5 · Payout controls</b></td><td>Three distinct mechanisms govern the moment of collection. <b>(a)</b> A round's payout cannot be released while any contribution in that round is unpaid: the release request is refused with the count of outstanding contributions, and since the recipient's own installment is among them, a member in arrears cannot collect. In guarantee-pool circles, only installments already classified MISSED may be covered from that circle's own pool — merely late ones still block. <b>(b)</b> If an account linked to the recipient carries an unresolved default (linkage meaning a two-way referral, a guarantor relationship, or a shared device), the payout is withheld until that recovery case closes. <b>(c)</b> Where a circle enables the forward-liability gate, an early recipient must have security posted equal to a set share of what they will still owe — counted from held deposits, previous holdbacks and any host-verified commitment. Any shortfall is withheld from the payout itself, capped at 60% of it, and the withheld amount is released back in steps as the member makes each remaining payment cleanly.</td></tr>
+<tr><td><b>6 · Consequence</b></td><td>A post-payout default sets a flag that refuses joining, hosting and marketplace participation platform-wide, publishes the default on the member's profile, and opens a recovery case for the outstanding amount plus accrued penalties plus a 10% rehabilitation fee. Clearing the case starts a cooldown, after which the member re-enters with a damaged score — so defaulters return to the recorded system rather than disappearing into the informal one. Every step is CNIC-linked and timestamped, and under the Electronic Transactions Ordinance 2002 these records are admissible in court.</td></tr>
+<tr><td><b>7 · Contract</b></td><td>Two signed instruments stand behind every circle. The <b>platform undertaking</b> is e-signed and valid for seven days at a time; creating, joining or paying into a circle is refused until the current one is signed. The signatory must type their registered legal name exactly, and draw a signature, which is stored with a SHA-256 hash, the signing IP and the timestamp. Its clauses include a liquidated demand suitable for summary recovery under Order XXXVII of the Civil Procedure Code, acceleration of the full outstanding balance on default, consent to automatic collection and salary deduction, consent to credit-bureau disclosure, and arbitration. The <b>mutual guarantee</b> is executed automatically at joining, runs from member to member — never to Halqa — and a circle cannot start until every member's guarantee is on file. Both texts are internal drafts pending review by retained counsel, which is a budgeted Gate-2 item. Alongside the instruments: an optional named guarantor for early seats whose own score is at stake, and fund-the-gap (§1), which removes the pressure that historically drove hosts to admit strangers.</td></tr>
+</table>
+
+<h3>3.3 The delinquency ladder</h3>
+<p>The grace window is computed per round from the circle's period, then clamped:</p>
+<div class="math">graceDays = max(2, min(14, round(periodDays × 0.23) − 2))</div>
+<p>A 30-day circle grants 5 days; a 45-day circle grants 8. The window does not appear in the interface: a disclosed grace period is simply a later due date, and members would plan around it. Keeping it internal protects the honest mistake without changing calculated behaviour. Score damage begins from the first late day regardless — the window forgives the fee, never the record.</p>
+
+<div class="fig">
+<svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif">
+  <line x1="60" y1="80" x2="612" y2="80" stroke="#000" stroke-width="1.2"/>
+  <polygon points="620,80 610,75 610,85" fill="#000"/>
+
+  <line x1="60" y1="66" x2="60" y2="94" stroke="#000" stroke-width="1.6"/>
+  <text x="60" y="58" font-size="9" text-anchor="middle">due date</text>
+
+  <line x1="240" y1="70" x2="240" y2="90" stroke="#000"/>
+  <line x1="420" y1="70" x2="420" y2="90" stroke="#000"/>
+
+  <rect x="60"  y="80" width="180" height="26" fill="#e8e8e8" stroke="#000"/>
+  <rect x="240" y="80" width="180" height="26" fill="#bbb" stroke="#000"/>
+  <rect x="420" y="80" width="192" height="26" fill="#666" stroke="#000"/>
+
+  <text x="150" y="97" font-size="9" text-anchor="middle">days 1–3</text>
+  <text x="330" y="97" font-size="9" text-anchor="middle">day 4 → graceDays</text>
+  <text x="516" y="97" font-size="9" text-anchor="middle" fill="#fff">beyond graceDays</text>
+
+  <text x="150" y="126" font-size="10" text-anchor="middle" font-weight="bold">2%</text>
+  <text x="330" y="126" font-size="10" text-anchor="middle" font-weight="bold">5%</text>
+  <text x="516" y="126" font-size="10" text-anchor="middle" font-weight="bold">10%</text>
+
+  <text x="150" y="142" font-size="9" text-anchor="middle">score −10</text>
+  <text x="330" y="142" font-size="9" text-anchor="middle">score −20</text>
+  <text x="516" y="142" font-size="9" text-anchor="middle">score −40</text>
+
+  <text x="150" y="160" font-size="8.4" text-anchor="middle" font-style="italic">circle's latePenaltyBps</text>
+  <text x="330" y="160" font-size="8.4" text-anchor="middle" font-style="italic">fixed 500 bps</text>
+  <text x="516" y="160" font-size="8.4" text-anchor="middle" font-style="italic">fixed 1000 bps · MISSED</text>
+  <text x="516" y="174" font-size="8.4" text-anchor="middle" font-style="italic">post-payout ⇒ DEFAULT</text>
+
+  <text x="60" y="192" font-size="8.4" font-style="italic">Auto-collection runs before this ladder — the fees only reach a member whose mandate could not be served.</text>
+</svg>
+<p class="cap"><b>Exhibit 3 — The delinquency ladder.</b> Percentages apply to the installment. The first tier uses the circle's own <code>latePenaltyBps</code>, defaulting to 200 basis points and capped at 1,000. The second and third tiers are fixed in <code>src/lib/settlement.ts</code> and mirrored in the daily sweep. A member who has already collected their payout and passes the final boundary is classified as a post-payout default — the one event the entire stack exists to prevent. Its score penalty can reach −200.</p>
+</div>
+
+<h3>3.4 The one piece still gated</h3>
+<p>Auto-collection is complete as software. The mandate is captured with consent and a timestamp, the daily sweep honours it, and collection is attempted before any penalty is assessed. What is not yet live is the debit itself: executing against a real card or wallet requires the merchant account of §9. The decision logic, the retry ladder and the settlement path all exist and pass their tests; the outbound authorisation is not yet connected to a live rail. This is the largest remaining gap between Halqa and a fully operational collection system, and closing it is a commercial step, not an engineering one.</p>
+</section>
+
+<!-- ================= 4 ================= -->
+<section class="brk">
+<h1>4 · The credit system</h1>
+
+<p>Halqa scores members on observed behaviour. It is a proprietary behavioural score, not a bureau score. Oraan and Money Fellows underwrite on their own data for the same reason: the population in question has no formal credit history to check.</p>
+
+<h3>The reliability score</h3>
+<p>The scale runs 300 to 850, and every account opens at 700. On-time payments, clean completions and streaks raise the score. Lateness and default lower it along the ladder of Exhibit 3, and a post-payout default can cost up to 200 points. The band boundaries live in a single file, so recalibration is a one-line change:</p>
+
+<table>
+<tr><th>Band</th><th>Range</th><th>Seats claimable</th><th>Marketplace</th></tr>
+<tr><td><b>BAD</b> — shown as "Rebuilding"</td><td>below 550</td><td>The last three seats, never earlier than halfway</td><td>May not buy</td></tr>
+<tr><td><b>DECENT</b> — shown as "Fair"</td><td>550 – 649</td><td>Second half of the order</td><td>May buy</td></tr>
+<tr><td><b>GOOD</b></td><td>650 – 749</td><td>Any free seat</td><td>May buy</td></tr>
+<tr><td><b>EXCELLENT</b></td><td>750 and above</td><td>Any free seat</td><td>May buy</td></tr>
+</table>
+<p>Marketplace participation is therefore gated at 550 — any non-BAD band may bid. Hosting is a separate gate at 700.</p>
+
+<h3>Tenure quarantine, independent of score</h3>
+<p>A new member is restricted to late seats regardless of score, until two conditions are met: two committees completed cleanly, and a manual verification recorded by the team. A new account's 700 is an assumption, not a record. Score and tenure remain separate gates because they answer different questions, and only one of them can be answered on day one.</p>
+
+<h3>The identity ladder</h3>
+<p>Level 0: nothing on file. Level 1: CNIC recorded — this unlocks hosting. Level 2: payment-account verified — held in reserve for the custody-backed products of the second stage (§7). A signup that includes a CNIC starts at Level 1.</p>
+
+<h3>Bureau compatibility</h3>
+<p>TASDEEQ, one of Pakistan's two licensed credit bureaus, publishes scores on a 200–600 scale. Halqa already implements a linear, invertible mapping from that scale onto its own 300–850 (<code>fromTasdeeq</code>, in the same file as the bands), which places the cutoffs of 550, 650 and 750 at approximately TASDEEQ 382, 455 and 527. The mapping is wired, not live. Reading a bureau score requires a subscriber agreement concluded directly with the bureau — TASDEEQ has precedent for admitting non-financial-institution data members. Writing to a bureau, or reaching the State Bank's eCIB registry, requires financial-institution status; it is excluded from both the first and second stages, and would be revisited only if Halqa later took a licence of its own. TASDEEQ does not publish its internal band boundaries, so the quartering above is provisional until a data agreement supplies their default-probability bands.</p>
+
+<h3>Credit events, and the Passport</h3>
+<p>Every score movement is stored as an immutable credit event with its reason and timestamp. That ledger is the underlying asset: it is what a future bureau relationship would consume, and it is what makes the <b>Credit Passport</b> possible — a cryptographically signed summary of clean completions, on-time percentage, total value recorded and an expiry date, exported as a link that a landlord, employer or lender verifies without holding a Halqa account and without relying on the member's word. For a population with committee discipline and no formal footprint, this is the bridge into documented credit. Neither comparator has an equivalent.</p>
+</section>
+
+<!-- ================= 5 ================= -->
+<section class="brk">
+<h1>5 · Engineering architecture</h1>
+
+<h3>The shape of the system</h3>
+<table>
+<tr><th style="width:30mm">Tier</th><th>Implementation</th></tr>
+<tr><td><b>Client</b></td><td>React and TypeScript, built with Vite. Routes load as separate chunks, so the first paint stays fast even on a cold serverless start. Known data is cached client-side and painted immediately, then reconciled against the server. PWA metadata is in place, and Capacitor provides the Android and iOS shells.</td></tr>
+<tr><td><b>API</b></td><td>Node and Express in TypeScript, with Prisma as the database layer. The Express application is separated from the long-lived server process, so the same code runs both as serverless functions and as a persistent host for chat and scheduled jobs. Every request body is validated with Zod before any logic runs.</td></tr>
+<tr><td><b>Data</b></td><td>PostgreSQL on Supabase in Singapore, reached through pgBouncer in transaction-pooling mode. Serverless functions cannot hold long-lived connections; the pooler lends real connections per transaction, which is what makes a function-per-request model workable against a fixed connection budget.</td></tr>
+<tr><td><b>Placement</b></td><td>The API functions are pinned to Singapore, the same region as the database. A multi-statement transaction pays the network round trip once per statement; moving the compute next to the data took the discovery screen from roughly ten seconds to under one.</td></tr>
+</table>
+
+<h3>Monetary correctness</h3>
+<p>Every amount in the system is an integer count of paisa, held in BigInt. There is no floating-point currency anywhere. Binary floating point cannot represent most decimal fractions exactly, so a system built on decimal balances accumulates small errors that stay invisible until the books fail to reconcile — at which point the history is already wrong. Integer arithmetic makes every operation exact by construction. Rates are applied as basis points with integer division: <code>amountPaisa × bps / 10000n</code>.</p>
+
+<p>Every movement is recorded as a double-entry pair — a debit and an equal credit — so the ledger checks itself, and a missing rupee appears as a broken balance rather than a mystery. Every write carries an idempotency key, a unique fingerprint of the intent: if the same request arrives twice, which is routine on mobile networks and under serverless retries, it is applied once. Together these properties mean the ledger cannot double-charge, cannot double-pay, and cannot silently lose money.</p>
+
+<h3>Scheduling</h3>
+<p>A daily sweep runs on Vercel Cron at 02:00 UTC in a fixed order: reminders, then auto-collection, then penalties, then escalation. Collection is attempted before any fee is considered, so the ladder of §3.3 only ever reaches a member whose mandate failed. A balance-check notice goes out the day before the sweep.</p>
+
+<h3>Payments as a replaceable layer</h3>
+<p>All rail-specific logic sits behind one interface in <code>payment-provider.ts</code>. The sandbox implementation confirms instantly; the live implementation is selected per rail by environment credentials. Because the routes and the settlement path never touch rail details, going live is a credential change, not a rewrite. This is the property that makes the §9 timeline realistic — the integration work is already done.</p>
+
+<h3>Schema discipline</h3>
+<p>Production schema changes are additive-only, hand-written SQL, applied through the pooler. A generated push against production is prohibited. Additive-only means new columns arrive as nullable and nothing is dropped or retyped in place, so during a deployment — when old and new code briefly run side by side — both versions remain correct. For a serverless platform with no single cut-over moment, this is the only safe discipline.</p>
+
+<h3>Verification</h3>
+<table>
+<tr><th style="width:44mm">Check</th><th>Status</th></tr>
+<tr><td>API type-check</td><td><b>Clean</b> — verified 28 July 2026</td></tr>
+<tr><td>Web type-check</td><td><b>Clean</b> — verified 28 July 2026</td></tr>
+<tr><td>Unit suite</td><td><b>53 of 53 passing</b> — verified 28 July 2026. Covers money arithmetic, score bands, forward liability, agreement clauses, risk distribution, the bonus ladder, and the simulation's invariants.</td></tr>
+<tr><td>Integration harness</td><td><b>349 of 349 checks passing</b> — verified 28 July 2026. The harness runs the entire lifecycle end to end: creation, joining, locking, payment on every rail, payout release, the late-fee ladder, marketplace trades, and adversarial cases including account lockout, token replay, SQL injection and weak passwords.</td></tr>
+<tr><td>Simulation</td><td>A Monte-Carlo model and a 120,000-agent Pakistan-calibrated simulation over a real 2025 calendar produce the default figures quoted in this report. <b>These are models, not measurements of live behaviour</b>, and they are labelled as such wherever they appear.</td></tr>
+</table>
+</section>
+
+<!-- ================= 6 ================= -->
+<section class="brk">
+<h1>6 · Payments and settlement</h1>
+
+<h3>The rails</h3>
+<p>Raast, JazzCash, Easypaisa, bank transfer and cash are each modelled as first-class payment methods, with their own presentation and flow. Cash and transfer payments are recorded against a reference number rather than presented as electronic settlement. The ledger records what actually happened.</p>
+
+<h3>The current state of auto-debit in Pakistan</h3>
+<p>True cross-bank auto-debit does not exist in Pakistan today, for any operator. There is no general mandate scheme that permits a third party to pull money from an arbitrary account on a schedule. What exists, in descending order of convenience: card-on-file recurring charges through an acquirer — the closest available equivalent for salaried members with cards; wallet deduction through 1LINK's biller scheme, for wallet-native users; and Raast request-to-pay, live across all banks since 2024, which asks the member for one approving tap. Halqa treats these as a waterfall matched to each member's situation. The State Bank has signalled that a true pull-payment scheme is in testing; the architecture is built so that adopting it will be a configuration change rather than a redesign.</p>
+
+<h3>Where settlement happens</h3>
+<p>Committee money moves from member to member. Halqa's own merchant account receives only Halqa's revenue — late fees and marketplace margin. This distinction is enforced by the code itself: no code path exists that credits a Halqa-controlled balance with a member's contribution.</p>
+
+<h3>The turn marketplace, rule by rule</h3>
+<p>A future payout position is a claim with value, and the marketplace lets members price it. Each rule closes a specific abuse:</p>
+<ul>
+<li><b>The premium is capped at 50% of the payout</b> — the market cannot become high-cost lending in committee form.</li>
+<li><b>Each bid must exceed the standing floor</b> — the auction is open and rising, and a seller cannot quietly accept a low bid from an accomplice.</li>
+<li><b>Shariah-labelled circles permit swaps only, at zero premium</b> — selling a claim on money for more money is religiously contested, so in those circles a position may move but not be sold. A feature is never removed for being non-compliant, and never labelled compliant when it is not.</li>
+<li><b>Members below the 550 band may not buy</b> — purchasing an earlier turn would otherwise be a route around the seat restrictions of §3.</li>
+</ul>
+<p>Halqa's fee is 10% of the accepted premium — a fee on the trade, never on the pot.</p>
+</section>
+
+<!-- ================= 7 ================= -->
+<section class="brk">
+<h1>7 · The second stage — savings under trustee custody: the Vault and the Float</h1>
+
+<p class="lede">The first stage records the committee. The second stage makes the money in it grow — without Halqa ever holding a rupee. The structure is trustee custody: member savings are placed in regulated funds whose assets are held by the <b>Central Depository Company (CDC)</b>, Pakistan's licensed trustee, with the fund units issued <b>in the member's own name</b>. A licensed digital asset-management company manages the funds. Halqa distributes and keeps the record. No bank appears anywhere in this structure, at this stage or any other; the only bank account in the entire plan is Halqa's own ordinary corporate account for its fees.</p>
+
+<h3>The structure, precisely</h3>
+<p>Under the <i>NBFC &amp; Notified Entities Regulations, 2008</i>, the assets of every regulated mutual fund in Pakistan are legally held by a trustee — in practice CDC — while the asset-management company (AMC) only manages them. The money path for a Halqa saver is: member → CDC collection account → fund units registered in the member's name. Halqa never sits in that path. The model is already operating in the market: Pakistan's first digital-only AMC runs precisely this structure, CDC-custodied, with a Rs 1,000 minimum investment and no direct access to customer funds, and CDC itself operates a fund-distribution platform on the same basis. The second stage places Halqa in the distributor's seat of that proven arrangement.</p>
+
+<h3>The licence it requires</h3>
+<p>Distribution of mutual funds requires an <b>SECP mutual-fund distributor registration</b> — a simplified registration regime that permits distributing the funds of multiple AMCs. It is not an EMI licence, because Halqa holds no balances; it is not an NBFC licence, because Halqa deploys no funds — the AMC does, into regulated instruments, under its own licence. An investment-adviser licence is avoided by design: Halqa presents an execution-only menu of funds and recommends nothing. The three red lines of §9 therefore remain uncrossed at the second stage: custody sits with CDC, deployment sits with the AMC, and Halqa remains the record-keeper.</p>
+
+<h3>The two products</h3>
+<table>
+<tr><th style="width:30mm">Product</th><th>Mechanism</th></tr>
+<tr><td><b>Growth Vault</b></td><td>A member parks idle money — typically a late-seat saver waiting for their turn — into an Islamic money-market or income fund through the structure above. Those funds yielded roughly 10–11% in mid-2026, against inflation of roughly 11–12%; committee money today earns zero while it waits. The vault gives the saver what a committee never could: a return on the waiting.</td></tr>
+<tr><td><b>Safety Vault</b></td><td>The same holding, pledged. The member's units carry a lien in favour of their circle. If an installment is missed, the system settles the group from the member's own units through the standard settlement path — the ledger entry, the receipt and the late adjustment all apply as normal. This is set-off against the member's own property, not seizure, and it is the second stage's central contribution to default prevention: <b>a member with a pledged buffer cannot default up to the size of that buffer.</b> A Rs 25,000 pledge in a Rs 10,000 circle self-cures two and a half missed installments before the group is exposed at all.</td></tr>
+</table>
+
+<h3>The Float</h3>
+<p>In most circles, contributions arrive at the start of a round and the payout leaves at its end, so the pool sits idle for days or weeks in between. At the second stage, each contribution buys fund units in the paying member's own name on the day it is made, and those units are redeemed on payout day. At a 10–11% annual yield, one month of float is worth roughly 0.85–0.9% of the pool — on a Rs 120,000 pool, roughly Rs 1,000 per round, accruing to the savers rather than to no one, with Halqa keeping a disclosed share. Fund redemptions settle in one to two days, so the product carries a liquidity buffer to guarantee that no payout ever waits on a redemption. The Float rides the same trustee structure as the Vault and follows it in sequence.</p>
+
+<h3>How the second stage strengthens the first</h3>
+<p>Stage one prevents default with position and price: risky members sit where the arithmetic caps their damage, and lateness is priced. Stage two adds property: a pledged buffer of the member's own money that absorbs a miss before the group ever feels it. The three layers — position, price, property — stack, and each member who adopts the vault reduces the exposure of every circle they sit in. Adoption is encouraged with fee discounts rather than compulsion. The eligibility, quarantine and ladder mechanics of §3 continue unchanged underneath.</p>
+
+<h3>Sequence and boundaries</h3>
+<p>The second stage begins after Gate 2 is complete and the first cohorts are running: the distributor registration is filed, the AMC and CDC agreements are concluded, and the vault features — already built and tested behind their flag (§2) — are switched on under the new structure. Until then, no savings product is offered, no yield is promised, and nothing in the live application implies otherwise. The boundary is the same at every stage: Halqa keeps records and distributes; the trustee holds; the AMC manages; the members own.</p>
+</section>
+
+<!-- ================= 8 ================= -->
+<section class="brk">
+<h1>8 · Security</h1>
+
+<h3>Transport and headers — verified live</h3>
+<ul>
+<li>TLS everywhere. HSTS on both applications; the web application carries <code>preload</code> and a two-year lifetime.</li>
+<li>A Content-Security-Policy on both the web application and the API. The API's policy is <code>default-src 'none'</code> — the correct setting for an origin that serves only JSON and should never behave as a page. The web policy is scoped to itself plus the API origin.</li>
+<li>Framing is refused twice over: <code>X-Frame-Options: DENY</code> for older browsers and CSP <code>frame-ancestors 'none'</code> for modern ones — the defence against clickjacking.</li>
+<li><code>X-Content-Type-Options: nosniff</code>, a referrer policy, and a permissions policy that denies camera, microphone, location and payment at the document level. The camera and location are used at signup, requested at the moment of use, never granted ambiently.</li>
+</ul>
+
+<h3>Application layer — verified live</h3>
+<ul>
+<li>Requests without a token receive 401 on profile and committee endpoints.</li>
+<li>An SQL-injection attempt against sign-in is rejected with 400 at validation. Injection is unavailable at a deeper level as well: Prisma parameterises every query, so user input never reaches the database as syntax.</li>
+<li>Rate limiting runs platform-wide, with sign-in hard-limited to 30 attempts per 15 minutes in production.</li>
+<li>Five failed sign-ins lock the account for fifteen minutes. Passwords are hashed with bcrypt at cost 12.</li>
+<li>Access tokens are short-lived; refresh tokens rotate on every use, and presenting an already-used refresh token revokes the whole token family. A stolen token becomes a single detectable event instead of a lasting foothold.</li>
+<li>Sign-in takes the same time whether or not the username exists, which defeats harvesting a list of real users from response timing.</li>
+<li>Every sensitive action lands in an append-only audit log, and the server refuses to boot with weak or missing signing secrets.</li>
+</ul>
+
+<h3>Supply chain and secrets — verified</h3>
+<p>The web package reports zero known vulnerabilities. The API carries one low-severity advisory in a build-time dependency that cannot be reached at runtime; it is tracked for the next update. All secrets live in encrypted platform environment variables, none in source control, and internal deployment URLs sit behind single sign-on.</p>
+
+<h3>Fraud controls specific to committees</h3>
+<ul>
+<li>Position as collateral — an early payout cannot be obtained without a proven record (§3).</li>
+<li>Release control — a payout cannot be released while contributions in the round are outstanding, and linked-account defaults withhold it (§3.2, layer 5).</li>
+<li>CNIC-linked, timestamped evidence, admissible under the Electronic Transactions Ordinance 2002.</li>
+<li>One person, one account — uniqueness on CNIC, phone and email. Without this, the reliability score would mean nothing.</li>
+<li>The marketplace is gated by band, and a default locks features platform-wide.</li>
+<li>Family and linked-account detection — a shared device, a guarantor link or a two-way referral — so an open default cannot be routed around through a relative's account.</li>
+</ul>
+
+<h3>Assessment</h3>
+<p>Security is self-assessed at B+. No critical or high-severity code vulnerability was found; the open items are operational and are listed with effort estimates in §11: rotation of a previously exposed database credential, migration of the application from the master database role to a least-privilege role, the second sign-in factor (WhatsApp OTP, planned, free), alerting on error and failed-login bursts, and an external penetration test when a counterparty requires one.</p>
+</section>
+
+<!-- ================= 9 ================= -->
+<section class="brk">
+<h1>9 · The plan to operational</h1>
+
+<p class="lede">Halqa requires no financial licence for as long as three conditions hold: it holds no customer funds, it lends none of its own money at scale, and it reports to no credit bureau. Each condition corresponds to exactly one licence. The design of both stages keeps all three conditions intact — at the second stage, custody sits with CDC and deployment with a licensed AMC (§7) — so crossing any line would be a deliberate future decision, never a side effect.</p>
+
+<h3>Gate 1 — become a company</h3>
+<table>
+<tr><th style="width:34mm">Step</th><th>Body and instrument</th><th style="width:38mm">Cost (PKR)</th><th style="width:26mm">Timeline</th></tr>
+<tr><td>Incorporate</td><td>Private limited company — SECP, <i>Companies Act 2017</i>, filed through the eZfile / LEAP portal</td><td>~3,000–5,000 self-filed (Rs 1,000 name reservation plus ~2,000 filing)</td><td>2–5 working days</td></tr>
+<tr><td>Tax registration</td><td>National Tax Number — FBR, through the IRIS portal</td><td>Free</td><td>1–2 days</td></tr>
+<tr><td>Sales tax on services</td><td>PRA, SRB or FBR-ICT, depending on province</td><td>Free</td><td>~1 week</td></tr>
+<tr><td>Corporate account</td><td>Any scheduled bank — the company's own operating account for fee revenue</td><td>Free, plus a Rs 10,000–50,000 minimum balance</td><td>1–2 weeks</td></tr>
+<tr><td>Trademark</td><td>"Halqa" word and logo — IPO-Pakistan, <i>Trade Marks Ordinance 2001</i></td><td>~5,000–15,000 per class</td><td>Filed in days; granted in 1–2 years</td></tr>
+</table>
+
+<h3>Gate 2 — turn on real money</h3>
+<table>
+<tr><th style="width:34mm">Step</th><th>Body and instrument</th><th style="width:38mm">Cost</th><th style="width:26mm">Timeline</th></tr>
+<tr><td>Payment aggregation</td><td>A Merchant Services Agreement with a licensed aggregator — PayFast (by APPS) or Safepay. A commercial contract, not a licence: the hardest-sounding step in this plan is a negotiation of weeks, not an approval of months.</td><td>Setup approximately free. Per transaction: Safepay 3.3% + Rs 33; wallets 1.5–3%; Raast approximately 0%, subsidised by the state</td><td>1–3 weeks</td></tr>
+<tr><td>Identity verification</td><td>A NADRA Verisys corporate agreement — confirms a CNIC is genuine and belongs to its holder</td><td>~50,000–100,000 setup; ~Rs 30–75 per check</td><td>2–6 weeks; can follow launch</td></tr>
+<tr><td>Second factor</td><td>WhatsApp Business Cloud API (Meta)</td><td>Free tier</td><td>1 day</td></tr>
+<tr><td>Legal cover</td><td>A fintech counsel's opinion letter confirming the activity is not licensable, and formal review of the undertaking and guarantee texts (§3.2, layer 7)</td><td>50,000–100,000</td><td>1–2 weeks</td></tr>
+<tr><td>Domain</td><td>halqa.pk, through PKNIC</td><td>~3,500 for two years</td><td>1 day</td></tr>
+</table>
+
+<div class="fig">
+<svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif">
+  <line x1="150" y1="30" x2="150" y2="212" stroke="#ccc"/>
+  <line x1="210" y1="30" x2="210" y2="212" stroke="#ccc"/>
+  <line x1="270" y1="30" x2="270" y2="212" stroke="#ccc"/>
+  <line x1="330" y1="30" x2="330" y2="212" stroke="#ccc"/>
+  <line x1="390" y1="30" x2="390" y2="212" stroke="#ccc"/>
+  <line x1="450" y1="30" x2="450" y2="212" stroke="#ccc"/>
+  <line x1="510" y1="30" x2="510" y2="212" stroke="#ccc"/>
+  <line x1="570" y1="30" x2="570" y2="212" stroke="#ccc"/>
+
+  <text x="180" y="26" font-size="8.4" text-anchor="middle">wk 1</text>
+  <text x="240" y="26" font-size="8.4" text-anchor="middle">2</text>
+  <text x="300" y="26" font-size="8.4" text-anchor="middle">3</text>
+  <text x="360" y="26" font-size="8.4" text-anchor="middle">4</text>
+  <text x="420" y="26" font-size="8.4" text-anchor="middle">5</text>
+  <text x="480" y="26" font-size="8.4" text-anchor="middle">6</text>
+  <text x="540" y="26" font-size="8.4" text-anchor="middle">7</text>
+  <text x="600" y="26" font-size="8.4" text-anchor="middle">8</text>
+
+  <text x="8" y="46" font-size="8.6">Incorporate (SECP)</text>
+  <rect x="150" y="38" width="45" height="11" fill="#333"/>
+  <text x="8" y="64" font-size="8.6">NTN (FBR)</text>
+  <rect x="195" y="56" width="30" height="11" fill="#333"/>
+  <text x="8" y="82" font-size="8.6">Sales-tax registration</text>
+  <rect x="210" y="74" width="60" height="11" fill="#666"/>
+  <text x="8" y="100" font-size="8.6">Corporate account</text>
+  <rect x="210" y="92" width="120" height="11" fill="#666"/>
+  <text x="8" y="118" font-size="8.6">Merchant agreement</text>
+  <rect x="210" y="110" width="180" height="11" fill="#333"/>
+  <text x="8" y="136" font-size="8.6">Raast-first integration</text>
+  <rect x="330" y="128" width="120" height="11" fill="#333"/>
+  <text x="8" y="154" font-size="8.6">WhatsApp OTP (2FA)</text>
+  <rect x="330" y="146" width="30" height="11" fill="#666"/>
+  <text x="8" y="172" font-size="8.6">Legal opinion</text>
+  <rect x="270" y="164" width="90" height="11" fill="#666"/>
+  <text x="8" y="190" font-size="8.6">Hardening + demo wipe</text>
+  <rect x="390" y="182" width="90" height="11" fill="#666"/>
+
+  <line x1="480" y1="30" x2="480" y2="212" stroke="#000" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <text x="484" y="208" font-size="8.6" font-style="italic">first real hosts</text>
+
+  <text x="8" y="236" font-size="8.4" font-style="italic">Solid black = critical path. Grey = runs in parallel. Total Rs 80,000–180,000 · 4–8 weeks · the application stays live throughout.</text>
+</svg>
+<p class="cap"><b>Exhibit 4 — The critical path.</b> The binding sequence is incorporation, then the tax number, then the merchant agreement, because the aggregator contracts with a registered company that has a tax number. The corporate account proceeds in parallel with the merchant application. No engineering work appears on this chart; the software is already deployed. The second stage (§7) follows once the first cohorts are running.</p>
+</div>
+
+<h3>The licences deliberately not taken</h3>
+<table>
+<tr><th style="width:38mm">Licence</th><th>Authority and instrument</th><th>What triggers it, and why Halqa never does</th></tr>
+<tr><td><b>EMI</b><br>Electronic Money Institution</td><td>SBP — <i>Regulations for Electronic Money Institutions, 2019</i>. Rs 200 million minimum capital</td><td>Triggered by holding customer funds. Not required at any planned stage: committee money settles member to member, and second-stage savings are held by CDC as trustee, in the member's own name. Halqa holds customer funds at no point.</td></tr>
+<tr><td><b>PSO / PSP</b></td><td>SBP — <i>Payment Systems and Electronic Fund Transfers Act, 2007</i></td><td>Triggered by operating a payment system. The aggregator holds this status; Halqa initiates over its rails.</td></tr>
+<tr><td><b>NBFC</b><br>Investment Finance Services</td><td>SECP — <i>NBFC &amp; Notified Entities Regulations, 2008</i></td><td>Triggered by lending own funds at scale, or by pooling and deploying member funds. Members fund each other; second-stage savings are deployed only by the licensed AMC under its own licence. Becomes relevant only if Halqa itself later chooses to lend — a separate, future decision.</td></tr>
+</table>
+
+<p>The licence the second stage does require — the SECP mutual-fund distributor registration — is a registration, not a heavy licence: no custody, no deployment, no minimum-capital wall (§7).</p>
+
+<h3>Laws that apply regardless</h3>
+<p>Licences attach to activities; laws bind everyone. Halqa operates under the Anti-Money Laundering Act 2010, the Prevention of Electronic Crimes Act 2016, and the Electronic Transactions Ordinance 2002 — the statute that makes its timestamped records admissible in court, and therefore the legal foundation under the evidence argument of §3. The forthcoming personal-data-protection framework bears directly on the consent-gated intent feed and is treated as a present design constraint.</p>
+</section>
+
+<!-- ================= 10 ================= -->
+<section class="brk">
+<h1>10 · Market — Money Fellows and the comparison</h1>
+
+<p>Money Fellows digitised the Egyptian <i>gam'eya</i>, the same institution as the Pakistani kameti. That is what makes it the right benchmark: it solved the same object, under the same informality, in a comparable market.</p>
+
+<p><b>Their reported figures:</b> 8.5 million registered users, roughly 350,000 monthly actives, more than US$1.5 billion processed, over US$60 million raised, and profitability reported for 2025.</p>
+
+<p><b>Their prevention machinery:</b> a credit assessment before a member joins; new members denied early slots; the platform covers a missed contribution and then pursues the defaulter; national-ID KYC with OTP; a prepaid card for disbursement; and slot-based service fees charged to members.</p>
+
+<p><b>A caveat that must travel with their numbers.</b> Money Fellows publishes no default rate. A figure of 7–8% circulates and is widely misread as their loss rate; it actually describes empty-slot fill — seats the platform funds itself, financed by a US$2.25 million debt facility — a different quantity altogether. Comparisons of prevention machinery are therefore comparisons of designs, not published outcomes: theirs are undisclosed, and Halqa's are simulations until a pilot.</p>
+
+<h3>Where Halqa matches them — roughly 75% of the mechanics</h3>
+<ul>
+<li>The same core object: fixed contribution, rotating payout, locked schedule.</li>
+<li>The same principal defence: turn position is earned, and unproven members pay before they collect. Halqa implements this without deposits.</li>
+<li>The same platform-fills-seats idea: their covered share corresponds to Halqa-fill.</li>
+<li>The same identity spine: national ID plus OTP.</li>
+<li>The same end goal for collection. Halqa's mandate is complete in software; execution arrives with the merchant account.</li>
+</ul>
+
+<h3>Where Halqa differs</h3>
+<table>
+<tr><th style="width:26mm">Dimension</th><th>Money Fellows</th><th>Halqa</th></tr>
+<tr><td><b>Who pays</b></td><td>Members pay slot-based service fees</td><td><b>Members pay nothing.</b> Revenue comes from late fees, marketplace margin, the fill fee, and consented leads — always from the party creating a cost or capturing a value, never from the saver</td></tr>
+<tr><td><b>Social structure</b></td><td>Assembles strangers into platform-formed circles; trust must be manufactured</td><td><b>Keeps the real host and the existing circle.</b> This is how Pakistani kametis actually form. The trust already exists; Halqa records it — and a smaller fraud surface follows</td></tr>
+<tr><td><b>Custody</b></td><td>Holds and moves member funds under a regulated custody arrangement</td><td><b>No custody at any stage.</b> Stage one: records and schedules only. Stage two: savings held by CDC as trustee, in the member's own name (§7)</td></tr>
+<tr><td><b>Signature product</b></td><td>A prepaid card</td><td><b>The Credit Passport</b> — portable, independently verifiable proof of reliability — and a turn marketplace that prices a position as a tradeable claim</td></tr>
+<tr><td><b>Data</b></td><td>Card and transaction data</td><td><b>Consented goal-intent</b> — the declared purpose of saving, shared only with explicit, per-purpose, revocable consent</td></tr>
+</table>
+
+<p><b>The scorecard.</b> Mechanics roughly 75% similar. Social architecture roughly 30% similar — Halqa keeps the host, they pool strangers. Business model roughly 35% similar — they charge members, Halqa does not. On prevention, Halqa implements about 85% of their machine; the missing 15% is live auto-debit execution (§3.4).</p>
+
+<h3>The extension neither of them has — Goal Direct-Pay</h3>
+<p>A twelve-member Hajj circle is not twelve small customers. It is one bulk buyer with a known budget and a known date. Instead of simply releasing the cash, Halqa negotiates the purchase on the group's behalf — the Hajj package, the wedding venue, the school fees. The member receives more than their money would have bought alone. The merchant gains a pre-qualified bulk customer at almost no acquisition cost, and pays Halqa a commission. The regulatory footprint is nil, because the merchant invoices the member directly: Halqa holds no money, extends no credit, and takes no payment. It earns a referral commission, which crosses none of the three red lines. It is also the natural completion of the goal-intent line — the member's declared intention becomes a negotiated discount for them, not merely a lead for someone else.</p>
+</section>
+
+<!-- ================= 11 ================= -->
+<section class="brk">
+<h1>11 · Vulnerability assessment</h1>
+<p>Scope: the live production web application, API and database. Method: manual probing aligned to the OWASP Top 10, an automated dependency audit, and a header and configuration review. This is an internal assessment; an external certificate is a Gate-2 purchase, made when a counterparty requires it.</p>
+
+<table>
+<tr><th style="width:44mm">Category</th><th>Finding</th><th style="width:26mm">Status</th></tr>
+<tr><td>A01 Broken Access Control</td><td>Unauthenticated requests receive 401; host-only routes verify the host; member-only routes verify membership</td><td><b>PASS</b></td></tr>
+<tr><td>A02 Cryptographic Failures</td><td>TLS and HSTS throughout; bcrypt at cost 12; signed passport tokens; database encrypted at rest</td><td><b>PASS</b></td></tr>
+<tr><td>A03 Injection</td><td>Injection attempts rejected at validation; every query parameterised by Prisma; every input validated by Zod</td><td><b>PASS</b></td></tr>
+<tr><td>A04 Insecure Design</td><td>The no-custody architecture removes the most valuable target a financial system can have — there is no pooled balance to steal</td><td><b>PASS</b></td></tr>
+<tr><td>A05 Security Misconfiguration</td><td>CSP on both applications; the full header set present; secrets in encrypted environment variables; none in version control</td><td><b>PASS</b></td></tr>
+<tr><td>A06 Vulnerable Components</td><td>Web: zero known vulnerabilities. API: one low-severity advisory in a build-time dependency, unreachable at runtime</td><td><b>PASS</b> — 1 low, tracked</td></tr>
+<tr><td>A07 Authentication Failures</td><td>30 attempts per 15 minutes; five-attempt lockout; refresh rotation with reuse detection; timing that defeats user enumeration</td><td><b>PASS</b></td></tr>
+<tr><td>A08 Integrity Failures</td><td>Double-entry ledger with idempotency keys; an append-only audit log; additive-only production migrations</td><td><b>PASS</b></td></tr>
+<tr><td>A09 Logging &amp; Monitoring</td><td>Structured request logs, an audit trail and platform logs exist; there is no alerting, so detection depends on inspection</td><td><b>PARTIAL</b></td></tr>
+<tr><td>A10 SSRF</td><td>The API fetches no user-supplied URLs</td><td><b>N/A</b></td></tr>
+</table>
+
+<h3>Open items, in priority order</h3>
+<table>
+<tr><th style="width:20mm">Priority</th><th>Item</th><th style="width:34mm">Effort</th></tr>
+<tr><td><b>HIGH</b></td><td>Rotate the production database credential exposed in an earlier working session. It remains active. Deferred by decision, on record.</td><td>Minutes</td></tr>
+<tr><td><b>HIGH</b></td><td>Apply the additive migration for the two <code>User</code> columns added on 23 July. The SQL is written (<code>prisma/additive-2026-07-23-locality-jobtitle.sql</code>) and awaits application to production; until then, deploying the current code would break registration and member profiles, because it selects both columns explicitly.</td><td>One command</td></tr>
+<tr><td><b>MEDIUM</b></td><td>Move the application from the master database role to a least-privilege role.</td><td>Hours</td></tr>
+<tr><td><b>MEDIUM</b></td><td>Add the second factor (WhatsApp OTP) and alerting on error spikes and failed-login bursts.</td><td>Days</td></tr>
+<tr><td><b>CLOSED 28 Jul</b></td><td>Rebuild the local development database. A fresh cluster was initialised, the schema pushed, demo data reseeded, and the full 349-check integration harness passes against it.</td><td>Done</td></tr>
+<tr><td><b>LOW</b></td><td>Clear the single low-severity dependency advisory at the next update.</td><td>Minutes</td></tr>
+<tr><td><b>LATER</b></td><td>An external penetration test and point-in-time database backups, when a counterparty or scale requires them.</td><td>Procurement</td></tr>
+</table>
+
+<p><b>Overall: B+, appropriate for a supervised pilot.</b> No critical or high-severity code vulnerability was found. Every high-priority item is operational, measured in minutes or a single command. The faults are shallow, and the foundations are not faulty.</p>
+</section>
+
+<!-- ================= SOURCES ================= -->
+<section class="brk">
+<h1>Sources</h1>
+<p style="font-size:9.3pt">SECP incorporation and fees — secp.gov.pk · SBP <i>Regulations for Electronic Money Institutions 2019</i>, Rs 200m capital — sbp.org.pk/psd/2019 · SBP on Raast and the merchant-payment subsidy — sbp.org.pk/dfs/Raast.html · SECP NBFC framework and the simplified mutual-fund distributor regime — secp.gov.pk · CDC trustee and custodial services — cdcpakistan.com · Digital-AMC precedent and fund minimums — mahaana.com · Islamic money-market yields — MUFAP industry statistics · NADRA Verisys — nadra.gov.pk · Aggregator pricing — PayFast and Safepay published rates · TASDEEQ scale — tasdeeq.com/credit-score · Money Fellows figures — company disclosures and public press · Market size and fraud cases — Dawn, Karandaaz K-FIS 2024, Vice. Full licensing detail: <code>docs/ROADMAP-LICENSING-AND-COSTS.md</code>.</p>
+<p class="src">Prepared 28 July 2026. Strictly confidential. Mechanisms read from the running source tree; constants cited by file. Live status confirmed the same day: web and API both healthy, 53/53 unit tests, 349/349 integration checks. Measured figures are marked verified; projections are marked modelled.</p>
+</section>
+
+</body>
+</html>

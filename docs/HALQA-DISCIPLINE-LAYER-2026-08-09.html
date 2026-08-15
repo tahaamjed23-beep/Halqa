@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Halqa — The Discipline Layer</title>
+<style>
+  @page { size: A4; margin: 19mm 17mm; }
+  *{box-sizing:border-box}
+  body{background:#fff;color:#0E1512;font-family:Georgia,'Times New Roman',serif;font-size:10.3pt;line-height:1.55;margin:0;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  h1{font-size:15.5pt;font-weight:normal;margin:0 0 4mm;padding-bottom:2mm;border-bottom:1.5px solid #123D30;color:#123D30}
+  h2{font-size:11.4pt;margin:7mm 0 2.5mm;padding-bottom:1mm;border-bottom:1px solid #D9A93C}
+  h3{font-size:10.4pt;margin:5mm 0 1.5mm;font-weight:bold}
+  p{margin:0 0 2.5mm}
+  ul,ol{margin:2mm 0 3mm;padding-left:6mm} li{margin:1.2mm 0}
+  code{font-family:Consolas,monospace;font-size:9pt;background:#F4EEE1;padding:0 1mm}
+  table{border-collapse:collapse;width:100%;margin:2mm 0 3.5mm}
+  th,td{border:1px solid #123D30;padding:1.7mm 2.2mm;font-size:8.9pt;vertical-align:top;text-align:left}
+  th{background:#123D30;color:#F6F1E4;font-weight:bold}
+  tr{page-break-inside:avoid}
+  .exh{font-size:8.6pt;color:#4C574F;margin:0 0 3mm;font-style:italic}
+  .exh b{color:#123D30;font-style:normal;letter-spacing:.06em}
+  .brk{page-break-before:always}
+  .lede{font-size:11pt;line-height:1.58}
+  .box{border:1px solid #123D30;border-left:4px solid #D9A93C;padding:3.5mm 4.5mm;margin:4mm 0;page-break-inside:avoid;background:#FBF8F0}
+  .box .t{font-weight:bold;color:#123D30;margin-bottom:1.5mm}
+  .math{font-family:Consolas,monospace;font-size:9.1pt;margin:1.5mm 0;padding-left:4mm}
+  .flag{font-size:9pt;font-style:italic;color:#4C574F}
+  .tag{font-family:Consolas,monospace;font-size:7.8pt;font-weight:bold;color:#123D30;border:1px solid #123D30;padding:.4mm 1.6mm;white-space:nowrap}
+  .tag.g{color:#8A6510;border-color:#D9A93C}
+  .cover{height:238mm;display:flex;flex-direction:column;justify-content:center;text-align:center;page-break-after:always}
+  .cover .m{font-size:32pt;letter-spacing:.2em;margin:0 0 4mm;color:#123D30}
+  .cover hr{width:52mm;border:none;border-top:1.5px solid #D9A93C;margin:0 auto 8mm}
+  .cover .t{font-size:15pt;margin:0 0 3mm}
+  .cover .d{font-size:10.5pt;font-style:italic;color:#4C574F;margin:0 0 12mm}
+  .cover .n{font-size:9.4pt;line-height:1.9;color:#4C574F}
+  .cover svg{width:58px;height:58px;margin:0 auto 6mm;display:block}
+  .num{font-weight:bold;color:#123D30}
+  .ladder td:first-child{width:8mm;text-align:center;font-weight:bold;color:#123D30}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <svg viewBox="0 0 100 100">
+    <g stroke="#123D30" stroke-width="7" stroke-linecap="round">
+      <line x1="50" y1="9" x2="50" y2="25"/><line x1="71" y1="13.6" x2="63" y2="27.5"/>
+      <line x1="86.4" y1="29" x2="72.5" y2="37"/><line x1="91" y1="50" x2="75" y2="50"/>
+      <line x1="86.4" y1="71" x2="72.5" y2="63"/><line x1="71" y1="86.4" x2="63" y2="72.5"/>
+      <line x1="50" y1="91" x2="50" y2="75"/><line x1="29" y1="86.4" x2="37" y2="72.5"/>
+      <line x1="13.6" y1="71" x2="27.5" y2="63"/>
+    </g>
+    <line x1="9" y1="50" x2="31" y2="50" stroke="#D9A93C" stroke-width="9" stroke-linecap="round"/>
+  </svg>
+  <p class="m">HALQA</p><hr>
+  <p class="t">The Discipline Layer</p>
+  <p class="d">Consent, exit, affordability and circle authenticity<br>9 August 2026 · Specification · Confidential</p>
+  <p class="n">
+    Four mechanisms that decide whether a member can join, how they may leave,<br>
+    how much they may carry, and whether the people in a circle<br>genuinely know one another.<br><br>
+    Written to be built. Every rule states its trigger, its arithmetic,<br>its failure mode, and the evidence behind it.
+  </p>
+</div>
+
+<!-- ============ 1 ============ -->
+<section>
+<h1>1 · Why this layer exists</h1>
+
+<p class="lede">Halqa has, until now, been strong on <i>recording</i> the committee and weak on <i>governing</i> it. A member could join with a tap and vanish with a tap. This document closes that gap with four mechanisms — deliberate joining, structured exit, enforced affordability, and earned leniency — which together turn a ledger into an institution.</p>
+
+<h3>The void being filled</h3>
+<p>The ROSCA literature is blunt about what happens today when someone walks away mid-cycle: <b>there is no formal recourse if a member defaults or the group disbands; members may lose their contributions with no legal protection or compensation.</b> The traditional committee handles this socially — a replacement is found, or the organizer covers it from his own pocket — and handles it well inside a village and badly everywhere else. Digitising the committee without digitising its exit conventions would ship the convenience and drop the discipline.</p>
+
+<h3>Three reasons this is urgent rather than tidy</h3>
+<ul>
+<li><b>The regulator has moved onto this ground.</b> In October 2025 SBP issued the <i>Business Conduct and Fair Treatment of Consumers Regulatory Framework</i>, which covers the entire product lifecycle — development, disclosure, delivery, complaints, and explicitly <b>termination</b>. Exit handling is no longer a product-design question in Pakistan; it is the thing the conduct regulator is looking at. SBP has also already normalised cooling periods, mandating a two-hour hold on branchless-banking cash-outs since April 2023.</li>
+<li><b>The nano-lending shadow.</b> Four hundred lending apps were removed after SECP's 2023–24 circulars, and the defining accusation against them was lending beyond capacity and collecting by pressure. Any Pakistani credit-adjacent product that cannot show an affordability gate and a hardship path is arguing from the wrong side of a very recent precedent.</li>
+<li><b>Our own exposure.</b> Halqa holds no money, so a defaulting member harms eleven peers rather than a balance sheet. That is the architecture working as designed — and it raises rather than lowers our duty to prevent the harm before it happens.</li>
+</ul>
+
+<p class="exh"><b>EXHIBIT 1</b> — The four mechanisms and what each one prevents. Tags: <span class="tag">LIVE</span> shipped · <span class="tag">BUILD</span> specified, buildable now, no licence · <span class="tag g">GATE-2</span> needs the merchant agreement · <span class="tag g">STAGE-2</span> needs the trustee structure.</p>
+<table>
+<tr><th style="width:38mm">Mechanism</th><th>Prevents</th><th style="width:20mm">Status</th></tr>
+<tr><td><b>Deliberate joining</b> — PIN, face match, 24-hour confirmation window</td><td>Impulse joins, coerced joins, impersonated joins, and the "I never agreed to this" dispute</td><td><span class="tag">BUILD</span></td></tr>
+<tr><td><b>The exit protocol</b> — five graded levels, group vote, restitution at completion</td><td>Casual abandonment; and, at the other end, members being trapped with no legitimate way out</td><td><span class="tag">BUILD</span></td></tr>
+<tr><td><b>The affordability engine</b> — three binding caps from verified income</td><td>Over-commitment, the cause of most default that is not fraud; and the nano-lending accusation</td><td><span class="tag">BUILD</span></td></tr>
+<tr><td><b>Circle authenticity</b> — detecting whether members actually know each other</td><td>The fabricated circle: one person, many identities or many strangers, wearing the shape of a committee</td><td><span class="tag">BUILD</span></td></tr>
+</table>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="brk">
+<h1>2 · Deliberate joining</h1>
+
+<p>Joining a committee is the moment a member accepts an obligation that, in Pakistani households, outranks rent. The interface must match the gravity of the act, and then give the member a chance to reconsider it.</p>
+
+<h2>2.1 Authentication at the moment of commitment <span class="tag">BUILD</span></h2>
+<p>Three layers, applied proportionately so that friction lands where the risk is.</p>
+<table>
+<tr><th style="width:34mm">Layer</th><th>When</th><th>What it proves</th></tr>
+<tr><td><b>App PIN</b></td><td>Every join-commit, every exit request, every payout release</td><td>The account holder authorised this specific act, not merely that the phone was unlocked</td></tr>
+<tr><td><b>Device biometric</b> (FaceID / fingerprint)</td><td>Layered on the PIN wherever the handset supports it</td><td>The device's enrolled owner is present. Never leaves the device; nothing is transmitted or stored by us</td></tr>
+<tr><td><b>NADRA face match</b> (Multi-Biometric Verification System)</td><td>Once at onboarding, then re-triggered on the events below</td><td>The living human is the CNIC holder — the only check that defeats a borrowed or purchased identity</td></tr>
+</table>
+
+<p><b>NADRA face verification is now procurable</b>, which is what makes this specifiable rather than aspirational: NADRA's multi-biometric APIs including facial recognition are exposed to onboarded institutions through the Nishan Pakistan portal launched in 2025, and contactless biometric verification was built for the banking and payments industry at SBP's own request.</p>
+
+<p><b>Re-trigger events for the full face match</b> — chosen so that cost and friction land only where they buy something: joining from a new device; joining a circle above the contribution threshold; claiming a seat in the first half of the order; any exit or hardship request (this one matters — it stops an impersonated exit); and returning after 90 days dormant.</p>
+
+<div class="box">
+<p class="t">Two constraints on the biometric layer, both non-negotiable</p>
+<p><b>Cost discipline.</b> Per-check charges are real — NADRA's facial-recognition certificate has been reported at Rs 20, and Easypaisa charges users Rs 99 when a NADRA biometric check fails. A face match on every trivial action would burn money and abandon users at the same time. Hence the event list above rather than blanket application.</p>
+<p style="margin-bottom:0"><b>Data discipline.</b> We store the verification <i>result</i> and NADRA's reference identifier. We never store raw biometric templates or face images. Given that the nano-lending crackdown was substantially about apps hoarding personal data they had no business holding, the ability to state this plainly is worth more than any feature it might enable.</p>
+</div>
+
+<h2>2.2 The 24-hour confirmation window <span class="tag">BUILD</span></h2>
+<p>A new circle state sits between forming and running.</p>
+<table>
+<tr><th style="width:28mm">State</th><th>What is true</th></tr>
+<tr><td><b>FORMING</b> <span class="tag">LIVE</span></td><td>Members join and leave freely. Nothing is owed, no record is made of a departure, no money has moved.</td></tr>
+<tr><td><b>CONFIRMING</b> <span class="tag">BUILD</span></td><td>The host has pressed Start. The roster is locked to new joiners. <b>For 24 hours any member may still withdraw with no fine, no score effect, and no record.</b> All members see the same countdown, the final roster, the seat order, the amount, and their own total forward obligation stated in rupees. Agreements are signed here.</td></tr>
+<tr><td><b>ACTIVE</b> <span class="tag">LIVE</span></td><td>The window has expired. Turn order frozen, rounds created, obligations live. From here the exit protocol of §3 is the only way out.</td></tr>
+</table>
+<p>The window runs from the host pressing Start rather than from each member's join, so a member who joined three weeks ago gets the same fresh 24 hours as one who joined this morning — the point is that everyone reconsiders once the circle is real and final. If withdrawals during the window drop the roster below the minimum, the circle falls back to FORMING rather than collapsing.</p>
+<p><b>Why this is worth a day of delay:</b> it converts every later dispute from "I did not understand what I was joining" into a documented, biometrically-authenticated commitment made after a full day's reflection with the complete terms on screen. That is the single cheapest piece of legal armour in the entire product, and SBP's existing cooling-period practice means we are aligned with the regulator rather than inventing a norm.</p>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="brk">
+<h1>3 · The exit protocol</h1>
+
+<p class="lede">There is no cancel button. There is a ladder, and which rung a member lands on depends on why they are leaving and whether their group agrees.</p>
+
+<h2>3.1 The five levels</h2>
+<p class="exh"><b>EXHIBIT 2</b> — The exit ladder. Levels 1–4 are legitimate departures; level 5 is not an exit at all.</p>
+<table class="ladder">
+<tr><th style="width:8mm">—</th><th style="width:32mm">Level</th><th>Mechanism and consequence</th></tr>
+<tr><td>1</td><td><b>Window withdrawal</b></td><td>During CONFIRMING. Free, silent, unrecorded. The right answer for anyone with doubts.</td></tr>
+<tr><td>2</td><td><b>Substitution</b><br>(the default path)</td><td>A replacement takes the seat and pays the leaver their contributions to date, member-to-member. Circle arithmetic entirely unaffected; no fine; the leaver is made whole <i>immediately</i>. Sourced from the member's own contacts, then the marketplace, then the standby pool. <b>This should be ~90% of exits and the interface should push hard toward it.</b></td></tr>
+<tr><td>3</td><td><b>Group-approved exit</b></td><td>No replacement found. The member states their reason to the circle; a majority must approve (§3.3). Contributions are <b>restored at the end of the cycle</b>, not now (§3.2). Fine of one installment. Score effect is mild and annotated as an approved exit.</td></tr>
+<tr><td>4</td><td><b>Hardship exit</b></td><td>The member genuinely cannot pay. Recorded statement to the Halqa helpline, evidence reviewed (§3.4). Fine waived. Restitution at completion. Score annotated as hardship, not default — a distinction that must survive into the Credit Passport.</td></tr>
+<tr><td>5</td><td><b>Abandonment</b><br>(not an exit)</td><td>Simply ceasing to pay without requesting anything. This is default: the full late-fee ladder, feature lock, recovery case, and the score consequence. <b>Restitution is withheld and set off against what is owed.</b> A member who walks away silently does not get the treatment reserved for one who asked.</td></tr>
+</table>
+<p><b>The boundary that matters:</b> all of this governs members who have <i>not yet collected</i>. A member who takes the pot and then stops paying is not exiting — that is post-payout default, the most serious event in the system, and it goes straight to the existing recovery machinery with the −200 score consequence.</p>
+
+<h2>3.2 Restitution — solving "paid back at the end" without custody</h2>
+<p>The chairman's rule is that a mid-cycle leaver gets their money back at the end of the cycle, the delay itself being the deterrent. It is exactly right, and it poses a genuine engineering problem: <b>Halqa holds no pool, so there is nothing to refund from.</b> Every rupee the leaver paid is already in the hands of the members who collected in those rounds.</p>
+<p>The resolution is that those members are precisely who owes it back — and the arithmetic says so exactly.</p>
+
+<div class="box">
+<p class="t">Worked example — 12 members, Rs 10,000 each, pot Rs 120,000</p>
+<p>Member M holds seat 9. After round 4 they must leave. They have paid 4 × Rs 10,000 = <span class="num">Rs 40,000</span> and collected nothing. No replacement is found, so the circle contracts to 11 payers and seat 9's round is cancelled.</p>
+<p class="math">Remaining rounds now pay: 11 × 10,000 = <b>Rs 110,000</b> per pot (not 120,000)</p>
+<p class="math">Member at seat 11 (never collected): pays 11 × 10,000 = 110,000, receives 110,000 → <b>square</b></p>
+<p class="math">Member at seat 3 (collected 120,000 early): pays 11 × 10,000 = 110,000 → <b>ahead by 10,000</b></p>
+<p class="math">Members at seats 1, 2, 3, 4 are each ahead by exactly 10,000 → 4 × 10,000 = <b>Rs 40,000</b></p>
+<p style="margin-bottom:0"><b>Which is precisely what M is owed.</b> M's Rs 40,000 did not vanish; it landed with the four members who collected before the exit, each of whom now receives a pot larger than the obligation they will finally have paid. At completion, each of those four transfers Rs 10,000 to M, member-to-member over the rails, and M is made whole. No custody, no platform capital, no arbitrary rule — the restitution falls out of the mathematics.</p>
+</div>
+
+<p><b>The general rule the engine implements.</b> Where a member exits before collecting, having paid <i>p</i> installments, and the circle contracts:</p>
+<p class="math">each member who collected in rounds 1…p owes the leaver exactly c, settled at completion</p>
+<p class="math">total restitution = p × c, nominal, with no time value — which is the deterrent</p>
+<p>The invariant the ledger enforces at close is that every continuing member ends at <code>received − paid = 0</code> and every exited member is returned to zero. Where two or more members exit, the engine recomputes recursively against the same invariant. The obligations are created as scheduled settlements at the final round and collected through the ordinary mandate machinery, so restitution is enforced exactly as an installment is.</p>
+<p class="flag">Note what this makes visible: a mid-cycle exit shrinks every remaining pot by one contribution. A member expecting Rs 120,000 for a wedding now receives Rs 110,000. That harm is real, it is the reason exits require group consent rather than a button, and it is why the fine exists.</p>
+
+<h2>3.3 The group vote <span class="tag">BUILD</span></h2>
+<table>
+<tr><th style="width:32mm">Element</th><th>Rule</th></tr>
+<tr><td>The request</td><td>Written reason plus an <b>optional voice note</b> — a literacy accommodation, not a nicety, given that only 31% of committee users can send or receive a text message.</td></tr>
+<tr><td>Publication</td><td>Posted to the circle chat; every member notified in-app and by WhatsApp. Members may discuss, or call, exactly as they would offline.</td></tr>
+<tr><td>Window</td><td>72 hours.</td></tr>
+<tr><td>Threshold</td><td>Simple majority of votes cast, excluding the requester, with a minimum 50% participation quorum.</td></tr>
+<tr><td>Apathy</td><td>If quorum is not reached the request escalates to Halqa review rather than failing. <b>A member must not be trapped in a circle because their peers did not open the app.</b></td></tr>
+<tr><td>The host</td><td>Votes as one member and breaks ties. No veto and no unilateral approval — restoring organizer power over exits would rebuild the very asymmetry that the fraud cases run on.</td></tr>
+<tr><td>Record</td><td>Every vote, abstention and comment is a permanent ledger entry. This is what protects the group from a later accusation as much as it protects the leaver.</td></tr>
+</table>
+<p>Approval governs whether the exit is <i>granted</i>. It does not waive the restitution arithmetic or the fine — those are automatic, so no member can be pressured into surrendering money they are owed.</p>
+
+<h2>3.4 The hardship path <span class="tag">BUILD</span></h2>
+<p>A member who genuinely cannot pay must have somewhere to go that is not default. They contact the helpline and make a recorded statement; documentary evidence is reviewed where it exists. The recording protects both sides, and its existence is the difference between a collections product and a defensible one.</p>
+<p>Four outcomes, in order of preference:</p>
+<ol>
+<li><b>Bring the turn forward.</b> If the member needs cash and the group agrees, moving them earlier solves the problem outright — this is the traditional emergency swap, and it is usually the humane and the commercially correct answer at once.</li>
+<li><b>Deferral.</b> Missed installments rescheduled and the circle extended, with group consent. Note this is a true deferral with a repayment date, not the UBL "installment holiday" that dissolves the obligation.</li>
+<li><b>Hardship exit.</b> Level 4 above: fine waived, restitution at completion, annotated as hardship.</li>
+<li><b>Structured settlement</b> where a payout has already been taken and cannot be repaid on schedule — a written plan, no penalty escalation while it is honoured.</li>
+</ol>
+<p><b>The Passport must carry the distinction.</b> A hardship exit is not a default and must never be exported as one; a member who came forward honestly should not be punished more than one who hid. That single design decision is what will let us stand in front of SECP and describe our collections posture as the opposite of the apps they removed.</p>
+
+<h2>3.5 Fines, and where the money goes</h2>
+<table>
+<tr><th style="width:36mm">Event</th><th>Fine</th><th>Destination</th></tr>
+<tr><td>Window withdrawal</td><td>None</td><td>—</td></tr>
+<tr><td>Substitution</td><td>None</td><td>— (the group is unharmed, so nothing is owed)</td></tr>
+<tr><td>Group-approved exit</td><td>One installment</td><td><b>70% to the remaining members</b>, 30% platform administration</td></tr>
+<tr><td>Hardship exit</td><td>Waived</td><td>—</td></tr>
+<tr><td>Abandonment</td><td>Late-fee ladder, then recovery costs plus the 10% rehabilitation fee</td><td>Platform, except on Shariah-labelled circles where penalties route to the circle pool</td></tr>
+</table>
+<p>The exit fine compensates the people actually harmed — the remaining members whose pots shrank — with a minority share covering the administration of the vote and the restitution schedule. Halqa profiting from a member's distress would be both indefensible and, under the new conduct framework, unwise.</p>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="brk">
+<h1>4 · The affordability engine</h1>
+
+<p class="lede">Most committee default is not fraud. It is a member who took on more than their income could carry, in circles that could not see each other. Halqa can see all of them at once, and is therefore the only party in Pakistan positioned to stop it.</p>
+
+<h2>4.1 The anchor, and why we go stricter than the regulator</h2>
+<p>SBP's Prudential Regulations for Consumer Financing cap the <b>debt-burden ratio at 40% of a borrower's disposable income</b> — reduced from 50% by BPRD Circular Letter 29 of 2021. That is the defensible reference point for any credit-adjacent obligation in Pakistan, and Halqa adopts it as an outer bound.</p>
+<p>Then we tighten it. Committee obligations should be held to <b>33% of verified net monthly income</b>, for three reasons a regulator will recognise:</p>
+<ul>
+<li><b>Committee obligations are the least compressible debt in the household.</b> Kamran's informant put it exactly: <i>"We can compromise on rent or bills, but Committee instalments should not be missed."</i> An obligation people rank above rent should be underwritten more conservatively than one they rank below it, not less.</li>
+<li><b>We can only see part of the picture.</b> Members will hold offline committees, family obligations and informal debts that appear in no bureau file. A margin below the regulatory line absorbs what we cannot observe.</li>
+<li><b>The counterparty is eleven neighbours, not a bank.</b> A bank prices default into its spread. A circle cannot. When the loss lands on peers rather than a balance sheet, the duty of care goes up.</li>
+</ul>
+
+<h2>4.2 The three caps</h2>
+<p class="exh"><b>EXHIBIT 3</b> — All three bind simultaneously; the tightest governs. Evaluated live at join and at host, for members and hosts alike.</p>
+<table>
+<tr><th style="width:32mm">Cap</th><th>Rule</th><th>What it stops</th></tr>
+<tr><td><b>Cash-flow</b></td><td><code>Σ contributions ≤ 33% of net monthly income</code><br>and <code>Σ contributions + known debt service ≤ 40%</code> (the SBP line, using TASDEEQ where available)</td><td>The member who can afford each circle individually and none of them together</td></tr>
+<tr><td><b>Forward exposure</b></td><td><code>Σ L(k) ≤ 4 × net monthly income</code>, evaluated at the worst case where every circle pays out early</td><td>The member carrying a large forward debt across several circles at once — the position that turns one bad month into several defaults</td></tr>
+<tr><td><b>Concurrency</b></td><td>Members: 1 circle unverified · up to 4 verified, rising with clean tenure.<br>Hosts: 2 concurrent unproven · up to 5 with clean history · beyond that, manual review</td><td>Complexity outrunning the member's own tracking — and, on the hosting side, the credibility-by-proxy fraud pattern</td></tr>
+</table>
+
+<div class="box">
+<p class="t">Worked example — a Rs 60,000/month salaried member</p>
+<p class="math">Cash-flow ceiling: 0.33 × 60,000 = <span class="num">Rs 19,800/month</span> across all circles</p>
+<p class="math">Existing: one circle at Rs 10,000 → headroom <span class="num">Rs 9,800/month</span></p>
+<p class="math">Forward exposure ceiling: 4 × 60,000 = <span class="num">Rs 240,000</span></p>
+<p class="math">Current worst-case L(k) if they collected at seat 1 of a 12 × 10,000 circle: 10,000 × 11 = 110,000 → headroom <span class="num">Rs 130,000</span></p>
+<p style="margin-bottom:0">They may join a second circle at up to Rs 9,800/month provided its worst-case forward liability stays under Rs 130,000 — which a 12-member circle at Rs 9,800 would breach at 9,800 × 11 = 107,800… inside the limit, so it clears. <b>The member is shown this in plain language</b> — "you can take one more circle up to Rs 9,800 a month" — never a bare rejection. A gate the member can see is a gate they can plan around; a gate they cannot see is one they resent.</p>
+</div>
+
+<h2>4.3 Verification tiers and the manual path</h2>
+<table>
+<tr><th style="width:34mm">Evidence held</th><th>What it unlocks</th></tr>
+<tr><td><b>None</b> — declared income only</td><td>One circle; contribution capped at a low absolute figure. Enough to begin and start building a record.</td></tr>
+<tr><td><b>Payslip photo, or salary pattern verified from our own collection outcomes</b></td><td>The full computed caps of §4.2. Note the second route costs nothing and requires no document — the payday engine already proves when money reliably arrives.</td></tr>
+<tr><td><b>Additional income</b> — business receipts, rent, remittance, spouse</td><td>The chairman's rule: the member contacts Halqa and submits proof. An analyst raises the cap, the evidence is filed against the decision, and the uplift carries an expiry requiring re-verification. Every manual uplift is auditable to a named reviewer.</td></tr>
+</table>
+
+<div class="box">
+<p class="t">One discipline the research insists on</p>
+<p style="margin-bottom:0">The microfinance literature on progressive lending — where limits rise with a clean repayment record — is broadly positive but carries a specific warning: escalating limits <b>increase liquidity defaults when the limit outruns the borrower's actual future repayment capacity</b>, particularly once borrowers start treating the limit itself as evidence of what they can afford. The rule we take from it: <b>good history unlocks better seats, more circles and lower friction — it never raises the money cap.</b> Only new evidence of income does that. Behaviour and capacity are different variables and must not be allowed to substitute for one another.</p>
+</div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="brk">
+<h1>5 · Circle authenticity — proving the members know each other</h1>
+
+<p class="lede">Every mass committee fraud in the record shares one shape: <b>one person at the centre, connected to many people who are not connected to each other.</b> Sidra Humaid ran 117 committees through Facebook groups whose members knew her and no one else. A real committee has the opposite shape. If the platform can tell those two shapes apart, it can see a fabricated circle before it takes a single rupee.</p>
+
+<div class="box">
+<p class="t">The posture — corrected</p>
+<p style="margin-bottom:0">Authenticity detection is <b>not</b> a route to lighter controls. <b>Auto-debit mandates, takaful cover, identity verification, the affordability caps, the exit protocol and the confirmation window apply to every circle without exception</b>, whether the members are brothers or strangers. What authenticity buys is the opposite of leniency: <b>where a circle looks fabricated, we tighten.</b> The signal drives review triggers, value ceilings and host limits — never a relaxation. A genuine circle is not rewarded with weaker protection; a suspicious one is met with stronger.</p>
+</div>
+
+<h2>5.1 The eight signals</h2>
+<p>Ordered by cost to us and by how hard each is to fake. The first four require no new permission of any kind, because the product already generates them.</p>
+
+<p class="exh"><b>EXHIBIT 4</b> — The authenticity signal stack.</p>
+<table>
+<tr><th style="width:6mm">—</th><th style="width:38mm">Signal</th><th>How it works, and how hard it is to fake</th></tr>
+<tr><td><b>1</b></td><td><b>Invitation provenance</b><br><span class="flag">free, no permission</span></td><td>Who invited whom. A real circle <b>branches</b> — the host invites two cousins, a cousin brings a colleague, the colleague brings his brother. A fabricated circle is a <b>star</b>: one person invited everybody. We already record every invitation, so this signal costs nothing and is available today. It is also the single clearest expression of the fraud topology.</td></tr>
+<tr><td><b>2</b></td><td><b>Geographic clustering</b><br><span class="flag">free, already collected</span></td><td>Home locations are already pinned by GPS at signup. Real committees cluster — one mohalla, one bazaar, one office. Family circles that span cities are the honest exception, which is why this is a contributing signal and never a sole test.</td></tr>
+<tr><td><b>3</b></td><td><b>Occupation and employer overlap</b><br><span class="flag">free, already collected</span></td><td>Job title and locality are captured at signup. Six members of one garment market or one school is a strong positive; eleven unrelated occupations scattered across a city is not evidence of fraud, but it is evidence of a stranger circle that should carry stranger controls.</td></tr>
+<tr><td><b>4</b></td><td><b>Mutual attestation</b><br><span class="flag">free, one screen</span></td><td>Each member privately marks which others they personally know. Self-reported and therefore weak alone — but non-repudiable, recorded, and consequential: attestors of a member who later defaults take a score penalty, which prices honest answering.</td></tr>
+<tr><td><b>5</b></td><td><b>Prior shared circles</b><br><span class="flag">free, un-fakeable</span></td><td>Members who have completed a circle together before. Impossible to fabricate — it costs a full cycle and real money — but only available from the second cycle onward.</td></tr>
+<tr><td><b>6</b></td><td><b>Contact-picker invitations</b><br><span class="flag">no blanket permission</span></td><td>Inviting through the operating system's contact picker proves the inviter had that person saved in their phone. It is a genuine contact check obtained as a by-product of an action the member wanted to take anyway — no address-book access, no permission prompt on modern Android and iOS.</td></tr>
+<tr><td><b>7</b></td><td><b>Mutual contact intersection</b><br><span class="flag">opt-in, on-device only</span></td><td>The strong version of the chairman's suggestion, built so that no address book ever leaves the phone. Mechanics in §5.2.</td></tr>
+<tr><td><b>8</b></td><td><b>Negative signals</b><br><span class="flag">free</span></td><td>Several "independent" members on one device, one IP, one address, or sequential phone numbers registered in a burst. These do not lower a score — they stop a circle and route it to a human.</td></tr>
+</table>
+
+<h2>5.2 Contact matching, done without harvesting contacts</h2>
+<p>The chairman's instinct is right: whether two people have each other saved in their phones is the most natural evidence of a real relationship available. The danger is equally real — <b>reading address books is precisely what the four hundred banned lending apps did</b>, and Google Play's policy bars personal-loan apps from contact access outright. A committee product that ships a blanket <code>READ_CONTACTS</code> permission is inviting both the delisting and the comparison.</p>
+<p>The mechanism below obtains the signal while making the abuse structurally impossible.</p>
+
+<div class="box">
+<p class="t">On-device hashed intersection</p>
+<p class="math">1 · Server sends the member's app the roster's phone numbers, hashed and salted per circle</p>
+<p class="math">2 · The app hashes the local address book with the same salt — <b>entirely on the device</b></p>
+<p class="math">3 · The app computes the intersection locally</p>
+<p class="math">4 · The app uploads only which roster members it recognised — a bit vector over people already known to be in the circle</p>
+<p style="margin-bottom:0"><b>What we learn:</b> that this member has these specific circle members saved. <b>What we never learn, receive, or store:</b> anyone else in their phone, any number, any name. There is no privacy leak toward the member either, since the roster is already visible to them. The address book is never transmitted, so it cannot be leaked, subpoenaed, sold, or used to call anybody — and the privacy policy can say so in one sentence that survives scrutiny.</p>
+</div>
+
+<h3>Why mutuality is the part that matters</h3>
+<p>A fraudster can save eleven numbers in his own phone in five minutes, so a one-directional edge proves almost nothing. <b>What he cannot do is make eleven real people independently save each other.</b> The signal is therefore not whether contacts match, but the <b>density of reciprocal edges once the host is removed from the graph</b> — the same structural test as invitation provenance, now fed by harder data. Genuine circles are dense and survive the removal of any single member. Fabricated ones collapse to dust the moment their hub is taken out.</p>
+<p>A supporting refinement, also computed on-device with only a quality score reported: <b>how the contact is saved.</b> Real relationships produce real names and kinship terms — "Bilal Bhai", "Chacha Rashid", "Nasreen Apa". A bare eleven-digit number saved with no name is not evidence of a relationship. Only the match quality is reported; the stored name never leaves the phone.</p>
+
+<h3>The line that must never be crossed</h3>
+<p><b>Contact data is used for authenticity detection and for nothing else — never for collection, never to contact a member's contacts, never for marketing, never retained beyond the circle it was computed for.</b> The nano-lending apps were removed for calling borrowers' families to shame them into paying. That single boundary, stated in the privacy policy and enforced in the architecture by never receiving the data, is what separates us from them in any conversation with SECP, Google, or a journalist.</p>
+
+<h2>5.3 What the score does</h2>
+<p>The eight signals compose into a <b>circle authenticity score</b> computed before a circle may leave the confirmation window. It moves controls in one direction only.</p>
+<table>
+<tr><th style="width:30mm">Reading</th><th>Consequence</th></tr>
+<tr><td><b>Strong</b> — dense reciprocal graph, branching invitations, geographic or occupational coherence</td><td>Standard controls. Nothing is relaxed; the circle simply proceeds normally.</td></tr>
+<tr><td><b>Thin</b> — sparse graph, star-shaped invitations, no coherence</td><td>Treated as a <b>stranger circle</b>, which is permitted but tightened: lower contribution and pot ceilings, seat gating applied strictly, more members required to be fully verified, and face re-verification triggered more often.</td></tr>
+<tr><td><b>Fabricated</b> — graph disconnects on host removal, or any negative signal fires</td><td>The circle <b>cannot start</b>. Routed to human review with the specific signal shown to the reviewer. The host is told plainly what to correct — a genuine circle usually fixes it by having members complete attestation or invite through the picker.</td></tr>
+</table>
+<p><b>Host-level aggregation matters as much as the per-circle reading.</b> A host running several thin circles at once, or recycling the same members across circles under different names, is the credibility-by-proxy pattern from the strategy pre-mortem. Concurrency limits already cap this; the authenticity score is what tells us where to look.</p>
+
+<h2>5.4 The honest limits</h2>
+<ul>
+<li><b>A patient fraudster with real accomplices defeats every signal here.</b> Eleven genuine people who know each other and collectively intend to defraud will read as a perfect circle. Nothing in this section touches that case — it is caught, if at all, by the seat gates capping exposure to unproven members and by the fact that everyone is NADRA-verified and therefore prosecutable.</li>
+<li><b>Legitimate circles will sometimes read thin.</b> A workplace circle across departments, or a diaspora family scattered across cities, is honest and sparse. They are not blocked — they run as stranger circles with tighter ceilings, which is the correct treatment for a group whose members genuinely cannot vouch for each other.</li>
+<li><b>Signals 6 and 7 depend on smartphone address books</b>, which is a real coverage gap in a market where just over half of committee users own a phone at all. This is why the first five signals were chosen to work without them.</li>
+</ul>
+</section>
+
+<!-- ============ 6 ============ -->
+<section class="brk">
+<h1>6 · What this layer buys, and the order to build it</h1>
+
+<h2>6.1 The regulatory dividend</h2>
+<p>These four mechanisms were specified as product design, but they read as a compliance posture — and that is the point. Set against SBP's <i>Business Conduct and Fair Treatment of Consumers</i> framework, which governs disclosure, delivery, complaints and termination, Halqa can now show: informed consent captured biometrically after a mandatory cooling window; a documented, member-initiated termination path with restitution arithmetic that is published rather than discretionary; an affordability gate stricter than the regulator's own debt-burden ratio; and a hardship route that ends in a recorded statement and a waived fine rather than a collections call.</p>
+<p>Read that list against the accusations that removed four hundred lending apps — lending beyond capacity, collecting by pressure, hoarding personal data — and it inverts every one. This is the substance behind the "first clean actor" approach to SECP: not a claim of good intentions, but four mechanisms, each with a number attached.</p>
+
+<h2>6.2 Build order</h2>
+<p class="exh"><b>EXHIBIT 4</b> — Sequenced by dependency and by risk retired per unit of work.</p>
+<table>
+<tr><th style="width:8mm">—</th><th style="width:44mm">Item</th><th>Why here</th></tr>
+<tr><td><b>1</b></td><td>CONFIRMING state and the 24-hour window</td><td>Smallest change in the document, largest legal return. One new state, one countdown, one screen. Nothing depends on it, and everything after it is safer for existing.</td></tr>
+<tr><td><b>2</b></td><td>Affordability engine — the three caps and the headroom display</td><td>Prevents the defaults the exit protocol would otherwise have to process. Cheapest place to stop harm is before the join.</td></tr>
+<tr><td><b>3</b></td><td>Exit ladder levels 1–3, with the restitution engine and the group vote</td><td>The arithmetic of §3.2 is the substantial piece of work here; the vote is straightforward. Substitution should be built first and made the obvious path.</td></tr>
+<tr><td><b>4</b></td><td>Hardship path and helpline statement capture</td><td>Depends on the exit ladder existing. Needs an operational process and a trained human, not only code.</td></tr>
+<tr><td><b>5</b></td><td>NADRA face match integration</td><td>Requires institutional onboarding through the Nishan portal, so start the paperwork in parallel with items 1–3. PIN and device biometrics ship immediately and cover the gap.</td></tr>
+<tr><td><b>6</b></td><td>Circle authenticity — invitation graph, private attestation, host-removal test</td><td>Last only because it is most improved by having real circles to calibrate against. The first four signals need no new permission; on-device contact matching follows as a second phase.</td></tr>
+</table>
+
+<p class="flag" style="margin-top:6mm">Prepared 9 August 2026. Regulatory references: SBP Prudential Regulations for Consumer Financing and BPRD Circular Letter 29 of 2021 (debt-burden ratio 40%); SBP Business Conduct and Fair Treatment of Consumers Regulatory Framework, October 2025; SBP branchless-banking cooling period, April 2023; NADRA Multi-Biometric Verification System and Nishan Pakistan portal. Theory: Ghatak on joint liability and the peer selection effect; the microfinance literature on progressive lending and liquidity default. Field evidence: Kamran (2017); Financial Inclusion Insights. Committee arithmetic derived from the platform's own parameters and marked as worked examples throughout. Fine levels, thresholds and caps are proposals for the chairman's decision, not settled policy.</p>
+</section>
+
+</body>
+</html>

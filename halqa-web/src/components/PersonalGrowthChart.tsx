@@ -3,7 +3,7 @@ import type { Committee } from '../types';
 import { money } from '../api';
 
 // A member-facing, position-aware projection: the person at turn X sees THEIR
-// own money's journey across the cycle — paying in each month, receiving the
+// own money's journey across the cycle, paying in each month, receiving the
 // pot at their turn, and their estimated profit share at completion. It makes
 // the loan-vs-savings shape of a committee visible per position.
 export default function PersonalGrowthChart({committee,turnPosition}:{committee:Committee;turnPosition:number}){
@@ -40,8 +40,8 @@ export default function PersonalGrowthChart({committee,turnPosition}:{committee:
   const netEnd=profitShare-feePaid;
 
   return <div className="personal-growth">
-    <div className="info-stack"><div><span>You pay in total</span><b>{money(totalPaid*100)}</b></div><div><span>You receive at turn #{X}</span><b>{money(pot*100)}</b></div><div><span>Est. profit share</span><b className="profit">{engine?money(profitShare*100):'—'}</b></div>{feePaid>0&&<div><span>Early-turn fee you pay</span><b>-{money(feePaid*100)}</b></div>}<div><span>Net at completion</span><b className={netEnd>=0?'profit':''}>{netEnd>=0?'+':''}{money(netEnd*100)}</b></div></div>
+    <div className="info-stack"><div><span>You pay in total</span><b>{money(totalPaid*100)}</b></div><div><span>You receive at turn #{X}</span><b>{money(pot*100)}</b></div><div><span>Est. profit share</span><b className="profit">{engine?money(profitShare*100):''}</b></div>{feePaid>0&&<div><span>Early-turn fee you pay</span><b>-{money(feePaid*100)}</b></div>}<div><span>Net at completion</span><b className={netEnd>=0?'profit':''}>{netEnd>=0?'+':''}{money(netEnd*100)}</b></div></div>
     <div className="projection-chart"><ResponsiveContainer width="100%" height="100%"><AreaChart data={data}><defs><linearGradient id="posFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1c6349" stopOpacity=".28"/><stop offset="1" stopColor="#1c6349" stopOpacity="0"/></linearGradient></defs><CartesianGrid vertical={false} stroke="#e9ebef"/><XAxis dataKey="label" tickLine={false} axisLine={false} fontSize={11}/><YAxis tickFormatter={v=>`${Math.round(v/1000)}k`} tickLine={false} axisLine={false} fontSize={11}/><Tooltip formatter={(v:number)=>`Rs ${Number(v).toLocaleString()}`} contentStyle={{borderRadius:14,border:'1px solid #e4e7eb'}}/><ReferenceLine y={0} stroke="#c4c9d0"/><ReferenceLine x={`R${X}`} stroke="#0a7cff" strokeDasharray="4 4" label={{value:'your payout',position:'top',fontSize:11,fill:'#0a7cff'}}/><Area dataKey="net" stroke="#1c6349" fill="url(#posFill)" strokeWidth={3}/></AreaChart></ResponsiveContainer></div>
-    <p className="field-note">{X<=Math.ceil(N/3)?'You’re an early turn: you collect the pot near the start — like an interest-free loan you repay over the remaining rounds.':X>=Math.ceil(N*2/3)?'You’re a later turn: your money stays in longest, so you earn the largest profit share — the committee’s reward for patience.':'You’re a middle turn: a balance of early access and profit share.'}{feePaid>0?' Because this is a conventional (Early Access / Maximum) circle, taking an earlier turn costs a disclosed fee out of your own payout.':''} All profit figures are indicative, never guaranteed.</p>
+    <p className="field-note">{X<=Math.ceil(N/3)?'You’re an early turn: you collect the pot near the start, like an interest-free loan you repay over the remaining rounds.':X>=Math.ceil(N*2/3)?'You’re a later turn: your money stays in longest, so you earn the largest profit share, the committee’s reward for patience.':'You’re a middle turn: a balance of early access and profit share.'}{feePaid>0?' Because this is a conventional (Early Access / Maximum) circle, taking an earlier turn costs a disclosed fee out of your own payout.':''} All profit figures are indicative, never guaranteed.</p>
   </div>;
 }

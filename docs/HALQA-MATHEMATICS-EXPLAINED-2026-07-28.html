@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Mathematics of Halqa · explained for an A-level student · 28 July 2026</title>
+<style>
+  @page { size: A4; margin: 20mm 18mm; }
+  *{box-sizing:border-box}
+  body{
+    background:#fff; color:#000;
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:10.4pt; line-height:1.58; margin:0;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  h1{font-size:15.5pt;font-weight:normal;margin:0 0 4mm;padding-bottom:2mm;border-bottom:1.5px solid #000}
+  h2{font-size:11.6pt;margin:7mm 0 2.5mm;padding-bottom:1mm;border-bottom:1px solid #000}
+  h3{font-size:10.5pt;margin:5mm 0 1.5mm;font-weight:bold}
+  p{margin:0 0 2.6mm}
+  ul,ol{margin:2mm 0 3mm;padding-left:6mm}
+  li{margin:1.3mm 0}
+  code{font-family:Consolas,'Courier New',monospace;font-size:9.2pt;background:#f2f2f2;padding:0 1mm}
+  table{border-collapse:collapse;width:100%;margin:3mm 0 4mm}
+  th,td{border:1px solid #000;padding:1.9mm 2.4mm;font-size:9.1pt;vertical-align:top;text-align:left}
+  th{background:#e8e8e8;font-weight:bold}
+  tr{page-break-inside:avoid}
+  .brk{page-break-before:always}
+  .work{border:1px solid #000;padding:3.5mm 4.5mm;margin:4mm 0;page-break-inside:avoid;background:#fafafa}
+  .work .t{font-weight:bold;margin-bottom:1.5mm}
+  .math{font-family:Consolas,'Courier New',monospace;font-size:9.3pt;margin:1.5mm 0;padding-left:4mm}
+  .selftest{border:1.5px solid #000;padding:3.5mm 4.5mm;margin:5mm 0;page-break-inside:avoid}
+  .selftest .t{font-weight:bold;margin-bottom:1.5mm}
+  .ans{font-size:9.2pt;font-style:italic}
+  .cover{height:240mm;display:flex;flex-direction:column;justify-content:center;text-align:center;page-break-after:always}
+  .cover .m{font-size:38pt;letter-spacing:.22em;margin:0 0 6mm}
+  .cover hr{width:60mm;border:none;border-top:1.5px solid #000;margin:0 auto 8mm}
+  .cover .t{font-size:14pt;margin:0 0 3mm}
+  .cover .d{font-size:10.5pt;margin:0 0 14mm}
+  .cover .n{font-size:9.4pt;line-height:1.9}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="m">HALQA</p>
+  <hr>
+  <p class="t">The Mathematics of Halqa</p>
+  <p class="d">Every formula in the system, derived and worked<br>for an A-level student · 28 July 2026</p>
+  <p class="n">
+    Every formula here was read from the source file that implements it, and the file is named.<br>
+    Every worked example is arithmetic you can verify with a pen.<br>
+    Formulas belonging to the second-stage engines have their own clearly marked chapter.
+  </p>
+</div>
+
+<!-- ============ 1 CONSERVATION ============ -->
+<section>
+<h1>1 · The conservation identity — why a committee balances</h1>
+
+<p>Take <code>n</code> members, a contribution <code>c</code> per round, and <code>n</code> rounds. Each round collects <code>c × n</code> into the pot and pays all of it to one member. Over the full cycle:</p>
+<div class="math">Each member pays in:&nbsp;&nbsp;&nbsp;c × n&nbsp;&nbsp;(one contribution per round, for n rounds)</div>
+<div class="math">Each member receives:&nbsp;&nbsp;c × n&nbsp;&nbsp;(the whole pot, exactly once)</div>
+<p>Every member's net position over a full cycle is therefore <b>zero</b>. Nothing is created and nothing is destroyed; only <i>timing</i> moves. This is also why the double-entry ledger works as a checksum. Summed over all accounts, debits minus credits must equal zero at every instant — exactly as total momentum is equal before and after a collision. If the ledger ever fails that identity, a rupee has been lost, stolen or double-counted, and the failure announces itself.</p>
+
+<div class="work">
+<p class="t">Worked — the circle as a zero-interest lending machine</p>
+<p>Although everyone nets zero, credit flows constantly. How much lending does one full cycle perform in total? Seat <code>k</code> borrows <code>L(k) = c(n−k)</code> at the moment of collection (Chapter 2). Sum this over every seat. It is an arithmetic series — the same one you know as 1 + 2 + … + (n−1):</p>
+<p class="math">Total credit extended = c × Σ(n−k) for k = 1..n = c × [(n−1) + (n−2) + … + 0] = c × n(n−1)/2</p>
+<p class="math">12 members, c = Rs 10,000:&nbsp;&nbsp;10,000 × 12 × 11 / 2 = Rs 660,000</p>
+<p style="margin-bottom:0">A committee with a Rs 120,000 pot quietly performs <b>Rs 660,000 of interest-free lending</b> over its year. That figure explains why the structure matters so much to people banks will not serve — and it is pure arithmetic, requiring no finance theory at all.</p>
+</div>
+
+<div class="selftest">
+<p class="t">Self-test 1</p>
+<p>A 10-member circle at Rs 5,000. (a) What is the pot per round? (b) How much total credit does the cycle extend?</p>
+<p class="ans" style="margin-bottom:0">(a) 5,000 × 10 = Rs 50,000. (b) 5,000 × 10 × 9 / 2 = Rs 225,000.</p>
+</div>
+</section>
+
+<!-- ============ 2 FORWARD LIABILITY ============ -->
+<section class="brk">
+<h1>2 · Forward liability — the straight line that runs the business</h1>
+
+<p>At the moment seat <code>k</code> collects, that member has paid <code>c·k</code> and received <code>c·n</code>. What they still owe the circle is:</p>
+<div class="math">L(k) = c × (n − k)</div>
+<p>The formula is implemented in <code>src/lib/forward-liability.ts</code>, and everything else in the system is built on top of it. Three properties, each carrying a consequence:</p>
+<ul>
+<li><b>Linear and strictly decreasing.</b> The gradient is −c per seat: each later seat removes exactly one contribution of risk. There is no safe-ish middle zone and no sudden cliff. Risk falls in a perfectly straight line, from <code>c(n−1)</code> at seat 1 to zero at seat n.</li>
+<li><b>Zero at k = n.</b> The final seat cannot owe anything. This is the mathematical anchor of "position is the collateral."</li>
+<li><b>Independent of the occupant.</b> L(k) depends only on the seat, never on the person sitting in it. That is why controlling <i>access to seats</i> controls exposure without requiring trust in anyone.</li>
+</ul>
+
+<div class="work">
+<p class="t">Worked — the full table for the reference circle (n = 12, c = Rs 10,000)</p>
+<table>
+<tr><th>k</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>
+<tr><th>L(k), Rs '000</th><td>110</td><td>100</td><td>90</td><td>80</td><td>70</td><td>60</td><td>50</td><td>40</td><td>30</td><td>20</td><td>10</td><td>0</td></tr>
+</table>
+<p style="margin-bottom:0">Check any cell by hand: L(4) = 10,000 × (12 − 4) = Rs 80,000. Note that L(1) is not the full pot of Rs 120,000 — seat 1 did pay their own first installment.</p>
+</div>
+
+<div class="selftest">
+<p class="t">Self-test 2</p>
+<p>n = 20, c = Rs 2,000. (a) L(5)? (b) Which seat has L = Rs 10,000? (c) What is the gradient of L(k), and what does it mean in words?</p>
+<p class="ans" style="margin-bottom:0">(a) 2,000 × 15 = Rs 30,000. (b) c(n−k) = 10,000 gives n−k = 5, so seat 15. (c) −c = −Rs 2,000 per seat: every later seat is exactly one contribution safer.</p>
+</div>
+</section>
+
+<!-- ============ 3 SEAT ELIGIBILITY ============ -->
+<section class="brk">
+<h1>3 · Seat eligibility — floors, clamps, and a closed form</h1>
+
+<p>Two functions from A-level are needed: the <b>floor</b> ⌊x⌋, which rounds down to the nearest integer, and <b>max(a, b)</b>, which selects the larger argument. The rules for which seats <code>p</code> (in a circle of <code>cap</code> members) each class may claim live in <code>src/lib/score-bands.ts</code>, in <code>allowedPositions()</code> and <code>eligiblePositions()</code>:</p>
+<div class="math">Lowest band or NEW member:&nbsp;&nbsp;p &gt; max(cap − 3, ⌊cap/2⌋)&nbsp;&nbsp;&nbsp;(the last three seats, never earlier than halfway)</div>
+<div class="math">Middle band:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p &gt; ⌊cap/2⌋&nbsp;&nbsp;&nbsp;(the second half)</div>
+<div class="math">Upper bands:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any free seat</div>
+
+<p><b>Why the max() clamp exists.</b> In a small circle, "the last three seats" alone would reach dangerously far forward. In a four-member circle it would include seat 2 — nearly the front. The clamp at <code>⌊cap/2⌋</code> guarantees that a restricted member can never cross the halfway line, whatever the circle's size.</p>
+
+<div class="work">
+<p class="t">Worked — three circle sizes</p>
+<p class="math">cap = 12: p &gt; max(9, 6) = 9&nbsp;&nbsp;→ seats {10, 11, 12}</p>
+<p class="math">cap = 8:&nbsp;&nbsp;p &gt; max(5, 4) = 5&nbsp;&nbsp;→ seats {6, 7, 8}</p>
+<p class="math">cap = 4:&nbsp;&nbsp;p &gt; max(1, 2) = 2&nbsp;&nbsp;→ seats {3, 4}&nbsp;&nbsp;(here the clamp is doing the work)</p>
+</div>
+
+<h3>A closed form for the exposure bound</h3>
+<p>What is the worst-case exposure to a quarantined member? Their earliest permitted seat is <code>p<sub>min</sub> = max(n−3, ⌊n/2⌋) + 1</code>, so the exposure bound is:</p>
+<div class="math">E_max = c × (n − p_min) = c × (n − 1 − max(n−3, ⌊n/2⌋))</div>
+<p>For any circle with <b>n ≥ 6</b>, we have <code>n−3 ≥ ⌊n/2⌋</code>, so the max() resolves to <code>n−3</code> and the whole expression collapses:</p>
+<div class="math">E_max = c × (n − 1 − (n − 3)) = <b>2c</b></div>
+<p><b>Exposure to a stranger never exceeds two contributions, regardless of how large the circle is.</b> Check it against the table in Chapter 2: a newcomer's best seat in the 12-circle is seat 10, and L(10) = Rs 20,000 = 2 × 10,000. For n = 4 the clamp yields seats {3, 4}, and the worst case is a single contribution — tighter still. This gives a strong, simple sentence for any meeting: <i>the most a brand-new member can ever owe a circle is two installments.</i> It falls directly out of the constants in the code, and anyone can verify it in under a minute.</p>
+
+<h3>Compaction ordering — comparison by tuple</h3>
+<p>When a circle starts under its cap, the seats compact to a continuous 1..N. The sort in <code>startOrder()</code> compares members as ordered tuples, exactly as words are compared alphabetically:</p>
+<div class="math">(bandRank, chosenPosition, joinedAt)&nbsp;&nbsp;— compared left to right; the first difference decides</div>
+<p>bandRank is 0 for the upper bands, 1 for the middle, and 2 for the lowest or NEW. Safer bands therefore always absorb the earlier compacted seats; members keep their chosen order <i>within</i> a band; and join time breaks any remaining tie deterministically. The eligibility guarantee survives compaction against the circle's <i>actual</i> started size — the protection holds even when a circle starts smaller than planned.</p>
+
+<div class="selftest">
+<p class="t">Self-test 3</p>
+<p>(a) cap = 6: which seats may a new member take, and what is E_max in rupees if c = Rs 8,000? (b) Why does the 2c closed form not apply below n = 6? (c) Member A (upper band, chose seat 4, joined second) and member B (NEW, chose seat 3, joined first) — who takes the earlier compacted seat?</p>
+<p class="ans" style="margin-bottom:0">(a) p &gt; max(3, 3) = 3, so seats {4, 5, 6}; E_max = L(4) = 8,000 × 2 = Rs 16,000 = 2c. (b) For n &lt; 6, ⌊n/2⌋ exceeds n−3, so the halfway clamp binds instead — the bound stays at or below 2c, but through the other branch. (c) A. A bandRank of 0 beats B's 2, regardless of chosen seat or join time.</p>
+</div>
+</section>
+
+<!-- ============ 4 MONEY ARITHMETIC ============ -->
+<section class="brk">
+<h1>4 · Money arithmetic — basis points, BigInt, and honest truncation</h1>
+
+<p>All rates are expressed in <b>basis points</b> (1 bps = 0.01%), and all fee arithmetic in the codebase is a single integer expression, with the shared helpers in <code>src/lib/money.ts</code>:</p>
+<div class="math">fee = amount × bps / 10000&nbsp;&nbsp;&nbsp;(in BigInt: amountPaisa × BigInt(bps) / 10_000n)</div>
+
+<div class="work">
+<p class="t">Worked — including the truncation subtlety</p>
+<p class="math">Rs 25,000 at 200 bps:&nbsp;2,500,000 paisa × 200 / 10,000 = 50,000 paisa = Rs 500&nbsp;— exact</p>
+<p>Now an awkward case: 999 paisa at 200 bps.</p>
+<p class="math">999 × 200 / 10,000 = 199,800 / 10,000 = 19.98&nbsp;&nbsp;→&nbsp;&nbsp;BigInt division returns <b>19 paisa</b></p>
+<p style="margin-bottom:0">BigInt division <b>truncates toward zero</b>; the 0.98 disappears. Is that a defect? No, and the reasoning is worth having ready. The error is always smaller than one paisa. It always favours the <i>member</i>, because fees can only round down. And it is deterministic — the same inputs give the same output on every machine, forever. Compare floating point, where 0.1 + 0.2 = 0.30000000000000004 and the error's direction is unpredictable. Halqa chooses a known, bounded, member-favouring error of less than one paisa over an unknown, unbounded, direction-random one. That is the entire float-versus-integer argument in one line.</p>
+</div>
+
+<p>The score clamp lives in the same file and is the simplest formula in the system: <code>clampScore(s) = max(300, min(850, s))</code> — a composition of the two functions from Chapter 3, pinning every score onto the 300–850 scale.</p>
+
+<div class="selftest">
+<p class="t">Self-test 4</p>
+<p>(a) The fee on a Rs 8,000 installment at 500 bps? (b) 1,234,567 paisa at 1,000 bps — the exact value, then the truncated BigInt result. (c) Why is "always round down" better than "round to nearest" for a fee?</p>
+<p class="ans" style="margin-bottom:0">(a) 800,000 × 500 / 10,000 = 40,000 paisa = Rs 400. (b) Exactly 123,456.7; truncated to 123,456 paisa. (c) Rounding to nearest sometimes overcharges by half a paisa. Truncation never charges above the true rate, which makes disputes impossible.</p>
+</div>
+</section>
+
+<!-- ============ 5 GRACE + LADDER ============ -->
+<section class="brk">
+<h1>5 · The grace window and the penalty ladder</h1>
+
+<p>The grace constant (<code>POST_DUE_GRACE_PCT = 0.23</code>) sits in <code>src/routes/committees.ts</code>; the penalty tiers sit in <code>src/lib/settlement.ts</code>. The window is computed per round from the circle's period:</p>
+<div class="math">graceDays(period) = max(2, min(14, round(period × 0.23) − 2))</div>
+<p>Read it from the inside out: take 23% of the period, subtract two days, then clamp the result between 2 and 14. The full behaviour:</p>
+
+<table>
+<tr><th>Period (days)</th><td>7</td><td>14</td><td>30</td><td>45</td><td>60</td><td>90</td></tr>
+<tr><th>round(p × 0.23) − 2</th><td>0</td><td>1</td><td>5</td><td>8</td><td>12</td><td>19</td></tr>
+<tr><th>After the clamps</th><td><b>2</b></td><td><b>2</b></td><td>5</td><td>8</td><td>12</td><td><b>14</b></td></tr>
+</table>
+<p>The floor prevents weekly circles from having a zero-day window, where one honest slip would be instantly fatal. The ceiling prevents quarterly circles from drifting for three weeks. Both clamps bind at period lengths that actually occur — this is a formula whose edge cases are real.</p>
+
+<h3>The ladder, as piecewise functions</h3>
+<div class="math">rate(d) = latePenaltyBps&nbsp;if d ≤ 3;&nbsp;&nbsp;500&nbsp;if 4 ≤ d ≤ grace;&nbsp;&nbsp;1000&nbsp;if d &gt; grace</div>
+<div class="math">Δscore(d) = −10&nbsp;if d ≤ 3;&nbsp;&nbsp;−20&nbsp;if 4 ≤ d ≤ grace;&nbsp;&nbsp;−40&nbsp;if d &gt; grace&nbsp;&nbsp;(post-payout default: up to −200)</div>
+<p>Here <code>d</code> is days late, and <code>latePenaltyBps</code> is the circle's own first-tier rate — default 200, hard-capped at 1,000. Two design decisions hide inside these step functions. The fee is forgiven within the grace boundaries, but <b>score damage runs from the first late day</b> — the record never forgives. And the daily sweep attempts auto-collection <b>before</b> assessing anything, so the ladder only ever reaches a member whose mandate failed.</p>
+
+<div class="work">
+<p class="t">Worked — a score's worst month, and the recovery asymmetry</p>
+<p class="math">Start at 700. Four payments in a row land past grace:&nbsp;700 − 4 × 40 = <b>540 → the lowest band</b> (below 550)</p>
+<p style="margin-bottom:0">Four badly missed payments take a perfect account down to quarantine-level restrictions. The climb back is deliberately slower than the fall: gains arrive as small on-time increments, while a single default can cost up to 200 points. The asymmetry is intentional, and it mirrors how real credit systems behave — trust is lost in lumps and rebuilt in grains.</p>
+</div>
+
+<div class="selftest">
+<p class="t">Self-test 5</p>
+<p>(a) graceDays for a 21-day circle? (b) A Rs 12,000 installment, four days late, in a circle whose latePenaltyBps is 300 — the fee and the score damage? (c) A member at 585 pays two days late — do they change band?</p>
+<p class="ans" style="margin-bottom:0">(a) round(4.83) − 2 = 5 − 2 = 3; the clamps leave it at 3. (b) Day four falls in tier two whatever the circle's own rate: 12,000 × 500 / 10,000 = Rs 600, and −20. (c) 585 − 10 = 575, still in the middle band (≥ 550). Another first-tier slip would leave them at 565; a second-tier slip (−20) would drop them below 550.</p>
+</div>
+</section>
+
+<!-- ============ 6 SCORE MAPPING ============ -->
+<section class="brk">
+<h1>6 · The TASDEEQ mapping — one straight line, both directions</h1>
+
+<p>TASDEEQ scores occupy [200, 600]; Halqa's occupy [300, 850]. The bridge between them — implemented as <code>fromTasdeeq</code> in <code>src/lib/score-bands.ts</code> — is the unique straight line through (200, 300) and (600, 850):</p>
+<div class="math">gradient m = (850 − 300) / (600 − 200) = 550/400 = 1.375</div>
+<div class="math">halqa(t) = 300 + (t − 200) × 1.375&nbsp;&nbsp;&nbsp;(t is first clamped into [200, 600])</div>
+<div class="math">inverse:&nbsp;t(h) = 200 + (h − 300) / 1.375 = 200 + (h − 300) × 400/550</div>
+<p>Because the map is linear with a positive gradient, it is <b>invertible and order-preserving</b>: if TASDEEQ ranks one person above another, the mapped Halqa scores agree. Passing the band cutoffs through the inverse places 550, 650 and 750 at approximately TASDEEQ 382, 455 and 527.</p>
+
+<p>Two notes travel with this mapping. It is wired, not live: reading TASDEEQ requires a subscriber agreement concluded directly with the bureau, and writing to any bureau requires financial-institution status. And TASDEEQ does not publish its internal band boundaries, so Halqa's quartering is provisional until a data agreement supplies their true default-probability bands.</p>
+
+<div class="selftest">
+<p class="t">Self-test 6</p>
+<p>(a) halqa(400)? (b) Which TASDEEQ score corresponds to Halqa 700, the hosting gate? (c) A corrupted TASDEEQ score of 700 arrives — what does the function return, and why?</p>
+<p class="ans" style="margin-bottom:0">(a) 300 + 200 × 1.375 = 575. (b) 200 + 400 × 400/550 ≈ 491. (c) 850 — the input clamp reduces 700 to 600 before mapping, so bad input can never produce an out-of-range score.</p>
+</div>
+</section>
+
+<!-- ============ 7 FEE CURVE + MARKETPLACE ============ -->
+<section class="brk">
+<h1>7 · The declining fee curve, and the marketplace as a bounded auction</h1>
+
+<h3>The fee spectrum — the same line as L(k), deliberately</h3>
+<p>The declining fee curve is defined in <code>src/lib/partner-catalog.ts</code> as <code>slotFeeBpsForRound</code>:</p>
+<div class="math">feeBps(k) = round( F × (N − k) / (N − 1) )&nbsp;&nbsp;&nbsp;F = the headline rate, N = total rounds, k = the round number</div>
+<p>At k = 1 the fraction equals 1 and the full fee applies. At k = N it equals 0 and the final turn pays nothing. Between the two it falls linearly. Look closely at the shape: <code>(N−k)/(N−1)</code> is forward liability rescaled onto [0, 1]. The member taking the most credit pays the most; the member taking none pays nothing. <b>The fee curve is L(k) wearing a price tag.</b></p>
+
+<div class="work">
+<p class="t">Worked — a 10% Sigma circle, 12 rounds, Rs 120,000 payout</p>
+<p class="math">k = 1:&nbsp;&nbsp;round(1000 × 11/11) = 1000 bps → 120,000 × 10% = Rs 12,000</p>
+<p class="math">k = 6:&nbsp;&nbsp;round(1000 × 6/11) = round(545.45) = 545 bps → Rs 6,540</p>
+<p class="math">k = 12: round(1000 × 0/11) = 0 bps → Rs 0</p>
+<p style="margin-bottom:0">One further factor applies at release: a recipient with a <b>linked salary account</b> pays 0.8 of the fee — the code multiplies by 8,000/10,000 — so seat 1 above would pay Rs 9,600. This is a pricing lever that rewards the most collectible members. The route constraints: the Sigma headline fee is capped at 1,000 bps and floored at 50 bps, the minimum at which the dividend remains meaningful.</p>
+</div>
+
+<h3>The marketplace — monotone, bounded, and therefore finite</h3>
+<p>A member lists a future turn; others bid a premium. Three numeric rules govern it, enforced in <code>src/routes/exchange.ts</code>:</p>
+<ul>
+<li><b>The cap:</b> the premium may not exceed half the payout — the ceiling that stops the market becoming disguised high-cost credit.</li>
+<li><b>Monotonicity:</b> every bid must strictly exceed the current floor, which is the highest open bid or the listing price.</li>
+<li><b>The fee:</b> Halqa takes premium / 10, in integer division — ten percent of the <i>spread</i>, never of the pot.</li>
+</ul>
+<p>A moment from A-level sequences: the bids form a <b>strictly increasing sequence bounded above</b>. In integer paisa, such a sequence cannot continue indefinitely — the auction is <i>guaranteed to end</i>. That is a correctness proof in one sentence. No rule limiting the number of bids is needed, because arithmetic already forbids an infinite auction.</p>
+
+<div class="work">
+<p class="t">Worked — a turn sale, end to end</p>
+<p class="math">Payout Rs 120,000 → the highest listable premium is Rs 60,000</p>
+<p class="math">Winning bid Rs 20,000 → Halqa's fee = 20,000 / 10 = Rs 2,000 → the seller nets Rs 18,000</p>
+<p style="margin-bottom:0">In the Shariah-labelled tiers the premium is pinned to zero: a position may <i>swap</i> but not <i>sell</i>, because trading a claim on money for more money is religiously contested. The mechanism is identical; one variable is constrained. That is the house rule — never remove a feature for being non-compliant, and never label one compliant when it is not — expressed as a single constant.</p>
+</div>
+
+<div class="selftest">
+<p class="t">Self-test 7</p>
+<p>(a) A 6% Priority circle, 10 rounds, payout Rs 200,000 — the early fee at k = 4, without a salary link? (b) Why do "each bid strictly exceeds the floor" and integer money together guarantee the auction ends? (c) The marketplace fee on a premium of Rs 45,001?</p>
+<p class="ans" style="margin-bottom:0">(a) round(600 × 6/9) = 400 bps → Rs 8,000. (b) A strictly increasing sequence of integers bounded above by half the payout can only contain finitely many terms. (c) 4,500,100 paisa / 10 = 450,010 paisa = Rs 4,500.10 — the integer division is exact here.</p>
+</div>
+</section>
+
+<!-- ============ 8 SIMULATION ============ -->
+<section class="brk">
+<h1>8 · The simulation — what "0.3–1.4%, modelled" actually means</h1>
+
+<p>A <b>Monte-Carlo simulation</b> runs a randomised model many times and reads the <i>distribution</i> of outcomes, rather than committing to a single guess. Halqa's models live in <code>tests/monte-carlo.ts</code>, <code>tests/lib-pakistan-sim.ts</code> and <code>tests/pakistan-2025-sim.ts</code>. They draw tens of thousands of simulated members with Pakistan-calibrated attributes — the test suite asserts, for example, that contribution burden stays within a calibrated 8–15% of income. They assemble them into circles governed by the real rules of Chapters 3 to 5, and let them behave: pay, slip, default, with calibrated probabilities. Repeated at scale, the count of post-payout defaults settles into a <b>band of 0.3–1.4% of pot value</b>. The width of that band is honest uncertainty, not imprecision.</p>
+
+<h3>The two ideas that make it trustworthy</h3>
+<ul>
+<li><b>The law of large numbers.</b> One simulated circle proves nothing; variance dominates. Averaged across 120,000 agents — the 2025 agent-based model runs a full real calendar — the sample mean converges toward the model's true mean, with noise shrinking in proportion to 1/√N. The large number is not for show. It is what makes the average meaningful.</li>
+<li><b>Seed robustness — the control experiment.</b> The simulations use a <b>seeded random number generator</b>: the same seed reproduces the identical run, which is what makes a test repeatable. The suite then re-runs everything with a different seed and asserts that the conclusions survive — the same logic as a control-versus-treatment experiment. A result that held on one seed only would be a lucky draw, not a finding. The passing test is literally titled "conclusions are robust to a different seed (not a lucky draw)."</li>
+</ul>
+
+<p><b>What the number is not.</b> It is not a measurement of live behaviour. There are no live members yet, and every document labels the figure <i>modelled</i>. The model's job is to show that the mechanism works under calibrated assumptions. Only a real pilot converts 0.3–1.4% into a measured number, and the report's credibility rests partly on never blurring that line.</p>
+
+<div class="selftest">
+<p class="t">Self-test 8</p>
+<p>(a) Why must a simulation be re-run on a different seed before its conclusion is trusted? (b) Why does averaging 120,000 agents beat averaging 100? (c) A journalist writes "Halqa's default rate is 0.9%." Which word is missing, and why does it matter?</p>
+<p class="ans" style="margin-bottom:0">(a) A single seed is one draw from the space of possible runs; a conclusion that flips on reseeding was luck, not structure. (b) Noise shrinks as 1/√N — 120,000 agents give roughly 35 times less noise than 100. (c) "Modelled." There is no live default rate yet, and stating that plainly is the difference between a projection and a false claim.</p>
+</div>
+</section>
+
+<!-- ============ 9 RAILS ============ -->
+<section class="brk">
+<h1>9 · Rail economics — the arithmetic that chooses Raast</h1>
+
+<p><b>MDR</b> — the Merchant Discount Rate — is the fee the payment aggregator keeps from each transaction. The rates below are the Gate-2 pricing from the main report. On a Rs 10,000 installment:</p>
+<table>
+<tr><th>Rail</th><th>Formula</th><th>Cost</th><th>Effective rate</th></tr>
+<tr><td>Card (Safepay)</td><td>10,000 × 3.3% + Rs 33</td><td>Rs 363</td><td>3.63%</td></tr>
+<tr><td>Wallet (1.5–3%)</td><td>10,000 × 1.5% … 3%</td><td>Rs 150–300</td><td>1.5–3%</td></tr>
+<tr><td><b>Raast</b></td><td>subsidised by the state</td><td><b>≈ Rs 0</b></td><td><b>≈ 0%</b></td></tr>
+</table>
+
+<div class="work">
+<p class="t">Worked — why the business model requires Raast</p>
+<p class="math">A 12-member circle over one full cycle: 12 × 12 = 144 installments of Rs 10,000</p>
+<p class="math">On card rails:&nbsp;144 × 363 = Rs 52,272 of rail cost per cycle — with Rs 0 of member fees to absorb it</p>
+<p class="math">On Raast:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;144 × 0 = Rs 0</p>
+<p style="margin-bottom:0">The fixed Rs 33 also weighs most heavily on the smallest payments. On a Rs 1,000 installment, the card fee is 33 + 33 = Rs 66 — <b>6.6%</b> — regressive against exactly the small savers Halqa exists to serve. "Raast first" is therefore not a preference. It is the only arithmetic under which free-for-members survives contact with per-transaction costs.</p>
+</div>
+
+<div class="selftest">
+<p class="t">Self-test 9</p>
+<p>(a) The card MDR on Rs 50,000? (b) At what payment size does the fixed Rs 33 alone equal 1% of the payment? (c) In one sentence: why does charging members nothing force the choice of rail?</p>
+<p class="ans" style="margin-bottom:0">(a) 1,650 + 33 = Rs 1,683, or 3.37%. (b) Rs 3,300. (c) With no member revenue, every rupee of MDR is an unrecovered cost, so only the rail with near-zero MDR can carry the model at scale.</p>
+</div>
+</section>
+
+<!-- ============ 10 SECOND STAGE ============ -->
+<section class="brk">
+<h1>10 · The second-stage formulas — built, switched off, worth knowing</h1>
+
+<p>The formulas in this chapter belong to the savings engines held for the second stage, when they run under the trustee structure of the main report's §7 — custody with CDC, management with a licensed AMC, distribution with Halqa. They live in <code>src/lib/sukoon.ts</code>, with the full derivations in <code>docs/HALQA-TECHNICAL-COMPENDIUM.md</code>. None of this is visible to members today.</p>
+
+<h3>Patience weights — rewarding the late seats</h3>
+<div class="math">w(k) = 10 + round( 10 × (k − 1) / (n − 1) )&nbsp;&nbsp;tenths</div>
+<p>Seat 1 receives a weight of 10 tenths (a multiplier of 1.0); seat n receives 20 tenths (2.0); every seat between lies on the straight line joining them. When a pooled pot of engine earnings is distributed at the end of a cycle, each member's share is proportional to w(k) — so <b>the last seat earns exactly double the first seat's share</b>. Notice the symmetry with Chapter 7. The fee curve charges early seats in proportion to the credit they took; the patience curve pays late seats in proportion to the waiting they endured. The two lines are mirror images, and both are L(k) in disguise.</p>
+
+<div class="work">
+<p class="t">Worked — n = 12</p>
+<p class="math">w(1) = 10;&nbsp;&nbsp;w(6) = 10 + round(50/11) = 10 + 5 = 15;&nbsp;&nbsp;w(12) = 20</p>
+<p style="margin-bottom:0">Distributing a pooled Rs 33,000 across these weights: the total weight is Σw(k) ≈ 180 tenths, so seat 12 takes 20/180 ≈ Rs 3,667 and seat 1 takes 10/180 ≈ Rs 1,833. Double, as promised.</p>
+</div>
+
+<h3>The other constants, briefly</h3>
+<ul>
+<li><b>The early-bird factor, ×1.25</b> — a member whose payments arrive at least three days early at least 75% of the time receives a 25% multiplier on their engine share. Punctuality, priced as an asset.</li>
+<li><b>The risk-engine weights: 0.22, 0.18, 0.18, 0.16, 0.14, 0.12</b> — the six factor weights of the composite risk score. Check that they sum to exactly <b>1.00</b>: that is the defining property of a weighted average, and it keeps the composite on the same scale as its inputs.</li>
+<li><b>The Sigma fee bounds</b> — the headline early fee is capped at 1,000 bps and floored at 50 bps (Chapter 7). The pooled variant routes the fee through the patience split above rather than paying an immediate dividend.</li>
+<li><b>The float sweep</b> — paid contributions earn the fund's indicative rate for the days they wait before payout, less a manager's share, on the same BigInt day-count arithmetic as everything else. At a 10–11% annual yield, one month of float is worth roughly 0.85–0.9% of the pool.</li>
+</ul>
+
+<p>The reason to learn the second-stage mathematics now: the flag is a switch, not a wall. The second stage turns these engines on — and the person who can explain w(k) fluently today is the person who will be believed about L(k) tomorrow.</p>
+
+<div class="selftest">
+<p class="t">Self-test 10</p>
+<p>(a) w(4) in a 10-member circle? (b) Why must the risk weights sum to 1? (c) Which Chapter-7 formula is the patience curve the mirror of, and why, in one sentence?</p>
+<p class="ans" style="margin-bottom:0">(a) 10 + round(10 × 3/9) = 10 + 3 = 13 tenths, a multiplier of 1.3. (b) So that the composite is a true weighted average, on the same scale as its inputs; any other total would inflate or deflate every score. (c) slotFeeBpsForRound — both are linear in seat position: one charges early seats for the credit they took, the other pays late seats for the patience they gave, and both are rescalings of L(k).</p>
+</div>
+
+<h2 style="margin-top:10mm">The whole system on one line</h2>
+<p style="font-size:11pt">Every formula in this document is one straight line — <b>L(k) = c(n − k)</b> — seen from a different angle. The eligibility rules cap it. The fees price it. The patience weights mirror it. The score reacts to violations of it. The simulation measures how often it goes unpaid. Understand that single line and you understand the mathematics of Halqa; everything else is clamps, rounding, and honesty about which numbers are measured and which are modelled.</p>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Halqa — Brand Identity v2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --pine:#123D30; --pine-deep:#07160F; --pine-mid:#1B5140;
+    --gold:#D9A93C; --gold-hot:#F0C356; --ivory:#F6F1E4; --ink:#0E1512;
+    --bg:var(--pine-deep); --surface:#0E251C; --text:#F6F1E4; --text-soft:#9DB3A4;
+    --line:rgba(217,169,60,.22);
+  }
+  :root[data-theme="light"]{--bg:#F6F1E4;--surface:#fff;--text:#0E1512;--text-soft:#4C574F;--line:rgba(18,61,48,.16)}
+  @media(prefers-color-scheme:light){:root{--bg:#F6F1E4;--surface:#fff;--text:#0E1512;--text-soft:#4C574F;--line:rgba(18,61,48,.16)}}
+  :root[data-theme="dark"]{--bg:#07160F;--surface:#0E251C;--text:#F6F1E4;--text-soft:#9DB3A4;--line:rgba(217,169,60,.22)}
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+  section{padding:56px 0}
+  h2{font-size:clamp(28px,4.6vw,46px);line-height:1.02;margin:0 0 12px;font-weight:800;letter-spacing:-.02em;text-wrap:balance}
+  .eyebrow{display:inline-block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:800;
+    color:var(--gold);padding:0 0 5px;border-bottom:2px solid var(--gold);margin-bottom:16px}
+  p{margin:0 0 10px;max-width:66ch;color:var(--text-soft);font-size:15px}
+  b{color:var(--text)}
+
+  /* HERO */
+  .hero{background:var(--pine-deep);color:#F6F1E4;padding:56px 0 0;border-bottom:5px solid var(--gold)}
+  .hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+  @media(max-width:860px){.hero .wrap{grid-template-columns:1fr;gap:26px}}
+  .brandline{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+  .brandline svg{width:60px;height:60px;flex:none}
+  .brandline .nm{font-size:44px;font-weight:800;letter-spacing:.04em;line-height:1}
+  .brandline .ur{font-size:34px;color:var(--gold);font-weight:600}
+  .hero h1{font-size:clamp(34px,5.6vw,58px);line-height:1;margin:14px 0 12px;font-weight:800;letter-spacing:-.025em}
+  .hero h1 em{font-style:normal;color:var(--gold)}
+  .hero .sub{font-size:17px;color:#B9CCBE;max-width:44ch}
+  /* Ledger rules — the register, not pills. Hard edges, gold hairlines. */
+  .ledger{margin-top:22px;border-top:2px solid var(--gold)}
+  .ledger div{display:flex;align-items:baseline;gap:12px;padding:8px 2px;border-bottom:1px solid rgba(246,241,228,.14)}
+  .ledger div:last-child{border-bottom:2px solid var(--gold)}
+  .ledger .tick{color:var(--gold);font-weight:800;font-size:12px;letter-spacing:.18em;flex:none;font-family:Consolas,monospace}
+  .ledger .l{font-size:13.5px;font-weight:700;letter-spacing:.01em}
+  .ledger .r{margin-left:auto;font-size:11.5px;color:#8FA595;font-weight:600;text-align:right}
+  .phone-wrap{display:flex;justify-content:center;padding-bottom:0}
+  .phone{width:270px;background:#000;border-radius:30px;padding:9px;box-shadow:0 24px 60px rgba(0,0,0,.55);border:1px solid #2a3a32}
+  .screen{background:var(--pine-deep);border-radius:23px;overflow:hidden}
+  .st{display:flex;justify-content:space-between;padding:9px 16px 4px;font-size:10.5px;color:#8FA595;font-weight:600}
+  .apphead{padding:4px 16px 12px;display:flex;align-items:center;gap:9px;border-bottom:1px solid rgba(217,169,60,.18)}
+  .apphead svg{width:24px;height:24px}
+  .apphead .t{font-size:14px;font-weight:800;letter-spacing:.02em}
+  .apphead .t span{color:var(--gold)}
+  .potcard{margin:12px;padding:15px;background:linear-gradient(150deg,#1B5140,#0E251C);border:1px solid rgba(217,169,60,.3);border-left:3px solid var(--gold)}
+  .potcard .lbl{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:800}
+  .potcard .amt{font-size:29px;font-weight:800;margin:3px 0 1px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .potcard .meta{font-size:11px;color:#A9BBAC}
+  .turnrow{display:flex;gap:5px;margin-top:12px;align-items:flex-end;height:22px}
+  .turnrow i{flex:1;background:rgba(246,241,228,.28);height:11px}
+  .turnrow i.done{background:rgba(246,241,228,.62)}
+  .turnrow i.now{background:var(--gold);height:22px;box-shadow:0 0 10px rgba(217,169,60,.55)}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;padding:4px 12px 12px}
+  .tile{background:rgba(246,241,228,.07);border:1px solid rgba(246,241,228,.11);padding:9px 4px;text-align:center}
+  .tile svg{width:19px;height:19px;margin-bottom:4px}
+  .tile span{display:block;font-size:8.6px;color:#B9CCBE;font-weight:600;line-height:1.25}
+  .paybar{margin:0 12px 12px;background:var(--gold);color:var(--pine-deep);padding:11px;text-align:center;font-weight:800;font-size:13px}
+  .paybar small{display:block;font-weight:600;font-size:9.5px;opacity:.8}
+
+  /* MARQUEE STRIP */
+  .strip{background:var(--gold);color:var(--pine-deep);padding:13px 0;font-weight:800;font-size:14px;overflow:hidden;white-space:nowrap}
+  .strip .wrap{display:flex;gap:36px;justify-content:center;flex-wrap:wrap}
+  .strip span{display:inline-flex;align-items:center;gap:10px}
+  .strip i{font-style:normal;font-family:Consolas,monospace;letter-spacing:.14em;opacity:.65;font-size:12px}
+
+  /* LOGO */
+  .logos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+  @media(max-width:800px){.logos{grid-template-columns:1fr}}
+  .lcard{background:var(--surface);border:1px solid var(--line);overflow:hidden}
+  .lcard.pick{border-color:var(--gold);border-width:2px}
+  .lstage{aspect-ratio:1.5;display:grid;place-items:center;background:var(--pine-deep);border-bottom:1px solid var(--line)}
+  .lstage svg{width:44%}
+  .lbody{padding:16px 17px}
+  .lbody h3{margin:0 0 5px;font-size:16.5px;font-weight:800;display:flex;align-items:center;gap:10px}
+  .tag{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:800;border-bottom:2px solid var(--gold);padding-bottom:1px}
+  .lbody p{font-size:13px;margin:0}
+
+  /* SCALE TEST */
+  .scaletest{display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-top:22px;padding:22px;background:var(--surface);border:1px solid var(--line)}
+  .sq{background:var(--pine-deep);display:grid;place-items:center;flex:none;border:1px solid rgba(217,169,60,.25)}
+  .sq svg{width:62%}
+  .sq.s1{width:112px;height:112px}
+  .sq.s2{width:64px;height:64px}
+  .sq.s3{width:40px;height:40px}
+  .sq.s4{width:24px;height:24px}
+  .scaletest .cap{font-size:12px;color:var(--text-soft);align-self:center;max-width:22ch}
+
+  /* PALETTE */
+  .sw{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:22px}
+  .sw>div{overflow:hidden;border:1px solid var(--line)}
+  .sw .chip{height:88px;display:flex;align-items:flex-end;padding:10px}
+  .sw .chip code{font-size:11px;background:rgba(0,0,0,.4);color:#fff;padding:3px 7px;font-family:Consolas,monospace}
+  .sw .m{padding:10px 12px;background:var(--surface)}
+  .sw .m b{display:block;font-size:13.5px}
+  .sw .m span{font-size:11.5px;color:var(--text-soft)}
+
+  /* COPY BLOCK */
+  .copygrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+  @media(max-width:760px){.copygrid{grid-template-columns:1fr}}
+  .cc{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--gold);padding:18px 20px}
+  .cc .h{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:800;margin-bottom:9px}
+  .cc .ur{font-size:21px;font-weight:800;margin-bottom:3px;line-height:1.2}
+  .cc .en{font-size:13px;color:var(--text-soft)}
+
+  .foot{border-top:1px solid var(--line);padding:22px 0;font-size:12px;color:var(--text-soft);text-align:center}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="brandline">
+        <svg viewBox="0 0 100 100" aria-label="Halqa mark">
+          <g stroke="#F6F1E4" stroke-width="6" stroke-linecap="round">
+            <line x1="50" y1="8" x2="50" y2="24"/>
+            <line x1="71" y1="13.6" x2="63" y2="27.5"/>
+            <line x1="86.4" y1="29" x2="72.5" y2="37"/>
+            <line x1="92" y1="50" x2="76" y2="50"/>
+            <line x1="86.4" y1="71" x2="72.5" y2="63"/>
+            <line x1="71" y1="86.4" x2="63" y2="72.5"/>
+            <line x1="50" y1="92" x2="50" y2="76"/>
+            <line x1="29" y1="86.4" x2="37" y2="72.5"/>
+            <line x1="13.6" y1="71" x2="27.5" y2="63"/>
+          </g>
+          <line x1="8" y1="50" x2="30" y2="50" stroke="#D9A93C" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <span class="nm">HALQA</span>
+        <span class="ur">حلقہ</span>
+      </div>
+      <h1>Apni <em>committee</em>,<br>apnay log.<br>Hisaab humara.</h1>
+      <p class="sub">Your committee. Your people. We keep the record — and we never hold your money.</p>
+      <div class="ledger">
+        <div><span class="tick">|||</span><span class="l">Paisa kabhi Halqa ke paas nahi</span><span class="r">no custody</span></div>
+        <div><span class="tick">||</span><span class="l">Members pay Rs 0</span><span class="r">koi fees nahi</span></div>
+        <div><span class="tick">|</span><span class="l">Raast · JazzCash · Easypaisa</span><span class="r">har rail</span></div>
+        <div><span class="tick">|||</span><span class="l">Har payment ka record</span><span class="r">sakh banti hai</span></div>
+      </div>
+    </div>
+    <div class="phone-wrap">
+      <div class="phone"><div class="screen">
+        <div class="st"><span>9:41</span><span>▮▮▮ ⌁ 100%</span></div>
+        <div class="apphead">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <g stroke="#F6F1E4" stroke-width="7" stroke-linecap="round">
+              <line x1="50" y1="8" x2="50" y2="24"/><line x1="71" y1="13.6" x2="63" y2="27.5"/>
+              <line x1="86.4" y1="29" x2="72.5" y2="37"/><line x1="92" y1="50" x2="76" y2="50"/>
+              <line x1="86.4" y1="71" x2="72.5" y2="63"/><line x1="71" y1="86.4" x2="63" y2="72.5"/>
+              <line x1="50" y1="92" x2="50" y2="76"/><line x1="29" y1="86.4" x2="37" y2="72.5"/>
+              <line x1="13.6" y1="71" x2="27.5" y2="63"/>
+            </g>
+            <line x1="8" y1="50" x2="30" y2="50" stroke="#D9A93C" stroke-width="9" stroke-linecap="round"/>
+          </svg>
+          <span class="t">HALQA <span>· Lahore Family</span></span>
+        </div>
+        <div class="potcard">
+          <span class="lbl">Aap ki baari · Turn 6 of 12</span>
+          <div class="amt">Rs 240,000</div>
+          <div class="meta">10 tareekh ko aap ke account mein</div>
+          <div class="turnrow">
+            <i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i>
+            <i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+        <div class="grid4">
+          <div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="#D9A93C" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg><span>Pay<br>karo</span></div>
+          <div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="#D9A93C" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M17 8h5M19.5 5.5v5"/></svg><span>Member<br>bulao</span></div>
+          <div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="#D9A93C" stroke-width="2"><path d="M4 19V9M9 19V5M14 19v-7M19 19v-4"/></svg><span>Sakh<br>742</span></div>
+          <div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="#D9A93C" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>Hisaab<br>dekho</span></div>
+        </div>
+        <div class="paybar">Rs 20,000 jama karo<small>Raast se · koi fees nahi</small></div>
+      </div></div>
+    </div>
+  </div>
+</header>
+
+<div class="strip"><div class="wrap">
+  <span><i>|||</i>33% Pakistanis committee se bachat karte hain</span>
+  <span><i>|||</i>Sirf 13% ke paas bank account</span>
+  <span><i>|||</i>12% ne fraud mein paisa khoya</span>
+</div></div>
+
+<!-- ============ THE MARK ============ -->
+<section class="wrap">
+  <span class="eyebrow">The mark</span>
+  <h2>Ghareeb ka hisaab<br>ek copy mein likha jata hai.</h2>
+  <p>The poor's financial system does not run on an app or a bank. It runs on a <b>notebook</b> — the organizer's register, a name in a column, a stroke against each month. Nine strokes for nine paid members. That register is the whole institution, and digitising it is the entire company.</p>
+  <p>So the mark is not a fintech circle. It is <b>tally marks arranged in a ring</b> — the register bent into the shape of the word <i>halqa</i>. Nine ivory strokes are the members who have paid. The tenth, gold and reaching into the centre, is whose turn it is now.</p>
+
+  <div class="logos">
+    <div class="lcard pick">
+      <div class="lstage">
+        <svg viewBox="0 0 100 100">
+          <g stroke="#F6F1E4" stroke-width="6" stroke-linecap="round">
+            <line x1="50" y1="8" x2="50" y2="24"/><line x1="71" y1="13.6" x2="63" y2="27.5"/>
+            <line x1="86.4" y1="29" x2="72.5" y2="37"/><line x1="92" y1="50" x2="76" y2="50"/>
+            <line x1="86.4" y1="71" x2="72.5" y2="63"/><line x1="71" y1="86.4" x2="63" y2="72.5"/>
+            <line x1="50" y1="92" x2="50" y2="76"/><line x1="29" y1="86.4" x2="37" y2="72.5"/>
+            <line x1="13.6" y1="71" x2="27.5" y2="63"/>
+          </g>
+          <line x1="8" y1="50" x2="30" y2="50" stroke="#D9A93C" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="lbody">
+        <h3>The Register <span class="tag">Primary</span></h3>
+        <p>Ten tally marks in a ring. The gold one is longer and points inward — the pot moving to this month's member. Reads as a circle, a clock, a register and a sunburst all at once. Nothing else in Pakistani fintech looks like it.</p>
+      </div>
+    </div>
+
+    <div class="lcard">
+      <div class="lstage">
+        <svg viewBox="0 0 100 100" fill="none">
+          <path d="M20 30 h60 a6 6 0 0 1 6 6 v34 a6 6 0 0 1 -6 6 h-60 a6 6 0 0 1 -6 -6 v-34 a6 6 0 0 1 6 -6z" stroke="#F6F1E4" stroke-width="5"/>
+          <path d="M14 42 h72" stroke="#F6F1E4" stroke-width="4"/>
+          <circle cx="50" cy="58" r="11" stroke="#D9A93C" stroke-width="5"/>
+          <path d="M50 24 a14 10 0 0 1 0 0" stroke="#D9A93C" stroke-width="5"/>
+          <path d="M31 30 q19 -18 38 0" stroke="#D9A93C" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="lbody">
+        <h3>The Fold</h3>
+        <p>A folded banknote — the physical currency of this economy — with the arc of the rotation rising from it. Warmer and more literal. Strong for print and merchant materials; slightly busier as an icon.</p>
+      </div>
+    </div>
+
+    <div class="lcard">
+      <div class="lstage">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="34" stroke="#F6F1E4" stroke-width="6"/>
+          <path d="M50 16 a34 34 0 0 1 0 68" stroke="#D9A93C" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="50" cy="16" r="7" fill="#D9A93C"/>
+        </svg>
+      </div>
+      <div class="lbody">
+        <h3>The Turn</h3>
+        <p>The simplest possible statement: a ring, half of it gold, one member at the top. Maximum legibility, minimum meaning — the safe fallback if the register mark proves too fine for small print.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="scaletest">
+    <div class="sq s1"><svg viewBox="0 0 100 100"><g stroke="#F6F1E4" stroke-width="6" stroke-linecap="round"><line x1="50" y1="8" x2="50" y2="24"/><line x1="71" y1="13.6" x2="63" y2="27.5"/><line x1="86.4" y1="29" x2="72.5" y2="37"/><line x1="92" y1="50" x2="76" y2="50"/><line x1="86.4" y1="71" x2="72.5" y2="63"/><line x1="71" y1="86.4" x2="63" y2="72.5"/><line x1="50" y1="92" x2="50" y2="76"/><line x1="29" y1="86.4" x2="37" y2="72.5"/><line x1="13.6" y1="71" x2="27.5" y2="63"/></g><line x1="8" y1="50" x2="30" y2="50" stroke="#D9A93C" stroke-width="8" stroke-linecap="round"/></svg></div>
+    <div class="sq s2"><svg viewBox="0 0 100 100"><g stroke="#F6F1E4" stroke-width="7" stroke-linecap="round"><line x1="50" y1="8" x2="50" y2="24"/><line x1="71" y1="13.6" x2="63" y2="27.5"/><line x1="86.4" y1="29" x2="72.5" y2="37"/><line x1="92" y1="50" x2="76" y2="50"/><line x1="86.4" y1="71" x2="72.5" y2="63"/><line x1="71" y1="86.4" x2="63" y2="72.5"/><line x1="50" y1="92" x2="50" y2="76"/><line x1="29" y1="86.4" x2="37" y2="72.5"/><line x1="13.6" y1="71" x2="27.5" y2="63"/></g><line x1="8" y1="50" x2="30" y2="50" stroke="#D9A93C" stroke-width="9" stroke-linecap="round"/></svg></div>
+    <div class="sq s3"><svg viewBox="0 0 100 100"><g stroke="#F6F1E4" stroke-width="8" stroke-linecap="round"><line x1="50" y1="9" x2="50" y2="25"/><line x1="71" y1="13.6" x2="63" y2="27.5"/><line x1="86.4" y1="29" x2="72.5" y2="37"/><line x1="91" y1="50" x2="75" y2="50"/><line x1="86.4" y1="71" x2="72.5" y2="63"/><line x1="71" y1="86.4" x2="63" y2="72.5"/><line x1="50" y1="91" x2="50" y2="75"/><line x1="29" y1="86.4" x2="37" y2="72.5"/><line x1="13.6" y1="71" x2="27.5" y2="63"/></g><line x1="9" y1="50" x2="31" y2="50" stroke="#D9A93C" stroke-width="10" stroke-linecap="round"/></svg></div>
+    <div class="sq s4"><svg viewBox="0 0 100 100"><g stroke="#F6F1E4" stroke-width="10" stroke-linecap="round"><line x1="50" y1="10" x2="50" y2="26"/><line x1="71" y1="14" x2="63" y2="28"/><line x1="86" y1="29" x2="72" y2="37"/><line x1="90" y1="50" x2="74" y2="50"/><line x1="86" y1="71" x2="72" y2="63"/><line x1="71" y1="86" x2="63" y2="72"/><line x1="50" y1="90" x2="50" y2="74"/><line x1="29" y1="86" x2="37" y2="72"/><line x1="14" y1="71" x2="28" y2="63"/></g><line x1="10" y1="50" x2="32" y2="50" stroke="#D9A93C" stroke-width="12" stroke-linecap="round"/></svg></div>
+    <div class="cap"><b>Scale test.</b> 112px to 24px. The silhouette holds because it is nine identical strokes and one that breaks the pattern — the eye reads the break before it reads the detail.</div>
+  </div>
+</section>
+
+<!-- ============ PALETTE ============ -->
+<section class="wrap" style="padding-top:8px">
+  <span class="eyebrow">Palette</span>
+  <h2>Same theme. More voltage.</h2>
+  <p>You liked the direction, so the pine and gold stay — but both are pushed harder. The green goes deeper so gold can sit on it at full strength, and the gold moves from a muted antique tone to one that survives a phone screen in Pakistani daylight. This is the difference between a heritage brochure and an app people tap.</p>
+  <div class="sw">
+    <div><div class="chip" style="background:#07160F"><code>#07160F</code></div><div class="m"><b>Deep Pine</b><span>App ground, hero</span></div></div>
+    <div><div class="chip" style="background:#123D30"><code>#123D30</code></div><div class="m"><b>Halqa Pine</b><span>Primary brand</span></div></div>
+    <div><div class="chip" style="background:#D9A93C"><code>#D9A93C</code></div><div class="m"><b>Live Gold</b><span>The active turn, CTAs</span></div></div>
+    <div><div class="chip" style="background:#F0C356"><code>#F0C356</code></div><div class="m"><b>Bright Gold</b><span>Highlights, badges</span></div></div>
+    <div><div class="chip" style="background:#F6F1E4"><code style="background:rgba(0,0,0,.45)">#F6F1E4</code></div><div class="m"><b>Ivory</b><span>Text on pine, light ground</span></div></div>
+    <div><div class="chip" style="background:#0E1512"><code>#0E1512</code></div><div class="m"><b>Ink</b><span>Text on ivory</span></div></div>
+  </div>
+</section>
+
+<!-- ============ VOICE ============ -->
+<section class="wrap" style="padding-top:8px">
+  <span class="eyebrow">Voice</span>
+  <h2>Roman Urdu first.<br>English underneath.</h2>
+  <p>JazzCash says <i>"ab business karo, baithay baithay."</i> Easypaisa says <i>"dunya ko bataa do."</i> Nobody in this market is won in formal English. The literature is blunt about why it matters: <b>only 31% of committee users can read a text message</b>, and women — who join at twice the rate of men — are the least served by dense English screens. Short Roman Urdu, big numbers, plain icons.</p>
+  <div class="copygrid">
+    <div class="cc"><div class="h">The promise</div><div class="ur">Paisa kabhi Halqa ke paas nahi aata.</div><div class="en">Your money never sits with Halqa. It goes from member to member — we only keep the record.</div></div>
+    <div class="cc"><div class="h">The host</div><div class="ur">Aap ki committee. Hum sirf hisaab rakhte hain.</div><div class="en">Your committee, your people. We do the chasing so you don't have to argue with your own relatives.</div></div>
+    <div class="cc"><div class="h">Payday</div><div class="ur">Tankhwah aate hi, jama.</div><div class="en">Collected the morning your salary lands — before the month eats it.</div></div>
+    <div class="cc"><div class="h">The record</div><div class="ur">Har payment likhi jati hai. Sakh banti hai.</div><div class="en">Every payment recorded. Your Sakh — the credit standing the banks never gave you — grows.</div></div>
+  </div>
+</section>
+
+<div class="strip"><div class="wrap">
+  <span><i>|||</i>Sakh 742</span><span><i>|||</i>6 committees mukammal</span><span><i>|||</i>Rs 0 fees</span><span><i>|||</i>Har payment ka receipt</span>
+</div></div>
+
+<div class="foot wrap">Halqa — Brand Identity v2 · concept marks, not final artwork · statistics from Financial Inclusion Insights and Global Findex via Mehmood et al. (2018) and Kamran (2017)</div>
+
+</body>
+</html>

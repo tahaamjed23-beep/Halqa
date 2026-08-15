@@ -6,7 +6,7 @@ import { assertBiometric, storedCredId } from '../lib/webauthn';
 import type { User } from '../types';
 
 // The app-open PIN gate. Shown on every fresh load when the member has a PIN
-// (in-memory unlock only — a reload re-asks, matching "every time you open"),
+// (in-memory unlock only, a reload re-asks, matching "every time you open"),
 // and as a one-time setup when they don't yet. A wrong PIN never reveals
 // anything; "Forgot PIN" falls back to a full password sign-in.
 export default function PinLock({ user, mode, onUnlock, onLogout, onSkip }: { user: User; mode: 'verify' | 'setup'; onUnlock: () => void; onLogout: () => void; onSkip?: () => void }) {
@@ -30,7 +30,7 @@ export default function PinLock({ user, mode, onUnlock, onLogout, onSkip }: { us
   };
   const submitSetup = async (value: string) => {
     if (stage === 'enter') { setFirstPin(value); setPin(''); setStage('confirm'); return; }
-    if (value !== firstPin) { setError('PINs did not match — try again'); setPin(''); setFirstPin(''); setStage('enter'); return; }
+    if (value !== firstPin) { setError('PINs did not match, try again'); setPin(''); setFirstPin(''); setStage('enter'); return; }
     setBusy(true); setError('');
     try { await api('/auth/set-pin', { method: 'POST', body: JSON.stringify({ pin: value }) }); onUnlock(); }
     catch (reason) { setError((reason as Error).message); setPin(''); setFirstPin(''); setStage('enter'); }

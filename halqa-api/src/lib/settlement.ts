@@ -1,6 +1,7 @@
 import type { Committee, Payment, Prisma, Round } from '@prisma/client';
 import { audit, ledger } from './audit';
 import { clampScore } from './money';
+import { applyRewardEvent, type RewardEventKind } from './rewards';
 import { debitReceiptText, queueWhatsApp } from './whatsapp';
 
 // Single settlement path for a contribution, shared by the member-recorded
@@ -80,13 +81,39 @@ export async function settleContribution(tx: Prisma.TransactionClient, args: {
   const event = await tx.creditEvent.create({ data: { userId: payerId, committeeId: round.committeeId, roundId: round.id, checkpoint, delta, reason } }).catch(() => null);
   if (event) {
     const user = await tx.user.findUniqueOrThrow({ where: { id: payerId } });
+    const nextStreak = streakIncrement > 0 ? user.paymentStreak + 1 : 0;
+
+    // Rewards ride on the same settlement, never on a client call, so a member
+    // cannot mint their own points. The rules — the per-cycle score cap, the
+    // streak multiplier, the fact that paying for somebody else earns points
+    // but never score — all live in lib/rewards.ts and are applied here only.
+    const rewardKind: RewardEventKind = isLate ? 'MISSED' : isEarly ? 'PAID_EARLY' : 'PAID_ON_TIME';
+    const reward = applyRewardEvent({
+      kind: rewardKind,
+      currentStreak: user.paymentStreak,
+      scoreGainedThisCycle: user.scoreGainedThisCycle,
+      settled: true,
+    });
+
     await tx.user.update({
       where: { id: user.id },
       data: {
         creditScore: clampScore(user.creditScore + delta),
-        paymentStreak: streakIncrement > 0 ? { increment: 1 } : 0,
+        paymentStreak: nextStreak,
+        longestStreak: Math.max(user.longestStreak, nextStreak),
+        rewardPoints: { increment: reward.points },
+        scoreGainedThisCycle: reward.scoreDelta > 0 ? { increment: reward.scoreDelta } : undefined,
       },
     });
+    if (reward.points > 0 || rewardKind === 'MISSED') {
+      await tx.rewardEvent.create({
+        data: {
+          userId: payerId, committeeId: round.committeeId, roundId: round.id,
+          kind: rewardKind, points: reward.points, scoreDelta: reward.scoreDelta,
+          streakAfter: nextStreak, multiplier: reward.multiplierApplied, reason: reward.reason,
+        },
+      });
+    }
   }
   await audit(tx, actorId, 'PAYMENT_RECORDED', 'Payment', row.id, { paidVia, txnRef, amountPaisa: row.amountPaisa.toString(), penaltyPaisa: penaltyPaisa.toString(), stage: 'RECORD_ONLY' });
   // Every debit of a member's money produces a WhatsApp receipt (queued in the

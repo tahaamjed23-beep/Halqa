@@ -3,7 +3,7 @@ import { ChevronDown, Search } from 'lucide-react';
 
 // International phone input: a country selector (flag + dial code, Pakistan
 // first) beside a national-number field. Emits an E.164-style string
-// `+<dial><national>` with any leading zeros on the national part stripped —
+// `+<dial><national>` with any leading zeros on the national part stripped
 // the API's cleanPhone() turns +92… back into 0… for Pakistani numbers.
 
 export type Country = { code: string; name: string; dial: string; flag: string };
