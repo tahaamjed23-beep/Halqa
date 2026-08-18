@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Gift, Home, UserPlus, User as UserIcon, Users, X, Bell } from 'lucide-react';
+import { Gift, Home, PiggyBank, UserPlus, User as UserIcon, Users, X, Bell } from 'lucide-react';
 import { JoinSheet } from '../components/JoinSheet';
+import { SIMPLE_MODE } from '../config';
 import { api } from '../api';
 import type { Notice, Page, User } from '../types';
 import RafaBot from '../components/RafaBot';
@@ -10,10 +11,18 @@ import ErrorBoundary from '../components/ErrorBoundary';
 // bar, the notification sheet and the account-lock banner. Five slots with a
 // raised centre action, which is the layout every Pakistani wallet uses and
 // therefore the one a member already knows how to drive.
-const TABS:[Page,string,ReactNode][]=[
+// The bar is symmetric around the centre Join button: two tabs, Join, two tabs.
+// With the full product on, Vault replaces Rewards on the right and Rewards
+// moves to a quick action, so the bar never grows past five targets.
+const TABS:[Page,string,ReactNode][]=SIMPLE_MODE?[
   ['home','Home',<Home key="h"/>],
   ['circles','Committees',<Users key="c"/>],
   ['rewards','Rewards',<Gift key="r"/>],
+  ['profile','Account',<UserIcon key="p"/>],
+]:[
+  ['home','Home',<Home key="h"/>],
+  ['circles','Committees',<Users key="c"/>],
+  ['vault','Vault',<PiggyBank key="v"/>],
   ['profile','Account',<UserIcon key="p"/>],
 ];
 

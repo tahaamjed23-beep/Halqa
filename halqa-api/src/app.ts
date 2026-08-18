@@ -62,6 +62,16 @@ app.use((req, res, next) => {
   next();
 });
 const bootedAt = Date.now();
+// Service root. Without this the bare domain falls through to Vercel's
+// filesystem routing and returns FUNCTION_INVOCATION_FAILED, which looks like
+// an outage to anybody who opens the URL even though every real route is fine.
+app.get('/', (_req, res) => res.json({
+  service: 'halqa-api',
+  status: 'ok',
+  stage: 'record-only-prototype',
+  docs: '/api/health',
+}));
+
 app.get('/api/health', async (_req, res) => {
   const db = await prisma.$queryRaw`SELECT 1`.then(() => 'ok').catch(() => 'down');
   res.status(db === 'ok' ? 200 : 503).json({ status: db === 'ok' ? 'ok' : 'degraded', db, stage: 'record-only-prototype', uptimeSec: Math.round((Date.now() - bootedAt) / 1000), at: new Date().toISOString() });

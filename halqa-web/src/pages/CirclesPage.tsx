@@ -168,7 +168,7 @@ function DiscoverCard({r,busy,join}:{r:Discover;busy:boolean;join:()=>void}){
       <div className="cm-badge">{initials}</div>
       <div className="cm-t">
         <h3>{r.name}</h3>
-        <p>{r.hostName} · Sakh {r.hostScore}</p>
+        <p>{r.hostName} · credit score {r.hostScore}</p>
       </div>
       {r.listedPublicly&&<span className="chip"><Globe/>Public</span>}
     </div>

@@ -1,6 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+// Rules for screens that were shipped with class names but no stylesheet.
+// Loaded after index.css so it can complete, never override, the base system.
+import './styles-completion.css'
+// Corrections keyed on the real markup (rows are <article>, status modifiers are
+// status-open/-closed). Must load after the completion pass to win on order.
+import './styles-structure.css'
 import App from './App.tsx'
 import { bootAppearance } from './components/Appearance'
 import ErrorBoundary from './components/ErrorBoundary.tsx'

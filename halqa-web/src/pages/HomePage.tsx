@@ -59,7 +59,7 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
         <div className="bal-split">
           <div><span>Next installment</span><strong>{due?mask(money(due.amountPaisa)):''}</strong></div>
           <div><span>Due in</span><strong>{due?formatDuration(due.dueAt):'Nothing due'}</strong></div>
-          <div><span>Sakh</span><strong style={{color:'var(--l600)'}}>{user.creditScore}</strong></div>
+          <div><span>Credit score</span><strong style={{color:'var(--l600)'}}>{user.creditScore}</strong></div>
         </div>
       </div>
     </div>
@@ -71,7 +71,7 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
       <Action icon={<Landmark/>} label="Auto debit" onClick={()=>go('cards')}/>
       <Action icon={<CreditCard/>} label="Cards" onClick={()=>go('cards')}/>
       <Action icon={<Receipt/>} label="Receipts" onClick={()=>go('activity')}/>
-      <Action icon={<Gauge/>} label="Sakh score" tone="blue" onClick={()=>go('credit')}/>
+      <Action icon={<Gauge/>} label="Credit score" tone="blue" onClick={()=>go('credit')}/>
       <Action icon={<Gift/>} label="Rewards" tone="amber" onClick={()=>go('rewards')}/>
     </div>
 

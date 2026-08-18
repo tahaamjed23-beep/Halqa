@@ -64,7 +64,7 @@ export default function HyperPage({user,back}:{user:User;back:()=>void}){
       </div>
 
       {!eligible&&<div className="banner" style={{margin:'16px 0 0'}}>
-        <Info/><div><b>Not open to you yet</b><p>HYPER needs a Sakh of 650 or above and two completed committees with a clean record. You are at {user.creditScore} with {user.committeesCompletedClean||0} completed.</p></div>
+        <Info/><div><b>Not open to you yet</b><p>HYPER needs a credit score of 650 or above and two completed committees with a clean record. You are at {user.creditScore} with {user.committeesCompletedClean||0} completed.</p></div>
       </div>}
 
       <div className="card" style={{marginTop:16}}>
