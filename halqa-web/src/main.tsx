@@ -9,6 +9,8 @@ import './styles-completion.css'
 import './styles-structure.css'
 // Sections 1-5 plus the cash-app continuity rules.
 import './styles-sections.css'
+// Engine surfaces and the rebuilt HYPER product.
+import './styles-engines.css'
 import App from './App.tsx'
 import { bootAppearance } from './components/Appearance'
 import ErrorBoundary from './components/ErrorBoundary.tsx'

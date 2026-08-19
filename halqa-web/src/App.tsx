@@ -5,6 +5,7 @@ import AuthPage from './pages/AuthPage';
 import Shell from './pages/Shell';
 import HomePage from './pages/HomePage';
 import ErrorBoundary from './components/ErrorBoundary';
+import OfflineBanner from './components/OfflineBanner';
 import AgreementGate from './components/AgreementGate';
 import PinLock from './components/PinLock';
 import { SIMPLE_MODE } from './config';
@@ -80,7 +81,7 @@ export default function App(){
   // In simple mode the investment surfaces are hidden; coerce any stale route
   // to home. The turn marketplace stays live in simple mode.
   const view=SIMPLE_MODE&&['terminal','vault'].includes(page)?'home':page;
-  return <Shell user={user} page={view} setPage={setPage} onLogout={()=>{tokens.clear();setUser(null)}}>
+  return <><OfflineBanner/><Shell user={user} page={view} setPage={setPage} onLogout={()=>{tokens.clear();setUser(null)}}>
     <ErrorBoundary resetKey={view} label="This page">
     <Suspense fallback={<PageLoader/>}>
       {view==='home'&&<HomePage user={user} openCommittee={setCommitteeId} create={()=>setPage('create')} go={p=>setPage(p as Page)}/>}
@@ -101,7 +102,7 @@ export default function App(){
     </Suspense>
     </ErrorBoundary>
     {gate}
-  </Shell>
+  </Shell></>
 }
 
 function PageLoader(){return <div className="page-loader"><i/><span>Loading Halqa</span></div>}

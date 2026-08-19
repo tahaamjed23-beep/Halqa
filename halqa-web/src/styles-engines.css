@@ -1,0 +1,90 @@
+/* ============================================================================
+   HALQA — ENGINE SURFACES AND HYPER
+   Styles for the screens that finally show what the algorithms compute:
+   forward liability, the score simulator, and the rebuilt HYPER product.
+   Every class here is used in JSX; nothing in this file is speculative.
+   ============================================================================ */
+
+/* ---------- forward liability, L(k) ---------- */
+.lk-callout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.lk-callout>div{background:var(--line-2);border-radius:var(--r-sm);padding:12px}
+.lk-callout span{display:block;font-size:11px;color:var(--muted);margin-bottom:3px;line-height:1.35}
+.lk-callout b{display:block;font-size:19px;font-weight:740;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums}
+.lk-owed{color:var(--warn)}
+.lk-clear{color:var(--ok)}
+.lk-bars{display:flex;align-items:flex-end;gap:3px;height:104px;padding:0 1px}
+.lk-bar{flex:1;min-width:0;min-height:4px;border-radius:3px 3px 1px 1px;background:var(--l200);
+  border:none;padding:0;transition:background .12s}
+.lk-bar.on{background:var(--l500)}
+.lk-bar.mine{background:var(--gold,#E6B93A);box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.lk-bar:hover,.lk-bar:focus-visible{background:var(--l600)}
+.lk-axis{display:flex;justify-content:space-between;font-size:10.5px;color:var(--faint);margin-top:6px}
+.lk-note{font-size:12.5px;line-height:1.6;color:var(--muted);margin-top:11px}
+
+/* ---------- score simulator ---------- */
+.sim-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.sim-now,.sim-next{flex:1;background:var(--line-2);border-radius:var(--r-sm);padding:12px;text-align:center}
+.sim-now span,.sim-next span{display:block;font-size:10.5px;color:var(--muted);margin-bottom:3px}
+.sim-now b,.sim-next b{display:block;font-size:26px;font-weight:740;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums}
+.sim-next.up{background:var(--ok-bg)}
+.sim-next.up b{color:#0F7A3E}
+.sim-next.down{background:var(--bad-bg)}
+.sim-next.down b{color:#8E2A20}
+.sim-arrow{color:var(--faint);font-size:17px;flex:none}
+.sim-verdict{font-size:12.5px;line-height:1.55;color:var(--ink-2);background:var(--line-2);
+  border-radius:var(--r-sm);padding:10px 12px;margin-bottom:11px}
+.sim-verdict.warn{background:var(--warn-bg);color:#7A4B00}
+.sim-events{display:flex;flex-direction:column;gap:7px}
+.sim-event{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
+  text-align:left;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:11px 13px;
+  background:var(--surface);font-size:13px;font-weight:600}
+.sim-event b{font-variant-numeric:tabular-nums;font-weight:720;flex:none}
+.sim-event.up b{color:var(--ok)}
+.sim-event.down b{color:var(--warn)}
+.sim-event.bad b{color:var(--bad)}
+.sim-event.on{border-color:var(--l500);background:var(--l50)}
+.sim-note{font-size:11.5px;line-height:1.55;color:var(--muted);margin-top:11px}
+
+/* ---------- HYPER ---------- */
+.hyper-risk{border:1.6px solid var(--warn);background:var(--warn-bg)}
+.hyper-risk-head{display:flex;align-items:center;gap:9px;margin-bottom:7px;color:#7A4B00}
+.hyper-risk-head svg{width:20px;height:20px;flex:none}
+.hyper-risk-head b{font-size:14px;font-weight:700}
+.hyper-risk p{font-size:12.5px;line-height:1.6;color:#7A4B00}
+.hyper-gates{display:flex;flex-direction:column;gap:8px}
+.hyper-gate{display:flex;align-items:flex-start;gap:10px;padding:10px 11px;border-radius:var(--r-sm);
+  background:var(--bad-bg)}
+.hyper-gate.ok{background:var(--ok-bg)}
+.hyper-gate>i{width:9px;height:9px;border-radius:50%;background:var(--bad);margin-top:5px;flex:none}
+.hyper-gate.ok>i{background:var(--ok)}
+.hyper-gate b{display:block;font-size:13px;font-weight:640;color:var(--ink)}
+.hyper-gate span{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
+.hyper-tickets button{font-size:12px}
+.hyper-sub{margin-top:14px}
+.hyper-note{font-size:12px;line-height:1.6;color:var(--muted);margin-top:11px}
+.hyper-apr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hyper-apr>div{background:var(--line-2);border-radius:var(--r-sm);padding:12px}
+.hyper-apr span{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;line-height:1.35}
+.hyper-apr b{display:block;font-size:21px;font-weight:740;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums}
+.hyper-ballot{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px}
+.hyper-ballot li{font-size:12.5px;line-height:1.55;color:var(--ink-2)}
+.hyper-never{display:flex;align-items:flex-start;gap:11px;background:var(--l50);
+  border-radius:var(--r-sm);padding:12px 13px;margin-top:12px}
+.hyper-never svg{width:19px;height:19px;color:var(--l600);flex:none;margin-top:1px}
+.hyper-never b{display:block;font-size:13px;font-weight:680;color:var(--l700)}
+.hyper-never span{display:block;font-size:12px;line-height:1.55;color:var(--ink-2);margin-top:3px}
+.hyper-roster{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px}
+.hyper-seat{background:var(--line-2);border-radius:var(--r-sm);padding:10px 11px;text-align:center}
+.hyper-seat b{display:block;font-size:12.5px;font-weight:680}
+.hyper-seat span{display:block;font-size:10.5px;color:var(--muted);margin-top:2px}
+.hyper-seat.me{background:var(--l50);outline:1.5px solid var(--l300)}
+.hyper-seat.me b{color:var(--l700)}
+.hyper-foot{font-size:11.5px;line-height:1.55;color:var(--muted);margin-top:11px;text-align:center}
+
+/* ---------- offline ---------- */
+.offline-banner{position:fixed;left:0;right:0;top:0;z-index:90;background:var(--ink);color:#fff;
+  font-size:12.5px;font-weight:600;text-align:center;padding:9px 14px;
+  padding-top:calc(9px + env(safe-area-inset-top))}

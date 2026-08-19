@@ -1,3 +1,4 @@
+import ScoreSimulator from '../components/ScoreSimulator';
 import { date } from '../lib/format';
 import { useEffect, useState } from 'react';
 import { ChevronLeft, ShieldCheck, TrendingUp } from 'lucide-react';
@@ -52,6 +53,7 @@ export default function CreditPage({user,back}:{user:User;back:()=>void}){
       <div className="trend-bars">{trend.map((p,i)=><div key={i} className="trend-bar" title={`${p.score}`}><i style={{height:`${Math.max(8,(p.score-min)/(max-min||1)*100)}%`,background:i===trend.length-1?'#b08d2f':'#e2d7b8'}}/><span>{i===trend.length-1?'Now':''}</span></div>)}</div>
     </section>
 
+    <ScoreSimulator score={user.creditScore}/>
     <section className="panel"><div className="panel-head"><div><span className="eyebrow">Score factors</span><h2>Factors</h2></div></div>
       <div className="factor-rows">
         <div><i className="factor-pill up">{positives}</i><span><b>Positive events</b><small>On-time rounds, clean completions, streaks</small></span></div>

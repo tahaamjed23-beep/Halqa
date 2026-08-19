@@ -1,117 +1,180 @@
-import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, Check, Flame, Gavel, Info } from 'lucide-react';
-import { money } from '../api';
+import { useMemo, useState } from 'react';
+import { ChevronLeft, Dices, Flame, Lock, ShieldAlert, Users } from 'lucide-react';
 import type { User } from '../types';
+import { money, percent } from '../lib/format';
 
-// HYPER: four hundred members, sixty days, daily contributions, six or seven
-// members collecting each day, positions set once by a twenty four hour
-// opening auction and fixed for the cycle thereafter.
-const TIERS=[
-  {daily:100,pot:6000},
-  {daily:150,pot:9000},
-  {daily:200,pot:12000},
-  {daily:250,pot:15000},
+// ---------------------------------------------------------------------------
+// HYPER: daily contributions, a random queue, members who cannot see each other.
+//
+// This screen was previously an opening auction where members bid for a
+// collection day. That is a chit fund: the discovered price is interest in
+// substance, it sits in the refused list, and India regulates precisely that
+// family. Seats here are DRAWN by a verifiable ballot and can never be bought.
+//
+// Mirrors halqa-api/src/lib/hyper.ts. The numbers below are the specification's,
+// and the APR figure uses the same formula the server does, because it is the
+// number a regulator or a journalist will compute against us.
+// ---------------------------------------------------------------------------
+
+const TICKETS = [
+  { dailyPaisa: 10_000, label: 'Rs 100' },
+  { dailyPaisa: 50_000, label: 'Rs 500' },
+  { dailyPaisa: 100_000, label: 'Rs 1,000' },
+  { dailyPaisa: 200_000, label: 'Rs 2,000' },
 ];
-const ROSTER=400,DAYS=60;
-const PER_DAY=Math.round(ROSTER/DAYS*10)/10;
+const MIN_DAYS = 48;
+const MAX_DAYS = 60;
+const MIN_SCORE = 650;
+const MIN_CLEAN = 2;
+const MAX_APR_PCT = 48;
 
-export default function HyperPage({user,back}:{user:User;back:()=>void}){
-  const [tier,setTier]=useState(1);
-  const [day,setDay]=useState<number|null>(null);
-  const [bid,setBid]=useState('');
-  const [placed,setPlaced]=useState<{day:number;amount:number}|null>(null);
-  const [left,setLeft]=useState(23*3600+41*60+12);
-  useEffect(()=>{const t=setInterval(()=>setLeft(v=>Math.max(0,v-1)),1000);return()=>clearInterval(t)},[]);
-  const t=TIERS[tier];
-  const eligible=user.creditScore>=650&&(user.committeesCompletedClean||0)>=2;
-
-  // Standing highest bid per day. Early days carry the largest forward
-  // liability and therefore the largest premium; the last days clear at nil.
-  const days=useMemo(()=>Array.from({length:DAYS},(_,i)=>{
-    const d=i+1;
-    const seats=d<=40?7:6;
-    const curve=Math.max(0,Math.round((DAYS-d)/DAYS*(t.pot*0.055)/10)*10);
-    return{d,seats,taken:d<=6?seats:d<=14?Math.floor(seats/2):0,top:curve};
-  }),[t.pot]);
-
-  const hh=String(Math.floor(left/3600)).padStart(2,'0');
-  const mm=String(Math.floor(left%3600/60)).padStart(2,'0');
-  const ss=String(left%60).padStart(2,'0');
-  const chosen=days.find(x=>x.d===day);
-
-  return <div className="enter">
-    <div className="topbar">
-      <button className="back" onClick={back}><ArrowLeft/></button>
-      <h1>HYPER committees</h1>
-      <span className="chip solid"><Flame/>Daily</span>
-    </div>
-
-    <div style={{padding:14}}>
-      <div className="card" style={{background:'linear-gradient(150deg,#22450C,#41801A 60%,#6DC72A)',color:'#fff',border:'none'}}>
-        <div style={{display:'flex',alignItems:'center',gap:8,fontSize:12.5,fontWeight:600,opacity:.92}}><Flame style={{width:16,height:16}}/>Sixty days · four hundred members</div>
-        <div style={{fontSize:30,fontWeight:760,letterSpacing:'-.035em',marginTop:8,fontVariantNumeric:'tabular-nums'}}>{money(t.pot*100)}</div>
-        <div style={{fontSize:12.5,opacity:.9,marginTop:3}}>pot, paid to {PER_DAY} members a day across {ROSTER}</div>
-        <div style={{display:'flex',gap:16,marginTop:15,paddingTop:14,borderTop:'1px solid rgba(255,255,255,.22)'}}>
-          <div><div style={{fontSize:11,opacity:.85}}>You pay daily</div><div style={{fontSize:16,fontWeight:700,marginTop:2}}>Rs {t.daily}</div></div>
-          <div><div style={{fontSize:11,opacity:.85}}>Over the cycle</div><div style={{fontSize:16,fontWeight:700,marginTop:2}}>{money(t.pot*100)}</div></div>
-          <div><div style={{fontSize:11,opacity:.85}}>Cover premium</div><div style={{fontSize:16,fontWeight:700,marginTop:2}}>15%</div></div>
-        </div>
-      </div>
-
-      <div className="sec-head" style={{marginTop:18}}><h2>Choose your daily amount</h2></div>
-      <div className="pillbar" style={{padding:0}}>
-        {TIERS.map((x,i)=><button key={x.daily} className={tier===i?'on':''} onClick={()=>{setTier(i);setDay(null)}}>Rs {x.daily} a day</button>)}
-      </div>
-
-      {!eligible&&<div className="banner" style={{margin:'16px 0 0'}}>
-        <Info/><div><b>Not open to you yet</b><p>HYPER needs a credit score of 650 or above and two completed committees with a clean record. You are at {user.creditScore} with {user.committeesCompletedClean||0} completed.</p></div>
-      </div>}
-
-      <div className="card" style={{marginTop:16}}>
-        <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:12}}>
-          <div className="row-ic" style={{background:'var(--ink)',color:'#fff'}}><Gavel/></div>
-          <div className="row-body"><strong>Opening auction</strong><span>Bidding closes in</span></div>
-        </div>
-        <div className="countdown">
-          <div><b>{hh}</b><span>hrs</span></div>
-          <div><b>{mm}</b><span>min</span></div>
-          <div><b>{ss}</b><span>sec</span></div>
-        </div>
-        <p className="note" style={{textAlign:'center'}}>Bid for <b>one</b> day only. You may raise your bid on that day as often as you like. Everything not taken at auction is drawn by ballot, and only a winning bid is charged.</p>
-      </div>
-
-      <div className="sec-head" style={{marginTop:18}}><h2>Pick a collection day</h2><span>{DAYS} days</span></div>
-      <div style={{maxHeight:340,overflow:'auto',paddingRight:2}}>
-        {days.slice(0,20).map(x=>{
-          const full=x.taken>=x.seats;
-          return <button key={x.d} className={`auc-day ${day===x.d?'on':''} ${full?'full':''}`} disabled={full||!eligible} onClick={()=>{setDay(x.d);setBid(String(x.top+50))}}>
-            <span className="auc-d"><b>{x.d}</b><span>day</span></span>
-            <span className="auc-b">
-              <strong>Collect {money(t.pot*100)}</strong>
-              <span>{x.seats-x.taken} of {x.seats} places left · you owe {money((DAYS-x.d)*t.daily*100)} after</span>
-            </span>
-            <span className="auc-bid"><b>{x.top?`Rs ${x.top}`:'No bid'}</b><small>top bid</small></span>
-          </button>;
-        })}
-      </div>
-
-      {chosen&&<div className="card" style={{marginTop:14}}>
-        <label className="fld" style={{marginBottom:10}}>
-          <span>Your bid for day {chosen.d}</span>
-          <div className="amt-input"><i>Rs</i><input inputMode="numeric" value={bid} onChange={e=>setBid(e.target.value.replace(/\D/g,''))}/></div>
-          <small>Must beat the standing top bid of Rs {chosen.top}. Paid to Halqa in full only if you win.</small>
-        </label>
-        <button className="btn" disabled={Number(bid)<=chosen.top} onClick={()=>setPlaced({day:chosen.d,amount:Number(bid)})}>
-          <Gavel/>Place bid
-        </button>
-      </div>}
-
-      {placed&&<div className="banner info" style={{margin:'14px 0 0'}}>
-        <Check/><div><b>Bid placed on day {placed.day}</b><p>Rs {placed.amount} standing. You will be charged only if you are still the highest bidder when the window closes.</p></div>
-      </div>}
-
-      <div style={{height:18}}/>
-    </div>
-  </div>;
+/** APR = 2 x 365 x F / ((n-1)^2 x c). Same formula as the server. */
+function aprPct(allInPaisa: number, days: number, dailyPaisa: number) {
+  if (days <= 1 || dailyPaisa <= 0) return 0;
+  return (allInPaisa * 2 * 365 * 100) / ((days - 1) ** 2 * dailyPaisa);
 }
 
+export default function HyperPage({ user, back }: { user: User; back: () => void }) {
+  const [ticket, setTicket] = useState(1);
+  const [days, setDays] = useState(MAX_DAYS);
+
+  const t = TICKETS[ticket];
+  const roster = days;                 // one collection a day
+  const pot = t.dailyPaisa * days;
+
+  // The largest all-in cost that still clears the published ceiling.
+  const maxCost = useMemo(
+    () => (MAX_APR_PCT * (days - 1) ** 2 * t.dailyPaisa) / (2 * 365 * 100),
+    [days, t.dailyPaisa],
+  );
+
+  const gates = [
+    { ok: user.creditScore >= MIN_SCORE, label: `Score ${MIN_SCORE} or above`, have: `You are at ${user.creditScore}` },
+    { ok: (user.committeesCompletedClean || 0) >= MIN_CLEAN, label: `${MIN_CLEAN} clean completed committees`, have: `You have ${user.committeesCompletedClean || 0}` },
+    { ok: Boolean(user.incomeVerifiedAt), label: 'Verified income', have: user.incomeVerifiedAt ? 'Verified' : 'Not verified yet' },
+    { ok: Boolean(user.hasVerifiedRaast), label: 'Verified Raast credential', have: user.hasVerifiedRaast ? 'On file' : 'Not linked yet' },
+  ];
+  const eligible = gates.every(g => g.ok);
+
+  return (
+    <div className="page narrow enter">
+      <button className="back-link" onClick={back}><ChevronLeft />Back</button>
+      <div className="page-head">
+        <div>
+          <span className="eyebrow">Daily committee</span>
+          <h1>HYPER</h1>
+          <p>You pay every day. The queue is random and nobody sees who else is in it.</p>
+        </div>
+      </div>
+
+      {/* The honest risk statement goes first, not buried at the bottom. */}
+      <section className="panel hyper-risk">
+        <div className="hyper-risk-head"><ShieldAlert /><b>Read this before anything else</b></div>
+        <p>
+          In an ordinary committee you know the others, and that is what makes people pay.
+          Here nobody knows anybody. That protection is gone, so HYPER is the most tightly
+          gated product on Halqa, not the most open one.
+        </p>
+      </section>
+
+      <section className="panel">
+        <div className="panel-head"><div><h2>Who can join</h2></div></div>
+        <div className="hyper-gates">
+          {gates.map(g => (
+            <div key={g.label} className={g.ok ? 'hyper-gate ok' : 'hyper-gate'}>
+              <i />
+              <div><b>{g.label}</b><span>{g.have}</span></div>
+            </div>
+          ))}
+        </div>
+        {!eligible && <div className="warning-box">You cannot join a HYPER committee yet.</div>}
+      </section>
+
+      <section className="panel">
+        <div className="panel-head"><div><h2>Your daily amount</h2></div></div>
+        <div className="segmented hyper-tickets">
+          {TICKETS.map((x, i) => (
+            <button key={x.dailyPaisa} className={ticket === i ? 'on' : ''} onClick={() => setTicket(i)}>{x.label}</button>
+          ))}
+        </div>
+
+        <div className="panel-head hyper-sub"><div><h2>Cycle length</h2><p>Between {MIN_DAYS} and {MAX_DAYS} days.</p></div></div>
+        <input
+          className="allocation-slider"
+          type="range" min={MIN_DAYS} max={MAX_DAYS} step={1}
+          value={days} onChange={e => setDays(Number(e.target.value))}
+          aria-label="Cycle length in days"
+        />
+        <div className="detail-grid">
+          <div><span>Days</span><b>{days}</b></div>
+          <div><span>Members</span><b>{roster}</b></div>
+          <div><span>You pay daily</span><b>{money(t.dailyPaisa)}</b></div>
+          <div><span>You collect</span><b>{money(pot)}</b></div>
+        </div>
+        <p className="hyper-note">
+          Over the cycle you pay in {money(pot)} and you collect {money(pot)} once, on the day
+          the ballot gives you.
+        </p>
+      </section>
+
+      <section className="panel">
+        <div className="panel-head"><div><h2>What it can cost you</h2></div></div>
+        <div className="hyper-apr">
+          <div>
+            <span>Most you can ever be charged, all in</span>
+            <b>{money(Math.floor(maxCost))}</b>
+          </div>
+          <div>
+            <span>As a yearly rate at the earliest seat</span>
+            <b>{percent(aprPct(maxCost, days, t.dailyPaisa))}</b>
+          </div>
+        </div>
+        <p className="hyper-note">
+          Paying daily makes small fees look large once they are annualised, so Halqa caps the
+          total at {MAX_APR_PCT}% a year for the earliest seat. Every charge counts toward that
+          cap, including cover and access fees.
+        </p>
+      </section>
+
+      <section className="panel">
+        <div className="panel-head"><div><h2>How your day is chosen</h2></div><Dices /></div>
+        <ol className="hyper-ballot">
+          <li>Halqa locks a sealed number and publishes its fingerprint before the draw.</li>
+          <li>Every member taps once, and each tap adds to the randomness.</li>
+          <li>The order comes out of the combined result.</li>
+          <li>The sealed number is published afterwards, so anyone can recheck the draw.</li>
+        </ol>
+        <div className="hyper-never">
+          <Lock />
+          <div>
+            <b>Days are never bought.</b>
+            <span>There is no bidding and no picking. Paying for an earlier turn would be interest, so it does not exist here.</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="panel">
+        <div className="panel-head"><div><h2>Who you are to everyone else</h2></div><Users /></div>
+        <div className="hyper-roster">
+          {Array.from({ length: 6 }, (_, i) => (
+            <div key={i} className={i === 2 ? 'hyper-seat me' : 'hyper-seat'}>
+              <b>Member #{i + 1}</b><span>{i === 2 ? 'this would be you' : `day ${i + 1}`}</span>
+            </div>
+          ))}
+        </div>
+        <p className="hyper-note">
+          No names, no photos, no phone numbers and no group chat. Halqa runs the queue, so there
+          is no organiser who could favour anyone.
+        </p>
+      </section>
+
+      <button className="primary full" disabled={!eligible}>
+        <Flame />{eligible ? 'Join the queue' : 'Not open to you yet'}
+      </button>
+      <p className="hyper-foot">
+        Payment is collected automatically every day. You can leave free within 24 hours of the
+        committee forming; after it starts, only a replacement can take your place.
+      </p>
+    </div>
+  );
+}
