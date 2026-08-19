@@ -1,3 +1,4 @@
+import FeeSchedule from '../components/FeeSchedule';
 import MyAgreements from '../components/MyAgreements';
 import { useEffect, useState } from 'react';
 import { Bell, ChevronLeft, ChevronRight, CreditCard, Fingerprint, Globe, HelpCircle, Megaphone, Scale, ShieldCheck, UserCog } from 'lucide-react';
@@ -112,6 +113,7 @@ export default function SettingsPage({ user, back }: { user: User; back?: () => 
             <p className="muted" style={{ fontSize: 12 }}>Preferences apply on this device. Critical security alerts are always delivered.</p>
           </>}
           {s.id === 'payments' && <>
+            <FeeSchedule />
             <CollectionOrder />
             <LinkedAccountsManager />
             <Field label="Fallback rail" hint="Used when none of your linked methods fits.">

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { ChevronRight, Info, LineChart, Receipt, Repeat, Settings, ShieldCheck, Sparkles } from 'lucide-react';
+import { ChevronRight, Info, LineChart, Package, Receipt, Repeat, Settings, ShieldCheck, Sparkles } from 'lucide-react';
 import type { Page } from '../types';
 import { SIMPLE_MODE } from '../config';
 
@@ -20,6 +20,7 @@ export function AccountMenu({ go }: { go: (page: Page) => void }) {
     { page: 'credit',   icon: <ShieldCheck />, title: 'Credit report',   sub: 'Your score and payment record' },
     { page: 'activity', icon: <Receipt />,     title: 'Activity',        sub: 'Every payment and receipt' },
     { page: 'market',   icon: <Repeat />,      title: 'Turn marketplace', sub: 'Buy or sell a turn', when: !SIMPLE_MODE },
+    { page: 'asset',    icon: <Package />,     title: 'Save for something', sub: 'A committee that buys a phone, bike or appliance' },
     { page: 'rewards',  icon: <Sparkles />,    title: 'Rewards',         sub: 'Points and streaks' },
     { page: 'terminal', icon: <LineChart />,   title: 'Scheme terminal', sub: 'Where idle funds sit', when: !SIMPLE_MODE },
     { page: 'settings', icon: <Settings />,    title: 'Settings',        sub: 'Security, privacy, notifications' },

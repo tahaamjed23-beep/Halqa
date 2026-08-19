@@ -28,6 +28,7 @@ const RewardsPage=lazy(()=>import('./pages/RewardsPage'));
 const HyperPage=lazy(()=>import('./pages/HyperPage'));
 const CardsPage=lazy(()=>import('./pages/CardsPage'));
 const ActivityPage=lazy(()=>import('./pages/ActivityPage'));
+const AssetPage=lazy(()=>import('./pages/AssetPage'));
 
 export default function App(){
   const [user,setUser]=useState<User|null>(PREVIEW?previewUser as unknown as User:null);
@@ -99,6 +100,7 @@ export default function App(){
       {view==='hyper'&&<HyperPage user={user} back={()=>setPage('home')}/>}
       {view==='cards'&&<CardsPage user={user} back={()=>setPage('home')}/>}
       {view==='activity'&&<ActivityPage user={user} back={()=>setPage('home')}/>}
+      {view==='asset'&&<AssetPage back={()=>setPage('home')}/>}
     </Suspense>
     </ErrorBoundary>
     {gate}
