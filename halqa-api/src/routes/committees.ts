@@ -9,6 +9,7 @@ import { clampScore, paisaInput, projectedReturn } from '../lib/money';
 import { assessForwardLiability, type SecurityPolicy } from '../lib/forward-liability';
 import { MUTUAL_PG_VERSION, freshUndertaking, hashText, mutualPgText } from '../lib/agreements';
 import { linkedOpenDefault } from '../lib/family-links';
+import { CONFIRMATION_WINDOW_HOURS, windowState, withdrawalOutcome } from '../lib/exit-ladder';
 import { band, allowedPositions, eligiblePositions, earlyTurnUnlocked, startOrder } from '../lib/score-bands';
 import { assessRisk, policyHash } from '../lib/risk-engine';
 import { allocateCyclePool } from '../lib/distribution';
@@ -433,8 +434,20 @@ async function joinCommittee(committeeId: string, req: Request, res: Response, n
 router.post('/:id/start', async (req, res, next) => {
   try {
     const { fundGap } = z.object({ fundGap: z.boolean().optional() }).parse(req.body ?? {});
-    const committee = await assertHost(req.params.id, req.auth!.userId);
-    if (committee.status !== 'FORMING') return res.status(409).json({ error: 'Only forming committees can start' });
+    const existing = await prisma.committee.findUniqueOrThrow({ where: { id: req.params.id } });
+    const dueActivation = existing.status === 'CONFIRMING' && !windowState(existing.confirmingSince)?.open;
+    // Opening the window is the host's call. Closing it is not: once the 24
+    // hours are up any member can complete the start, so a circle never stalls
+    // on a host who has not opened the app.
+    if (dueActivation) await assertMember(req.params.id, req.auth!.userId);
+    const committee = dueActivation ? existing : await assertHost(req.params.id, req.auth!.userId);
+    // Two stages now. FORMING -> Start opens the 24-hour confirmation window.
+    // CONFIRMING -> the window has run its course and the circle activates.
+    // Every gate below is re-checked at activation, because a member can
+    // withdraw during the window and the roster it validates must be the final one.
+    if (committee.status !== 'FORMING' && committee.status !== 'CONFIRMING') {
+      return res.status(409).json({ error: 'Only forming committees can start' });
+    }
     // The host can request gap-filling at start, OR have opted in at creation
     // (allowHalqaFill) so a not-full circle starts full automatically.
     const useFundGap = fundGap || committee.allowHalqaFill;
@@ -482,6 +495,40 @@ router.post('/:id/start', async (req, res, next) => {
         sponsorMembers.push({ ...membership, user: sponsor } as (typeof members)[number]);
       }
     }
+    // Every gate has passed. A FORMING circle does NOT start here: it enters the
+    // 24-hour confirmation window, where the roster is locked to new joiners and
+    // any member may still walk away free. The window runs from this instant for
+    // everyone, so the group reconsiders together rather than one member at a
+    // time. Activation happens after it closes, in this same handler.
+    if (committee.status === 'FORMING') {
+      const openedAt = new Date();
+      await prisma.committee.update({
+        where: { id: committee.id },
+        data: { status: 'CONFIRMING', confirmingSince: openedAt },
+      });
+      await prisma.notification.createMany({
+        data: members.map(m => ({
+          userId: m.userId,
+          type: 'CONFIRMATION_WINDOW_OPEN',
+          message: `${committee.name} starts in ${CONFIRMATION_WINDOW_HOURS} hours. Leaving now costs nothing.`,
+        })),
+      });
+      await audit(prisma, req.auth!.userId, 'CONFIRMATION_WINDOW_OPENED', 'Committee', committee.id,
+        { members: members.length, closesAt: new Date(openedAt.getTime() + CONFIRMATION_WINDOW_HOURS * 3_600_000) });
+      return res.json({
+        status: 'CONFIRMING',
+        closesAt: new Date(openedAt.getTime() + CONFIRMATION_WINDOW_HOURS * 3_600_000),
+        message: 'Confirmation window open',
+      });
+    }
+
+    // Reaching here means the circle is CONFIRMING. Refuse to activate early:
+    // the window is a promise to the members, not a formality the host can skip.
+    const win = windowState(committee.confirmingSince);
+    if (win && win.open) {
+      return res.status(409).json({ error: 'The confirmation window is still open', closesAt: win.closesAt });
+    }
+
     // Compaction to contiguous 1..N when a circle starts under capacity must
     // NOT let a risky member's late pick collapse into an early seat: a 10-cap
     // circle where three BAD members picked seats 8/9/10 and starts with just
@@ -1084,6 +1131,72 @@ router.post('/:id/autopay', async (req, res, next) => {
       return row;
     });
     res.json({ autoDebitEnabled: updated.autoDebitEnabled, autoDebitRail: updated.autoDebitRail, autoDebitMandateAt: updated.autoDebitMandateAt });
+  } catch (error) { next(error); }
+});
+
+
+// ---------------------------------------------------------------------------
+// Withdraw during the 24-hour confirmation window.
+//
+// This is NOT an exit. Nothing has been collected, no round exists and no money
+// has moved, so there is no fine, no score event and no record that follows the
+// member. Rung 1 of the ladder is free by design, and it only works if it is
+// genuinely free.
+// ---------------------------------------------------------------------------
+router.post('/:id/withdraw', async (req, res, next) => {
+  try {
+    const userId = req.auth!.userId;
+    const committee = await prisma.committee.findUniqueOrThrow({ where: { id: req.params.id } });
+    if (committee.status !== 'CONFIRMING') {
+      return res.status(409).json({ error: 'Free withdrawal is only open during the confirmation window' });
+    }
+    const win = windowState(committee.confirmingSince);
+    if (!win || !win.open) {
+      return res.status(409).json({ error: 'The confirmation window has closed' });
+    }
+    const membership = await prisma.committeeMember.findUnique({
+      where: { committeeId_userId: { committeeId: committee.id, userId } },
+    });
+    if (!membership || membership.status !== 'ACTIVE') {
+      return res.status(404).json({ error: 'You are not in this committee' });
+    }
+    if (committee.hostId === userId) {
+      return res.status(409).json({ error: 'The host cannot withdraw. Cancel the committee instead.' });
+    }
+
+    const result = await prisma.$transaction(async tx => {
+      await tx.committeeMember.update({ where: { id: membership.id }, data: { status: 'WITHDRAWN' } });
+      const remaining = await tx.committeeMember.count({
+        where: { committeeId: committee.id, status: 'ACTIVE' },
+      });
+      const outcome = withdrawalOutcome(remaining, committee.minMembersToStart);
+      if (outcome.reopened) {
+        // Below the minimum the circle cannot quietly carry on smaller than the
+        // one everybody agreed to join. It reopens so the host can recruit, and
+        // everyone still inside is released from the countdown.
+        await tx.committee.update({
+          where: { id: committee.id },
+          data: { status: 'FORMING', confirmingSince: null },
+        });
+      }
+      const others = await tx.committeeMember.findMany({
+        where: { committeeId: committee.id, status: 'ACTIVE' }, select: { userId: true },
+      });
+      await tx.notification.createMany({
+        data: others.map(o => ({
+          userId: o.userId,
+          type: outcome.reopened ? 'CONFIRMATION_WINDOW_REOPENED' : 'CONFIRMATION_WITHDRAWAL',
+          message: outcome.reopened
+            ? `${committee.name} is back to forming: it dropped below ${committee.minMembersToStart} members.`
+            : `A member left ${committee.name} during the confirmation window. ${remaining} remain.`,
+        })),
+      });
+      await audit(tx, userId, 'CONFIRMATION_WITHDRAWAL', 'Committee', committee.id,
+        { remaining, reopened: outcome.reopened });
+      return { remaining, ...outcome };
+    });
+
+    res.json({ message: 'You have left this committee. Nothing is owed.', ...result });
   } catch (error) { next(error); }
 });
 

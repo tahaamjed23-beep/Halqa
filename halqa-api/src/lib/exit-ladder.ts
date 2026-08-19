@@ -75,6 +75,55 @@ export const VOTE = {
 /** The 24h confirmation window between FORMING and ACTIVE. */
 export const CONFIRMATION_WINDOW_HOURS = 24;
 
+const WINDOW_MS = CONFIRMATION_WINDOW_HOURS * 3_600_000;
+
+export type WindowState = {
+  /** The instant the window closes and the circle activates. */
+  closesAt: Date;
+  /** Milliseconds left; zero once the window has closed. */
+  msRemaining: number;
+  /** True while members may still walk away for free. */
+  open: boolean;
+  /** True when the window has run its course and the circle should activate. */
+  expired: boolean;
+};
+
+/**
+ * The window runs from the moment the host pressed Start, NOT from each
+ * member's join. Everyone reconsiders together and sees the same countdown,
+ * which is the point: a member deciding alone at 3am is the situation this
+ * state exists to prevent.
+ */
+export function windowState(confirmingSince: Date | null | undefined, now: Date = new Date()): WindowState | null {
+  if (!confirmingSince) return null;
+  const closesAt = new Date(confirmingSince.getTime() + WINDOW_MS);
+  const msRemaining = Math.max(0, closesAt.getTime() - now.getTime());
+  return { closesAt, msRemaining, open: msRemaining > 0, expired: msRemaining === 0 };
+}
+
+/**
+ * What a withdrawal during the window does to the circle.
+ *
+ * Below the minimum the circle cannot simply carry on with fewer people than
+ * its members agreed to: it drops back to FORMING so the host can recruit
+ * again, and everyone still inside is released from the countdown.
+ */
+export function withdrawalOutcome(remainingActive: number, minMembersToStart: number):
+  { status: 'CONFIRMING' | 'FORMING'; reopened: boolean } {
+  return remainingActive < minMembersToStart
+    ? { status: 'FORMING', reopened: true }
+    : { status: 'CONFIRMING', reopened: false };
+}
+
+/**
+ * What a member is committing to over the whole cycle, in paisa. Shown during
+ * the window because "twelve payments of Rs 10,000" is the number people
+ * actually need, and it is the one number the old flow never showed them.
+ */
+export function forwardObligationPaisa(contributionPaisa: bigint, rounds: number): bigint {
+  return contributionPaisa * BigInt(Math.max(0, rounds));
+}
+
 export type ExitEligibilityInput = {
   /** True while the circle is inside its 24h confirmation window. */
   inConfirmationWindow: boolean;

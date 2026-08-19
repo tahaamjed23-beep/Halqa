@@ -20,6 +20,10 @@ enum KycStatus {
 }
 enum CommitteeStatus {
   FORMING
+  // The 24-hour confirmation window. The roster is locked to new joiners and
+  // every member can still walk away free, with no fine, no score effect and
+  // no record. Nothing is owed here, which is exactly why it is safe to leave.
+  CONFIRMING
   ACTIVE
   COMPLETED
   CANCELLED
@@ -54,6 +58,9 @@ enum MemberStatus {
   EXITED
   BANNED
   REMOVED
+  // Left during the 24-hour window. Deliberately distinct from EXITED: no fine,
+  // no score event, and it must never be read as a default anywhere.
+  WITHDRAWN
 }
 enum RoundStatus {
   PENDING
@@ -306,6 +313,9 @@ model Committee {
   joinPolicy JoinPolicy @default(OPEN_UNTIL_FULL)
   joinDeadline DateTime?
   minMembersToStart Int
+  // Set when the host presses Start. The window closes 24 hours later and the
+  // circle activates. Null at every other point in the lifecycle.
+  confirmingSince DateTime?
   autoStart Boolean @default(false)
   currentRound Int @default(0)
   cycleNumber Int @default(1)

@@ -79,3 +79,23 @@ button,a.invite-act,.settings-row,.method-row,.vault-tier,.mode-option{min-heigh
 /* safe area for notched devices, so the nav is never under the home bar */
 .tabbar,.bottom-nav,.nav{padding-bottom:env(safe-area-inset-bottom)}
 .content{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+
+/* ---------- the 24-hour confirmation window ---------- */
+.confirming{border:1.6px solid var(--l300);background:var(--l50)}
+.confirming-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.confirming-head>svg{width:26px;height:26px;color:var(--l600);flex:none}
+.confirming-head b{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted)}
+.confirming-clock{display:block;font-size:27px;font-weight:740;letter-spacing:-.03em;
+  color:var(--l700);font-variant-numeric:tabular-nums}
+.confirming-lead{font-size:13px;line-height:1.55;color:var(--ink-2);margin-bottom:12px}
+.confirming .detail-grid>div{background:rgba(255,255,255,.72)}
+.confirming-obligation{font-size:12.5px;line-height:1.6;color:var(--ink-2);
+  background:rgba(255,255,255,.72);border-radius:var(--r-sm);padding:11px 12px;margin:11px 0}
+.confirming-obligation b{font-weight:700}
+.confirming-hostnote{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:10px}
+.confirming-confirm{margin-top:11px;background:rgba(255,255,255,.8);border-radius:var(--r-sm);padding:13px}
+.confirming-confirm p{font-size:12.5px;line-height:1.5;margin-bottom:10px}
+.confirming-confirm .form-actions{margin-top:0}
+.confirming-confirm .form-actions>*{flex:1}
+.circle-status.status-confirming{background:var(--l50);color:var(--l700)}
