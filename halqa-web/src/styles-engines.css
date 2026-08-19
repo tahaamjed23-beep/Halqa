@@ -183,3 +183,25 @@
 .asset-early b{display:block;font-size:13px;font-weight:660;margin-bottom:3px}
 .asset-early span{display:block;font-size:12px;line-height:1.55;color:var(--muted)}
 .asset-foot{font-size:11.5px;line-height:1.55;color:var(--muted);margin-top:11px;text-align:center}
+
+/* ---------- affordability ---------- */
+.afford-bar{height:10px;border-radius:5px;background:var(--line);overflow:hidden;margin-bottom:6px}
+.afford-bar i{display:block;height:100%;border-radius:5px;background:var(--l500)}
+.afford-legend{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);
+  margin-bottom:12px}
+.afford-note{font-size:12.5px;line-height:1.6;color:var(--ink-2);margin-top:11px}
+.afford-fine{font-size:11.5px;line-height:1.55;color:var(--muted);margin-top:9px}
+
+/* ---------- collection calendar ---------- */
+.cal-steps{display:flex;flex-direction:column;position:relative}
+.cal-step{display:flex;gap:12px;padding:11px 0;position:relative}
+.cal-step:not(:last-child)::before{content:'';position:absolute;left:5px;top:26px;bottom:-11px;
+  width:2px;background:var(--line)}
+.cal-step>i{width:12px;height:12px;border-radius:50%;background:var(--line);border:2px solid var(--surface);
+  box-shadow:0 0 0 2px var(--line);flex:none;margin-top:4px;z-index:1}
+.cal-step.now>i{background:var(--l500);box-shadow:0 0 0 2px var(--l200)}
+.cal-step.warn>i{background:var(--warn);box-shadow:0 0 0 2px var(--warn-bg)}
+.cal-step.bad>i{background:var(--bad);box-shadow:0 0 0 2px var(--bad-bg)}
+.cal-step b{display:block;font-size:13px;font-weight:640}
+.cal-step span{display:block;font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:2px}
+.cal-note{font-size:12px;line-height:1.55;color:var(--muted);margin-top:11px}
