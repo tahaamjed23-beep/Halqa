@@ -4,14 +4,15 @@ import { money, percent } from '../lib/format';
 // ---------------------------------------------------------------------------
 // What a member can carry, shown as headroom rather than as a refusal.
 //
-// Mirrors halqa-api/src/lib/affordability.ts. Halqa is stricter than the
-// regulator here: SBP caps consumer debt service at 40% of income, and
-// committees are held to 33% on their own, because a committee instalment
-// outranks rent and the loss lands on eleven neighbours rather than a bank.
+// Mirrors halqa-api/src/lib/affordability.ts.
 //
-// The rule that matters most: good history never raises the money cap. It
-// unlocks seats and lowers friction. Only new income evidence raises the cap,
-// because escalating limits are what cause liquidity defaults.
+// The point of a committee is that a large sum becomes affordable by spreading
+// it: a member on Rs 30,000 a month can collect a Rs 30,000 pot, because across
+// twelve members that is Rs 2,500 a month. The pot size is never the test. So
+// this screen leads with what a member could collect, not with a limit.
+//
+// Strictness is aimed where members actually get into trouble: holding four or
+// five committees at once, not one they can plainly pay for.
 // ---------------------------------------------------------------------------
 
 export function Affordability({ monthlyIncomeP, committedMonthlyP, activeCircles, verified }:
@@ -19,8 +20,12 @@ export function Affordability({ monthlyIncomeP, committedMonthlyP, activeCircles
   const cap = monthlyIncomeP * 0.33;
   const used = Math.min(cap, committedMonthlyP);
   const headroom = Math.max(0, cap - committedMonthlyP);
-  const concurrent = verified ? 4 : 1;
+  const concurrent = verified ? 6 : 1;
   const left = Math.max(0, concurrent - activeCircles);
+  // What the headroom buys at a few common lengths. This is the number that
+  // makes the point, and it is the one members were never shown.
+  const pots = [6, 12, 24].map(months => ({ months, pot: headroom * months }));
+  const watched = activeCircles >= 3;
 
   if (monthlyIncomeP <= 0) {
     return (
@@ -52,6 +57,17 @@ export function Affordability({ monthlyIncomeP, committedMonthlyP, activeCircles
         <div><span>Of your income</span><b>{percent((committedMonthlyP / monthlyIncomeP) * 100)}</b></div>
       </div>
 
+      {headroom > 0 && (
+        <div className="afford-pots">
+          <span className="afford-pots-lead">Spread over more months, that same room collects:</span>
+          <div className="detail-grid">
+            {pots.map(p => (
+              <div key={p.months}><span>{p.months} months</span><b>{money(p.pot)}</b></div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <p className="afford-note">
         {headroom > 0 && left > 0
           ? `You can take ${left === 1 ? 'one more committee' : `${left} more committees`} up to ${money(headroom)} a month.`
@@ -65,9 +81,16 @@ export function Affordability({ monthlyIncomeP, committedMonthlyP, activeCircles
           charges you by up to 80 per cent.
         </p>
       )}
+      {watched && (
+        <p className="afford-note">
+          You are running {activeCircles} committees. From the fourth, Halqa also looks at how
+          healthy each circle is and how much you are carrying at once, not just this month's cost.
+        </p>
+      )}
       <p className="afford-fine">
-        Halqa keeps committees under a third of your income. A good record opens up earlier turns
-        and more committees, but never a bigger amount: only new proof of income does that.
+        Halqa keeps committees under a third of your income, and looks no further than that until
+        your fourth. A good record opens up earlier turns and more committees, but never a bigger
+        amount: only new proof of income does that.
       </p>
     </section>
   );
