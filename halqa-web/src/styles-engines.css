@@ -205,3 +205,20 @@
 .cal-step b{display:block;font-size:13px;font-weight:640}
 .cal-step span{display:block;font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:2px}
 .cal-note{font-size:12px;line-height:1.55;color:var(--muted);margin-top:11px}
+
+/* ---------- seat eligibility ---------- */
+.seat-map{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.seat-dot{width:30px;height:30px;border-radius:var(--r-sm);display:grid;place-items:center;
+  font-size:11.5px;font-weight:660;background:var(--line-2);color:var(--faint)}
+.seat-dot.open{background:var(--l50);color:var(--l700)}
+.seat-dot.first{background:var(--l500);color:#fff}
+.seat-line{font-size:13px;line-height:1.6;color:var(--ink-2);margin-bottom:12px}
+.seat-gates{display:flex;flex-direction:column;gap:8px}
+.seat-gate{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border-radius:var(--r-sm);
+  background:var(--warn-bg)}
+.seat-gate.ok{background:var(--ok-bg)}
+.seat-gate>i{width:9px;height:9px;border-radius:50%;background:var(--warn);margin-top:5px;flex:none}
+.seat-gate.ok>i{background:var(--ok)}
+.seat-gate b{display:block;font-size:13px;font-weight:640}
+.seat-gate span{display:block;font-size:11.5px;color:var(--muted);line-height:1.55;margin-top:2px}
+.seat-fine{font-size:11.5px;line-height:1.55;color:var(--muted);margin-top:11px}
