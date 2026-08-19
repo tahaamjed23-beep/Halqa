@@ -1,3 +1,4 @@
+import { RailLogo } from '../components/RailLogo';
 import { useState } from 'react';
 import { ChevronLeft, ShieldCheck } from 'lucide-react';
 import { api, tokens } from '../api';
@@ -137,7 +138,7 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
         :<button type="button" className="secondary" style={{marginTop:10,display:'inline-flex',alignItems:'center',gap:8}} onClick={()=>setScanning(true)}>📷 Scan my CNIC with the camera</button>}
       <div className="onboard-note"><b>Identity check</b><span>Your CNIC is recorded now and verified against NADRA when live verification activates. It is never shown to other members.</span></div></>;
     case 'account':return <><h2>Link your collection account</h2><p>Every circle collects automatically from this account on each due date, that's how Halqa keeps circles safe. A one-time code confirms the link and you get a WhatsApp receipt for every collection. Change it any time in Profile.</p>
-      <div className="rail-grid" style={{marginBottom:12}}>{Object.keys(RAIL_META).map(id=><button type="button" key={id} className={`rail-chip ${form.rail===id?'on':''}`} onClick={()=>setForm({...form,rail:id})}><i className="chip-logo" style={{background:RAIL_META[id].color}}>{RAIL_META[id].mono}</i>{RAIL_META[id].name}</button>)}</div>
+      <div className="rail-grid" style={{marginBottom:12}}>{Object.keys(RAIL_META).map(id=><button type="button" key={id} className={`rail-chip ${form.rail===id?'on':''}`} onClick={()=>setForm({...form,rail:id})}><RailLogo rail={id} size={30} />{RAIL_META[id].name}</button>)}</div>
       {form.rail==='BANK_TRANSFER'&&<><label className="onboard-field-label">Your bank</label>
         <div className="bank-grid" style={{marginBottom:12}}>{PK_BANKS.map(b=><button type="button" key={b.name} className={`bank-tile ${form.bankName===b.name?'on':''}`} onClick={()=>setForm({...form,bankName:b.name})}><i style={{background:`linear-gradient(135deg, ${b.color}, ${b.dark})`}}>{b.mono}</i><span>{b.name}</span></button>)}</div></>}
       <label className="onboard-field-label">Account holder name</label>

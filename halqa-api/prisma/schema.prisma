@@ -316,6 +316,9 @@ model Committee {
   // Set when the host presses Start. The window closes 24 hours later and the
   // circle activates. Null at every other point in the lifecycle.
   confirmingSince DateTime?
+  // Group picture, the way a WhatsApp group has one. A data URI or a hosted
+  // URL; the same 300KB ceiling the member avatar uses.
+  avatarUrl String?
   autoStart Boolean @default(false)
   currentRound Int @default(0)
   cycleNumber Int @default(1)

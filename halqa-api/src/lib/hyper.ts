@@ -1,9 +1,10 @@
 // ============================================================================
 // HYPER COMMITTEES
 //
-// Daily contributions over a 30-day cycle. Seven members collect each day, so
-// the roster is 210. Every member pays Rs 500 a day and collects Rs 15,000
-// once, which balances exactly: 210 x 15,000 in, 210 x 15,000 out.
+// Daily contributions over a 60-day cycle. Seven members collect each day, so
+// the roster is 420. Every member pays Rs 500 a day for 60 days and collects
+// that same Rs 30,000 once, which balances exactly at both the member and the
+// circle level.
 //
 // Members buy their collection day at an opening auction. The earlier the day,
 // the larger the advance, so the earlier days carry a premium and the last days
@@ -18,19 +19,19 @@
 // the member's all-in cost reaches 48% APR-equivalent. Above that the bid is
 // refused outright rather than merely discouraged.
 //
-// The cap is not decoration. At day 1 it works out to about Rs 276 on a
-// Rs 15,000 pot, and it falls to a few rupees by the final week, which is the
-// economically correct shape: a late day is worth nothing to bid for.
+// The cap is not decoration: it falls from a meaningful figure on day 1 to a
+// few rupees by the final week, which is the economically correct shape,
+// because a late day is worth nothing to bid for.
 // ============================================================================
 
 export const HYPER = {
   /** Cycle length in days. One cohort collects per day. */
-  DAYS: 30,
+  DAYS: 60,
   /** Daily contribution, in paisa. Rs 500. */
   DAILY_PAISA: 50_000n,
-  /** What one member collects on their day, in paisa. Rs 15,000. */
-  POT_PAISA: 1_500_000n,
-  /** Members collecting per day. 7 x 30 = a 210-member roster. */
+  /** What one member collects on their day. Equals what they pay in. */
+  POT_PAISA: 3_000_000n,
+  /** Members collecting per day. 7 x 60 = a 420-member roster. */
   SEATS_PER_DAY: 7,
   /** Entry gates. */
   MIN_SCORE: 650,
@@ -54,7 +55,7 @@ export const HYPER = {
   AUCTION_HOURS: 24,
 } as const;
 
-/** 7 a day across 30 days. */
+/** 7 a day across the whole cycle. */
 export const rosterSize = () => HYPER.SEATS_PER_DAY * HYPER.DAYS;
 
 /** What a member pays in across the whole cycle. Equals the pot, by design. */
@@ -75,7 +76,7 @@ export const isBalanced = () => totalContributionPaisa() === HYPER.POT_PAISA;
  * Net cash advanced to a member who collects on day d.
  *
  * By day d they have paid d daily installments, so collecting the pot advances
- * them the difference. Day 30 advances nothing: they have already paid it all.
+ * them the difference. The last day advances nothing: it is already paid.
  */
 export function advancePaisa(day: number): bigint {
   const d = Math.max(1, Math.min(HYPER.DAYS, Math.trunc(day)));
@@ -162,7 +163,7 @@ export function assessEntry(e: HyperEntry): EntryVerdict {
   if (!e.hasDailyEarningJob && e.vaultBalancePaisa < HYPER.MIN_VAULT_PAISA) {
     reasons.push('Either daily earnings or a minimum vault balance is required');
   }
-  // Daily cadence multiplies collection events by thirty. On wallet rails at
+  // Daily cadence multiplies collection events by sixty. On wallet rails at
   // 1.5% the fees alone would consume a large share of a single pot.
   if (!e.hasVerifiedRaast) reasons.push('A verified Raast credential is required');
   if (e.activeHyperCircles >= HYPER.MAX_CONCURRENT) reasons.push('Only one HYPER committee at a time');

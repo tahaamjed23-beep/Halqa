@@ -224,3 +224,91 @@
 .seat-fine{font-size:11.5px;line-height:1.55;color:var(--muted);margin-top:11px}
 .afford-pots{margin:12px 0}
 .afford-pots-lead{display:block;font-size:11.5px;color:var(--muted);margin-bottom:8px}
+
+/* ---------- payment rail marks ---------- */
+.rail-mark{display:inline-grid;place-items:center;border-radius:10px;flex:none;overflow:hidden}
+.rail-mark-plain{display:inline-grid;place-items:center;flex:none}
+.rail-chip{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1.5px solid var(--line);
+  border-radius:var(--r-sm);background:var(--surface);font-size:12.5px;font-weight:620;text-align:left}
+.rail-chip.on{border-color:var(--l500);background:var(--l50)}
+.rail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.acct-card-logo{display:inline-flex;align-items:center}
+
+/* ---------- receipt, laid out like a wallet slip ---------- */
+.rcpt-wrap{position:fixed;inset:0;z-index:95;background:rgba(12,20,8,.62);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;padding:20px}
+.rcpt-stage{width:100%;max-width:360px;position:relative;display:flex;flex-direction:column;
+  align-items:center;max-height:92dvh;overflow-y:auto}
+.rcpt-close{position:absolute;top:0;right:0;width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.16);color:#fff;display:grid;place-items:center;z-index:2}
+.rcpt-tick{width:62px;height:62px;border-radius:50%;background:var(--ok);color:#fff;display:grid;
+  place-items:center;margin-bottom:-31px;z-index:1;box-shadow:0 6px 18px rgba(0,0,0,.28)}
+.rcpt-tick svg{width:32px;height:32px;stroke-width:3}
+.rcpt-tick.pending{background:var(--warn)}
+/* the torn-paper slip: notched top and bottom, like a printed receipt */
+.rcpt-slip{width:100%;background:#fff;padding:44px 20px 18px;
+  -webkit-mask:radial-gradient(6px at 6px 50%,#0000 98%,#000) -6px 0/100% 100%;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 8px),96% 100%,92% calc(100% - 8px),88% 100%,
+    84% calc(100% - 8px),80% 100%,76% calc(100% - 8px),72% 100%,68% calc(100% - 8px),64% 100%,
+    60% calc(100% - 8px),56% 100%,52% calc(100% - 8px),48% 100%,44% calc(100% - 8px),40% 100%,
+    36% calc(100% - 8px),32% 100%,28% calc(100% - 8px),24% 100%,20% calc(100% - 8px),16% 100%,
+    12% calc(100% - 8px),8% 100%,4% calc(100% - 8px),0 100%)}
+.rcpt-slip-head{text-align:center;margin-bottom:14px}
+.rcpt-slip-head b{display:block;font-size:16px;font-weight:720;color:var(--ink)}
+.rcpt-slip-head span{display:block;font-size:10.5px;color:var(--muted);margin-top:3px;
+  font-variant-numeric:tabular-nums}
+.rcpt-amount{text-align:center;font-size:30px;font-weight:760;letter-spacing:-.035em;
+  color:var(--ink);font-variant-numeric:tabular-nums;margin-bottom:16px}
+.rcpt-rows{display:flex;flex-direction:column;border-top:1px dashed var(--line);padding-top:6px}
+.rcpt-rows>div{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;
+  border-bottom:1px solid var(--line-2);font-size:12.5px}
+.rcpt-rows>div:last-child{border-bottom:none}
+.rcpt-rows span{color:var(--muted)}
+.rcpt-rows b{color:var(--ink);font-weight:660;text-align:right;font-variant-numeric:tabular-nums}
+.rcpt-rail{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;
+  padding-top:12px;border-top:1px dashed var(--line);font-size:11.5px;color:var(--muted)}
+.rcpt-rail b{color:var(--ink);font-weight:660}
+.rcpt-acts{display:flex;gap:9px;margin-top:16px;width:100%}
+.rcpt-acts button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;height:44px;
+  border-radius:var(--r-full);background:rgba(255,255,255,.15);color:#fff;font-size:13px;font-weight:640}
+.rcpt-acts svg{width:16px;height:16px}
+.rcpt-note{font-size:11px;color:rgba(255,255,255,.75);text-align:center;margin-top:12px;line-height:1.5}
+
+/* ---------- host record: corrected layout ----------
+   The card stacks a header row, trust lines, a stat grid and one banner. The
+   earlier rule made them flex SIBLINGS, which jumbled the whole thing into a
+   column of floating fragments and pushed the warning across the stats. Loaded
+   last, so this is what wins. */
+.host-card{display:block;background:var(--surface);border:1px solid var(--line-2);
+  border-radius:var(--r);padding:14px;box-shadow:var(--sh-1);margin-top:11px}
+.host-card>header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  margin-bottom:8px}
+.host-card>header>div{flex:1;min-width:0}
+.host-card>header b{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:680}
+.host-card>header b svg{width:15px;height:15px;color:#E6B93A}
+.host-card>header span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.host-card>header strong{font-size:18px;font-weight:740;flex:none;font-variant-numeric:tabular-nums}
+.host-card-trust{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:10px}
+.host-card-trust span{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted)}
+.host-card-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(108px,1fr));gap:8px;
+  margin-top:0}
+.host-card-stats>div{background:var(--line-2);border-radius:var(--r-sm);padding:9px 10px}
+.host-card-stats span{display:block;font-size:10.5px;color:var(--muted);line-height:1.3;margin-bottom:2px}
+.host-card-stats b{display:block;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+/* One banner across the foot. It carries a sentence, so it must never be
+   uppercased or squeezed onto a pill. */
+.host-card-flag,.host-card-clean{display:flex;align-items:flex-start;gap:9px;margin-top:11px;
+  padding:10px 12px;border-radius:var(--r-sm);font-size:11.5px;line-height:1.5;font-weight:500;
+  letter-spacing:normal;text-transform:none;background:var(--warn-bg);color:#7A4B00}
+.host-card-clean{background:var(--ok-bg);color:#0F7A3E}
+.host-card-flag svg,.host-card-clean svg{width:16px;height:16px;flex:none;margin-top:1px}
+
+/* ---------- committee group picture ---------- */
+.cmt-avatar{position:relative;width:44px;height:44px;border-radius:14px;flex:none;overflow:hidden;
+  background:rgba(255,255,255,.2);display:grid;place-items:center;color:#fff;font-weight:700;
+  font-size:15px;border:1.5px solid rgba(255,255,255,.45)}
+.cmt-avatar img{width:100%;height:100%;object-fit:cover}
+.cmt-avatar-btn{position:absolute;right:-2px;bottom:-2px;width:20px;height:20px;min-height:20px;
+  border-radius:50%;background:var(--surface);color:var(--ink-2);display:grid;place-items:center;
+  box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.cmt-avatar-btn svg{width:11px;height:11px}

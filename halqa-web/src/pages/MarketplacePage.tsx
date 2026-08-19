@@ -47,8 +47,8 @@ export default function MarketplacePage({ user, back }: { user: User; back?: () 
       <div className="market-rules">
         <ShieldCheck />
         <div>
-          <b>Protected exchange</b>
-          <p>Active members bid to swap future payout positions. Membership and contribution duties remain unchanged.</p>
+          
+          
         </div>
       </div>
 

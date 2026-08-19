@@ -4,8 +4,8 @@ import type { User } from '../types';
 import { money, percent } from '../lib/format';
 
 // ---------------------------------------------------------------------------
-// HYPER: 30 days, Rs 500 a day, a Rs 15,000 pot, seven members collecting each
-// day, so 210 in the circle. What a member pays in over the cycle is exactly
+// HYPER: 60 days, Rs 500 a day, seven members collecting each day, so 420 in
+// the circle. What a member pays in over the cycle is exactly
 // what they collect, which is what makes it a committee and not a scheme.
 //
 // Members buy their collection day at a 24-hour opening auction. An early day
@@ -19,9 +19,9 @@ import { money, percent } from '../lib/format';
 // is a few rupees. Mirrors halqa-api/src/lib/hyper.ts, which enforces it.
 // ---------------------------------------------------------------------------
 
-const DAYS = 30;
+const DAYS = 60;
 const DAILY_PAISA = 50_000;      // Rs 500
-const POT_PAISA = 1_500_000;     // Rs 15,000
+const POT_PAISA = DAILY_PAISA * DAYS;   // what you pay in is what you collect
 const SEATS_PER_DAY = 7;
 const ROSTER = SEATS_PER_DAY * DAYS;
 const MIN_SCORE = 650;
@@ -78,12 +78,12 @@ export default function HyperPage({ user, back }: { user: User; back: () => void
         <div>
           <span className="eyebrow">Daily committee</span>
           <h1>HYPER</h1>
-          <p>Rs 500 a day for 30 days. You collect Rs 15,000 on the day you win.</p>
+          <p>Rs 500 a day for 60 days. You collect the pot on the day you win.</p>
         </div>
       </div>
 
       <section className="panel hyper-hero">
-        <div className="hyper-hero-top"><Flame /><span>30 days · {ROSTER} members · {SEATS_PER_DAY} collect a day</span></div>
+        <div className="hyper-hero-top"><Flame /><span>60 days · {ROSTER} members · {SEATS_PER_DAY} collect a day</span></div>
         <b className="hyper-hero-pot">{money(POT_PAISA)}</b>
         <div className="detail-grid">
           <div><span>You pay daily</span><b>{money(DAILY_PAISA)}</b></div>
@@ -91,7 +91,7 @@ export default function HyperPage({ user, back }: { user: User; back: () => void
           <div><span>You collect</span><b>{money(POT_PAISA)}</b></div>
         </div>
         <p className="hyper-note">
-          What you pay in over the 30 days is exactly what you collect. The only thing that
+          What you pay in over the 60 days is exactly what you collect. The only thing that
           changes is when you get it.
         </p>
       </section>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowDownLeft, ArrowUpRight, Bell, CalendarClock, CheckCircle2, ChevronRight, CreditCard, Eye, EyeOff, Flame, Gauge, Gift, Landmark, Receipt, Users, Wallet, Zap } from 'lucide-react';
+import {ArrowDownLeft, ArrowUpRight, Bell, CalendarClock, CheckCircle2, ChevronRight, CreditCard, Eye, EyeOff, Flame, Gauge, Gift, Landmark, Package, Receipt, Repeat, Users, Wallet, Zap} from 'lucide-react';
 import { api, money } from '../api';
 import type { Committee, Summary, User } from '../types';
 import { formatDuration } from '../components/ui';
@@ -70,6 +70,8 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
       <Action icon={<Flame/>} label="HYPER" onClick={()=>go('hyper')}/>
       <Action icon={<Landmark/>} label="Auto debit" onClick={()=>go('cards')}/>
       <Action icon={<CreditCard/>} label="Cards" onClick={()=>go('cards')}/>
+      <Action icon={<Repeat/>} label="Buy a turn" onClick={()=>go('market')}/>
+      <Action icon={<Package/>} label="Save for a thing" onClick={()=>go('asset')}/>
       <Action icon={<Receipt/>} label="Receipts" onClick={()=>go('activity')}/>
       <Action icon={<Gauge/>} label="Credit score" tone="blue" onClick={()=>go('credit')}/>
       <Action icon={<Gift/>} label="Rewards" tone="amber" onClick={()=>go('rewards')}/>

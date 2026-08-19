@@ -53,20 +53,20 @@ export default function VaultPage(){
   },[seedRs,monthly,horizonY,preview]);
   const saveAllocation=()=>call(()=>api('/vault/allocation',{method:'POST',body:JSON.stringify({allocation:shares,...(shares.CRYPTO>0?{acknowledgeExtremeRisk:true}:{})})}));
 
-  if(!vault)return <div className="page enter"><div className="page-head"><div><span className="eyebrow">Personal savings · recorded</span><h1>Your vault</h1><p>Loading…</p></div></div></div>;
+  if(!vault)return <div className="page enter"><div className="page-head"><div><h1>Your vault</h1><p>Loading…</p></div></div></div>;
   const sections=[['overview','Overview',<Landmark key="a"/>],['sizing','Portion sizing',<SlidersHorizontal key="b"/>],['growth','Projected growth',<LineChart key="c"/>],['risk','Risk model',<Scale key="d"/>],['map','Money map',<Map key="e"/>]] as const;
   return <div className="page enter">
-    <div className="page-head"><div><span className="eyebrow">Personal savings · recorded</span><h1>Your vault</h1><p>Park payouts, size your mix across four sleeves, project it forward, and see exactly where every rupee is recorded to sit. Profit is indicative, never guaranteed; principal is yours at any time.</p></div></div>
+    <div className="page-head"><div><h1>Your vault</h1><p>Payouts can park here and earn until you take them out. Your principal is available any time.</p></div></div>
     <div className="segmented" style={{marginBottom:6}}>{sections.map(([id,label,icon])=><button key={id} onClick={()=>document.getElementById(`vault-${id}`)?.scrollIntoView({behavior:'smooth',block:'start'})}><span style={{display:'inline-flex',alignItems:'center',gap:5,verticalAlign:'middle'}}>{icon}{label}</span></button>)}</div>
 
-    <section className="panel" id="vault-overview"><div className="panel-head"><div><span className="eyebrow">Overview</span><h2>Position</h2></div><PiggyBank/></div>
+    <section className="panel" id="vault-overview"><div className="panel-head"><div><h2>Your balance</h2></div><PiggyBank/></div>
       <div className="info-stack">
         <div><span>Recorded balance</span><b>{money(vault.balancePaisa)}</b></div>
         <div><span>Accrued profit (indicative)</span><b className="profit">{money(vault.accruedProfitPaisa)}</b></div>
         <div><span>Blended yield</span><b>{vault.blendedRatePct.toFixed(2)}% / yr</b></div>
         <div><span>Blended risk</span><b>{vault.blendedRiskScore.toFixed(1)}/10 · {riskWord(vault.blendedRiskScore)}</b></div>
       </div>
-      <div className="market-rules"><ShieldCheck/><div><b>Your vault is also your safety net</b><p>With auto-cover on, a committee installment you miss is settled automatically from this balance, the late note and score effect still apply, but the miss never escalates toward default.</p></div></div>
+      <div className="market-rules"><ShieldCheck/><div><b>Covers a missed installment</b><p>If you miss an installment, it is paid from this balance so it never becomes a default.</p></div></div>
       <div className="policy-toggles compact">
         <label><input type="checkbox" checked={vault.enabled} disabled={busy} onChange={()=>call(()=>api('/vault/toggle',{method:'POST',body:JSON.stringify({enabled:!vault.enabled})}))}/><span><b>Payout parking</b><small>New committee payouts land here instead of releasing directly.</small></span></label>
         <label><input type="checkbox" checked={vault.autoCover} disabled={busy} onChange={()=>call(()=>api('/vault/auto-cover',{method:'POST',body:JSON.stringify({enabled:!vault.autoCover})}))}/><span><b>Auto-cover missed installments</b><small>If an installment slips and the vault holds enough, it is settled from here automatically.</small></span></label>
@@ -80,7 +80,7 @@ export default function VaultPage(){
       {error&&<div className="vault-callout warn">{error}</div>}
     </section>
 
-    <section className="panel" id="vault-sizing"><div className="panel-head"><div><span className="eyebrow">Portion sizing</span><h2>Size your mix</h2><p>Split the vault across the sleeves. The blend must total 100%; your balance accrues at the weighted rate of the mix.</p></div><SlidersHorizontal/></div>
+    <section className="panel" id="vault-sizing"><div className="panel-head"><div><h2>Where it sits</h2><p>Must total 100%.</p></div><SlidersHorizontal/></div>
       {details.map(d=><div key={d.tier} className="allocation-box" style={{marginBottom:8}}>
         <div className="allocation-head"><div><span className="eyebrow">{TIER_LABEL[d.tier]} {d.shariahCompliant?<i className="rafa-halal">halal</i>:<i className="rafa-conv">high risk · not Shariah</i>}</span><h3>{shares[d.tier]??0}% <small style={{fontWeight:400,opacity:0.7}}>· {d.ratePct}%/yr indicative · risk {d.riskScore}/10</small></h3></div></div>
         <input className="allocation-slider" type="range" min="0" max="100" step="5" value={shares[d.tier]??0} onChange={e=>setShares({...shares,[d.tier]:+e.target.value})}/>
@@ -94,7 +94,7 @@ export default function VaultPage(){
       <div className="form-actions"><button disabled={busy||sum!==100||(shares.CRYPTO>0&&!ackHighRisk)} onClick={saveAllocation}>Save allocation</button></div>
     </section>
 
-    <section className="panel" id="vault-growth"><div className="panel-head"><div><span className="eyebrow">Projected growth</span><h2>Estimated growth of your mix</h2><p>{balanceRs>0?`Starting from your recorded ${money(vault.balancePaisa)}`:'Illustration from a Rs 10,000 starting amount (your balance is empty)'}, compounding monthly at the blend above. Three paths: conservative, expected, optimistic. Estimates only, actual profit follows the dated rates and real timing.</p></div><LineChart/></div>
+    <section className="panel" id="vault-growth"><div className="panel-head"><div><h2>Projected growth</h2><p>Estimates only, at the rates shown.</p></div><LineChart/></div>
       <div className="form-grid">
         <Field label="Horizon"><select className="field" value={horizonY} onChange={e=>setHorizonY(+e.target.value)}><option value="1">1 year</option><option value="3">3 years</option><option value="5">5 years</option></select></Field>
         <Field label="Monthly top-up (PKR, optional)"><input className="field" type="number" min="0" step="500" value={monthly} onChange={e=>setMonthly(Math.max(0,+e.target.value))}/></Field>
@@ -117,7 +117,7 @@ export default function VaultPage(){
       </div>
     </section>
 
-    <section className="panel" id="vault-risk"><div className="panel-head"><div><span className="eyebrow">Risk model</span><h2>What can go wrong, sleeve by sleeve</h2><p>Risk scores and volatility come from each sleeve's dated scheme record. The conservative path in the chart above uses these same assumptions.</p></div><Scale/></div>
+    <section className="panel" id="vault-risk"><div className="panel-head"><div><h2>What can go wrong</h2></div><Scale/></div>
       {details.map(d=><div key={d.tier} className="allocation-box" style={{marginBottom:8}}>
         <div className="allocation-head"><div><span className="eyebrow">{TIER_LABEL[d.tier]}</span><h3>{riskWord(d.riskScore)} risk <small style={{fontWeight:400,opacity:0.7}}>· {d.riskScore}/10 · swings around ±{(d.volatilityBps/100).toFixed(1)}%/yr {d.tier==='CRYPTO'?'or far more':''} · exit in ~{d.liquidityDays} day{d.liquidityDays===1?'':'s'}</small></h3></div></div>
         <div style={{height:8,borderRadius:4,background:'#e7efe9',overflow:'hidden'}}><div style={{width:`${d.riskScore*10}%`,height:'100%',background:d.riskScore<=3?'#1c6349':d.riskScore<=6?'#8a5a00':'#a03030'}}/></div>
@@ -126,7 +126,7 @@ export default function VaultPage(){
       <div className="market-rules"><ShieldCheck/><div><b>Your blended position: {vault.blendedRiskScore.toFixed(1)}/10 ({riskWord(vault.blendedRiskScore)})</b><p>Committees never touch the crypto sleeve regardless of your mix, it exists only inside this personal vault. On sweep, {vault.mudaribFeePct}% of the accrued profit (never principal) is the platform's Mudarib share on the halal sleeves.</p></div></div>
     </section>
 
-    <section className="panel" id="vault-map"><div className="panel-head"><div><span className="eyebrow">Money map</span><h2>Exactly where the money sits</h2><p>Straight answer, stage by stage. Today Halqa is a record-only prototype: it does not hold or invest real money. Your balance is a recorded position, and profit is computed at the dated rates below.</p></div><Map/></div>
+    <section className="panel" id="vault-map"><div className="panel-head"><div><h2>Where the money really is</h2><p>Halqa records your balance. It does not hold or invest it.</p></div><Map/></div>
       <div className="table-scroll"><table className="mini-table"><thead><tr><th>Sleeve</th><th>Your share</th><th>Instrument</th><th>Issuer</th><th>Rate (dated)</th><th>Where it sits today</th></tr></thead><tbody>
         {details.map(d=><tr key={d.tier}><td><b>{TIER_LABEL[d.tier]}</b></td><td>{d.sharePct}%</td><td>{d.name}</td><td>{d.issuer||''}</td><td>{d.ratePct}%/yr{d.rateAsOf?` · as of ${date(d.rateAsOf)}`:''}</td><td>{d.sharePct>0?'Recorded entry in the Halqa ledger; no real money moved':''}</td></tr>)}
       </tbody></table></div>

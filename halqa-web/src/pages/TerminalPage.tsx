@@ -62,7 +62,7 @@ export default function TerminalPage({ back }: { back?: () => void }) {
   const expected = useMemo(() => profitProjection(invested, scheme?.indicativeRatePct || 0, months * 30.4375), [invested, scheme, months]);
   return <div className="page enter">
     {back&&<button className="back-link" onClick={back}><ChevronLeft/>Account</button>}
-    <div className="page-head terminal-head"><div><span className="eyebrow">Investments · where your profit comes from</span><h1>Growth laboratory</h1><p>Two separate worlds: how Halqa grows your money automatically, and the market schemes you can optionally invest a slice of the pool into.</p></div></div>
+    <div className="page-head terminal-head"><div><h1>Schemes</h1><p>Where idle pool money is recorded to sit.</p></div></div>
     <nav className="terminal-tabs"><button className={tab === 'engine' ? 'active' : ''} onClick={() => setTab('engine')}><Sparkles />Halqa earning &amp; gold</button><button className={tab === 'market' ? 'active' : ''} onClick={() => setTab('market')}><TrendingUp />Market investments</button></nav>
     {error && <div className="error-box">{error}</div>}
 

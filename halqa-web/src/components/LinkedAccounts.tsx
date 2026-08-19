@@ -1,3 +1,4 @@
+import { RailLogo, SchemeMark } from './RailLogo';
 import { useEffect, useState } from 'react';
 import { api } from '../api';
 import { Field } from './ui';
@@ -65,7 +66,7 @@ export function AccountCard({ rail, bankName, accountTitle, accountNo, label, ve
   const cardLine = isCard ? `•••• •••• •••• ${(last4 || accountNo || '').replace(/\D/g, '').slice(-4) || '••••'}` : groupAccount(accountNo);
   return <div className={`acct-card${isCard ? ' is-card' : ''}`} style={{ background: `linear-gradient(135deg, ${meta.color}, ${meta.dark})` }}>
     <div className="acct-card-top">
-      <i className="acct-card-logo">{meta.mono}</i>
+      <i className="acct-card-logo">{isCard ? <SchemeMark brand={brand} size={40} /> : <RailLogo rail={rail} size={34} plain />}</i>
       <b>{isCard ? (brand || 'Card') : rail === 'BANK_TRANSFER' ? (bankName || 'Bank account') : meta.name}</b>
       <span className="acct-badges">
         {draft ? <em className="acct-badge">Preview</em> : verified ? <em className="acct-badge ok">Verified ✓</em> : <em className="acct-badge warn">Unverified</em>}
@@ -167,7 +168,7 @@ export function LinkedAccountsManager() {
     </div>
     {adding ? <div className="add-method">
       <span className="eyebrow">Step 1 · Where should collections pull from?</span>
-      <div className="rail-grid" style={{ margin: '8px 0 14px' }}>{Object.keys(RAIL_META).map(r => <button key={r} type="button" className={`rail-chip ${rail === r ? 'on' : ''}`} onClick={() => setRail(r)}><i className="chip-logo" style={{ background: RAIL_META[r].color }}>{RAIL_META[r].mono}</i>{RAIL_META[r].name}</button>)}</div>
+      <div className="rail-grid" style={{ margin: '8px 0 14px' }}>{Object.keys(RAIL_META).map(r => <button key={r} type="button" className={`rail-chip ${rail === r ? 'on' : ''}`} onClick={() => setRail(r)}><RailLogo rail={r} size={30} />{RAIL_META[r].name}</button>)}</div>
       {rail === 'BANK_TRANSFER' && <>
         <span className="eyebrow">Step 2 · Pick your bank</span>
         <div className="bank-grid" style={{ margin: '8px 0 14px' }}>{PK_BANKS.map(b => <button key={b.name} type="button" className={`bank-tile ${bank === b.name ? 'on' : ''}`} onClick={() => setBank(b.name)}><i style={{ background: `linear-gradient(135deg, ${b.color}, ${b.dark})` }}>{b.mono}</i><span>{b.name}</span></button>)}</div>

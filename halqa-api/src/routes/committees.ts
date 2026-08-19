@@ -44,7 +44,7 @@ const includeDetail = {
   partner: { select: { name: true, shortCode: true, sandbox: true } },
   floatScheme: { select: { name: true, indicativeRatePct: true, shariahCompliant: true } },
   depositScheme: { select: { name: true, indicativeRatePct: true, shariahCompliant: true } },
-  members: { where: { status: 'ACTIVE' as const }, include: { user: { select: { id: true, fullName: true, username: true, creditScore: true, kycLevel: true } } }, orderBy: { turnPosition: 'asc' as const } },
+  members: { where: { status: 'ACTIVE' as const }, include: { user: { select: { id: true, fullName: true, username: true, creditScore: true, kycLevel: true, phone: true, displayName: true, avatarUrl: true } } }, orderBy: { turnPosition: 'asc' as const } },
   // (auto-debit mandate fields ride along on each member via the default select)
   rounds: { include: { recipient: { select: { id: true, fullName: true } }, payments: { include: { payer: { select: { id: true, fullName: true } } } }, investments: { include: { scheme: true } } }, orderBy: { roundNumber: 'asc' as const } },
 } satisfies Prisma.CommitteeInclude;
@@ -1197,6 +1197,25 @@ router.post('/:id/withdraw', async (req, res, next) => {
     });
 
     res.json({ message: 'You have left this committee. Nothing is owed.', ...result });
+  } catch (error) { next(error); }
+});
+
+// ---------------------------------------------------------------------------
+// The committee's group picture. Host only, because it is the circle's identity
+// to everyone in it, and members recognise a photo faster than a name.
+// ---------------------------------------------------------------------------
+router.patch('/:id/avatar', async (req, res, next) => {
+  try {
+    const { avatarUrl } = z.object({
+      avatarUrl: z.string().max(300_000).nullable(),
+    }).parse(req.body ?? {});
+    const committee = await assertHost(req.params.id, req.auth!.userId);
+    const updated = await prisma.committee.update({
+      where: { id: committee.id }, data: { avatarUrl },
+      select: { id: true, avatarUrl: true },
+    });
+    await audit(prisma, req.auth!.userId, 'COMMITTEE_AVATAR_SET', 'Committee', committee.id, {});
+    res.json(updated);
   } catch (error) { next(error); }
 });
 
