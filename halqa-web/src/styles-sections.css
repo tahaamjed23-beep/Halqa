@@ -1,0 +1,81 @@
+/* ============================================================================
+   HALQA — SECTIONS 1 to 5, AND THE CASH-APP CONTINUITY RULES (section 18)
+   Account menu, join flow, invite sharing, agreements, and the shared
+   primitives every screen is now expected to use instead of inventing its own.
+   ============================================================================ */
+
+/* ---------- account menu: the reachability fix ---------- */
+.account-menu{padding:0;overflow:hidden}
+.account-menu .settings-body{border:none;border-radius:0;box-shadow:none}
+.account-menu .settings-row svg:first-child{color:var(--l600);flex:none}
+
+/* ---------- join by code ---------- */
+.join-card{border-color:var(--l200)}
+.join-entry{display:flex;gap:8px;margin-bottom:10px}
+.join-code-input{flex:1;min-width:0;height:52px;text-align:center;font-size:21px;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.join-paste{height:52px;padding:0 16px;flex:none}
+.join-preview{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-2)}
+.join-preview-head{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.join-preview-head b{display:block;font-size:15px;font-weight:680}
+.join-preview-head span{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.join-preview-head .member-avatar svg{width:18px;height:18px}
+.join-liability{font-size:12px;line-height:1.5;color:var(--muted);margin:11px 0}
+
+/* ---------- invite sharing ---------- */
+.invite-share{margin-top:12px}
+.invite-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:8px;margin-top:10px}
+.invite-act{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  height:64px;border-radius:var(--r-sm);background:var(--line-2);color:var(--ink-2);
+  font-size:11px;font-weight:620;text-decoration:none;text-align:center;padding:0 4px}
+.invite-act svg{width:19px;height:19px}
+.invite-act:active{background:var(--l50);color:var(--l700)}
+.invite-act--wa{background:var(--l50);color:var(--l700)}
+.invite-qr{display:flex;flex-direction:column;align-items:center;gap:7px;margin-top:12px;
+  padding:14px;background:var(--line-2);border-radius:var(--r)}
+.invite-qr img{border-radius:8px;background:#fff;padding:8px}
+.invite-qr small{font-size:11px;color:var(--muted)}
+
+/* ---------- agreements ---------- */
+.agreement-note{font-size:11.5px;color:var(--muted);line-height:1.5;margin:0 0 10px}
+.agreement-body{padding:12px 15px 15px;border-bottom:1px solid var(--line-2)}
+.agreement-plain{background:var(--l50);border-radius:var(--r-sm);padding:11px 12px;font-size:12.5px;
+  line-height:1.55;color:var(--ink-2);margin-bottom:10px}
+.agreement-text{max-height:280px;overflow-y:auto;white-space:pre-wrap;font-family:inherit;
+  font-size:12px;line-height:1.6;color:var(--ink-2);background:var(--line-2);
+  border-radius:var(--r-sm);padding:12px;margin:0 0 10px}
+
+/* ============================================================================
+   SECTION 18 · CASH-APP CONTINUITY
+   One row, one card, one button, one empty state, everywhere.
+   ============================================================================ */
+
+/* every money figure aligns in a column and never wraps mid-amount */
+.money,.num,[data-money]{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* one empty state */
+.empty-state{display:flex;flex-direction:column;align-items:center;gap:9px;padding:30px 18px;
+  text-align:center;color:var(--muted)}
+.empty-state svg{width:26px;height:26px;color:var(--faint)}
+.empty-state p{font-size:13px;line-height:1.5;max-width:30ch}
+.empty-state .primary,.empty-state .secondary{margin-top:4px}
+
+/* one full-width action button */
+.primary.full,.secondary.full{width:100%;display:flex;align-items:center;justify-content:center;gap:7px}
+
+/* one tap-target floor, applied to every interactive element */
+button,a.invite-act,.settings-row,.method-row,.vault-tier,.mode-option{min-height:44px}
+.icon-button,.hdr-btn{min-height:36px}
+
+/* one focus ring */
+:focus-visible{outline:2px solid var(--l500);outline-offset:2px;border-radius:8px}
+
+/* respect a member who asked the system for less movement */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
+/* safe area for notched devices, so the nav is never under the home bar */
+.tabbar,.bottom-nav,.nav{padding-bottom:env(safe-area-inset-bottom)}
+.content{padding-bottom:calc(96px + env(safe-area-inset-bottom))}

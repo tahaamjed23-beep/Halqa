@@ -1,10 +1,12 @@
+import { ChevronLeft } from 'lucide-react';
 import { HandCoins, Landmark, ShieldCheck, Users } from 'lucide-react';
 import { HalqaOrb } from '../components/ui';
 
 // About Halqa, mission, the kameti tradition, and the numbers. Reached by
 // tapping the Halqa mark anywhere in the shell.
-export default function AboutPage(){
+export default function AboutPage({ back }: { back?: () => void }){
   return <div className="page narrow enter">
+    {back&&<button className="back-link" onClick={back}><ChevronLeft/>Account</button>}
     <section className="about-hero"><HalqaOrb/><span className="eyebrow">About Halqa</span><h1>The committee you trust,<br/>finally written down.</h1>
     <p>For generations, Pakistani families have saved through the kameti, a circle of people, a fixed amount, one member collecting the pool each round. It runs on trust, and it works, until memory fails, a register goes missing, or someone walks away with the pot. Halqa keeps everything that makes the committee beautiful and adds the one thing it never had: a record that cannot be argued with.</p></section>
 

@@ -1,3 +1,4 @@
+import { dateTime } from '../lib/format';
 import { Check, Download, Share2, X } from 'lucide-react';
 import { money } from '../api';
 
@@ -17,7 +18,7 @@ export type ReceiptData={
 // on a document with a reference, a timestamp and an identity on it, the same
 // artefact a wallet issues, because that is the one members already trust.
 export default function Receipt({data,onClose}:{data:ReceiptData;onClose:()=>void}){
-  const when=data.stamp||new Date().toLocaleString('en-PK',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const when=data.stamp||dateTime(new Date());
   const fee=Number(data.feePaisa||0);
   const total=Number(data.amountPaisa)+fee;
   const share=async()=>{

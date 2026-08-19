@@ -1,3 +1,4 @@
+import { dateTime } from '../lib/format';
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowDownLeft, ArrowLeft, ArrowUpRight, CalendarClock, CheckCircle2, Receipt as ReceiptIcon, Search } from 'lucide-react';
 import { api, money } from '../api';
@@ -58,7 +59,7 @@ export default function ActivityPage({user,back}:{user:User;back:()=>void}){
         <button className="row" key={i.id} style={{width:'100%',textAlign:'left'}} onClick={()=>setOpen({
           title:i.title,amountPaisa:i.paisa,reference:`RCPT-${i.id.slice(0,8).toUpperCase()}`,rail:i.rail,
           status:i.kind==='wait'?'PENDING':'SETTLED',
-          stamp:new Date(i.when).toLocaleString('en-PK',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+          stamp:dateTime(i.when),
           rows:[['Committee',i.committee],['Round',`#${i.round}`],[i.kind==='in'?'From':'To',i.counterparty],['Member',user.fullName]],
         })}>
           <div className={`row-ic ${i.kind}`}>{i.kind==='in'?<ArrowDownLeft/>:i.kind==='out'?<ArrowUpRight/>:<CalendarClock/>}</div>

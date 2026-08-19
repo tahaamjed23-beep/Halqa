@@ -1,3 +1,4 @@
+import { date } from '../lib/format';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Landmark, LineChart, Map, PiggyBank, Scale, ShieldCheck, SlidersHorizontal } from 'lucide-react';
@@ -127,7 +128,7 @@ export default function VaultPage(){
 
     <section className="panel" id="vault-map"><div className="panel-head"><div><span className="eyebrow">Money map</span><h2>Exactly where the money sits</h2><p>Straight answer, stage by stage. Today Halqa is a record-only prototype: it does not hold or invest real money. Your balance is a recorded position, and profit is computed at the dated rates below.</p></div><Map/></div>
       <div className="table-scroll"><table className="mini-table"><thead><tr><th>Sleeve</th><th>Your share</th><th>Instrument</th><th>Issuer</th><th>Rate (dated)</th><th>Where it sits today</th></tr></thead><tbody>
-        {details.map(d=><tr key={d.tier}><td><b>{TIER_LABEL[d.tier]}</b></td><td>{d.sharePct}%</td><td>{d.name}</td><td>{d.issuer||''}</td><td>{d.ratePct}%/yr{d.rateAsOf?` · as of ${new Date(d.rateAsOf).toLocaleDateString()}`:''}</td><td>{d.sharePct>0?'Recorded entry in the Halqa ledger; no real money moved':''}</td></tr>)}
+        {details.map(d=><tr key={d.tier}><td><b>{TIER_LABEL[d.tier]}</b></td><td>{d.sharePct}%</td><td>{d.name}</td><td>{d.issuer||''}</td><td>{d.ratePct}%/yr{d.rateAsOf?` · as of ${date(d.rateAsOf)}`:''}</td><td>{d.sharePct>0?'Recorded entry in the Halqa ledger; no real money moved':''}</td></tr>)}
       </tbody></table></div>
       <div className="vault-callout"><b>After licensing and the bank partnership</b>, the same screen will show: cash held in escrow at the partner bank in your name, fund units held at the asset-management company for each sleeve, and gold exposure through the gold-linked fund, with this ledger reconciling to theirs, line by line. The structure is already built; only the custody switch is waiting.</div>
     </section>

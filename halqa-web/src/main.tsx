@@ -7,6 +7,8 @@ import './styles-completion.css'
 // Corrections keyed on the real markup (rows are <article>, status modifiers are
 // status-open/-closed). Must load after the completion pass to win on order.
 import './styles-structure.css'
+// Sections 1-5 plus the cash-app continuity rules.
+import './styles-sections.css'
 import App from './App.tsx'
 import { bootAppearance } from './components/Appearance'
 import ErrorBoundary from './components/ErrorBoundary.tsx'

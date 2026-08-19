@@ -1,3 +1,5 @@
+import { ChevronLeft } from 'lucide-react';
+import { date } from '../lib/format';
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { ExternalLink, Filter, Sparkles, TrendingUp } from 'lucide-react';
 import { api, money } from '../api';
@@ -37,7 +39,7 @@ const ABOUT: Record<string, string> = {
   'Digital Asset': '⚠ Cryptocurrency. This is NOT government-backed and it is extremely volatile, the price can crash 50% or more in weeks. The "rate" shown is speculative, not a promise; you could lose a large part of your capital. Halqa keeps this out of committees entirely and shows it here for information only. Only for money you can afford to lose completely.',
 };
 
-export default function TerminalPage() {
+export default function TerminalPage({ back }: { back?: () => void }) {
   const [schemes, setSchemes] = useState<Scheme[]>([]);
   const [selected, setSelected] = useState('');
   const [principal, setPrincipal] = useState(100000);
@@ -59,6 +61,7 @@ export default function TerminalPage() {
   const invested = principal * allocation / 100;
   const expected = useMemo(() => profitProjection(invested, scheme?.indicativeRatePct || 0, months * 30.4375), [invested, scheme, months]);
   return <div className="page enter">
+    {back&&<button className="back-link" onClick={back}><ChevronLeft/>Account</button>}
     <div className="page-head terminal-head"><div><span className="eyebrow">Investments · where your profit comes from</span><h1>Growth laboratory</h1><p>Two separate worlds: how Halqa grows your money automatically, and the market schemes you can optionally invest a slice of the pool into.</p></div></div>
     <nav className="terminal-tabs"><button className={tab === 'engine' ? 'active' : ''} onClick={() => setTab('engine')}><Sparkles />Halqa earning &amp; gold</button><button className={tab === 'market' ? 'active' : ''} onClick={() => setTab('market')}><TrendingUp />Market investments</button></nav>
     {error && <div className="error-box">{error}</div>}
@@ -77,7 +80,7 @@ export default function TerminalPage() {
             <div className="scheme-sort"><button className={sortBy === 'return' ? 'on' : ''} onClick={() => setSortBy('return')}>Highest return</button><button className={sortBy === 'risk' ? 'on' : ''} onClick={() => setSortBy('risk')}>Lowest risk</button></div>
             <div className="scheme-bands">{(['ALL', 'LOW', 'MEDIUM', 'HIGH', 'EXTREME'] as const).map(b => <button key={b} className={bandFilter === b ? 'on' : ''} onClick={() => setBandFilter(b)}>{b === 'ALL' ? 'All' : b.charAt(0) + b.slice(1).toLowerCase()}</button>)}</div>
           </div>
-          <div className="scheme-scroll">{list.length ? list.map(item => <button key={item.id} className={scheme?.id === item.id ? 'selected' : ''} onClick={() => { if (item.category === 'Digital Asset' && !cryptoOk) setPending(item); else setSelected(item.id); }}><div><b>{item.name}</b><RiskBadge score={item.riskScore} band={band(item.riskScore)} /></div><p>{item.indicativeRatePct}% indicative · {item.issuer}</p><span>{item.liquidityDays}d liquidity · {item.shariahCompliant ? 'Shariah-compliant · ' : ''}{rateFreshness(item.rateAsOf).stale ? '⚠ rate review due · ' : ''}{new Date(item.rateAsOf).toLocaleDateString()}</span></button>) : <p className="scheme-empty">No schemes in this band under your risk ceiling. Raise the maximum accepted risk above, or pick another band.</p>}</div>
+          <div className="scheme-scroll">{list.length ? list.map(item => <button key={item.id} className={scheme?.id === item.id ? 'selected' : ''} onClick={() => { if (item.category === 'Digital Asset' && !cryptoOk) setPending(item); else setSelected(item.id); }}><div><b>{item.name}</b><RiskBadge score={item.riskScore} band={band(item.riskScore)} /></div><p>{item.indicativeRatePct}% indicative · {item.issuer}</p><span>{item.liquidityDays}d liquidity · {item.shariahCompliant ? 'Shariah-compliant · ' : ''}{rateFreshness(item.rateAsOf).stale ? '⚠ rate review due · ' : ''}{date(item.rateAsOf)}</span></button>) : <p className="scheme-empty">No schemes in this band under your risk ceiling. Raise the maximum accepted risk above, or pick another band.</p>}</div>
         </aside>
         <section className="terminal-card">
           {scheme && <div className="scheme-about">

@@ -1,3 +1,5 @@
+import { ChevronLeft } from 'lucide-react';
+import { date } from '../lib/format';
 import { useEffect, useState } from 'react';
 import { CalendarDays, Plus, ShieldCheck, Users, Gavel } from 'lucide-react';
 import { api, key, money, tokens } from '../api';
@@ -8,7 +10,7 @@ import { SHOW_INVESTOR_BRIEFING_FEATURES } from '../config';
 type Bid = { id: string; bidderId: string; premiumPaisa: string; status: string; bidder: { id: string; fullName: string; creditScore: number } };
 type Listing = { id: string; position: number; payoutPaisa: string; premiumPaisa: string; payoutDate?: string; remainingDuesPaisa: string; buyerNetCostPaisa: string; buyerScope: 'INSIDE' | 'OUTSIDE'; totalTurns?: number; turnPricing:TurnPricing;creditHealth:{averageCreditScore:number;grade:'EXCELLENT'|'STRONG'|'FAIR'|'WATCH';defaults:number;latePayments:number;earlyPayments:number};engines:string[]; seller: { id: string; fullName: string; creditScore: number; kycLevel: number }; committee: { id: string; name: string; mode: string; currentRound: number; periodDays: number }; bids?: Bid[] };
 
-export default function MarketplacePage({ user }: { user: User }) {
+export default function MarketplacePage({ user, back }: { user: User; back?: () => void }) {
   const [rows, setRows] = useState<Listing[]>([]);
   const [eligible, setEligible] = useState<Committee[]>([]);
   const [sell, setSell] = useState(false);
@@ -32,6 +34,7 @@ export default function MarketplacePage({ user }: { user: User }) {
 
   return (
     <div className="page enter">
+    {back&&<button className="back-link" onClick={back}><ChevronLeft/>Account</button>}
       <div className="page-head">
         <div>
           <span className="eyebrow">Turn exchange</span>
@@ -75,7 +78,7 @@ export default function MarketplacePage({ user }: { user: User }) {
 
             {listing.payoutDate && (
               <div className="payout-date">
-                <CalendarDays />Expected payout {new Date(listing.payoutDate).toLocaleDateString()}
+                <CalendarDays />Expected payout {date(listing.payoutDate)}
               </div>
             )}
 
@@ -183,7 +186,7 @@ function SellTurn({ committees, close, done }: { committees: Committee[]; close:
               {committees.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
             </select>
           </Field>
-          <Field label="Starting Ask Premium (PKR)" hint={`Maximum ${max.toLocaleString()}`}>
+          <Field label="Starting Ask Premium (PKR)" hint={`Maximum ${money(max*100)}`}>
             <input className="field" type="number" min="0" max={max} step="100" value={premium} onChange={e => setPremium(Math.max(0, Math.min(max, +e.target.value)))} />
           </Field>
           <div className="warning-box" style={{ marginTop: '16px' }}>Only active members of this committee can bid. Accepted bids swap future positions; nobody exits and all dues remain unchanged.</div>

@@ -174,11 +174,11 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
       <label className="tos-check"><input type="checkbox" checked={agreed} onChange={e=>setAgreed(e.target.checked)}/><span>I have read and agree to the <button type="button" className="inline-link" onClick={()=>setDoc('agreement')}>User Agreement</button> and <button type="button" className="inline-link" onClick={()=>setDoc('privacy')}>Privacy Policy</button>, including the <button type="button" className="inline-link" onClick={()=>setDoc('fees')}>Fees & Payments Policy</button>.</span></label></>;
   }};
 
-  return <main className="auth-layout"><section className="auth-story"><Logo/><div className="auth-copy"><HalqaOrb/><span className="eyebrow">Pakistan's transparent savings network</span><h1>Save together.<br/>Grow with clarity.</h1><p>Locked schedules, visible turns, auto-pay, and a payment record that follows you, the committee you trust, finally written down.</p></div></section>
+  return <main className="auth-layout"><section className="auth-story"><Logo/><div className="auth-copy"><HalqaOrb/><span className="eyebrow">Pakistan's transparent savings network</span><h1>Save together.<br/>Grow with clarity.</h1><p>Locked schedules, visible turns, and a payment record that follows you.</p></div></section>
   <section className="auth-form"><div className="auth-card">
     <div className="mobile-logo"><Logo/></div>
     {mode==='login'?<>
-      <h2>Welcome back</h2><p>Sign in with your mobile number and password.</p>
+      <h2>Welcome back</h2><p>Mobile number and password.</p>
       <form onSubmit={login}>
         <PhoneInput value={form.identity} onChange={v=>setForm({...form,identity:v})}/>
         <input className="field" type="password" placeholder="Password" autoComplete="current-password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})}/>

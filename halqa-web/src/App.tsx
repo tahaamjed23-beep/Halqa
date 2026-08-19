@@ -31,8 +31,28 @@ const ActivityPage=lazy(()=>import('./pages/ActivityPage'));
 export default function App(){
   const [user,setUser]=useState<User|null>(PREVIEW?previewUser as unknown as User:null);
   const [loading,setLoading]=useState(!PREVIEW);
-  const [page,setPage]=useState<Page>(()=>{const q=new URLSearchParams(window.location.search).get('screen');return (q as Page)||'home'});
-  const [committeeId,setCommitteeId]=useState<string|null>(null);
+  const [page,setPage]=useState<Page>(()=>{const q=new URLSearchParams(window.location.search);return (q.get('screen') as Page)||(q.get('join')?'circles':'home')});
+  const [committeeId,setCommitteeId]=useState<string|null>(()=>new URLSearchParams(window.location.search).get('committee'));
+  // An invite link (?join=CODE) opens the app straight onto that committee.
+  const [joinCode,setJoinCode]=useState<string|null>(()=>new URLSearchParams(window.location.search).get('join'));
+  // Page and open committee live in the URL, so the hardware back button, a
+  // refresh and a shared link all behave the way a member expects. Without this
+  // back exits the app from anywhere inside it.
+  useEffect(()=>{
+    const url=new URL(window.location.href);
+    const q=new URLSearchParams();
+    if(page!=='home')q.set('screen',page);
+    if(joinCode)q.set('join',joinCode);
+    if(committeeId)q.set('committee',committeeId);
+    const next=`${url.pathname}${q.toString()?'?'+q:''}`;
+    if(next!==url.pathname+url.search)window.history.pushState({page,committeeId},'',next);
+  },[page,committeeId,joinCode]);
+  useEffect(()=>{
+    const pop=()=>{const q=new URLSearchParams(window.location.search);
+      setCommitteeId(q.get('committee'));setPage((q.get('screen') as Page)||'home')};
+    window.addEventListener('popstate',pop);
+    return ()=>window.removeEventListener('popstate',pop);
+  },[]);
   // In-memory PIN unlock: false on every fresh load, so the app re-asks the PIN
   // each time it opens (a reload counts as an open). A fresh login sets it true
   //, you just proved your password, so no PIN on the same open.
@@ -64,15 +84,15 @@ export default function App(){
     <ErrorBoundary resetKey={view} label="This page">
     <Suspense fallback={<PageLoader/>}>
       {view==='home'&&<HomePage user={user} openCommittee={setCommitteeId} create={()=>setPage('create')} go={p=>setPage(p as Page)}/>}
-      {view==='circles'&&<CirclesPage user={user} openCommittee={setCommitteeId} create={()=>setPage('create')}/>}
-      {view==='market'&&<MarketplacePage user={user}/>}
-      {view==='terminal'&&<TerminalPage/>}
+      {view==='circles'&&<CirclesPage user={user} openCommittee={setCommitteeId} create={()=>setPage('create')} joinCode={joinCode} onJoinHandled={()=>setJoinCode(null)}/>}
+      {view==='market'&&<MarketplacePage user={user} back={()=>setPage('profile')}/>}
+      {view==='terminal'&&<TerminalPage back={()=>setPage('profile')}/>}
       {view==='vault'&&<VaultPage/>}
-      {view==='profile'&&<ProfilePage user={user} openCredit={()=>setPage('credit')}/>}
+      {view==='profile'&&<ProfilePage user={user} openCredit={()=>setPage('credit')} go={p=>setPage(p)}/>}
       {view==='credit'&&<CreditPage user={user} back={()=>setPage('profile')}/>}
-      {view==='about'&&<AboutPage/>}
+      {view==='about'&&<AboutPage back={()=>setPage('profile')}/>}
       {view==='create'&&<CreateCirclePage user={user} done={setCommitteeId} cancel={()=>setPage('home')}/>}
-      {view==='settings'&&<SettingsPage user={user}/>}
+      {view==='settings'&&<SettingsPage user={user} back={()=>setPage('profile')}/>}
       {view==='pay'&&<PayPage user={user} back={()=>setPage('home')}/>}
       {view==='rewards'&&<RewardsPage user={user} back={()=>setPage('home')}/>}
       {view==='hyper'&&<HyperPage user={user} back={()=>setPage('home')}/>}

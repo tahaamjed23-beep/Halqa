@@ -1,5 +1,6 @@
+import MyAgreements from '../components/MyAgreements';
 import { useEffect, useState } from 'react';
-import { Bell, ChevronRight, CreditCard, Fingerprint, Globe, HelpCircle, Megaphone, Scale, ShieldCheck, UserCog } from 'lucide-react';
+import { Bell, ChevronLeft, ChevronRight, CreditCard, Fingerprint, Globe, HelpCircle, Megaphone, Scale, ShieldCheck, UserCog } from 'lucide-react';
 import { api } from '../api';
 import type { User } from '../types';
 import { Field } from '../components/ui';
@@ -43,7 +44,7 @@ function Toggle({ label, hint, checked, onChange, disabled }: { label: string; h
 // imports keep working.
 export { LinkedAccountsManager as LinkedMethodsManager } from '../components/LinkedAccounts';
 
-export default function SettingsPage({ user }: { user: User }) {
+export default function SettingsPage({ user, back }: { user: User; back?: () => void }) {
   const [open, setOpen] = useState<SectionId | null>(null);
   const [doc, setDoc] = useState<DocId | null>(null);
   const [lang, setLang] = useLang();
@@ -67,7 +68,8 @@ export default function SettingsPage({ user }: { user: User }) {
   ];
 
   return <div className="page narrow enter">
-    <div className="page-head"><div><span className="eyebrow">Account center</span><h1>Settings</h1><p>Everything about your account, your data, and your choices, in one place.</p></div></div>
+    {back&&<button className="back-link" onClick={back}><ChevronLeft/>Account</button>}
+    <div className="page-head"><div><h1>Settings</h1></div></div>
     <div className="settings-list">
       {sections.map(s => <section key={s.id} className={`panel settings-section ${open === s.id ? 'open' : ''}`}>
         <button className="settings-row" onClick={() => setOpen(open === s.id ? null : s.id)}>{s.icon}<span className="settings-row-text"><b>{s.title}</b><small>{s.sub}</small></span><ChevronRight className={`chev ${open === s.id ? 'down' : ''}`} /></button>
@@ -119,6 +121,7 @@ export default function SettingsPage({ user }: { user: User }) {
             <button className="text-action" onClick={() => setDoc('fees')}>Read Fees & Payments Policy</button>
           </>}
           {s.id === 'legal' && <>
+            <MyAgreements />
             <div className="legal-links">{(Object.keys(LEGAL_DOCS) as DocId[]).map(id => <button key={id} className="settings-row slim" onClick={() => setDoc(id)}><Scale size={16} /><span className="settings-row-text"><b>{LEGAL_DOCS[id].title}</b><small>{LEGAL_DOCS[id].updated}</small></span><ChevronRight className="chev" /></button>)}</div>
             <p className="muted" style={{ fontSize: 12 }}>You accepted version {TERMS_VERSION} at signup; acceptance is recorded with a timestamp.</p>
           </>}

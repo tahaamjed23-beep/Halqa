@@ -1,3 +1,4 @@
+import { date } from '../lib/format';
 import { useEffect, useState } from 'react';
 import { ChevronLeft, ShieldCheck, TrendingUp } from 'lucide-react';
 import { api, money } from '../api';
@@ -31,7 +32,7 @@ export default function CreditPage({user,back}:{user:User;back:()=>void}){
   const negatives=events.filter(e=>e.delta<0).length;const positives=events.filter(e=>e.delta>0).length;
   return <div className="page narrow enter">
     <button className="back-link" onClick={back}><ChevronLeft/>Back to profile</button>
-    <div className="page-head"><div><span className="eyebrow">Your credit profile</span><h1>Halqa reliability report</h1><p>Built from your real committee record, the same score circles use to rank turn order.</p></div></div>
+    <div className="page-head"><div><span className="eyebrow">Your credit profile</span><h1>Halqa reliability report</h1><p>Built from the payments you have actually made.</p></div></div>
 
     <section className="panel credit-hero">
       <div className="credit-gauge"><ScoreRing score={user.creditScore}/><div className="credit-band" style={{color:band.color}}><b>{band.label}</b><span>{band.note}</span></div></div>
@@ -42,12 +43,12 @@ export default function CreditPage({user,back}:{user:User;back:()=>void}){
       </div>
     </section>
 
-    <section className="panel"><div className="panel-head"><div><span className="eyebrow">Payment history</span><h2>Your last {recent.length||12} installments</h2><p>Green is on time. This row is what a host sees when they rank turns.</p></div><ShieldCheck/></div>
+    <section className="panel"><div className="panel-head"><div><span className="eyebrow">Payment history</span><h2>Your last {recent.length||12} installments</h2><p>Green is on time.</p></div><ShieldCheck/></div>
       <div className="history-dots">{recent.length?recent.map(p=>{const d=DOT(p.status);return <div key={p.id} className="history-dot" title={`${p.round.committee.name} · round ${p.round.roundNumber} · ${money(p.amountPaisa)} · ${d.t}`} style={{background:d.c}}/>}):<p className="muted">No installments recorded yet, join a circle to start your history.</p>}</div>
       <div className="dot-legend"><span><i style={{background:'#3f7d4e'}}/>On time</span><span><i style={{background:'#c28f1f'}}/>Late</span><span><i style={{background:'#b3563a'}}/>Missed</span><span><i style={{background:'#d8d2bd'}}/>Pending</span></div>
     </section>
 
-    <section className="panel"><div className="panel-head"><div><span className="eyebrow">Score movement</span><h2>How your score has moved</h2><p>Each bar is a score event, payments, completions, penalties.</p></div><TrendingUp/></div>
+    <section className="panel"><div className="panel-head"><div><span className="eyebrow">Score movement</span><h2>How your score has moved</h2><p>Each bar is a score event.</p></div><TrendingUp/></div>
       <div className="trend-bars">{trend.map((p,i)=><div key={i} className="trend-bar" title={`${p.score}`}><i style={{height:`${Math.max(8,(p.score-min)/(max-min||1)*100)}%`,background:i===trend.length-1?'#b08d2f':'#e2d7b8'}}/><span>{i===trend.length-1?'Now':''}</span></div>)}</div>
     </section>
 
@@ -60,7 +61,7 @@ export default function CreditPage({user,back}:{user:User;back:()=>void}){
     </section>
 
     <section className="panel"><div className="panel-head"><div><span className="eyebrow">History</span><h2>Recent events</h2></div></div>
-      <div className="history-list">{events.slice(0,10).map(e=><article key={e.id}><div><b>{e.reason}</b><span>{new Date(e.scoredAt).toLocaleDateString()}</span></div><strong className={e.delta>=0?'profit':'loss'}>{e.delta>0?'+':''}{e.delta}</strong></article>)}{!events.length&&<p className="muted">No score events yet.</p>}</div>
+      <div className="history-list">{events.slice(0,10).map(e=><article key={e.id}><div><b>{e.reason}</b><span>{date(e.scoredAt)}</span></div><strong className={e.delta>=0?'profit':'loss'}>{e.delta>0?'+':''}{e.delta}</strong></article>)}{!events.length&&<p className="muted">No score events yet.</p>}</div>
     </section>
   </div>;
 }

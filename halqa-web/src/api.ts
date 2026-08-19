@@ -45,5 +45,7 @@ if(typeof window!=='undefined'){
   setInterval(()=>{if(document.visibilityState==='visible'){warm();lastWarm=Date.now()}},4*60_000);
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-lastWarm>60_000){warm();lastWarm=Date.now()}});
 }
-export const money=(paisa:string|number|bigint=0)=>new Intl.NumberFormat('en-PK',{style:'currency',currency:'PKR',maximumFractionDigits:0}).format(Number(paisa)/100);
+// Money formatting lives in lib/format.ts now, so every screen speaks the same
+// language. Re-exported here because most pages already import it from api.
+export { money, moneyShort } from './lib/format';
 export const key=()=>crypto.randomUUID();

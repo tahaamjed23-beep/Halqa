@@ -1,3 +1,4 @@
+import JoinByCode from '../components/JoinByCode';
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, Check, Copy, Eye, Globe, MessageCircle, Phone, Plus, Search, Send, Users } from 'lucide-react';
 import { api, money } from '../api';
@@ -9,7 +10,7 @@ type Discover={id:string;name:string;hostName:string;hostScore:number;memberCap:
   contributionPaisa:string;periodDays:number;status:string;listedPublicly:boolean;earlyFeeBps:number;
   openSlots:number[];cleanStreak:number;startsAt:string;riskBand:string};
 
-export default function CirclesPage({user,openCommittee,create}:{user:User;openCommittee:(id:string)=>void;create:()=>void}){
+export default function CirclesPage({user,openCommittee,create,joinCode,onJoinHandled}:{user:User;openCommittee:(id:string)=>void;create:()=>void;joinCode?:string|null;onJoinHandled?:()=>void}){
   const [tab,setTab]=useState<'mine'|'discover'>('mine');
   const [mine,setMine]=useState<Committee[]>(()=>cached('home.committees',[]));
   const [rows,setRows]=useState<Discover[]>([]);
@@ -60,6 +61,7 @@ export default function CirclesPage({user,openCommittee,create}:{user:User;openC
   };
 
   return <div className="enter">
+    <JoinByCode initialCode={joinCode} onJoined={id=>{onJoinHandled?.();openCommittee(id)}}/>
     <div className="topbar">
       <h1>Committees</h1>
       <button className="btn sm" onClick={create}><Plus/>New</button>

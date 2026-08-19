@@ -58,7 +58,7 @@ export default function RewardsPage({user,back}:{user:User;back:()=>void}){
       </div>
 
       <div className="stat-2" style={{marginTop:12}}>
-        <div className="stat"><span>Points balance</span><strong>{points.toLocaleString()}</strong><small>Buys fee waivers</small></div>
+        <div className="stat"><span>Points balance</span><strong>{new Intl.NumberFormat('en-PK').format(points)}</strong><small>Buys fee waivers</small></div>
         <div className="stat"><span>Next unlock</span><strong>{next.n} rounds</strong><small>{next.retail.split(',')[0]}</small></div>
       </div>
 

@@ -84,13 +84,13 @@ export function RafaBot3D({ size = 46, talking = false, mood = 'idle' as RafaMoo
 
 // Reaction bubble shown near the FAB after an action fires.
 const ACTION_COPY: Partial<Record<HalqaAction, string>> = {
-  CREATE_CIRCLE: '🎉 Circle created!',
-  PAY_INSTALLMENT: '✅ Installment recorded!',
-  VAULT_DEPOSIT: '💰 Saved!',
-  VAULT_SWEEP: '🏦 Vault swept!',
-  PAYOUT: '🎉 Payout released!',
-  CONSENT: '👍 Confirmed!',
-  JOIN: '👋 Joined!',
+  CREATE_CIRCLE: '🎉 Circle created.',
+  PAY_INSTALLMENT: '✅ Installment recorded.',
+  VAULT_DEPOSIT: '💰 Saved.',
+  VAULT_SWEEP: '🏦 Vault swept.',
+  PAYOUT: '🎉 Payout released.',
+  CONSENT: '👍 Confirmed.',
+  JOIN: '👋 Joined.',
 };
 
 const ACTION_MOOD: Record<HalqaAction, RafaMood> = {
