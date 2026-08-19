@@ -1,114 +1,131 @@
 // ============================================================================
 // HYPER COMMITTEES
 //
-// Daily contributions, a random queue, and members who do not know each other
-// and cannot see each other. Halqa runs the queue; there is no human organizer,
-// which deletes the organizer-fraud topology entirely.
+// Daily contributions over a 30-day cycle. Seven members collect each day, so
+// the roster is 210. Every member pays Rs 500 a day and collects Rs 15,000
+// once, which balances exactly: 210 x 15,000 in, 210 x 15,000 out.
 //
-// THE GOVERNING CONSTRAINT, stated first because it decides everything else:
-// anonymity removes the single strongest enforcement mechanism a committee has.
-// Kamran's informant, a housemaid on Rs 15,000 a month: "We can compromise on
-// rent or bills, but Committee instalments should not be missed." That ranking
-// exists because the group is KNOWN. Strip the identities out and what remains
-// is an unsecured 30-day advance to a stranger with a score penalty as the only
-// consequence. HYPER is therefore the most heavily gated product on the
-// platform, not the most open one.
+// Members buy their collection day at an opening auction. The earlier the day,
+// the larger the advance, so the earlier days carry a premium and the last days
+// clear at nil.
 //
-// WHAT THIS FILE REPLACES: the first implementation ran an opening auction
-// where members bid for a collection day. That is a chit fund. The discovered
-// price is interest in substance, it is listed under refused features, and
-// India regulates precisely that family. Seats here are drawn, never bought.
+// THE CONSTRAINT THAT MAKES THE AUCTION SAFE
+//
+// A premium paid for an earlier day is a real cost of money, and daily cadence
+// turns a small rupee figure into a very large annualised rate. That rate is
+// the number a hostile journalist or an SECP reviewer computes, and it is what
+// killed the 400 banned lending apps. So every bid is capped at the point where
+// the member's all-in cost reaches 48% APR-equivalent. Above that the bid is
+// refused outright rather than merely discouraged.
+//
+// The cap is not decoration. At day 1 it works out to about Rs 276 on a
+// Rs 15,000 pot, and it falls to a few rupees by the final week, which is the
+// economically correct shape: a late day is worth nothing to bid for.
 // ============================================================================
 
-/** Daily ticket sizes. Fixed set; a member picks one, never an amount. */
-export const HYPER_TICKETS_PAISA = [10_000n, 50_000n, 100_000n, 200_000n] as const;
-export type HyperTicket = (typeof HYPER_TICKETS_PAISA)[number];
-
 export const HYPER = {
-  /** Cycles run 48 to 60 days. 60 is recommended and is the maximum. */
-  MIN_DAYS: 48,
-  MAX_DAYS: 60,
-  RECOMMENDED_DAYS: 60,
-  /** Shorter cycles exist only for members who pledged a Safety Vault. */
-  PLEDGED_ONLY_DAYS: [15, 30],
-  /** Entry gates. Every one of them, not any one of them. */
+  /** Cycle length in days. One cohort collects per day. */
+  DAYS: 30,
+  /** Daily contribution, in paisa. Rs 500. */
+  DAILY_PAISA: 50_000n,
+  /** What one member collects on their day, in paisa. Rs 15,000. */
+  POT_PAISA: 1_500_000n,
+  /** Members collecting per day. 7 x 30 = a 210-member roster. */
+  SEATS_PER_DAY: 7,
+  /** Entry gates. */
   MIN_SCORE: 650,
   MIN_CLEAN_CIRCLES: 2,
+  /** A member with no daily earnings must hold this much in the vault instead. */
+  MIN_VAULT_PAISA: 1_500_000n,
   /** One HYPER at a time: daily obligations compound too fast to stack. */
   MAX_CONCURRENT: 1,
   /** Daily cadence: the standing grace formula returns zero, so it is fixed. */
   GRACE_HOURS: 12,
-  /** Late ladder, as a share of the installment, at each step of the clock. */
   LATE_LADDER: [
     { afterHours: 12, penaltyBps: 500 },
     { afterHours: 36, penaltyBps: 1000 },
     { afterHours: 60, penaltyBps: 1500 },
   ],
-  /** Score damage at each rung, then the post-payout default. */
   SCORE_DAMAGE: [-20, -40, -60],
   POST_PAYOUT_DEFAULT: -200,
-  /**
-   * The single most important number in the design.
-   *
-   * Daily cadence turns every rupee of fee into a very large annualised rate,
-   * and that annualised rate is the exact number a hostile journalist or an
-   * SECP reviewer will compute. The 400 banned lending apps were killed by it.
-   * 48% sits above what a microfinance bank charges and far below anything that
-   * reads as predatory, so it is a number we can publish.
-   */
+  /** The published ceiling on a member's total cost of an early day. */
   MAX_APR_BPS: 4800,
+  /** Auction length before the cycle starts. */
+  AUCTION_HOURS: 24,
 } as const;
 
-/** A roster is exactly as long as the cycle: one collection per day. */
-export const rosterFor = (days: number) => days;
+/** 7 a day across 30 days. */
+export const rosterSize = () => HYPER.SEATS_PER_DAY * HYPER.DAYS;
 
-export function isValidCycleLength(days: number, pledged = false): boolean {
-  if (pledged && (HYPER.PLEDGED_ONLY_DAYS as readonly number[]).includes(days)) return true;
-  return days >= HYPER.MIN_DAYS && days <= HYPER.MAX_DAYS;
-}
+/** What a member pays in across the whole cycle. Equals the pot, by design. */
+export const totalContributionPaisa = () => HYPER.DAILY_PAISA * BigInt(HYPER.DAYS);
 
-/** Pot = one daily ticket from every member, once per day, for the whole cycle. */
-export const potPaisa = (ticketPaisa: bigint, days: number) => ticketPaisa * BigInt(days);
+/**
+ * The cycle balances only if what one member pays in equals what they collect.
+ * Asserted rather than assumed, because a change to any constant that broke it
+ * would silently turn the product into a loss-maker or a lottery.
+ */
+export const isBalanced = () => totalContributionPaisa() === HYPER.POT_PAISA;
 
 // ---------------------------------------------------------------------------
-// The APR-equivalent, and why it is computed this way
-//
-// The earliest seat in a daily circle is a genuinely short loan:
-//
-//   Seat 1, n rounds of c. Receives n·c on day 1 having paid c.
-//   Net advance         = (n−1)c
-//   Amortises by c/day to zero over (n−1) days
-//   Average outstanding = (n−1)c / 2
-//
-// So for an all-in member cost F at seat 1:
-//
-//                    F              365          2 × 365 × F
-//   APR       =  ───────────  ×  ───────  =  ─────────────────
-//                (n−1)c / 2        n−1         (n−1)² × c
-//
-// Halqa's own cut is NOT the test. The borrower's total cost is the test,
-// because that is the number that gets computed against us. Cover premium,
-// access fee and any time-value premium paid to other members all count.
+// The advance, and what an early day is really worth
 // ---------------------------------------------------------------------------
 
-export function aprEquivalentBps(allInCostPaisa: bigint, days: number, ticketPaisa: bigint): number {
-  const n = days;
-  if (n <= 1 || ticketPaisa <= 0n) return 0;
-  const denominator = BigInt(n - 1) * BigInt(n - 1) * ticketPaisa;
-  // basis points, integer division throughout: no floating point on money
-  return Number((allInCostPaisa * 2n * 365n * 10_000n) / denominator);
+/**
+ * Net cash advanced to a member who collects on day d.
+ *
+ * By day d they have paid d daily installments, so collecting the pot advances
+ * them the difference. Day 30 advances nothing: they have already paid it all.
+ */
+export function advancePaisa(day: number): bigint {
+  const d = Math.max(1, Math.min(HYPER.DAYS, Math.trunc(day)));
+  const paidSoFar = HYPER.DAILY_PAISA * BigInt(d);
+  const advance = HYPER.POT_PAISA - paidSoFar;
+  return advance > 0n ? advance : 0n;
 }
 
-/** The largest all-in member cost that still clears the published ceiling. */
-export function maxAllInCostPaisa(days: number, ticketPaisa: bigint): bigint {
-  const n = days;
-  if (n <= 1) return 0n;
-  const denominator = BigInt(n - 1) * BigInt(n - 1) * ticketPaisa;
-  return (BigInt(HYPER.MAX_APR_BPS) * denominator) / (2n * 365n * 10_000n);
+/** Days the advance stays outstanding before it is fully repaid. */
+export const daysOutstanding = (day: number) =>
+  Math.max(0, HYPER.DAYS - Math.max(1, Math.min(HYPER.DAYS, Math.trunc(day))));
+
+/**
+ * APR-equivalent of a premium paid for day d, in basis points.
+ *
+ *   average outstanding = advance / 2   (it amortises linearly to zero)
+ *   APR = premium / (advance/2) x 365 / daysOutstanding
+ *
+ * Returns 0 where nothing is advanced or nothing is outstanding, because there
+ * is no borrowing to price.
+ */
+export function bidAprBps(premiumPaisa: bigint, day: number): number {
+  const advance = advancePaisa(day);
+  const outstanding = daysOutstanding(day);
+  if (advance <= 0n || outstanding <= 0 || premiumPaisa <= 0n) return 0;
+  return Number((premiumPaisa * 2n * 365n * 10_000n) / (advance * BigInt(outstanding)));
 }
 
-export function withinAprCeiling(allInCostPaisa: bigint, days: number, ticketPaisa: bigint): boolean {
-  return aprEquivalentBps(allInCostPaisa, days, ticketPaisa) <= HYPER.MAX_APR_BPS;
+/**
+ * The most a member may bid for day d and still sit inside the ceiling.
+ * This is the number the auction enforces, not a suggestion.
+ */
+export function maxBidPaisa(day: number): bigint {
+  const advance = advancePaisa(day);
+  const outstanding = daysOutstanding(day);
+  if (advance <= 0n || outstanding <= 0) return 0n;
+  return (BigInt(HYPER.MAX_APR_BPS) * advance * BigInt(outstanding)) / (2n * 365n * 10_000n);
+}
+
+export function bidAllowed(premiumPaisa: bigint, day: number): boolean {
+  return premiumPaisa <= maxBidPaisa(day);
+}
+
+/**
+ * A guide price for a day, used to seed the auction and to show a member what
+ * the market has been paying. Scales with the advance and the time it is out,
+ * held at two thirds of the hard cap so the ceiling stays a ceiling.
+ */
+export function guidePricePaisa(day: number): bigint {
+  return (maxBidPaisa(day) * 2n) / 3n;
 }
 
 // ---------------------------------------------------------------------------
@@ -118,92 +135,82 @@ export function withinAprCeiling(allInCostPaisa: bigint, days: number, ticketPai
 export type HyperEntry = {
   creditScore: number;
   cleanCompletedCircles: number;
-  incomeVerified: boolean;
+  /** A payslip on file. Required of everyone, with no substitute. */
+  salarySlipVerified: boolean;
+  /** Verified daily-earning work: a trader, a driver, a shopkeeper. */
+  hasDailyEarningJob: boolean;
+  /** Vault balance, which stands in for daily earnings when there are none. */
+  vaultBalancePaisa: bigint;
   hasVerifiedRaast: boolean;
   activeHyperCircles: number;
-  /** Stage 2 only: pledged Safety Vault units covering L(k) at the seat. */
-  pledgeCoversLiability?: boolean;
 };
 
 export type EntryVerdict = { allowed: boolean; reasons: string[] };
 
+/**
+ * A daily committee only works if money arrives daily. So: a payslip is
+ * required of everyone, and on top of that a member must either earn daily or
+ * hold enough in the vault to cover the gaps. One or the other, never neither.
+ */
 export function assessEntry(e: HyperEntry): EntryVerdict {
   const reasons: string[] = [];
   if (e.creditScore < HYPER.MIN_SCORE) reasons.push(`A score of ${HYPER.MIN_SCORE} or above is required`);
   if (e.cleanCompletedCircles < HYPER.MIN_CLEAN_CIRCLES) {
     reasons.push(`${HYPER.MIN_CLEAN_CIRCLES} completed committees with a clean record are required`);
   }
-  if (!e.incomeVerified) reasons.push('Verified income is required, by payslip or a proven salary pattern');
-  // Daily cadence multiplies collection events by sixty. On wallet rails at
-  // 1.5% the fees alone reach ~90% of a single pot. HYPER is a product on
-  // Raast or it does not exist, so this is a creation-time gate.
-  if (!e.hasVerifiedRaast) reasons.push('A verified Raast credential is required');
-  if (e.activeHyperCircles >= HYPER.MAX_CONCURRENT) {
-    reasons.push('Only one HYPER committee at a time');
+  if (!e.salarySlipVerified) reasons.push('A salary slip must be on file');
+  if (!e.hasDailyEarningJob && e.vaultBalancePaisa < HYPER.MIN_VAULT_PAISA) {
+    reasons.push('Either daily earnings or a minimum vault balance is required');
   }
+  // Daily cadence multiplies collection events by thirty. On wallet rails at
+  // 1.5% the fees alone would consume a large share of a single pot.
+  if (!e.hasVerifiedRaast) reasons.push('A verified Raast credential is required');
+  if (e.activeHyperCircles >= HYPER.MAX_CONCURRENT) reasons.push('Only one HYPER committee at a time');
   return { allowed: reasons.length === 0, reasons };
 }
 
 // ---------------------------------------------------------------------------
-// Seat assignment: a verifiable commit-reveal ballot
-//
-// The ballot ceremony IS the institution. A server-side random() replaces
-// theatre with a black box, and black boxes get accused. So: the server
-// commits to a hashed seed before the draw, every member's tap adds entropy,
-// the ordering derives from the combined value, and the seed is revealed
-// afterwards so anyone can recompute the result and check it.
-//
-// No competitor in the archive has this.
+// The auction
 // ---------------------------------------------------------------------------
 
-import { createHash } from 'node:crypto';
+export type DayBook = {
+  day: number;
+  seats: number;
+  taken: number;
+  /** Standing highest bid on this day. */
+  topBidPaisa: bigint;
+  guidePaisa: bigint;
+  maxBidPaisa: bigint;
+  full: boolean;
+};
 
-export const sha256 = (v: string) => createHash('sha256').update(v).digest('hex');
-
-/** Published before the draw. The seed itself stays secret until after. */
-export const commitment = (serverSeed: string) => sha256(`halqa-ballot:${serverSeed}`);
-
-/**
- * Derives the running order. Deterministic: the same inputs always produce the
- * same order, which is precisely what makes it checkable.
- */
-export function drawOrder(serverSeed: string, entropies: { userId: string; nonce: string }[]): string[] {
-  const combined = [serverSeed, ...entropies.map(e => `${e.userId}:${e.nonce}`).sort()].join('|');
-  return entropies
-    .map(e => ({ userId: e.userId, ticket: sha256(`${combined}#${e.userId}`) }))
-    .sort((a, b) => (a.ticket < b.ticket ? -1 : a.ticket > b.ticket ? 1 : 0))
-    .map(x => x.userId);
+export function buildDayBook(taken: Record<number, number> = {}, topBids: Record<number, bigint> = {}): DayBook[] {
+  return Array.from({ length: HYPER.DAYS }, (_, i) => {
+    const day = i + 1;
+    const t = taken[day] ?? 0;
+    return {
+      day,
+      seats: HYPER.SEATS_PER_DAY,
+      taken: t,
+      topBidPaisa: topBids[day] ?? 0n,
+      guidePaisa: guidePricePaisa(day),
+      maxBidPaisa: maxBidPaisa(day),
+      full: t >= HYPER.SEATS_PER_DAY,
+    };
+  });
 }
 
-/** Anyone can run this against the revealed seed and confirm the published order. */
-export function verifyDraw(
-  publishedCommitment: string,
-  revealedSeed: string,
-  entropies: { userId: string; nonce: string }[],
-  publishedOrder: string[],
-): boolean {
-  if (commitment(revealedSeed) !== publishedCommitment) return false;
-  const recomputed = drawOrder(revealedSeed, entropies);
-  return recomputed.length === publishedOrder.length
-    && recomputed.every((id, i) => id === publishedOrder[i]);
-}
+export type BidVerdict = { accepted: boolean; reason?: string };
 
-// ---------------------------------------------------------------------------
-// Presentation
-// ---------------------------------------------------------------------------
-
-/**
- * Members are pseudonymous to each other: no names, photos, phones or chat.
- * The label is stable for a cycle so people can follow the queue without ever
- * learning who anybody is.
- */
-export const pseudonym = (seatIndex: number) => `Member #${seatIndex + 1}`;
-
-/** Stage 1 seat access: everyone below Excellent takes one of the last 3 seats. */
-export function allowedSeats(days: number, band: string): number[] {
-  const n = rosterFor(days);
-  if (band === 'EXCELLENT') return Array.from({ length: n }, (_, i) => i + 1);
-  return [n - 2, n - 1, n];
+export function validateBid(premiumPaisa: bigint, day: number, book: DayBook): BidVerdict {
+  if (day < 1 || day > HYPER.DAYS) return { accepted: false, reason: 'That day is not in this cycle' };
+  if (book.full) return { accepted: false, reason: 'That day is full' };
+  if (premiumPaisa < 0n) return { accepted: false, reason: 'A bid cannot be negative' };
+  if (premiumPaisa <= book.topBidPaisa) return { accepted: false, reason: 'Your bid must beat the standing bid' };
+  if (!bidAllowed(premiumPaisa, day)) {
+    return { accepted: false, reason: 'That bid is above the cost ceiling Halqa allows for this day' };
+  }
+  return { accepted: true };
 }
 
 /** Which rung of the late ladder a payment has reached, given hours overdue. */

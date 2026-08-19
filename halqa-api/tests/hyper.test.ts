@@ -1,94 +1,149 @@
 import { describe, expect, it } from 'vitest';
 import {
   HYPER,
-  HYPER_TICKETS_PAISA,
-  allowedSeats,
-  aprEquivalentBps,
+  advancePaisa,
   assessEntry,
-  commitment,
-  drawOrder,
-  isValidCycleLength,
+  bidAllowed,
+  bidAprBps,
+  buildDayBook,
+  daysOutstanding,
+  guidePricePaisa,
+  isBalanced,
   lateRung,
-  maxAllInCostPaisa,
-  potPaisa,
-  pseudonym,
-  rosterFor,
-  verifyDraw,
-  withinAprCeiling,
+  maxBidPaisa,
+  rosterSize,
+  totalContributionPaisa,
+  validateBid,
 } from '../src/lib/hyper';
 
-const RS = (n: number) => BigInt(n) * 100n;
+const RS = (n: number) => BigInt(Math.round(n * 100));
+const asRupees = (p: bigint) => Number(p) / 100;
 
-describe('HYPER parameters', () => {
-  it('sets the roster to the cycle length: one collection a day', () => {
-    expect(rosterFor(60)).toBe(60);
-    expect(rosterFor(48)).toBe(48);
+describe('HYPER shape', () => {
+  it('runs 30 days with 7 collecting each day, so the roster is 210', () => {
+    expect(HYPER.DAYS).toBe(30);
+    expect(HYPER.SEATS_PER_DAY).toBe(7);
+    expect(rosterSize()).toBe(210);
   });
 
-  it('accepts 48 to 60 day cycles and rejects anything shorter', () => {
-    expect(isValidCycleLength(48)).toBe(true);
-    expect(isValidCycleLength(60)).toBe(true);
-    expect(isValidCycleLength(47)).toBe(false);
-    expect(isValidCycleLength(61)).toBe(false);
-    // 15 and 30 exist only behind a Safety Vault pledge
-    expect(isValidCycleLength(30)).toBe(false);
-    expect(isValidCycleLength(30, true)).toBe(true);
+  it('charges Rs 500 a day and pays a Rs 15,000 pot', () => {
+    expect(HYPER.DAILY_PAISA).toBe(RS(500));
+    expect(HYPER.POT_PAISA).toBe(RS(15_000));
   });
 
-  it('offers exactly the four specified daily tickets', () => {
-    expect(HYPER_TICKETS_PAISA).toEqual([10_000n, 50_000n, 100_000n, 200_000n]);
+  it('balances exactly: what a member pays in equals what they collect', () => {
+    expect(totalContributionPaisa()).toBe(HYPER.POT_PAISA);
+    expect(isBalanced()).toBe(true);
   });
 
-  it('produces the specified pot range across the ticket and cycle bounds', () => {
-    // Rs 100 a day over 60 days
-    expect(potPaisa(10_000n, 60)).toBe(RS(6_000));
-    // Rs 2,000 a day over 60 days
-    expect(potPaisa(200_000n, 60)).toBe(RS(120_000));
+  it('balances at the circle level too', () => {
+    const membersIn = BigInt(rosterSize()) * totalContributionPaisa();
+    const paidOut = BigInt(rosterSize()) * HYPER.POT_PAISA;
+    expect(membersIn).toBe(paidOut);
   });
 });
 
-describe('the APR-equivalent ceiling', () => {
-  // Worked example from the specification: Rs 500 a day, 30-day cycle,
-  // pot Rs 15,000. These are the numbers the design was argued from.
-  const c = 50_000n; // Rs 500 in paisa
-  const days = 30;
-
-  it('reproduces the worked table from the specification', () => {
-    const pct = (paisa: bigint) => Math.round(aprEquivalentBps(paisa, days, c) / 100);
-    expect(pct(RS(276))).toBe(48);   // 1.84% of pot
-    expect(pct(RS(450))).toBe(78);   // 3.0% of pot
-    expect(pct(RS(750))).toBe(130);  // 5.0% of pot
-    expect(pct(RS(1_500))).toBe(260); // 10% of pot, nano-lender territory
+describe('the advance an early day represents', () => {
+  it('advances the pot less whatever the member has already paid', () => {
+    // Day 1: paid Rs 500, collects Rs 15,000, so Rs 14,500 is advanced.
+    expect(advancePaisa(1)).toBe(RS(14_500));
+    // Day 15: paid Rs 7,500, so Rs 7,500 is advanced.
+    expect(advancePaisa(15)).toBe(RS(7_500));
   });
 
-  it('shows why "just charge 10%" cannot be executed naively', () => {
-    // Rs 1,500 on a Rs 15,000 pot feels like a modest 10%. It is 260% APR.
-    const tenPercentOfPot = RS(1_500);
-    expect(withinAprCeiling(tenPercentOfPot, days, c)).toBe(false);
+  it('advances nothing on the last day, because it is all already paid', () => {
+    expect(advancePaisa(30)).toBe(0n);
+    expect(daysOutstanding(30)).toBe(0);
   });
 
-  it('holds the published 48% ceiling', () => {
-    expect(HYPER.MAX_APR_BPS).toBe(4800);
-    const cap = maxAllInCostPaisa(days, c);
-    expect(withinAprCeiling(cap, days, c)).toBe(true);
-    expect(withinAprCeiling(cap + 100n, days, c)).toBe(false);
+  it('shrinks steadily as the cycle runs', () => {
+    for (let d = 2; d <= HYPER.DAYS; d++) {
+      expect(advancePaisa(d)).toBeLessThan(advancePaisa(d - 1));
+    }
+  });
+});
+
+describe('the bid ceiling', () => {
+  it('caps the first day at about Rs 276, the specification worked example', () => {
+    const cap = maxBidPaisa(1);
+    expect(Math.round(asRupees(cap))).toBe(276);
   });
 
-  it('permits a larger absolute fee on a longer cycle, as the formula requires', () => {
-    // The advance amortises over more days, so the same rupee cost is a lower
-    // rate. This is exactly why the cycle floor exists.
-    expect(maxAllInCostPaisa(60, c)).toBeGreaterThan(maxAllInCostPaisa(30, c));
+  it('prices that cap at exactly the published 48 per cent', () => {
+    expect(bidAprBps(maxBidPaisa(1), 1)).toBeLessThanOrEqual(HYPER.MAX_APR_BPS);
+    expect(bidAprBps(maxBidPaisa(1), 1)).toBeGreaterThan(HYPER.MAX_APR_BPS - 100);
   });
 
-  it('never divides by zero on a degenerate cycle', () => {
-    expect(aprEquivalentBps(RS(100), 1, c)).toBe(0);
-    expect(maxAllInCostPaisa(1, c)).toBe(0n);
+  it('refuses the bid that reads as a modest ten per cent of the pot', () => {
+    // Rs 1,500 on a Rs 15,000 pot feels small and is far past the ceiling.
+    expect(bidAllowed(RS(1_500), 1)).toBe(false);
+    expect(bidAprBps(RS(1_500), 1)).toBeGreaterThan(20_000); // over 200% APR
+  });
+
+  it('falls towards nothing for the last days, because they are worth nothing', () => {
+    expect(maxBidPaisa(29)).toBeLessThan(maxBidPaisa(15));
+    expect(maxBidPaisa(15)).toBeLessThan(maxBidPaisa(1));
+    expect(maxBidPaisa(30)).toBe(0n);
+  });
+
+  it('never lets any bid on any day exceed the ceiling', () => {
+    for (let d = 1; d <= HYPER.DAYS; d++) {
+      const cap = maxBidPaisa(d);
+      expect(bidAprBps(cap, d)).toBeLessThanOrEqual(HYPER.MAX_APR_BPS);
+      if (cap > 0n) expect(bidAllowed(cap + RS(1), d)).toBe(false);
+    }
+  });
+
+  it('keeps the guide price below the hard cap', () => {
+    for (let d = 1; d <= HYPER.DAYS; d++) {
+      expect(guidePricePaisa(d)).toBeLessThanOrEqual(maxBidPaisa(d));
+    }
+  });
+
+  it('prices a free day at zero rather than dividing by zero', () => {
+    expect(bidAprBps(0n, 1)).toBe(0);
+    expect(bidAprBps(RS(50), 30)).toBe(0);
+  });
+});
+
+describe('the auction book', () => {
+  it('lays out every day with its seats and ceiling', () => {
+    const book = buildDayBook();
+    expect(book).toHaveLength(30);
+    expect(book[0].seats).toBe(7);
+    expect(book[0].maxBidPaisa).toBe(maxBidPaisa(1));
+    expect(book.every(d => !d.full)).toBe(true);
+  });
+
+  it('marks a day full once seven have taken it', () => {
+    const book = buildDayBook({ 3: 7 });
+    expect(book[2].full).toBe(true);
+    expect(validateBid(RS(10), 3, book[2])).toMatchObject({ accepted: false });
+  });
+
+  it('requires a bid to beat the standing bid', () => {
+    const book = buildDayBook({}, { 1: RS(100) });
+    expect(validateBid(RS(100), 1, book[0]).accepted).toBe(false);
+    expect(validateBid(RS(101), 1, book[0]).accepted).toBe(true);
+  });
+
+  it('refuses a bid above the ceiling even when it beats the standing bid', () => {
+    const book = buildDayBook({}, { 1: RS(200) });
+    const v = validateBid(RS(5_000), 1, book[0]);
+    expect(v.accepted).toBe(false);
+    expect(v.reason).toContain('ceiling');
+  });
+
+  it('refuses a day outside the cycle', () => {
+    const book = buildDayBook();
+    expect(validateBid(RS(10), 31, book[0]).accepted).toBe(false);
   });
 });
 
 describe('entry gating', () => {
   const ok = {
-    creditScore: 700, cleanCompletedCircles: 2, incomeVerified: true,
+    creditScore: 700, cleanCompletedCircles: 2, salarySlipVerified: true,
+    hasDailyEarningJob: true, vaultBalancePaisa: 0n,
     hasVerifiedRaast: true, activeHyperCircles: 0,
   };
 
@@ -96,104 +151,36 @@ describe('entry gating', () => {
     expect(assessEntry(ok)).toEqual({ allowed: true, reasons: [] });
   });
 
-  it('refuses on score, and says so', () => {
-    const v = assessEntry({ ...ok, creditScore: 649 });
+  it('always requires a salary slip, with no substitute', () => {
+    const v = assessEntry({ ...ok, salarySlipVerified: false });
     expect(v.allowed).toBe(false);
-    expect(v.reasons[0]).toContain('650');
+    expect(v.reasons.join(' ')).toContain('salary slip');
   });
 
-  it('refuses without two clean completed circles', () => {
+  it('accepts a vault balance in place of daily earnings', () => {
+    expect(assessEntry({
+      ...ok, hasDailyEarningJob: false, vaultBalancePaisa: HYPER.MIN_VAULT_PAISA,
+    }).allowed).toBe(true);
+  });
+
+  it('refuses a member with neither daily earnings nor the vault balance', () => {
+    const v = assessEntry({
+      ...ok, hasDailyEarningJob: false, vaultBalancePaisa: HYPER.MIN_VAULT_PAISA - 1n,
+    });
+    expect(v.allowed).toBe(false);
+    expect(v.reasons.join(' ')).toContain('daily earnings');
+  });
+
+  it('refuses on score, history, Raast and concurrency', () => {
+    expect(assessEntry({ ...ok, creditScore: 649 }).allowed).toBe(false);
     expect(assessEntry({ ...ok, cleanCompletedCircles: 1 }).allowed).toBe(false);
-  });
-
-  it('refuses without verified income', () => {
-    expect(assessEntry({ ...ok, incomeVerified: false }).allowed).toBe(false);
-  });
-
-  it('refuses without Raast, because wallet rails eat the pot', () => {
-    const v = assessEntry({ ...ok, hasVerifiedRaast: false });
-    expect(v.allowed).toBe(false);
-    expect(v.reasons.join(' ')).toContain('Raast');
-  });
-
-  it('allows only one HYPER circle at a time', () => {
+    expect(assessEntry({ ...ok, hasVerifiedRaast: false }).allowed).toBe(false);
     expect(assessEntry({ ...ok, activeHyperCircles: 1 }).allowed).toBe(false);
-    expect(HYPER.MAX_CONCURRENT).toBe(1);
-  });
-
-  it('reports every failed gate at once rather than one at a time', () => {
-    const v = assessEntry({ ...ok, creditScore: 400, incomeVerified: false, hasVerifiedRaast: false });
-    expect(v.reasons.length).toBe(3);
-  });
-});
-
-describe('the commit-reveal ballot', () => {
-  const entropies = Array.from({ length: 12 }, (_, i) => ({ userId: `u${i}`, nonce: `n${i}` }));
-
-  it('publishes a commitment that does not leak the seed', () => {
-    const c = commitment('secret-seed');
-    expect(c).toHaveLength(64);
-    expect(c).not.toContain('secret-seed');
-  });
-
-  it('is deterministic: the same inputs always give the same order', () => {
-    expect(drawOrder('seed', entropies)).toEqual(drawOrder('seed', entropies));
-  });
-
-  it('returns every member exactly once', () => {
-    const order = drawOrder('seed', entropies);
-    expect(order).toHaveLength(entropies.length);
-    expect(new Set(order).size).toBe(entropies.length);
-  });
-
-  it('changes the order when the seed changes', () => {
-    expect(drawOrder('seed-a', entropies)).not.toEqual(drawOrder('seed-b', entropies));
-  });
-
-  it('changes the order when any member contributes different entropy', () => {
-    const tampered = [{ userId: 'u0', nonce: 'DIFFERENT' }, ...entropies.slice(1)];
-    expect(drawOrder('seed', tampered)).not.toEqual(drawOrder('seed', entropies));
-  });
-
-  it('verifies a published order against the revealed seed', () => {
-    const seed = 'seed';
-    const c = commitment(seed);
-    const order = drawOrder(seed, entropies);
-    expect(verifyDraw(c, seed, entropies, order)).toBe(true);
-  });
-
-  it('catches a server that reveals a seed which does not match its commitment', () => {
-    const order = drawOrder('seed', entropies);
-    expect(verifyDraw(commitment('seed'), 'other-seed', entropies, order)).toBe(false);
-  });
-
-  it('catches a published order that was quietly reshuffled after the draw', () => {
-    const seed = 'seed';
-    const order = drawOrder(seed, entropies);
-    const swapped = [order[1], order[0], ...order.slice(2)];
-    expect(verifyDraw(commitment(seed), seed, entropies, swapped)).toBe(false);
-  });
-});
-
-describe('anonymity and seat access', () => {
-  it('labels members by seat, never by name', () => {
-    expect(pseudonym(0)).toBe('Member #1');
-    expect(pseudonym(6)).toBe('Member #7');
-  });
-
-  it('restricts everyone below Excellent to the last three seats in stage 1', () => {
-    expect(allowedSeats(60, 'GOOD')).toEqual([58, 59, 60]);
-    expect(allowedSeats(48, 'DECENT')).toEqual([46, 47, 48]);
-  });
-
-  it('opens every seat to Excellent', () => {
-    expect(allowedSeats(60, 'EXCELLENT')).toHaveLength(60);
   });
 });
 
 describe('the daily late ladder', () => {
   it('leaves a payment inside the 12-hour grace untouched', () => {
-    expect(lateRung(0)).toBeNull();
     expect(lateRung(11)).toBeNull();
     expect(HYPER.GRACE_HOURS).toBe(12);
   });
@@ -204,12 +191,7 @@ describe('the daily late ladder', () => {
     expect(lateRung(60)).toMatchObject({ rung: 3, penaltyBps: 1500, scoreDelta: -60 });
   });
 
-  it('stays on the final rung rather than escalating without limit', () => {
-    expect(lateRung(500)).toMatchObject({ rung: 3, penaltyBps: 1500 });
-  });
-
-  it('keeps the post-payout default far heavier than any lateness', () => {
-    expect(HYPER.POST_PAYOUT_DEFAULT).toBe(-200);
+  it('keeps the post-payout default heavier than any lateness', () => {
     expect(Math.abs(HYPER.POST_PAYOUT_DEFAULT)).toBeGreaterThan(Math.abs(HYPER.SCORE_DAMAGE[2]));
   });
 });

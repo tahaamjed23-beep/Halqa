@@ -61,30 +61,45 @@
 .hyper-gate.ok>i{background:var(--ok)}
 .hyper-gate b{display:block;font-size:13px;font-weight:640;color:var(--ink)}
 .hyper-gate span{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
-.hyper-tickets button{font-size:12px}
-.hyper-sub{margin-top:14px}
 .hyper-note{font-size:12px;line-height:1.6;color:var(--muted);margin-top:11px}
-.hyper-apr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.hyper-apr>div{background:var(--line-2);border-radius:var(--r-sm);padding:12px}
-.hyper-apr span{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;line-height:1.35}
-.hyper-apr b{display:block;font-size:21px;font-weight:740;letter-spacing:-.03em;
-  font-variant-numeric:tabular-nums}
-.hyper-ballot{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px}
-.hyper-ballot li{font-size:12.5px;line-height:1.55;color:var(--ink-2)}
-.hyper-never{display:flex;align-items:flex-start;gap:11px;background:var(--l50);
-  border-radius:var(--r-sm);padding:12px 13px;margin-top:12px}
-.hyper-never svg{width:19px;height:19px;color:var(--l600);flex:none;margin-top:1px}
-.hyper-never b{display:block;font-size:13px;font-weight:680;color:var(--l700)}
-.hyper-never span{display:block;font-size:12px;line-height:1.55;color:var(--ink-2);margin-top:3px}
-.hyper-roster{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px}
-.hyper-seat{background:var(--line-2);border-radius:var(--r-sm);padding:10px 11px;text-align:center}
-.hyper-seat b{display:block;font-size:12.5px;font-weight:680}
-.hyper-seat span{display:block;font-size:10.5px;color:var(--muted);margin-top:2px}
-.hyper-seat.me{background:var(--l50);outline:1.5px solid var(--l300)}
-.hyper-seat.me b{color:var(--l700)}
-.hyper-foot{font-size:11.5px;line-height:1.55;color:var(--muted);margin-top:11px;text-align:center}
 
 /* ---------- offline ---------- */
 .offline-banner{position:fixed;left:0;right:0;top:0;z-index:90;background:var(--ink);color:#fff;
   font-size:12.5px;font-weight:600;text-align:center;padding:9px 14px;
   padding-top:calc(9px + env(safe-area-inset-top))}
+
+/* ---------- HYPER auction ---------- */
+.hyper-hero{background:var(--hdr);color:#fff;border:none}
+.hyper-hero-top{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;opacity:.94}
+.hyper-hero-top svg{width:17px;height:17px}
+.hyper-hero-pot{display:block;font-size:32px;font-weight:760;letter-spacing:-.035em;margin:9px 0 13px;
+  font-variant-numeric:tabular-nums}
+.hyper-hero .detail-grid>div{background:rgba(255,255,255,.16)}
+.hyper-hero .detail-grid span{color:rgba(255,255,255,.82)}
+.hyper-hero .detail-grid b{color:#fff}
+.hyper-hero .hyper-note{color:rgba(255,255,255,.9)}
+.hyper-cap{display:flex;align-items:flex-start;gap:11px;background:var(--warn-bg);color:#7A4B00;
+  border-radius:var(--r-sm);padding:12px 13px;margin-bottom:12px}
+.hyper-cap svg{width:19px;height:19px;flex:none;margin-top:1px}
+.hyper-cap b{display:block;font-size:13px;font-weight:700}
+.hyper-cap span{display:block;font-size:12px;line-height:1.55;margin-top:3px}
+.hyper-days{display:flex;flex-direction:column;gap:7px;max-height:390px;overflow-y:auto;padding-right:2px}
+.hyper-day{display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+  border:1.5px solid var(--line);border-radius:var(--r-sm);padding:10px 12px;background:var(--surface)}
+.hyper-day.on{border-color:var(--l500);background:var(--l50)}
+.hyper-day.full{opacity:.45}
+.hyper-day-n{display:flex;flex-direction:column;align-items:center;flex:none;width:34px}
+.hyper-day-n b{font-size:17px;font-weight:740;line-height:1;font-variant-numeric:tabular-nums}
+.hyper-day-n small{font-size:9.5px;color:var(--muted)}
+.hyper-day-body{flex:1;min-width:0}
+.hyper-day-body b{display:block;font-size:13px;font-weight:660}
+.hyper-day-body small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.hyper-day-bid{text-align:right;flex:none}
+.hyper-day-bid b{display:block;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.hyper-day-bid small{display:block;font-size:10px;color:var(--faint)}
+.hyper-bid-input{margin-bottom:12px}
+.amt-input{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);
+  border-radius:var(--r-sm);padding:0 14px;height:56px;background:var(--surface)}
+.amt-input i{font-style:normal;font-size:16px;font-weight:700;color:var(--muted)}
+.amt-input input{flex:1;min-width:0;border:none;outline:none;background:none;height:100%;
+  font-size:24px;font-weight:740;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
