@@ -17,7 +17,7 @@ export const RAIL_META: Record<string, BrandMeta> = {
   JAZZCASH: { name: 'JazzCash', mono: 'JC', color: '#c8102e', dark: '#7e0a1d' },
   EASYPAISA: { name: 'Easypaisa', mono: 'EP', color: '#3f9c35', dark: '#25631f' },
   BANK_TRANSFER: { name: 'Bank account', mono: 'BK', color: '#5b6472', dark: '#39404b' },
-  CARD: { name: 'Debit / credit card', mono: '💳', color: '#2b2f45', dark: '#14162a' },
+  CARD: { name: 'Debit or credit card', mono: 'CD', color: '#2b2f45', dark: '#14162a' },
 };
 // Card brand from leading digits, display only; the PAN never leaves the form.
 export const cardBrand = (digits: string) => /^4/.test(digits) ? 'Visa' : /^(5[1-5]|2[2-7])/.test(digits) ? 'Mastercard' : /^3[47]/.test(digits) ? 'Amex' : /^(60|65|81|82)/.test(digits) ? 'PayPak' : 'Card';
@@ -69,9 +69,9 @@ export function AccountCard({ rail, bankName, accountTitle, accountNo, label, ve
       <i className="acct-card-logo">{isCard ? <SchemeMark brand={brand} size={40} /> : <RailLogo rail={rail} size={34} plain />}</i>
       <b>{isCard ? (brand || 'Card') : rail === 'BANK_TRANSFER' ? (bankName || 'Bank account') : meta.name}</b>
       <span className="acct-badges">
-        {draft ? <em className="acct-badge">Preview</em> : verified ? <em className="acct-badge ok">Verified ✓</em> : <em className="acct-badge warn">Unverified</em>}
+        {draft ? <em className="acct-badge">Preview</em> : verified ? <em className="acct-badge ok">Verified</em> : <em className="acct-badge warn">Unverified</em>}
         {preferred && <em className="acct-badge gold">Preferred</em>}
-        {salary && <em className="acct-badge gold">💼 Salary · 20% off fees</em>}
+        {salary && <em className="acct-badge gold">Salary, 20% off fees</em>}
       </span>
     </div>
     <div className="acct-card-no mono">{cardLine || '•••• •••• ••••'}</div>
@@ -136,7 +136,7 @@ export function LinkedAccountsManager() {
   return <div className="settings-block">
     <span className="eyebrow" style={{ display: 'block', marginBottom: 8 }}>Linked collection accounts</span>
     {salary && <div className="onboard-note" style={{ marginBottom: 10 }}>
-      <b>Salary day{salary.salaryVerifiedAt ? ' · Verified ✓' : salary.payslip?.status === 'PENDING' ? ' · Payslip under review' : ''}</b>
+      <b>Salary day{salary.salaryVerifiedAt ? ' · Verified' : salary.payslip?.status === 'PENDING' ? ' · Payslip under review' : ''}</b>
       <span>
         {salary.salaryVerifiedAt
           ? `Verified ${salary.salaryVerifyMethod === 'PATTERN' ? 'from your payment history' : salary.salaryVerifyMethod === 'ALERTS' ? 'from your credit alerts' : salary.salaryVerifyMethod === 'PAYSLIP' ? 'by payslip' : 'for the pilot'}, collection runs on your payday${salary.salaryDayLearned ? ` (around the ${salary.salaryDayLearned}th)` : ''}, before it is even due.`
@@ -188,7 +188,7 @@ export function LinkedAccountsManager() {
         <div style={{ margin: '10px 0' }}><AccountCard draft rail="CARD" accountTitle={accountTitle} accountNo={cardDigits} brand={cardDigits ? cardBrand(cardDigits) : undefined} expiry={expiry} /></div>
         {error && <div className="error-box">{error}</div>}
         <div className="form-actions"><button className="secondary" onClick={() => { setAdding(false); setError(''); }}>Cancel</button><button className="primary" disabled={busy || !cardValid} onClick={add}>{busy ? 'Linking…' : 'Link card'}</button></div>
-        <p className="muted" style={{ fontSize: 11.5 }}>🔒 Halqa stores only your card's <b>brand, last 4 digits, expiry and billing address</b>, never the full number, never the CVC. Real card charges run on the licensed payment partner's own PCI-secure page when live rails switch on.</p>
+        <p className="muted" style={{ fontSize: 11.5 }}>Halqa stores only your card's <b>brand, last 4 digits, expiry and billing address</b>, never the full number, never the CVC. Real card charges run on the licensed payment partner's own PCI-secure page when live rails switch on.</p>
       </> : <>
         <span className="eyebrow">{rail === 'BANK_TRANSFER' ? 'Step 3' : 'Step 2'} · Account details</span>
         <div style={{ marginTop: 8 }}>

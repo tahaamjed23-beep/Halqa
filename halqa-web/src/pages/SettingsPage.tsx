@@ -1,49 +1,79 @@
-import { RailLogo } from '../components/RailLogo';
-import FeeSchedule from '../components/FeeSchedule';
-import MyAgreements from '../components/MyAgreements';
 import { useEffect, useState } from 'react';
-import { Bell, ChevronLeft, ChevronRight, CreditCard, Fingerprint, Globe, HelpCircle, Megaphone, Scale, ShieldCheck, UserCog } from 'lucide-react';
+import {
+  Bell, CreditCard, Fingerprint, Globe, HelpCircle, Info, Megaphone,
+  Scale, ShieldCheck, UserCog,
+} from 'lucide-react';
 import { api } from '../api';
 import type { User } from '../types';
-import { Field } from '../components/ui';
+import FeeSchedule from '../components/FeeSchedule';
+import MyAgreements from '../components/MyAgreements';
 import LegalFooter, { LegalDocModal } from '../components/LegalFooter';
-import { LinkedAccountsManager, RAIL_META } from '../components/LinkedAccounts';
+import { LinkedAccountsManager } from '../components/LinkedAccounts';
 import { LEGAL_DOCS, TERMS_VERSION, type DocId } from '../legal/content';
 import { useLang } from '../lib/i18n';
 import { AppearancePanel } from '../components/Appearance';
 import { CollectionOrder } from '../components/CollectionOrder';
 import { SecurityPanel } from '../components/SecurityPanel';
+import { Card, Field, FlowHeader, Notice, Row, RowGroup } from '../components/wallet';
 
-// The Settings hub, the sectioned "gear" screen every payment app has.
-// Sections: Sign in & security · Account preferences · Data privacy ·
-// Advertising data · Notifications · Payments · Legal & policies · Help.
+// ---------------------------------------------------------------------------
+// SETTINGS
+//
+// A list that opens sub-screens, the way every wallet does it, instead of eight
+// accordions expanding in place. Tapping a row replaces the screen and gives
+// you a back arrow; you always know where you are and the page never grows to
+// six screens tall while you read it.
+// ---------------------------------------------------------------------------
 
 type SectionId = 'security' | 'account' | 'privacy' | 'ads' | 'notifications' | 'payments' | 'legal' | 'help';
 
 const pref = {
-  get: (k: string, fallback: string) => localStorage.getItem(`halqa.pref.${k}`) ?? fallback,
-  set: (k: string, v: string) => localStorage.setItem(`halqa.pref.${k}`, v),
+  get: (k: string, fallback: string) => localStorage.getItem('halqa.pref.' + k) ?? fallback,
+  set: (k: string, v: string) => localStorage.setItem('halqa.pref.' + k, v),
 };
 
 function ChangePassword() {
-  const [current, setCurrent] = useState(''); const [next, setNext] = useState(''); const [busy, setBusy] = useState(false); const [done, setDone] = useState(false); const [error, setError] = useState('');
-  const submit = async () => { setBusy(true); setError(''); setDone(false); try { await api('/auth/change-password', { method: 'POST', body: JSON.stringify({ currentPassword: current, newPassword: next }) }); setDone(true); setCurrent(''); setNext(''); } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); } };
-  return <div className="settings-block">
-    <div className="form-grid"><Field label="Current password"><input className="field" type="password" autoComplete="current-password" value={current} onChange={e => setCurrent(e.target.value)} /></Field><Field label="New password (min 8, letters + numbers)"><input className="field" type="password" autoComplete="new-password" value={next} onChange={e => setNext(e.target.value)} /></Field></div>
-    {done && <div className="commitment-ok" style={{ marginTop: 10 }}><ShieldCheck /><div><b>Password updated</b><p>Every other session was signed out.</p></div></div>}
-    {error && <div className="error-box">{error}</div>}
-    <div className="form-actions"><button className="primary" disabled={busy || !current || next.length < 8} onClick={submit}>{busy ? 'Updating…' : 'Update password'}</button></div>
-  </div>;
+  const [current, setCurrent] = useState('');
+  const [next, setNext] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState('');
+  const submit = async () => {
+    setBusy(true); setError(''); setDone(false);
+    try {
+      await api('/auth/change-password', { method: 'POST', body: JSON.stringify({ currentPassword: current, newPassword: next }) });
+      setDone(true); setCurrent(''); setNext('');
+    } catch (reason) { setError((reason as Error).message) } finally { setBusy(false) }
+  };
+  return (
+    <Card title="Change your password">
+      <Field label="Current password">
+        <input type="password" autoComplete="current-password" value={current}
+               onChange={e => setCurrent(e.target.value)} />
+      </Field>
+      <Field label="New password" hint="Eight characters or more, letters and numbers.">
+        <input type="password" autoComplete="new-password" value={next}
+               onChange={e => setNext(e.target.value)} />
+      </Field>
+      {done && <Notice kind="ok" icon={<ShieldCheck />}>Password updated. Every other session was signed out.</Notice>}
+      {error && <Notice kind="bad" icon={<Info />}>{error}</Notice>}
+      <button className="primary full" disabled={busy || !current || next.length < 8} onClick={submit}>
+        {busy ? 'Updating' : 'Update password'}
+      </button>
+    </Card>
+  );
 }
 
-function Toggle({ label, hint, checked, onChange, disabled }: { label: string; hint: string; checked: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
-  return <label className="settings-toggle"><input type="checkbox" checked={checked} disabled={disabled} onChange={e => onChange(e.target.checked)} /><span><b>{label}</b><small>{hint}</small></span></label>;
+/** A settings switch: title, one line, and the state on the right. */
+function Switch({ title, sub, on, onChange, disabled }:
+  { title: string; sub: string; on: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
+  return (
+    <Row chevron={false} title={title} sub={sub}
+         value={on ? 'On' : 'Off'} tone={on ? 'ok' : undefined}
+         onClick={disabled ? undefined : () => onChange(!on)} />
+  );
 }
 
-// Linked collection accounts now live in components/LinkedAccounts.tsx
-// bank-branded cards + the stepped SadaPay-style add flow, shared with
-// Profile and the signup wizard. Re-exported under the old name so existing
-// imports keep working.
 export { LinkedAccountsManager as LinkedMethodsManager } from '../components/LinkedAccounts';
 
 export default function SettingsPage({ user, back }: { user: User; back?: () => void }) {
@@ -52,89 +82,173 @@ export default function SettingsPage({ user, back }: { user: User; back?: () => 
   const [lang, setLang] = useLang();
   const [consent, setConsent] = useState<boolean | null>(null);
   const [consentBusy, setConsentBusy] = useState(false);
-  const [notif, setNotif] = useState({ reminders: pref.get('notif.reminders', 'on') === 'on', rounds: pref.get('notif.rounds', 'on') === 'on', marketing: pref.get('notif.marketing', 'off') === 'on' });
-  const [rail, setRail] = useState(pref.get('payments.rail', 'RAAST'));
-  useEffect(() => { void api<{ dataConsent: boolean }>('/profile/consent').then(d => setConsent(d.dataConsent)).catch(() => setConsent(null)); }, []);
-  const saveConsent = async (value: boolean) => { setConsentBusy(true); try { await api('/profile/consent', { method: 'PATCH', body: JSON.stringify({ dataConsent: value }) }); setConsent(value); } catch { /* keep previous */ } finally { setConsentBusy(false); } };
-  const setN = (k: keyof typeof notif, v: boolean) => { setNotif({ ...notif, [k]: v }); pref.set(`notif.${k}`, v ? 'on' : 'off'); };
+  const [notif, setNotif] = useState({
+    reminders: pref.get('notif.reminders', 'on') === 'on',
+    rounds: pref.get('notif.rounds', 'on') === 'on',
+    marketing: pref.get('notif.marketing', 'off') === 'on',
+  });
+
+  useEffect(() => {
+    void api<{ dataConsent: boolean }>('/profile/consent').then(d => setConsent(d.dataConsent)).catch(() => setConsent(null));
+  }, []);
+
+  const saveConsent = async (value: boolean) => {
+    setConsentBusy(true);
+    try { await api('/profile/consent', { method: 'PATCH', body: JSON.stringify({ dataConsent: value }) }); setConsent(value) }
+    catch { /* keep the previous value */ } finally { setConsentBusy(false) }
+  };
+  const setN = (k: keyof typeof notif, v: boolean) => {
+    setNotif({ ...notif, [k]: v }); pref.set('notif.' + k, v ? 'on' : 'off');
+  };
 
   const sections: { id: SectionId; icon: JSX.Element; title: string; sub: string }[] = [
-    { id: 'security', icon: <Fingerprint />, title: 'Sign in & security', sub: 'PIN, password, devices' },
-    { id: 'account', icon: <UserCog />, title: 'Your details', sub: 'Name, picture, language' },
-    { id: 'privacy', icon: <ShieldCheck />, title: 'Data privacy', sub: 'What is shared, and with whom' },
-    { id: 'ads', icon: <Megaphone />, title: 'Advertising', sub: 'What advertisers may see' },
+    { id: 'security', icon: <Fingerprint />, title: 'Sign in and security', sub: 'PIN, password, fingerprint' },
+    { id: 'account', icon: <UserCog />, title: 'Your details', sub: user.fullName + ' · @' + user.username },
+    { id: 'payments', icon: <CreditCard />, title: 'Payments', sub: 'Linked accounts, fees, collection order' },
     { id: 'notifications', icon: <Bell />, title: 'Notifications', sub: 'When Halqa contacts you' },
-    { id: 'payments', icon: <CreditCard />, title: 'Payments', sub: 'Accounts, fees, history' },
-    { id: 'legal', icon: <Scale />, title: 'Legal & policies', sub: 'What you signed' },
-    { id: 'help', icon: <HelpCircle />, title: 'Help', sub: 'Get help' },
+    { id: 'privacy', icon: <ShieldCheck />, title: 'Data privacy', sub: 'What is shared, and with whom' },
+    { id: 'ads', icon: <Megaphone />, title: 'Advertising', sub: 'One switch, no trackers' },
+    { id: 'legal', icon: <Scale />, title: 'Legal', sub: 'What you signed, and when' },
+    { id: 'help', icon: <HelpCircle />, title: 'Help', sub: 'support@halqa.pk' },
   ];
 
-  return <div className="page narrow enter">
-    {back&&<button className="back-link" onClick={back}><ChevronLeft/>Account</button>}
-    <div className="page-head"><div><h1>Settings</h1></div></div>
-    <div className="settings-list">
-      {sections.map(s => <section key={s.id} className={`panel settings-section ${open === s.id ? 'open' : ''}`}>
-        <button className="settings-row" onClick={() => setOpen(open === s.id ? null : s.id)}>{s.icon}<span className="settings-row-text"><b>{s.title}</b><small>{s.sub}</small></span><ChevronRight className={`chev ${open === s.id ? 'down' : ''}`} /></button>
-        {open === s.id && <div className="settings-body">
-          {s.id === 'security' && <>
+  const section = sections.find(s => s.id === open);
+
+  // ---- a sub-screen -------------------------------------------------------
+  if (section) {
+    return (
+      <div className="w-screen">
+        <FlowHeader title={section.title} onBack={() => setOpen(null)} />
+        <div className="w-screen-body">
+          {section.id === 'security' && <>
             <ChangePassword />
-            {/* App PIN and device biometric. The PIN is a second lock asked on
-                every open, separate from the password. */}
             <SecurityPanel />
-            <div className="info-stack"><div><span>Two-step verification</span><b>Coming with WhatsApp OTP</b></div><div><span>Failed sign-in lockout</span><b>On, locks after repeated failures</b></div><div><span>Sessions</span><b>Changing your password signs out all other devices</b></div></div>
+            <RowGroup title="Also in force">
+              <Row chevron={false} title="Lockout after repeated failures" sub="On, and it cannot be turned off" value="On" tone="ok" />
+              <Row chevron={false} title="Other sessions" sub="Changing your password signs out every other device" />
+              <Row chevron={false} title="Two step verification" sub="Arrives with the WhatsApp code rail" value="Soon" />
+            </RowGroup>
           </>}
-          {s.id === 'account' && <>
-            <div className="info-stack">
-              <div><span>Full name</span><b>{user.fullName}</b></div>
-              <div><span>Username</span><b>@{user.username}</b></div>
-              <div><span>Mobile</span><b>{user.phone}</b></div>
-              <div><span>Email</span><b>{user.email}</b></div>
-              <div><span>CNIC</span><b>{user.cnic ? `•••••••••${user.cnic.slice(-4)} · verified identity on file` : 'Not on file, add it to rank higher in turn order'}</b></div>
+
+          {section.id === 'account' && <>
+            <RowGroup title="Verified identity">
+              <Row chevron={false} title="Full name" value={user.fullName} />
+              <Row chevron={false} title="Username" value={'@' + user.username} />
+              <Row chevron={false} title="Mobile" value={user.phone} />
+              <Row chevron={false} title="Email" value={user.email} />
+              <Row chevron={false} title="CNIC"
+                   value={user.cnic ? '•••••••••' + user.cnic.slice(-4) : 'Not on file'}
+                   tone={user.cnic ? 'ok' : 'warn'} />
+            </RowGroup>
+            <div className="w-inset">
+              <Notice kind="info" icon={<Info />}>
+                These are locked once a circle is running. If one is wrong, write to
+                support@halqa.pk with proof of identity.
+              </Notice>
             </div>
-            <div className="settings-block"><Toggle label={lang === 'en' ? 'اردو interface' : 'English interface'} hint="Switch the app language." checked={lang === 'ur'} onChange={v => setLang(v ? 'ur' : 'en')} /></div>
-            <p className="muted" style={{ fontSize: 12 }}>Name, phone, email or CNIC wrong? Contact support@halqa.pk with proof of identity, identity fields are audit-locked and can't be self-edited once circles are running.</p>
-            {/* Photo, display name, accent, theme, text size and reminder
-                preferences. None of it touches the verified identity above. */}
+            <RowGroup title="Language">
+              <Switch title={lang === 'en' ? 'اردو interface' : 'English interface'}
+                      sub="Switch the language the app speaks"
+                      on={lang === 'ur'} onChange={v => setLang(v ? 'ur' : 'en')} />
+            </RowGroup>
             <AppearancePanel />
           </>}
-          {s.id === 'privacy' && <>
-            <Toggle label="Share my goal interest with relevant partners" hint="Only your name, number, city and goal category, never your ledger, score, CNIC or circle history. Off means nothing is ever shared. You can change this any time." checked={consent === true} disabled={consent === null || consentBusy} onChange={saveConsent} />
-            <div className="info-stack"><div><span>Your ledger & score</span><b>Never sold, never shared with partners</b></div><div><span>Other members see</span><b>Name, reliability, payment status in shared circles only</b></div><div><span>Download my data</span><b>Generate a Credit Passport from Profile, or email privacy@halqa.pk</b></div><div><span>Delete my account</span><b>Email privacy@halqa.pk, honoured after active circles settle</b></div></div>
-            <button className="text-action" onClick={() => setDoc('privacy')}>Read the full Privacy Policy</button>
-          </>}
-          {s.id === 'ads' && <>
-            <Toggle label="Goal-intent sharing (the only 'advertising data' we use)" hint="This is the same switch as Data privacy, one consent, one switch, no dark patterns. Sponsored content, if ever shown, will be labelled." checked={consent === true} disabled={consent === null || consentBusy} onChange={saveConsent} />
-            <div className="info-stack"><div><span>Third-party ad trackers</span><b>None in the app</b></div><div><span>Your CNIC & ledger</span><b>Never available to advertisers</b></div></div>
-            <button className="text-action" onClick={() => setDoc('ads')}>Read Advertising & Ad Choices</button>
-          </>}
-          {s.id === 'notifications' && <>
-            <Toggle label="Payment reminders" hint="Due-date nudges for your installments." checked={notif.reminders} onChange={v => setN('reminders', v)} />
-            <Toggle label="Round updates" hint="Payout releases, round openings, circle milestones." checked={notif.rounds} onChange={v => setN('rounds', v)} />
-            <Toggle label="News & offers from Halqa" hint="Off by default. Product news only, we don't spam." checked={notif.marketing} onChange={v => setN('marketing', v)} />
-            <p className="muted" style={{ fontSize: 12 }}>Preferences apply on this device. Critical security alerts are always delivered.</p>
-          </>}
-          {s.id === 'payments' && <>
+
+          {section.id === 'payments' && <>
             <FeeSchedule />
             <CollectionOrder />
             <LinkedAccountsManager />
-            <Field label="Fallback rail" hint="Used when none of your linked methods fits.">
-              <div className="rail-grid">{['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER', 'CASH'].map(r => { const meta = RAIL_META[r]; return <button key={r} className={`rail-chip ${rail === r ? 'on' : ''}`} onClick={() => { setRail(r); pref.set('payments.rail', r); }}><RailLogo rail={r} size={30} />{meta ? meta.name : 'Cash'}</button>; })}</div>
-            </Field>
-            <div className="info-stack"><div><span>Digital confirmations</span><b>Sandbox mode, clearly marked until live rails switch on</b></div><div><span>Fees Halqa charges</span><b>Only what's in the Fees & Payments Policy</b></div><div><span>Payment history</span><b>Profile → Recorded installments</b></div></div>
-            <button className="text-action" onClick={() => setDoc('fees')}>Read Fees & Payments Policy</button>
+            <div className="w-inset">
+              <button className="text-action" onClick={() => setDoc('fees')}>Read the Fees and Payments Policy</button>
+            </div>
           </>}
-          {s.id === 'legal' && <>
+
+          {section.id === 'notifications' && <>
+            <RowGroup title="On this device">
+              <Switch title="Payment reminders" sub="A nudge before an instalment is due"
+                      on={notif.reminders} onChange={v => setN('reminders', v)} />
+              <Switch title="Turn updates" sub="Payouts released, turns opening, circles finishing"
+                      on={notif.rounds} onChange={v => setN('rounds', v)} />
+              <Switch title="News from Halqa" sub="Off by default, and product news only"
+                      on={notif.marketing} onChange={v => setN('marketing', v)} />
+            </RowGroup>
+            <p className="w-foot">Security alerts are always delivered, whatever is set here.</p>
+          </>}
+
+          {section.id === 'privacy' && <>
+            <RowGroup>
+              <Switch title="Share my goal with relevant partners"
+                      sub="Name, number, city and goal category only. Never your ledger, score, CNIC or history."
+                      on={consent === true} disabled={consent === null || consentBusy}
+                      onChange={saveConsent} />
+            </RowGroup>
+            <RowGroup title="What is never shared">
+              <Row chevron={false} title="Your ledger and your score" sub="Never sold, never given to a partner" />
+              <Row chevron={false} title="What other members see" sub="Your name, standing and payment status, in shared circles only" />
+              <Row chevron={false} title="Download your data" sub="Generate a Credit Passport from Profile, or write to privacy@halqa.pk" />
+              <Row chevron={false} title="Delete your account" sub="Write to privacy@halqa.pk. Honoured once your circles settle." />
+            </RowGroup>
+            <div className="w-inset">
+              <button className="text-action" onClick={() => setDoc('privacy')}>Read the full Privacy Policy</button>
+            </div>
+          </>}
+
+          {section.id === 'ads' && <>
+            <RowGroup>
+              <Switch title="Goal sharing" sub="The same switch as Data privacy. One consent, one control."
+                      on={consent === true} disabled={consent === null || consentBusy}
+                      onChange={saveConsent} />
+            </RowGroup>
+            <RowGroup title="What advertisers get">
+              <Row chevron={false} title="Third party ad trackers" value="None" tone="ok" />
+              <Row chevron={false} title="Your CNIC and your ledger" value="Never" tone="ok" />
+            </RowGroup>
+            <div className="w-inset">
+              <button className="text-action" onClick={() => setDoc('ads')}>Read Advertising and Ad Choices</button>
+            </div>
+          </>}
+
+          {section.id === 'legal' && <>
             <MyAgreements />
-            <div className="legal-links">{(Object.keys(LEGAL_DOCS) as DocId[]).map(id => <button key={id} className="settings-row slim" onClick={() => setDoc(id)}><Scale size={16} /><span className="settings-row-text"><b>{LEGAL_DOCS[id].title}</b><small>{LEGAL_DOCS[id].updated}</small></span><ChevronRight className="chev" /></button>)}</div>
-            <p className="muted" style={{ fontSize: 12 }}>You accepted version {TERMS_VERSION} at signup; acceptance is recorded with a timestamp.</p>
+            <RowGroup title="The documents">
+              {(Object.keys(LEGAL_DOCS) as DocId[]).map(id => (
+                <Row key={id} icon={<Scale />} title={LEGAL_DOCS[id].title}
+                     sub={LEGAL_DOCS[id].updated} onClick={() => setDoc(id)} />
+              ))}
+            </RowGroup>
+            <p className="w-foot">
+              You accepted version {TERMS_VERSION} at signup, and the acceptance is timestamped.
+            </p>
           </>}
-          {s.id === 'help' && <>
-            <div className="info-stack"><div><span>Support</span><b>support@halqa.pk · replies within 2 working days</b></div><div><span>Security reports</span><b>security@halqa.pk</b></div><div><span>App</span><b>Halqa web · {TERMS_VERSION.split('-')[0]}</b></div><div><span><Globe size={12} style={{ verticalAlign: 'middle' }} /> Region</span><b>Pakistan · Asia/Karachi</b></div></div>
-          </>}
-        </div>}
-      </section>)}
+
+          {section.id === 'help' && (
+            <RowGroup>
+              <Row chevron={false} icon={<HelpCircle />} title="Support"
+                   sub="support@halqa.pk, answered within two working days" />
+              <Row chevron={false} icon={<ShieldCheck />} title="Security reports" sub="security@halqa.pk" />
+              <Row chevron={false} icon={<Globe />} title="Region" sub="Pakistan, Asia/Karachi" />
+              <Row chevron={false} icon={<Info />} title="App version" sub={'Halqa web ' + TERMS_VERSION.split('-')[0]} />
+            </RowGroup>
+          )}
+        </div>
+        {doc && <LegalDocModal doc={doc} onClose={() => setDoc(null)} />}
+      </div>
+    );
+  }
+
+  // ---- the list -----------------------------------------------------------
+  return (
+    <div className="w-screen">
+      <FlowHeader title="Settings" onBack={back} />
+      <div className="w-screen-body">
+        <RowGroup>
+          {sections.map(s => (
+            <Row key={s.id} icon={s.icon} title={s.title} sub={s.sub} onClick={() => setOpen(s.id)} />
+          ))}
+        </RowGroup>
+        <LegalFooter />
+      </div>
+      {doc && <LegalDocModal doc={doc} onClose={() => setDoc(null)} />}
     </div>
-    <LegalFooter />
-    {doc && <LegalDocModal doc={doc} onClose={() => setDoc(null)} />}
-  </div>;
+  );
 }

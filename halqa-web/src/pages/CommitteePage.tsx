@@ -10,7 +10,7 @@ import InviteShare from '../components/InviteShare';
 import { date, dateShort, dateTime } from '../lib/format';
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
-import { ChevronLeft, Crown, Landmark, Send, ShieldCheck, UserRound, Users, X } from 'lucide-react';
+import { Check, ChevronLeft, Clock, Crown, Landmark, Lock, Send, ShieldCheck, UserRound, Users, X } from 'lucide-react';
 import { API_ORIGIN, api, key, money, tokens } from '../api';
 import { emitHalqaAction } from '../lib/events';
 import type { Committee, Round, User } from '../types';
@@ -61,7 +61,7 @@ function MutualPgLink({committeeId}:{committeeId:string}){
   return <>
     <button className="text-action" style={{fontSize:11.5}} onClick={()=>void show()}>View the mutual guarantee you signed</button>
     {open&&<div className="modal-backdrop"><section className="modal" style={{display:'flex',flexDirection:'column',gap:10,maxHeight:'88vh'}}>
-      <div className="modal-head"><div><span className="eyebrow">{signedAt?`E-signed ${dateTime(signedAt)}`:'Recorded at join'}</span><h2>Mutual member guarantee</h2></div><button onClick={()=>setOpen(false)} aria-label="Close">✕</button></div>
+      <div className="modal-head"><div><span className="eyebrow">{signedAt?`E-signed ${dateTime(signedAt)}`:'Recorded at join'}</span><h2>Mutual member guarantee</h2></div><button onClick={()=>setOpen(false)} aria-label="Close"><X/></button></div>
       <pre style={{overflowY:'auto',whiteSpace:'pre-wrap',fontFamily:'inherit',fontSize:13,lineHeight:1.55,background:'rgba(255,255,255,.04)',border:'1px solid rgba(214,178,94,.25)',borderRadius:10,padding:14,margin:0,flex:1,minHeight:140}}>{text}</pre>
     </section></div>}
   </>;
@@ -77,8 +77,8 @@ function Payments({committee,user,active,myPayment,host,reload,action}:{committe
   const [showReceipt,setShowReceipt]=useState(false);
   return <section className="panel detail-panel"><div className="panel-head"><div><span className="eyebrow">Round {active?.roundNumber||''}</span><h2>Installment matrix</h2><p>{active?`${formatDuration(active.dueDate)} until due · ${paid}/${active.payments.length} recorded`:'The committee has not started.'}</p></div>{myPayment&&(myPayment.status!=='PAID'
     ?<button className="secondary" onClick={()=>setPay(true)}>Collect now (optional)</button>
-    :<button className="secondary" onClick={()=>setShowReceipt(!showReceipt)}>Collected ✓ · receipt</button>)}</div>
-  {mine&&myPayment&&myPayment.status!=='PAID'&&active&&<div className="warning-box" style={{background:'rgba(120,180,120,.08)',borderColor:'rgba(120,180,120,.35)'}}>🔄 <b>Auto-collection is on.</b> {money(myPayment.amountPaisa)} is collected from your linked {autoRail} account on {dateShort(active.dueDate)}, keep the balance available. You'll get a WhatsApp receipt for every collection. Collecting early (3+ days) earns a reliability bonus.</div>}
+    :<button className="secondary" onClick={()=>setShowReceipt(!showReceipt)}>Collected, see the receipt</button>)}</div>
+  {mine&&myPayment&&myPayment.status!=='PAID'&&active&&<div className="warning-box" style={{background:'rgba(120,180,120,.08)',borderColor:'rgba(120,180,120,.35)'}}><b>Auto-collection is on.</b> {money(myPayment.amountPaisa)} is collected from your linked {autoRail} account on {dateShort(active.dueDate)}, keep the balance available. You'll get a WhatsApp receipt for every collection. Collecting early (3+ days) earns a reliability bonus.</div>}
   {myRound&&<div className="your-payout"><div><span>Your turn · round {myRound.roundNumber}</span><b>{money(myRound.payoutPaisa)}</b><small>{myRound.status==='CLOSED'?'Collected':`Lands ${date(myRound.payoutDate)}`} · already net of the turn-order adjustment</small></div><i>#{committee.members.find(m=>m.userId===user.id)?.turnPosition||''}</i></div>}
   {!active&&<div className="warning-box">{committee.status==='FORMING'?(host?'Installments appear here the moment you start the circle, use Start on the Turns tab.':'Installments appear here once the host starts the circle. Nothing is owed while it forms.'):'No round is collecting right now.'}</div>}
   {showReceipt&&myPayment&&<div className="receipt-rows" style={{marginBottom:12}}><div><span>Status</span><b className="paid">PAID</b></div><div><span>Amount</span><b>{money(myPayment.amountPaisa)}</b></div><div><span>Rail</span><b>{(myPayment as unknown as {paidVia?:string}).paidVia||''}</b></div><div><span>Reference</span><b className="mono">{(myPayment as unknown as {txnRef?:string}).txnRef||''}</b></div></div>}<div className="payment-grid">{active?.payments.map(payment=><article key={payment.id}><div className="avatar">{payment.payer?.fullName[0]}</div><div><b>{payment.payer?.fullName}</b><p>{money(payment.amountPaisa)}</p></div><span className={`status status-${payment.status.toLowerCase()}`}>{payment.status}</span></article>)}</div>
@@ -145,13 +145,13 @@ function PaymentModal({round,committee,user,amountPaisa,close,done}:{round:Round
   }catch(reason){setError((reason as Error).message);setStep('failed')}};
   const copyRef=async()=>{try{await navigator.clipboard.writeText(receipt?.ref||'');setCopied(true);setTimeout(()=>setCopied(false),1500)}catch{/* clipboard unavailable */}};
   return <div className="modal-backdrop"><section className="modal checkout">
-    <div className="modal-head"><div className="checkout-title"><h2>Checkout</h2><span className="secure-chip">🔒 Encrypted</span></div>{step!=='processing'&&<button onClick={step==='receipt'?()=>void done():close}><X/></button>}</div>
+    <div className="modal-head"><div className="checkout-title"><h2>Checkout</h2><span className="secure-chip"><Lock/>Encrypted</span></div>{step!=='processing'&&<button onClick={step==='receipt'?()=>void done():close}><X/></button>}</div>
     {step==='select'&&<>
       <div className="checkout-summary"><div className="checkout-lines"><div><span>{committee.name}</span><b>Round {round.roundNumber} installment</b></div><div><span>Service fee</span><b className="fee-zero">Rs 0, members never pay Halqa</b></div></div><div className="checkout-amount"><span>Total</span><strong>{money(amountPaisa)}</strong></div></div>
       {methods.length>0&&<><span className="eyebrow" style={{display:'block',margin:'12px 0 6px'}}>Your linked methods</span>
       <div className="method-list">{methods.map(m=>{return <button key={m.id} type="button" className={`method-row ${methodId===m.id?'on':''}`} onClick={()=>chooseMethod(m)}><i className="method-radio"/><RailLogo rail={m.rail} size={38} /><span className="method-text"><b>{m.label}</b><small className="mono">{m.accountNo}</small></span>{m.preferred&&<span className="pref-chip">Preferred</span>}</button>})}</div></>}
       <span className="eyebrow" style={{display:'block',margin:'12px 0 6px'}}>{methods.length?'Or pay another way':'Pay with'}</span>
-      <div className="rail-cards">{RAILS.map(([id,label,mono,color])=><button key={id} type="button" className={`rail-card ${via===id&&!methodId?'on':''}`} onClick={()=>chooseRail(id)}><i style={{background:color}}>{mono}</i><b>{label}</b>{via===id&&!methodId&&<span className="tick">✓</span>}</button>)}</div>
+      <div className="rail-cards">{RAILS.map(([id,label,mono,color])=><button key={id} type="button" className={`rail-card ${via===id&&!methodId?'on':''}`} onClick={()=>chooseRail(id)}><i style={{background:color}}>{mono}</i><b>{label}</b>{via===id&&!methodId&&<span className="tick"><Check/></span>}</button>)}</div>
       {wallets&&!methodId&&<><Field label={`${railMeta[1]} wallet number`}><input className="field" inputMode="tel" value={wallet} onChange={e=>setWallet(e.target.value)} placeholder="03XXXXXXXXX"/></Field>
       <label className="tos-check" style={{margin:'2px 0 8px'}}><input type="checkbox" checked={saveMethod} onChange={e=>setSaveMethod(e.target.checked)}/><span>Save this as my preferred way to pay</span></label></>}
       {via==='BANK_TRANSFER'&&<div className="warning-box">Send the transfer to the recipient directly from your banking app, then enter the transaction reference below.</div>}
@@ -174,7 +174,7 @@ function PaymentModal({round,committee,user,amountPaisa,close,done}:{round:Round
       <p className="checkout-foot">Nothing was recorded, your installment is untouched until a payment confirms.</p>
     </div>}
     {step==='receipt'&&receipt&&<div className="checkout-receipt">
-      <div className={`receipt-badge ${receipt.live?'pending':''}`}>{receipt.live?'⏳':'✓'}</div>
+      <div className={`receipt-badge ${receipt.live?'pending':''}`}>{receipt.live?<Clock/>:<Check/>}</div>
       <h3>{receipt.live?'Payment initiated':'Payment confirmed'}</h3>
       <div className="receipt-amount">{money(amountPaisa)}</div>
       <div className="receipt-rows">

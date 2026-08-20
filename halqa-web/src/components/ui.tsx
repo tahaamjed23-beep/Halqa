@@ -63,5 +63,5 @@ export function formatDuration(date?:string|null){return until(date)}
 export function profitProjection(principalRupees:number,rate:number,days:number){return principalRupees*rate/100*days/365}
 export const RATE_STALE_AFTER_DAYS=45;
 export function rateFreshness(rateAsOf:string){const days=Math.floor((Date.now()-new Date(rateAsOf).getTime())/86400000);return{days,stale:days>RATE_STALE_AFTER_DAYS,label:`Rate verified ${date(rateAsOf)}`}}
-export function RateStamp({rateAsOf}:{rateAsOf:string}){const f=rateFreshness(rateAsOf);return <span className={`rate-stamp ${f.stale?'stale':''}`}>{f.stale?`⚠ Rate review due · last verified ${date(rateAsOf)}`:f.label}</span>}
+export function RateStamp({rateAsOf}:{rateAsOf:string}){const f=rateFreshness(rateAsOf);return <span className={`rate-stamp ${f.stale?'stale':''}`}>{f.stale?`Rate review due, last verified ${date(rateAsOf)}`:f.label}</span>}
 export function SummaryMoney({paisa}:{paisa:string|number}){return <>{money(paisa)}</>}
