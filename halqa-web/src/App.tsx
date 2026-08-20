@@ -100,7 +100,7 @@ export default function App(){
       {view==='hyper'&&<HyperPage user={user} back={()=>setPage('home')}/>}
       {view==='cards'&&<CardsPage user={user} back={()=>setPage('home')}/>}
       {view==='activity'&&<ActivityPage user={user} back={()=>setPage('home')}/>}
-      {view==='asset'&&<AssetPage back={()=>setPage('home')}/>}
+      {view==='asset'&&<AssetPage back={()=>setPage('home')} openCommittee={setCommitteeId}/>}
     </Suspense>
     </ErrorBoundary>
     {gate}

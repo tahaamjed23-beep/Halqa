@@ -54,7 +54,7 @@ export default function CreditPage({user,back}:{user:User;back:()=>void}){
       <div className="trend-bars">{trend.map((p,i)=><div key={i} className="trend-bar" title={`${p.score}`}><i style={{height:`${Math.max(8,(p.score-min)/(max-min||1)*100)}%`,background:i===trend.length-1?'#b08d2f':'#e2d7b8'}}/><span>{i===trend.length-1?'Now':''}</span></div>)}</div>
     </section>
 
-    <Affordability monthlyIncomeP={0} committedMonthlyP={0} activeCircles={0} verified={Boolean(user.incomeVerifiedAt)}/>
+    <Affordability monthlyIncomeP={Number(user.declaredIncomePaisa||0)} committedMonthlyP={0} activeCircles={0} verified={Boolean(user.incomeVerifiedAt)}/>
     <ScoreSimulator score={user.creditScore}/>
     <section className="panel"><div className="panel-head"><div><span className="eyebrow">Score factors</span><h2>Factors</h2></div></div>
       <div className="factor-rows">

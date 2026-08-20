@@ -20,15 +20,15 @@ const RS = (n: number) => BigInt(Math.round(n * 100));
 const asRupees = (p: bigint) => Number(p) / 100;
 
 describe('HYPER shape', () => {
-  it('runs 60 days with 7 collecting each day, so the roster is 420', () => {
-    expect(HYPER.DAYS).toBe(60);
+  it('runs 30 days with 7 collecting each day, so the roster is 210', () => {
+    expect(HYPER.DAYS).toBe(30);
     expect(HYPER.SEATS_PER_DAY).toBe(7);
-    expect(rosterSize()).toBe(420);
+    expect(rosterSize()).toBe(210);
   });
 
   it('charges Rs 500 a day and pays what the member paid in', () => {
     expect(HYPER.DAILY_PAISA).toBe(RS(500));
-    expect(HYPER.POT_PAISA).toBe(RS(30_000));
+    expect(HYPER.POT_PAISA).toBe(RS(15_000));
   });
 
   it('balances exactly: what a member pays in equals what they collect', () => {
@@ -45,15 +45,15 @@ describe('HYPER shape', () => {
 
 describe('the advance an early day represents', () => {
   it('advances the pot less whatever the member has already paid', () => {
-    // Day 1: paid Rs 500, collects Rs 30,000, so Rs 29,500 is advanced.
-    expect(advancePaisa(1)).toBe(RS(29_500));
-    // Day 30: paid Rs 15,000, so Rs 15,000 is advanced.
-    expect(advancePaisa(30)).toBe(RS(15_000));
+    // Day 1: paid Rs 500, collects Rs 15,000, so Rs 14,500 is advanced.
+    expect(advancePaisa(1)).toBe(RS(14_500));
+    // Day 15: paid Rs 7,500, so Rs 7,500 is still advanced.
+    expect(advancePaisa(15)).toBe(RS(7_500));
   });
 
   it('advances nothing on the last day, because it is all already paid', () => {
-    expect(advancePaisa(60)).toBe(0n);
-    expect(daysOutstanding(60)).toBe(0);
+    expect(advancePaisa(30)).toBe(0n);
+    expect(daysOutstanding(30)).toBe(0);
   });
 
   it('shrinks steadily as the cycle runs', () => {
@@ -68,20 +68,25 @@ describe('the bid ceiling', () => {
     expect(bidAprBps(maxBidPaisa(1), 1)).toBeLessThanOrEqual(HYPER.MAX_APR_BPS);
   });
 
-  it('prices that cap at exactly the published 48 per cent', () => {
+  it('tops the markup out at Rs 380 on day one, the dearest day in the cycle', () => {
+    expect(maxBidPaisa(1)).toBeGreaterThanOrEqual(HYPER.MAX_DAY_ONE_PAISA);
+    expect(maxBidPaisa(1)).toBeLessThan(HYPER.MAX_DAY_ONE_PAISA + RS(1));
+  });
+
+  it('holds that ceiling at the published rate', () => {
     expect(bidAprBps(maxBidPaisa(1), 1)).toBeLessThanOrEqual(HYPER.MAX_APR_BPS);
     expect(bidAprBps(maxBidPaisa(1), 1)).toBeGreaterThan(HYPER.MAX_APR_BPS - 100);
   });
 
   it('refuses the bid that reads as a modest ten per cent of the pot', () => {
-    // Rs 1,500 on a Rs 15,000 pot feels small and is far past the ceiling.
-    expect(bidAllowed(RS(6_000), 1)).toBe(false);
+    // Rs 1,500 on a Rs 15,000 pot feels small and is four times the ceiling.
+    expect(bidAllowed(RS(1_500), 1)).toBe(false);
   });
 
   it('falls towards nothing for the last days, because they are worth nothing', () => {
-    expect(maxBidPaisa(59)).toBeLessThan(maxBidPaisa(30));
-    expect(maxBidPaisa(30)).toBeLessThan(maxBidPaisa(1));
-    expect(maxBidPaisa(60)).toBe(0n);
+    expect(maxBidPaisa(29)).toBeLessThan(maxBidPaisa(15));
+    expect(maxBidPaisa(15)).toBeLessThan(maxBidPaisa(1));
+    expect(maxBidPaisa(30)).toBe(0n);
   });
 
   it('never lets any bid on any day exceed the ceiling', () => {
@@ -100,14 +105,14 @@ describe('the bid ceiling', () => {
 
   it('prices a free day at zero rather than dividing by zero', () => {
     expect(bidAprBps(0n, 1)).toBe(0);
-    expect(bidAprBps(RS(50), 60)).toBe(0);
+    expect(bidAprBps(RS(50), 30)).toBe(0);
   });
 });
 
 describe('the auction book', () => {
   it('lays out every day with its seats and ceiling', () => {
     const book = buildDayBook();
-    expect(book).toHaveLength(60);
+    expect(book).toHaveLength(30);
     expect(book[0].seats).toBe(7);
     expect(book[0].maxBidPaisa).toBe(maxBidPaisa(1));
     expect(book.every(d => !d.full)).toBe(true);
@@ -127,14 +132,14 @@ describe('the auction book', () => {
 
   it('refuses a bid above the ceiling even when it beats the standing bid', () => {
     const book = buildDayBook({}, { 1: RS(200) });
-    const v = validateBid(RS(5_000), 1, book[0]);
+    const v = validateBid(RS(2_000), 1, book[0]);
     expect(v.accepted).toBe(false);
     expect(v.reason).toContain('ceiling');
   });
 
   it('refuses a day outside the cycle', () => {
     const book = buildDayBook();
-    expect(validateBid(RS(10), 61, book[0]).accepted).toBe(false);
+    expect(validateBid(RS(10), 31, book[0]).accepted).toBe(false);
   });
 });
 

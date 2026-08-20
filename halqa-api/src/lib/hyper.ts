@@ -1,37 +1,39 @@
 // ============================================================================
 // HYPER COMMITTEES
 //
-// Daily contributions over a 60-day cycle. Seven members collect each day, so
-// the roster is 420. Every member pays Rs 500 a day for 60 days and collects
-// that same Rs 30,000 once, which balances exactly at both the member and the
+// Daily contributions over a 30-day cycle. Seven members collect each day, so
+// the roster is 210. Every member pays Rs 500 a day for 30 days and collects
+// that same Rs 15,000 once, which balances exactly at both the member and the
 // circle level.
 //
 // Members buy their collection day at an opening auction. The earlier the day,
 // the larger the advance, so the earlier days carry a premium and the last days
 // clear at nil.
 //
-// THE CONSTRAINT THAT MAKES THE AUCTION SAFE
+// THE MARKUP, AND WHY IT IS CAPPED
 //
-// A premium paid for an earlier day is a real cost of money, and daily cadence
-// turns a small rupee figure into a very large annualised rate. That rate is
-// the number a hostile journalist or an SECP reviewer computes, and it is what
-// killed the 400 banned lending apps. So every bid is capped at the point where
-// the member's all-in cost reaches 48% APR-equivalent. Above that the bid is
-// refused outright rather than merely discouraged.
+// The premium paid for an early day is Halqa's markup. It is what covers a
+// default on a roster of strangers, which is the only real risk in this
+// product, and it is priced rather than hidden. But daily cadence turns a small
+// rupee figure into a very large annualised rate, and that rate is the number a
+// hostile journalist or an SECP reviewer computes. It is what killed the 400
+// banned lending apps.
 //
-// The cap is not decoration: it falls from a meaningful figure on day 1 to a
-// few rupees by the final week, which is the economically correct shape,
-// because a late day is worth nothing to bid for.
+// So the markup has a hard ceiling: Rs 380 on day one, the most anyone can pay
+// for the earliest collection in the cycle. Every other day is priced from the
+// same curve, which falls to a few rupees by the final week, because a late day
+// is worth almost nothing to bid for. Expressed as a rate the ceiling is 66%
+// APR-equivalent, and it is enforced, not advised: a bid above it is refused.
 // ============================================================================
 
 export const HYPER = {
   /** Cycle length in days. One cohort collects per day. */
-  DAYS: 60,
+  DAYS: 30,
   /** Daily contribution, in paisa. Rs 500. */
   DAILY_PAISA: 50_000n,
   /** What one member collects on their day. Equals what they pay in. */
-  POT_PAISA: 3_000_000n,
-  /** Members collecting per day. 7 x 60 = a 420-member roster. */
+  POT_PAISA: 1_500_000n,
+  /** Members collecting per day. 7 x 30 = a 210-member roster. */
   SEATS_PER_DAY: 7,
   /** Entry gates. */
   MIN_SCORE: 650,
@@ -49,8 +51,14 @@ export const HYPER = {
   ],
   SCORE_DAMAGE: [-20, -40, -60],
   POST_PAYOUT_DEFAULT: -200,
-  /** The published ceiling on a member's total cost of an early day. */
-  MAX_APR_BPS: 4800,
+  /**
+   * The markup ceiling, as a rate. Chosen so the most expensive day in the
+   * cycle, day one, tops out at exactly Rs 380. Every other day falls out of
+   * the same curve. See MAX_DAY_ONE_PAISA below, which asserts it.
+   */
+  MAX_APR_BPS: 6600,
+  /** What that ceiling is worth on day one, in paisa. Rs 380. */
+  MAX_DAY_ONE_PAISA: 38_000n,
   /** Auction length before the cycle starts. */
   AUCTION_HOURS: 24,
 } as const;

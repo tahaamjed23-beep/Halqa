@@ -10,7 +10,7 @@ import { createHash } from 'node:crypto';
 
 const router = Router();
 const cleanPhone = (v: string) => v.replace(/\s+/g, '').replace(/^\+92/, '0');
-const publicUser = { id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, phoneVerified:true, addressLine:true, city:true, locality:true, occupationType:true, employerName:true, jobTitle:true, committeesCompletedClean:true, earlyTurnVerifiedAt:true, incomeVerifiedAt:true, chequeSecuredAt:true, cnicCaptured:true, homeLat:true, homeLng:true, salaryDay:true, salaryDayLearned:true, salaryVerifiedAt:true, salaryVerifyMethod:true, createdAt: true } as const;
+const publicUser = { declaredIncomePaisa: true, declaredIncomeAt: true, id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, phoneVerified:true, addressLine:true, city:true, locality:true, occupationType:true, employerName:true, jobTitle:true, committeesCompletedClean:true, earlyTurnVerifiedAt:true, incomeVerifiedAt:true, chequeSecuredAt:true, cnicCaptured:true, homeLat:true, homeLng:true, salaryDay:true, salaryDayLearned:true, salaryVerifiedAt:true, salaryVerifyMethod:true, createdAt: true } as const;
 // Never send the PIN hash or biometric credential id to the client; we only
 // expose booleans + the derived tenure/discount status the UI needs.
 const pinHash = (pin: string) => createHash('sha256').update(`halqa-pin:${process.env.JWT_SECRET || 'dev'}:${pin}`).digest('hex');
@@ -19,9 +19,15 @@ const otpHash = (code: string) => createHash('sha256').update(`halqa-otp:${code}
 // real SMS gateway (phone OTP accepts any code; the code is surfaced so it can
 // be typed). Off by default — never enable in normal production.
 const demoMode = () => process.env.DEMO_MODE === 'true';
-const withHasPin = <T extends { pinHash?: string | null; biometricCredId?: string | null; creditScore: number; committeesCompletedClean: number; earlyTurnVerifiedAt: Date | null; incomeVerifiedAt: Date | null; chequeSecuredAt: Date | null; salaryAccountLinked: boolean }>(u: T) => {
-  const { pinHash: _p, biometricCredId: _b, ...rest } = u;
-  return { ...rest, hasPin: !!_p, hasBiometric: !!_b, earlyTurnUnlocked: earlyTurnUnlocked(u), feeDiscountBps: feeDiscountBps(u), discountReason: discountReason(u) };
+const withHasPin = <T extends { pinHash?: string | null; biometricCredId?: string | null; declaredIncomePaisa?: bigint | null; creditScore: number; committeesCompletedClean: number; earlyTurnVerifiedAt: Date | null; incomeVerifiedAt: Date | null; chequeSecuredAt: Date | null; salaryAccountLinked: boolean }>(u: T) => {
+  // BigInt has no JSON representation, so paisa always leaves as a string.
+  const { pinHash: _p, biometricCredId: _b, declaredIncomePaisa: _i, ...rest } = u;
+  return {
+    ...rest,
+    declaredIncomePaisa: _i == null ? null : _i.toString(),
+    hasPin: !!_p, hasBiometric: !!_b,
+    earlyTurnUnlocked: earlyTurnUnlocked(u), feeDiscountBps: feeDiscountBps(u), discountReason: discountReason(u),
+  };
 };
 const credentials = z.object({ identity: z.string().trim().min(1), password: z.string().min(8).max(128) });
 const tokenHash=(token:string)=>createHash('sha256').update(token).digest('hex');
@@ -70,6 +76,10 @@ router.post('/register', async (req, res, next) => {
       // Declared payday (1–31): the day auto-collection pulls, ahead of the
       // due date. Verified later against our own collection pattern.
       salaryDay: z.number().int().min(1).max(31).optional(),
+      // What the member says they earn each month, in paisa. Affordability
+      // needs a figure to size anything at all; without one it assumes zero
+      // and refuses every committee, which is not a safety feature.
+      declaredIncomePaisa: z.string().regex(/^\d{1,15}$/).optional(),
       cnicCaptured: z.boolean().optional(),
       homeLat: z.number().min(-90).max(90).optional(),
       homeLng: z.number().min(-180).max(180).optional(),
@@ -101,6 +111,8 @@ router.post('/register', async (req, res, next) => {
       jobTitle: body.jobTitle ?? null,
       pinHash: body.pin ? pinHash(body.pin) : null,
       salaryDay: body.salaryDay ?? null,
+      declaredIncomePaisa: body.declaredIncomePaisa ? BigInt(body.declaredIncomePaisa) : null,
+      declaredIncomeAt: body.declaredIncomePaisa ? new Date() : null,
       cnicCaptured: body.cnicCaptured ?? false,
       homeLat: body.homeLat ?? null, homeLng: body.homeLng ?? null,
       homeLocationAt: (body.homeLat != null && body.homeLng != null) ? new Date() : null,

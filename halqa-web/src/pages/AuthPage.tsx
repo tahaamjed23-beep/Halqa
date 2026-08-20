@@ -1,209 +1,625 @@
-import { RailLogo } from '../components/RailLogo';
 import { useState } from 'react';
-import { ChevronLeft, ShieldCheck } from 'lucide-react';
+import {
+  Briefcase, Camera, Check, CreditCard, Info, Landmark, Lock, MapPin,
+  Search, ShieldCheck, Smartphone, Wallet,
+} from 'lucide-react';
 import { api, tokens } from '../api';
 import type { User } from '../types';
 import { HalqaOrb, Logo } from '../components/ui';
 import PhoneInput from '../components/PhoneInput';
 import LegalFooter, { LegalDocModal } from '../components/LegalFooter';
-import { AccountCard, PK_BANKS, RAIL_META, formatEntry } from '../components/LinkedAccounts';
+import { AccountCard, PK_BANKS, RAIL_META } from '../components/LinkedAccounts';
+import { RailLogo } from '../components/RailLogo';
 import CnicCapture from '../components/CnicCapture';
 import { TERMS_VERSION, type DocId } from '../legal/content';
+import {
+  BottomBar, Card, Field, FlowHeader, Keypad, Notice, PickerRow,
+  ReviewRow, Sheet, SheetGroup, SheetRow, Steps,
+} from '../components/wallet';
+import {
+  cleanCnic, cleanIban, cleanMobile, groupCnic, groupIban, groupMobile,
+  ibanOk, ibanProblem, mobileOk, mobileProblem,
+} from '../lib/validate';
+import { money } from '../lib/format';
 
-// Onboarding is one question per screen (the pattern every Pakistani wallet
-// app has trained users on): phone → name → email → CNIC → account → password
-// → review. Each step validates before Continue unlocks, and the whole thing
-// submits as a single register call at the end. The ACCOUNT step is mandatory:
-// auto-collection is how every circle collects, so the account it pulls from
-// is linked the moment the account is made (changeable later in Profile).
-const REG_STEPS = ['phone', 'otp', 'name', 'profile', 'email', 'cnic', 'account', 'password', 'pin', 'review'] as const;
+// ---------------------------------------------------------------------------
+// OPENING AN ACCOUNT
+//
+// One question per screen, the pattern every Pakistani wallet has trained
+// people on, laid out with the shared wallet components so it matches the rest
+// of the app rather than inventing a ninth style of form.
+//
+// Three things were wrong with the old flow and are fixed here.
+//
+//   The income question was asked and thrown away. The register call never sent
+//   it, so the affordability engine had no figure and had to assume zero, which
+//   makes it refuse every committee. It is sent now.
+//
+//   The PIN was two text boxes. It is the number a member types every single
+//   time they open the app, so it is a keypad with dots, the way it will be
+//   entered forever afterwards.
+//
+//   The collection account accepted any ten characters. An IBAN is now checked
+//   against its mod-97 checksum and a wallet number against 03 plus nine
+//   digits, because a mistyped account does not fail at signup, it fails weeks
+//   later as a missed instalment on somebody's record.
+// ---------------------------------------------------------------------------
+
+const REG_STEPS = ['phone', 'otp', 'name', 'where', 'work', 'cnic', 'account', 'password', 'pin', 'review'] as const;
 type RegStep = typeof REG_STEPS[number];
-// Occupation drives future risk models + the partner KYC handoff. EMPLOYED asks
-// for the employer (salary-deduction collection is the most certain there is).
-const OCCUPATIONS: [string, string][] = [['EMPLOYED','Employed (salaried)'],['BUSINESS_OWNER','Business owner'],['SELF_EMPLOYED','Self-employed / freelance'],['HOUSEWIFE','Housewife'],['STUDENT','Student'],['RETIRED','Retired'],['OTHER','Other']];
-// The public "job" line shown on a member's profile, the profession, never the
-// employer. For a housewife it captures the husband's job (a common Pakistani
-// reference point). Label/placeholder change with the occupation picked.
-const JOB_FIELD: Record<string,{label:string;ph:string}> = {
-  EMPLOYED:{label:'Your job / role (shown to members)',ph:'e.g. Teacher, Accountant, Engineer'},
-  BUSINESS_OWNER:{label:'What’s your business? (shown to members)',ph:'e.g. Grocery store, Garments trader'},
-  SELF_EMPLOYED:{label:'What work do you do? (shown to members)',ph:'e.g. Electrician, Tailor, Driver'},
-  STUDENT:{label:'What are you studying? (shown to members)',ph:'e.g. BSc Computer Science'},
-  HOUSEWIFE:{label:'Husband’s job (shown to members)',ph:'e.g. Shopkeeper, Government officer'},
-  RETIRED:{label:'What did you do? (shown to members)',ph:'e.g. Retired schoolteacher'},
-  OTHER:{label:'Your work (shown to members)',ph:'Describe your work'},
+
+const OCCUPATIONS: [string, string][] = [
+  ['EMPLOYED', 'Employed, salaried'],
+  ['BUSINESS_OWNER', 'Business owner'],
+  ['SELF_EMPLOYED', 'Self employed or freelance'],
+  ['HOUSEWIFE', 'Housewife'],
+  ['STUDENT', 'Student'],
+  ['RETIRED', 'Retired'],
+  ['OTHER', 'Other'],
+];
+
+// The public job line on a member's profile: the profession, never the
+// employer. For a housewife it holds the husband's job, a common reference
+// point here. Label and placeholder follow the occupation chosen.
+const JOB_FIELD: Record<string, { label: string; ph: string }> = {
+  EMPLOYED: { label: 'Your job, shown to members', ph: 'Teacher, accountant, engineer' },
+  BUSINESS_OWNER: { label: 'Your business, shown to members', ph: 'Grocery store, garments trader' },
+  SELF_EMPLOYED: { label: 'Your work, shown to members', ph: 'Electrician, tailor, driver' },
+  STUDENT: { label: 'What you are studying, shown to members', ph: 'BSc Computer Science' },
+  HOUSEWIFE: { label: 'Husband’s job, shown to members', ph: 'Shopkeeper, government officer' },
+  RETIRED: { label: 'What you did, shown to members', ph: 'Retired schoolteacher' },
+  OTHER: { label: 'Your work, shown to members', ph: 'Describe your work' },
 };
-// A short searchable list of the largest Pakistani cities; free text is allowed
-// for anywhere not listed.
-const PK_CITIES = ['Karachi','Lahore','Islamabad','Rawalpindi','Faisalabad','Multan','Peshawar','Quetta','Hyderabad','Gujranwala','Sialkot','Bahawalpur','Sargodha','Sukkur','Larkana','Sheikhupura','Mardan','Gujrat','Kasur','Rahim Yar Khan','Sahiwal','Okara','Wah Cantt','Dera Ghazi Khan','Mirpur','Abbottabad','Muzaffarabad','Mingora','Nawabshah','Chiniot'];
 
-export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
-  const [mode,setMode]=useState<'login'|'register'>('login');
-  const [step,setStep]=useState<RegStep>('phone');
-  const [form,setForm]=useState({identity:'',password:'',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:'',rail:'RAAST',accountNo:'',accountTitle:'',bankName:'HBL',otpCode:'',addressLine:'',city:'',locality:'',occupationType:'',employerName:'',jobTitle:'',pin:'',pinConfirm:'',salaryDay:'',monthlyIncome:''});
-  const [agreed,setAgreed]=useState(false);
-  const [cnicCaptured,setCnicCaptured]=useState(false);const [scanning,setScanning]=useState(false);
-  const [homeLat,setHomeLat]=useState<number|null>(null);const [homeLng,setHomeLng]=useState<number|null>(null);const [locating,setLocating]=useState(false);const [locErr,setLocErr]=useState('');
-  const [otpSent,setOtpSent]=useState(false);const [otpVerified,setOtpVerified]=useState(false);const [devCode,setDevCode]=useState('');
-  const [doc,setDoc]=useState<DocId|null>(null);
-  const [error,setError]=useState('');const [busy,setBusy]=useState(false);
-  const stepIndex=REG_STEPS.indexOf(step);
-  // International: +92 wants a 3XXXXXXXXX national part (10 digits); other
-  // dial codes just need a plausible 7-14 digit number.
-  const phoneOk=form.phone.startsWith('+92')?/^\+923\d{9}$/.test(form.phone):/^\+\d{8,15}$/.test(form.phone);
-  const nameOk=form.fullName.trim().length>=3&&form.username.trim().length>=3;
-  const emailOk=/.+@.+\..+/.test(form.email);
-  const cnicOk=form.cnic.length===13;
-  const passOk=form.regPassword.length>=8&&/[a-zA-Z]/.test(form.regPassword)&&/\d/.test(form.regPassword);
-  const accountOk=form.accountNo.replace(/\s+/g,'').length>=10&&form.accountTitle.trim().length>=3;
-  const profileOk=homeLat!=null&&form.addressLine.trim().length>=5&&form.city.trim().length>=2&&!!form.occupationType&&(form.occupationType!=='EMPLOYED'||form.employerName.trim().length>=2);
-  const pinOk=/^\d{4,6}$/.test(form.pin)&&form.pin===form.pinConfirm;
-  const canContinue=step==='phone'?phoneOk:step==='otp'?otpVerified:step==='name'?nameOk:step==='profile'?profileOk:step==='email'?emailOk:step==='cnic'?cnicOk:step==='account'?accountOk:step==='password'?passOk:step==='pin'?pinOk:agreed;
-  const next=()=>{setError('');if(stepIndex<REG_STEPS.length-1)setStep(REG_STEPS[stepIndex+1])};
-  const back=()=>{setError('');if(stepIndex>0)setStep(REG_STEPS[stepIndex-1]);else setMode('login')};
+const PK_CITIES = ['Karachi', 'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad', 'Multan', 'Peshawar', 'Quetta', 'Hyderabad', 'Gujranwala', 'Sialkot', 'Bahawalpur', 'Sargodha', 'Sukkur', 'Larkana', 'Sheikhupura', 'Mardan', 'Gujrat', 'Kasur', 'Rahim Yar Khan', 'Sahiwal', 'Okara', 'Wah Cantt', 'Dera Ghazi Khan', 'Mirpur', 'Abbottabad', 'Muzaffarabad', 'Mingora', 'Nawabshah', 'Chiniot'];
 
-  // Phone OTP: request a code when the user reaches the verify step, and confirm
-  // it before they can continue. Sandbox surfaces the code inline (devCode).
-  const requestOtp=async()=>{setBusy(true);setError('');try{const d=await api<{otpSent:boolean;devCode?:string}>('/auth/phone-otp',{method:'POST',body:JSON.stringify({phone:form.phone.trim()})});setOtpSent(true);setDevCode(d.devCode||'')}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
-  // Live location: capture the device's real GPS and reverse-geocode it to
-  // prefill the address + city. The coordinates are saved as the member's home.
-  const captureLocation=()=>{
-    setLocating(true);setLocErr('');
-    if(!('geolocation' in navigator)){setLocErr('Location isn’t available on this device, type your address instead.');setLocating(false);return}
-    navigator.geolocation.getCurrentPosition(async pos=>{
-      const lat=pos.coords.latitude,lng=pos.coords.longitude;setHomeLat(lat);setHomeLng(lng);
-      try{
-        const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&zoom=16`,{headers:{Accept:'application/json'}});
-        const j=await r.json();const a=j.address||{};
-        const city=a.city||a.town||a.village||a.county||'';
-        // Broad area shown to members (sector/colony), never the house number.
-        const locality=a.suburb||a.neighbourhood||a.city_district||a.quarter||a.residential||a.borough||'';
-        const line=[a.road,a.suburb,a.neighbourhood,a.residential].filter(Boolean).join(', ')||(j.display_name||'').split(',').slice(0,2).join(', ');
-        setForm(f=>({...f,city:city||f.city,locality:locality||f.locality,addressLine:line||f.addressLine}));
-      }catch{/* coordinates alone are enough */}
-      setLocating(false);
-    },err=>{setLocErr(err.code===1?'Please allow location access, your home location is required.':'Couldn’t get your location. Try again.');setLocating(false)},{enableHighAccuracy:true,timeout:15000});
+const ordinal = (d: number) =>
+  d === 1 || d === 21 || d === 31 ? 'st' : d === 2 || d === 22 ? 'nd' : d === 3 || d === 23 ? 'rd' : 'th';
+
+export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
+  const [mode, setMode] = useState<'login' | 'register'>('login');
+  const [step, setStep] = useState<RegStep>('phone');
+  const [form, setForm] = useState({
+    identity: '', password: '', fullName: '', username: '', phone: '', email: '', cnic: '',
+    regPassword: '', rail: 'RAAST', accountNo: '', accountTitle: '', bankName: 'HBL',
+    otpCode: '', addressLine: '', city: '', locality: '', occupationType: '', employerName: '',
+    jobTitle: '', pin: '', pinConfirm: '', salaryDay: '', monthlyIncome: '',
+  });
+  const [agreed, setAgreed] = useState(false);
+  const [cnicCaptured, setCnicCaptured] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const [homeLat, setHomeLat] = useState<number | null>(null);
+  const [homeLng, setHomeLng] = useState<number | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [locErr, setLocErr] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [devCode, setDevCode] = useState('');
+  const [doc, setDoc] = useState<DocId | null>(null);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  // Pickers
+  const [railSheet, setRailSheet] = useState(false);
+  const [bankSheet, setBankSheet] = useState(false);
+  const [bankFind, setBankFind] = useState('');
+  const [citySheet, setCitySheet] = useState(false);
+  const [cityFind, setCityFind] = useState('');
+  const [jobSheet, setJobSheet] = useState(false);
+  const [daySheet, setDaySheet] = useState(false);
+  // PIN keypad
+  const [pinStage, setPinStage] = useState<'set' | 'again'>('set');
+
+  const stepIndex = REG_STEPS.indexOf(step);
+  const isBank = form.rail === 'BANK_TRANSFER';
+
+  const phoneOk = form.phone.startsWith('+92') ? /^\+923\d{9}$/.test(form.phone) : /^\+\d{8,15}$/.test(form.phone);
+  const nameOk = form.fullName.trim().length >= 3 && form.username.trim().length >= 3 && /.+@.+\..+/.test(form.email);
+  const cnicOk = form.cnic.length === 13;
+  const passOk = form.regPassword.length >= 8 && /[a-zA-Z]/.test(form.regPassword) && /\d/.test(form.regPassword);
+  const accountNumberOk = isBank ? ibanOk(form.accountNo) : mobileOk(form.accountNo);
+  const accountOk = accountNumberOk && form.accountTitle.trim().length >= 3;
+  const whereOk = homeLat != null && form.addressLine.trim().length >= 5 && form.city.trim().length >= 2;
+  const workOk = !!form.occupationType && Number(form.monthlyIncome) > 0
+    && (form.occupationType !== 'EMPLOYED' || form.employerName.trim().length >= 2);
+  const pinOk = /^\d{4}$/.test(form.pin) && form.pin === form.pinConfirm;
+
+  const canContinue = step === 'phone' ? phoneOk
+    : step === 'otp' ? otpVerified
+    : step === 'name' ? nameOk
+    : step === 'where' ? whereOk
+    : step === 'work' ? workOk
+    : step === 'cnic' ? cnicOk
+    : step === 'account' ? accountOk
+    : step === 'password' ? passOk
+    : step === 'pin' ? pinOk
+    : agreed;
+
+  const next = () => { setError(''); if (stepIndex < REG_STEPS.length - 1) setStep(REG_STEPS[stepIndex + 1]) };
+  const back = () => { setError(''); if (stepIndex > 0) setStep(REG_STEPS[stepIndex - 1]); else setMode('login') };
+  const goNext = () => { const cur = step; next(); if (cur === 'phone' && !otpSent) void requestOtp() };
+
+  const requestOtp = async () => {
+    setBusy(true); setError('');
+    try {
+      const d = await api<{ otpSent: boolean; devCode?: string }>('/auth/phone-otp',
+        { method: 'POST', body: JSON.stringify({ phone: form.phone.trim() }) });
+      setOtpSent(true); setDevCode(d.devCode || '');
+    } catch (reason) { setError((reason as Error).message) } finally { setBusy(false) }
   };
-  const verifyOtp=async()=>{setBusy(true);setError('');try{await api('/auth/phone-otp/verify',{method:'POST',body:JSON.stringify({phone:form.phone.trim(),code:form.otpCode.trim()})});setOtpVerified(true)}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
-  // Advancing off the phone step fires the OTP so the code is waiting when the
-  // verify step paints.
-  const goNext=()=>{const cur=step;next();if(cur==='phone'&&!otpSent)void requestOtp()};
 
-  const login=async(event:React.FormEvent)=>{event.preventDefault();setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/login',{method:'POST',body:JSON.stringify({identity:form.identity.trim(),password:form.password.trim()})});tokens.set(data.accessToken,data.refreshToken);onAuth(data.user)}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
-  const register=async()=>{setBusy(true);setError('');try{const data=await api<{user:User;accessToken:string;refreshToken:string}>('/auth/register',{method:'POST',body:JSON.stringify({fullName:form.fullName.trim(),username:form.username.trim(),phone:form.phone.trim(),email:form.email.trim(),cnic:form.cnic,password:form.regPassword,termsVersion:TERMS_VERSION,addressLine:form.addressLine.trim(),city:form.city.trim(),locality:form.locality.trim()||undefined,occupationType:form.occupationType,employerName:form.occupationType==='EMPLOYED'?form.employerName.trim():undefined,jobTitle:form.jobTitle.trim()||undefined,pin:form.pin,cnicCaptured,homeLat:homeLat??undefined,homeLng:homeLng??undefined,salaryDay:form.salaryDay?Number(form.salaryDay):undefined})});tokens.set(data.accessToken,data.refreshToken);
-    // The mandatory collection account, linked the moment the account exists.
-    // Best-effort: a rail hiccup must never strand a fresh registration
-    // Profile shows the link (and its WhatsApp OTP) if this needs a retry.
-    try{await api('/profile/payment-methods',{method:'POST',body:JSON.stringify({rail:form.rail,accountNo:form.accountNo.replace(/\s+/g,''),accountTitle:form.accountTitle.trim(),bankName:form.rail==='BANK_TRANSFER'?form.bankName:undefined,preferred:true})})}catch{/* retry from Profile */}
-    onAuth(data.user)}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
+  const verifyOtp = async () => {
+    setBusy(true); setError('');
+    try {
+      await api('/auth/phone-otp/verify',
+        { method: 'POST', body: JSON.stringify({ phone: form.phone.trim(), code: form.otpCode.trim() }) });
+      setOtpVerified(true);
+    } catch (reason) { setError((reason as Error).message) } finally { setBusy(false) }
+  };
 
-  const stepBody=()=>{switch(step){
-    case 'phone':return <><h2>What's your mobile number?</h2><p>Your number is your identity on Halqa, invites, reminders and payments all reach you here. We'll send a one-time code to confirm it.</p>
-      <PhoneInput value={form.phone} onChange={v=>{setForm({...form,phone:v});if(otpSent){setOtpSent(false);setOtpVerified(false);setDevCode('')}}} autoFocus/></>;
-    case 'otp':return <><h2>Confirm your number</h2><p>We sent a 6-digit code to <b>{form.phone}</b>. Enter it to prove the number is yours.</p>
-      <input className="field big-field mono" inputMode="numeric" autoFocus maxLength={6} placeholder="6-digit code" value={form.otpCode} disabled={otpVerified} onChange={e=>setForm({...form,otpCode:e.target.value.replace(/\D/g,'')})}/>
-      {otpVerified
-        ?<div className="commitment-ok" style={{marginTop:10}}><ShieldCheck/><div><b>Number confirmed</b><p>Tap Continue to carry on.</p></div></div>
-        :<div className="otp-actions"><button type="button" className="secondary" disabled={busy||form.otpCode.length!==6} onClick={()=>void verifyOtp()}>{busy?'Checking…':'Verify code'}</button><button type="button" className="text-action" disabled={busy} onClick={()=>void requestOtp()}>Resend code</button></div>}
-      {devCode&&!otpVerified&&<p className="muted" style={{fontSize:11.5,marginTop:8}}>Sandbox, no SMS gateway yet. Your code is <b className="mono">{devCode}</b>. Real codes arrive by SMS/WhatsApp once the provider connects.</p>}</>;
-    case 'name':return <><h2>Your name, as on your CNIC</h2><p>Circles run on real names, it's how members know exactly who they're trusting.</p>
-      <input className="field big-field" autoFocus autoComplete="name" placeholder="Full name" value={form.fullName} onChange={e=>setForm({...form,fullName:e.target.value})}/>
-      <input className="field" placeholder="Pick a username" autoComplete="username" value={form.username} onChange={e=>setForm({...form,username:e.target.value.toLowerCase().replace(/[^a-z0-9_.]/g,'')})}/></>;
-    case 'profile':return <><h2>Where you live & what you do</h2><p>Your city, area and job appear on your member profile, a light trust signal so people know who they're saving with. Your exact street address and CNIC are <b>never</b> shown to anyone.</p>
-      <div className="onboard-warn"><b>⚠ Enter your real, correct details</b><span>Members see your name, area and job, and our team checks them when we review your account. Wrong or made-up information gets your account frozen.</span></div>
-      {homeLat!=null
-        ?<div className="commitment-ok" style={{margin:'10px 0'}}><ShieldCheck/><div><b>Home location set ✓</b><p>Pinned from your device, this is your registered home.</p></div></div>
-        :<button type="button" className="location-cta" disabled={locating} onClick={captureLocation}><span className="location-cta-pin">📍</span><span className="location-cta-text"><b>{locating?'Getting your location…':'Use my live location'}</b><small>{locating?'Hold on a moment':'Required, tap to pin your home from your device GPS'}</small></span></button>}
-      {locErr&&<div className="error-box" style={{marginBottom:10}}>{locErr}</div>}
-      <label className="onboard-field-label">Home address <span className="label-private">· private</span></label>
-      <input className="field" autoFocus autoComplete="street-address" placeholder="House / street / area" value={form.addressLine} onChange={e=>setForm({...form,addressLine:e.target.value})}/>
-      <label className="onboard-field-label">City</label>
-      <input className="field" list="pk-cities" autoComplete="address-level2" placeholder="Start typing your city" value={form.city} onChange={e=>setForm({...form,city:e.target.value})}/>
-      <datalist id="pk-cities">{PK_CITIES.map(c=><option key={c} value={c}/>)}</datalist>
-      <label className="onboard-field-label">Area / sector <span className="label-shown">· shown to members</span></label>
-      <input className="field" placeholder="e.g. G-13, DHA Phase 2, Gulberg" value={form.locality} onChange={e=>setForm({...form,locality:e.target.value})}/>
-      <label className="onboard-field-label">What do you do?</label>
-      <select className="field" value={form.occupationType} onChange={e=>setForm({...form,occupationType:e.target.value,employerName:e.target.value==='EMPLOYED'?form.employerName:'',jobTitle:''})}><option value="">Select…</option>{OCCUPATIONS.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select>
-      {form.occupationType&&<><label className="onboard-field-label">{JOB_FIELD[form.occupationType].label}</label>
-        <input className="field" placeholder={JOB_FIELD[form.occupationType].ph} value={form.jobTitle} onChange={e=>setForm({...form,jobTitle:e.target.value})}/></>}
-      {form.occupationType&&<><label className="onboard-field-label">Roughly what do you earn a month? <span className="label-private">· private</span></label>
-        <input className="field" inputMode="numeric" placeholder="e.g. 60000" value={form.monthlyIncome} onChange={e=>setForm({...form,monthlyIncome:e.target.value.replace(/\D/g,'')})}/>
-        <div className="onboard-note"><b>This decides what you can join</b><span>Halqa keeps your committees under a third of what you earn. Without it you can only take one small committee.</span></div></>}
-      {form.occupationType==='EMPLOYED'&&<><label className="onboard-field-label">Where do you work? <span className="label-private">· private</span></label>
-        <input className="field" placeholder="Company / employer name" value={form.employerName} onChange={e=>setForm({...form,employerName:e.target.value})}/>
-        <div className="onboard-note"><b>Salary account = best rate</b><span>A salary account earns a 20% discount on Halqa's fee.</span></div></>}</>;
-    case 'email':return <><h2>Your email address</h2><p>For receipts and getting back in if you are locked out.</p>
-      <input className="field big-field" type="email" autoFocus autoComplete="email" placeholder="you@example.com" value={form.email} onChange={e=>setForm({...form,email:e.target.value})}/></>;
-    case 'cnic':return <><h2>Your CNIC number</h2><p>The 13 digits, no dashes.</p>
-      <input className="field big-field mono" inputMode="numeric" autoFocus maxLength={13} placeholder="3520212345671" value={form.cnic} onChange={e=>setForm({...form,cnic:e.target.value.replace(/\D/g,'')})}/>
-      {cnicCaptured
-        ?<div className="commitment-ok" style={{marginTop:10}}><ShieldCheck/><div><b>CNIC scanned</b><p>Card photo captured on your device.</p></div></div>
-        :<button type="button" className="secondary" style={{marginTop:10,display:'inline-flex',alignItems:'center',gap:8}} onClick={()=>setScanning(true)}>Scan my CNIC with the camera</button>}
-      <div className="onboard-note"><b>Identity check</b><span>Never shown to other members.</span></div></>;
-    case 'account':return <><h2>Link your collection account</h2><p>Committees collect from this account automatically. A one-time code confirms it is yours.</p>
-      <div className="rail-grid" style={{marginBottom:12}}>{Object.keys(RAIL_META).map(id=><button type="button" key={id} className={`rail-chip ${form.rail===id?'on':''}`} onClick={()=>setForm({...form,rail:id})}><RailLogo rail={id} size={30} />{RAIL_META[id].name}</button>)}</div>
-      {form.rail==='BANK_TRANSFER'&&<><label className="onboard-field-label">Your bank</label>
-        <div className="bank-grid" style={{marginBottom:12}}>{PK_BANKS.map(b=><button type="button" key={b.name} className={`bank-tile ${form.bankName===b.name?'on':''}`} onClick={()=>setForm({...form,bankName:b.name})}><i style={{background:`linear-gradient(135deg, ${b.color}, ${b.dark})`}}>{b.mono}</i><span>{b.name}</span></button>)}</div></>}
-      <label className="onboard-field-label">Account holder name</label>
-      <input className="field" autoFocus autoComplete="name" placeholder="Exactly as printed on the account" value={form.accountTitle} onChange={e=>setForm({...form,accountTitle:e.target.value})}/>
-      <label className="onboard-field-label">{form.rail==='BANK_TRANSFER'?'IBAN':form.rail==='RAAST'?'Raast ID (mobile number)':'Wallet number'}</label>
-      <input className="field mono" inputMode={form.rail==='BANK_TRANSFER'?'text':'numeric'} placeholder={form.rail==='BANK_TRANSFER'?'PK36 SONE 0000 1234 5678 9012':'03XX XXXXXXX'} value={form.accountNo} onChange={e=>setForm({...form,accountNo:formatEntry(form.rail,e.target.value)})}/>
-      <div style={{margin:'12px 0'}}><AccountCard draft rail={form.rail} bankName={form.rail==='BANK_TRANSFER'?form.bankName:undefined} accountTitle={form.accountTitle} accountNo={form.accountNo}/></div>
-      <label className="onboard-field-label">Which day does your pay arrive? <span className="label-private">· optional</span></label>
-      <select className="field" value={form.salaryDay} onChange={e=>setForm({...form,salaryDay:e.target.value})}><option value="">It varies / prefer not to say</option>{Array.from({length:31},(_,i)=>i+1).map(d=><option key={d} value={d}>{d}{d===1?'st':d===2?'nd':d===3?'rd':d===21?'st':d===22?'nd':d===23?'rd':d===31?'st':'th'} of the month</option>)}</select>
-      <div className="onboard-note"><b>Collection on your payday</b><span>Tell us your salary day and your installment is collected that morning, while the money is there, instead of waiting for the due date. Verified automatically from your payment history.</span></div>
-      <div className="onboard-note"><b>Unconfigurable by design</b><span>Auto-collection is standard on every circle, no manual payments to remember, no missed installments. Halqa stores the identifier only, never balances or cards.</span></div></>;
-    case 'password':return <><h2>Create a password</h2><p>At least 8 characters with letters and numbers.</p>
-      <input className="field big-field" type="password" autoFocus autoComplete="new-password" placeholder="Password" value={form.regPassword} onChange={e=>setForm({...form,regPassword:e.target.value})}/>
-      <div className={`pass-meter ${passOk?'ok':form.regPassword.length>0?'weak':''}`}><i/><span>{passOk?'Strong enough':form.regPassword.length?'Keep going, letters + numbers, 8 minimum':''}</span></div></>;
-    case 'pin':return <><h2>Set your app PIN</h2><p>A 4-digit PIN you'll enter every time you open Halqa, a second lock even when you're already signed in.</p>
-      <label className="onboard-field-label">Choose a PIN</label>
-      <input className="field big-field mono" inputMode="numeric" autoFocus maxLength={6} placeholder="••••" value={form.pin} onChange={e=>setForm({...form,pin:e.target.value.replace(/\D/g,'')})}/>
-      <label className="onboard-field-label">Confirm PIN</label>
-      <input className="field big-field mono" inputMode="numeric" maxLength={6} placeholder="••••" value={form.pinConfirm} onChange={e=>setForm({...form,pinConfirm:e.target.value.replace(/\D/g,'')})}/>
-      {form.pin&&form.pinConfirm&&form.pin!==form.pinConfirm&&<div className="pin-error" style={{textAlign:'left'}}>PINs don't match yet</div>}
-      <div className="onboard-note"><b>Keep it private</b><span>You'll need this PIN on every open. Forgot it later? Sign in with your password to reset.</span></div></>;
-    case 'review':return <><h2>One look before we start</h2><p>Check your details, accept the terms, and your Halqa opens.</p>
-      <div className="review-rows">
-        <div><span>Mobile</span><b>{form.phone}</b></div>
-        <div><span>Name</span><b>{form.fullName}</b></div>
-        <div><span>Username</span><b>@{form.username}</b></div>
-        <div><span>Email</span><b>{form.email}</b></div>
-        <div><span>CNIC</span><b className="mono">{'•'.repeat(9)}{form.cnic.slice(-4)}</b></div>
-        <div><span>City &amp; area</span><b>{form.city||''}{form.locality?` · ${form.locality}`:''}</b></div>
-        <div><span>Work</span><b>{OCCUPATIONS.find(([id])=>id===form.occupationType)?.[1]||''}{form.jobTitle?` · ${form.jobTitle}`:''}</b></div>
-        <div><span>Collection account</span><b>{form.accountTitle} · <span className="mono">{form.rail==='BANK_TRANSFER'?form.bankName+' ':''}{'•'.repeat(Math.max(0,form.accountNo.replace(/\s+/g,'').length-4))}{form.accountNo.replace(/\s+/g,'').slice(-4)}</span></b></div>
-        <div><span>App PIN</span><b>Set ✓</b></div>
-      </div>
-      <label className="tos-check"><input type="checkbox" checked={agreed} onChange={e=>setAgreed(e.target.checked)}/><span>I have read and agree to the <button type="button" className="inline-link" onClick={()=>setDoc('agreement')}>User Agreement</button> and <button type="button" className="inline-link" onClick={()=>setDoc('privacy')}>Privacy Policy</button>, including the <button type="button" className="inline-link" onClick={()=>setDoc('fees')}>Fees & Payments Policy</button>.</span></label></>;
-  }};
+  // The device's real position, reverse-geocoded to fill the address and city.
+  // The coordinates themselves are the registered home.
+  const captureLocation = () => {
+    setLocating(true); setLocErr('');
+    if (!('geolocation' in navigator)) {
+      setLocErr('Location is not available on this device. Type your address instead.');
+      setLocating(false); return;
+    }
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const lat = pos.coords.latitude, lng = pos.coords.longitude;
+      setHomeLat(lat); setHomeLng(lng);
+      try {
+        const r = await fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=16', { headers: { Accept: 'application/json' } });
+        const j = await r.json(); const a = j.address || {};
+        const city = a.city || a.town || a.village || a.county || '';
+        const locality = a.suburb || a.neighbourhood || a.city_district || a.quarter || a.residential || a.borough || '';
+        const line = [a.road, a.suburb, a.neighbourhood, a.residential].filter(Boolean).join(', ')
+          || (j.display_name || '').split(',').slice(0, 2).join(', ');
+        setForm(f => ({ ...f, city: city || f.city, locality: locality || f.locality, addressLine: line || f.addressLine }));
+      } catch { /* the coordinates alone are enough */ }
+      setLocating(false);
+    }, err => {
+      setLocErr(err.code === 1 ? 'Allow location access. Your home location is required.' : 'Could not get your location. Try again.');
+      setLocating(false);
+    }, { enableHighAccuracy: true, timeout: 15000 });
+  };
 
-  return <main className="auth-layout"><section className="auth-story"><Logo/><div className="auth-copy"><HalqaOrb/><span className="eyebrow">Pakistan's transparent savings network</span><h1>Save together.<br/>Grow with clarity.</h1><p>Locked schedules, visible turns, and a payment record that follows you.</p></div></section>
-  <section className="auth-form"><div className="auth-card">
-    <div className="mobile-logo"><Logo/></div>
-    {mode==='login'?<>
-      <h2>Welcome back</h2><p>Mobile number and password.</p>
-      <form onSubmit={login}>
-        <PhoneInput value={form.identity} onChange={v=>setForm({...form,identity:v})}/>
-        <input className="field" type="password" placeholder="Password" autoComplete="current-password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})}/>
-        {error&&<div className="error-box">{error}</div>}
-        <button className="primary" disabled={busy||form.identity.length<8||form.password.length<4}>{busy?'Please wait…':'Sign in'}</button>
-      </form>
-      <button className="text-action" onClick={()=>{setMode('register');setStep('phone');setError('')}}>New to Halqa? Create account</button>
-      <div className="demo-note"><b>Demo</b><span>🇵🇰 +92 300 1234567 · halqa123</span></div>
-    </>:<>
-      <div className="onboard-top">
-        <button type="button" className="onboard-back" onClick={back}><ChevronLeft size={18}/></button>
-        <div className="onboard-dots">{REG_STEPS.map((s,i)=><i key={s} className={i<=stepIndex?'on':''}/>)}</div>
-        <span className="onboard-count">{stepIndex+1}/{REG_STEPS.length}</span>
-      </div>
-      <div className="onboard-body">{stepBody()}</div>
-      {error&&<div className="error-box">{error}</div>}
-      {step!=='review'
-        ?<button className="primary full" disabled={!canContinue||busy} onClick={goNext}>Continue</button>
-        :<button className="primary full" disabled={!agreed||busy} onClick={register}>{busy?'Creating your account':'Agree and create my account'}</button>}
-    </>}
-  </div><LegalFooter/></section>
-  {doc&&<LegalDocModal doc={doc} onClose={()=>setDoc(null)}/>}
-  {scanning&&<CnicCapture onClose={()=>setScanning(false)} onCaptured={()=>{setCnicCaptured(true);setScanning(false)}}/>}</main>
+  const login = async (event: React.FormEvent) => {
+    event.preventDefault(); setBusy(true); setError('');
+    try {
+      const data = await api<{ user: User; accessToken: string; refreshToken: string }>('/auth/login',
+        { method: 'POST', body: JSON.stringify({ identity: form.identity.trim(), password: form.password.trim() }) });
+      tokens.set(data.accessToken, data.refreshToken); onAuth(data.user);
+    } catch (reason) { setError((reason as Error).message) } finally { setBusy(false) }
+  };
+
+  const register = async () => {
+    setBusy(true); setError('');
+    try {
+      const data = await api<{ user: User; accessToken: string; refreshToken: string }>('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({
+          fullName: form.fullName.trim(), username: form.username.trim(), phone: form.phone.trim(),
+          email: form.email.trim(), cnic: form.cnic, password: form.regPassword,
+          termsVersion: TERMS_VERSION,
+          addressLine: form.addressLine.trim(), city: form.city.trim(),
+          locality: form.locality.trim() || undefined,
+          occupationType: form.occupationType,
+          employerName: form.occupationType === 'EMPLOYED' ? form.employerName.trim() : undefined,
+          jobTitle: form.jobTitle.trim() || undefined,
+          pin: form.pin, cnicCaptured,
+          homeLat: homeLat ?? undefined, homeLng: homeLng ?? undefined,
+          salaryDay: form.salaryDay ? Number(form.salaryDay) : undefined,
+          // The figure affordability sizes every committee against. Rupees on
+          // the form, paisa on the wire, like every other amount.
+          declaredIncomePaisa: form.monthlyIncome ? String(Number(form.monthlyIncome) * 100) : undefined,
+        }),
+      });
+      tokens.set(data.accessToken, data.refreshToken);
+      // The collection account, linked the moment the account exists. Best
+      // effort: a rail hiccup must never strand a fresh registration, and
+      // Profile shows the link and its code if this needs a retry.
+      try {
+        await api('/profile/payment-methods', {
+          method: 'POST',
+          body: JSON.stringify({
+            rail: form.rail,
+            accountNo: isBank ? cleanIban(form.accountNo) : cleanMobile(form.accountNo),
+            accountTitle: form.accountTitle.trim(),
+            bankName: isBank ? form.bankName : undefined,
+            preferred: true,
+          }),
+        });
+      } catch { /* retry from Profile */ }
+      onAuth(data.user);
+    } catch (reason) { setError((reason as Error).message) } finally { setBusy(false) }
+  };
+
+  const pressPin = (d: string) => {
+    if (pinStage === 'set') {
+      const v = (form.pin + d).slice(0, 4);
+      setForm(f => ({ ...f, pin: v }));
+      if (v.length === 4) setPinStage('again');
+    } else {
+      const v = (form.pinConfirm + d).slice(0, 4);
+      setForm(f => ({ ...f, pinConfirm: v }));
+    }
+  };
+  const backPin = () => {
+    if (pinStage === 'again' && !form.pinConfirm) { setPinStage('set'); setForm(f => ({ ...f, pin: f.pin.slice(0, -1) })); return }
+    if (pinStage === 'again') setForm(f => ({ ...f, pinConfirm: f.pinConfirm.slice(0, -1) }));
+    else setForm(f => ({ ...f, pin: f.pin.slice(0, -1) }));
+  };
+
+  const cities = cityFind.trim() ? PK_CITIES.filter(c => c.toLowerCase().includes(cityFind.trim().toLowerCase())) : PK_CITIES;
+  const banks = bankFind.trim() ? PK_BANKS.filter(b => b.name.toLowerCase().includes(bankFind.trim().toLowerCase())) : PK_BANKS;
+  const numberLabel = isBank ? 'IBAN' : form.rail === 'RAAST' ? 'Raast ID, your mobile number' : 'Wallet number';
+
+  const body = () => {
+    switch (step) {
+      case 'phone': return <>
+        <div className="w-title"><h2>What is your mobile number?</h2>
+          <p>Your number is your identity on Halqa. Invites, reminders and payments all reach you here.</p></div>
+        <div className="w-inset">
+          <PhoneInput value={form.phone} onChange={v => {
+            setForm({ ...form, phone: v });
+            if (otpSent) { setOtpSent(false); setOtpVerified(false); setDevCode('') }
+          }} autoFocus />
+        </div>
+      </>;
+
+      case 'otp': return <>
+        <div className="w-title"><h2>Confirm your number</h2>
+          <p>A six digit code went to {form.phone}.</p></div>
+        <Field label="The code">
+          <input className="mono" inputMode="numeric" autoFocus maxLength={6} placeholder="000000"
+                 value={form.otpCode} disabled={otpVerified}
+                 onChange={e => setForm({ ...form, otpCode: e.target.value.replace(/\D/g, '') })} />
+        </Field>
+        <div className="w-inset">
+          {otpVerified
+            ? <Notice kind="ok" icon={<Check />}>Number confirmed.</Notice>
+            : <div className="w-actions">
+                <button className="secondary" disabled={busy || form.otpCode.length !== 6} onClick={() => void verifyOtp()}>
+                  {busy ? 'Checking' : 'Verify code'}
+                </button>
+                <button className="text-action" disabled={busy} onClick={() => void requestOtp()}>Send again</button>
+              </div>}
+          {devCode && !otpVerified && (
+            <Notice kind="info" icon={<Info />}>
+              No SMS gateway is connected yet, so your code is <b className="mono">{devCode}</b>.
+            </Notice>
+          )}
+        </div>
+      </>;
+
+      case 'name': return <>
+        <div className="w-title"><h2>Your name, as on your CNIC</h2>
+          <p>Circles run on real names. It is how members know who they are trusting.</p></div>
+        <Field label="Full name">
+          <input autoFocus autoComplete="name" placeholder="Full name" value={form.fullName}
+                 onChange={e => setForm({ ...form, fullName: e.target.value })} />
+        </Field>
+        <Field label="Username" hint="Letters, numbers, dots and underscores.">
+          <input autoComplete="username" placeholder="Pick a username" value={form.username}
+                 onChange={e => setForm({ ...form, username: e.target.value.toLowerCase().replace(/[^a-z0-9_.]/g, '') })} />
+        </Field>
+        <Field label="Email" hint="For receipts, and for getting back in if you are locked out.">
+          <input type="email" autoComplete="email" placeholder="you@example.com" value={form.email}
+                 onChange={e => setForm({ ...form, email: e.target.value })} />
+        </Field>
+      </>;
+
+      case 'where': return <>
+        <div className="w-title"><h2>Where you live</h2>
+          <p>Your city and area appear on your profile. Your street address never does.</p></div>
+        <div className="w-inset">
+          {homeLat != null
+            ? <Notice kind="ok" icon={<Check />}>Home location pinned from your device.</Notice>
+            : <button type="button" className="w-locate" disabled={locating} onClick={captureLocation}>
+                <MapPin />
+                <span><b>{locating ? 'Getting your location' : 'Use my live location'}</b>
+                  <small>{locating ? 'One moment' : 'Required. This pins your home from the device.'}</small></span>
+              </button>}
+          {locErr && <Notice kind="bad" icon={<Info />}>{locErr}</Notice>}
+        </div>
+        <Field label="Home address" hint="Private. Never shown to another member.">
+          <input autoComplete="street-address" placeholder="House, street, area" value={form.addressLine}
+                 onChange={e => setForm({ ...form, addressLine: e.target.value })} />
+        </Field>
+        <PickerRow label="City" icon={<MapPin />} value={form.city} placeholder="Pick your city"
+                   onClick={() => setCitySheet(true)} />
+        <Field label="Area or sector" hint="Shown to members. G-13, DHA Phase 2, Gulberg.">
+          <input placeholder="Your area" value={form.locality}
+                 onChange={e => setForm({ ...form, locality: e.target.value })} />
+        </Field>
+      </>;
+
+      case 'work': return <>
+        <div className="w-title"><h2>What you do</h2>
+          <p>Your work is a trust signal to other members. What you earn is private and decides
+            what you can join.</p></div>
+        <PickerRow label="What you do" icon={<Briefcase />}
+                   value={OCCUPATIONS.find(([id]) => id === form.occupationType)?.[1]}
+                   placeholder="Pick one" onClick={() => setJobSheet(true)} />
+        {form.occupationType && (
+          <Field label={JOB_FIELD[form.occupationType].label}>
+            <input placeholder={JOB_FIELD[form.occupationType].ph} value={form.jobTitle}
+                   onChange={e => setForm({ ...form, jobTitle: e.target.value })} />
+          </Field>
+        )}
+        <Field label="Roughly what you earn a month" hint="Private. Nobody else sees this.">
+          <input inputMode="numeric" placeholder="60000" value={form.monthlyIncome}
+                 onChange={e => setForm({ ...form, monthlyIncome: e.target.value.replace(/\D/g, '') })} />
+        </Field>
+        {Number(form.monthlyIncome) > 0 && (
+          <div className="w-inset">
+            <Notice kind="info" icon={<Info />}>
+              Halqa keeps your committees under a third of what you earn, so about{' '}
+              <b>{money(Math.round(Number(form.monthlyIncome) * 33))}</b> a month across everything
+              you hold.
+            </Notice>
+          </div>
+        )}
+        {form.occupationType === 'EMPLOYED' && (
+          <>
+            <Field label="Where you work" hint="Private. A salary account earns 20 per cent off Halqa's fee.">
+              <input placeholder="Company or employer" value={form.employerName}
+                     onChange={e => setForm({ ...form, employerName: e.target.value })} />
+            </Field>
+            <PickerRow label="Which day your pay arrives" icon={<Wallet />}
+                       value={form.salaryDay ? 'The ' + form.salaryDay + ordinal(Number(form.salaryDay)) : undefined}
+                       placeholder="It varies" onClick={() => setDaySheet(true)} />
+          </>
+        )}
+      </>;
+
+      case 'cnic': return <>
+        <div className="w-title"><h2>Your CNIC number</h2>
+          <p>Thirteen digits. Used to confirm who you are, and never shown to another member.</p></div>
+        <Field label="CNIC">
+          <input className="mono" inputMode="numeric" autoFocus maxLength={15}
+                 placeholder="35202-1234567-1" value={groupCnic(form.cnic)}
+                 onChange={e => setForm({ ...form, cnic: cleanCnic(e.target.value) })} />
+        </Field>
+        <div className="w-inset">
+          {cnicCaptured
+            ? <Notice kind="ok" icon={<Check />}>Card photo captured on this device.</Notice>
+            : <button type="button" className="secondary" onClick={() => setScanning(true)}>
+                <Camera /> Scan my CNIC with the camera
+              </button>}
+        </div>
+      </>;
+
+      case 'account': return <>
+        <div className="w-title"><h2>Where should we collect from?</h2>
+          <p>Every committee collects automatically. This is the account it pulls from, and you
+            can change it later.</p></div>
+        <PickerRow label="What you are linking" icon={<RailLogo rail={form.rail} size={22} />}
+                   value={RAIL_META[form.rail].name} onClick={() => setRailSheet(true)} />
+        {isBank && <PickerRow label="Your bank" icon={<Landmark />} value={form.bankName}
+                              onClick={() => setBankSheet(true)} />}
+        <Field label="Account holder name" hint="Exactly as registered. A name that does not match is refused.">
+          <input autoComplete="name" placeholder="As printed on the account" value={form.accountTitle}
+                 onChange={e => setForm({ ...form, accountTitle: e.target.value })} />
+        </Field>
+        <Field label={numberLabel}
+               hint={isBank ? 'Twenty four characters, starting PK.' : 'Eleven digits, starting 03.'}
+               error={(isBank ? ibanProblem(form.accountNo) : mobileProblem(form.accountNo)) || undefined}>
+          <input className="mono" inputMode={isBank ? 'text' : 'numeric'}
+                 placeholder={isBank ? 'PK36 SONE 0000 1234 5678 9012' : '0300 1234567'}
+                 value={isBank ? groupIban(form.accountNo) : groupMobile(form.accountNo)}
+                 onChange={e => setForm({ ...form, accountNo: e.target.value })} />
+        </Field>
+        <div className="w-inset">
+          <AccountCard draft rail={form.rail} bankName={isBank ? form.bankName : undefined}
+                       accountTitle={form.accountTitle} accountNo={form.accountNo} />
+          <Notice kind="info" icon={<Lock />}>
+            Halqa keeps the identifier only. No balances are read, and no money moves until an
+            instalment is due.
+          </Notice>
+        </div>
+      </>;
+
+      case 'password': return <>
+        <div className="w-title"><h2>Create a password</h2>
+          <p>Eight characters or more, with letters and numbers.</p></div>
+        <Field label="Password">
+          <input type="password" autoFocus autoComplete="new-password" placeholder="Password"
+                 value={form.regPassword} onChange={e => setForm({ ...form, regPassword: e.target.value })} />
+        </Field>
+        <div className="w-inset">
+          <div className={'w-strength' + (passOk ? ' ok' : form.regPassword ? ' weak' : '')}>
+            <i />
+            <span>{passOk ? 'Strong enough'
+              : form.regPassword ? 'Keep going. Letters and numbers, eight minimum.' : ''}</span>
+          </div>
+        </div>
+      </>;
+
+      case 'pin': return <>
+        <div className="w-title">
+          <h2>{pinStage === 'set' ? 'Set your app PIN' : 'Enter it again'}</h2>
+          <p>{pinStage === 'set'
+            ? 'Four digits, typed every time you open Halqa. A second lock even when you are signed in.'
+            : 'Type the same four digits to confirm.'}</p>
+        </div>
+        <Keypad length={4}
+                filled={pinStage === 'set' ? form.pin.length : form.pinConfirm.length}
+                onKey={pressPin} onBackspace={backPin} />
+        <div className="w-inset">
+          {pinStage === 'again' && form.pinConfirm.length === 4 && form.pin !== form.pinConfirm && (
+            <Notice kind="bad" icon={<Info />}>
+              Those do not match.{' '}
+              <button className="text-action" onClick={() => { setForm(f => ({ ...f, pin: '', pinConfirm: '' })); setPinStage('set') }}>Start again</button>
+            </Notice>
+          )}
+          {pinOk && <Notice kind="ok" icon={<Check />}>PIN set.</Notice>}
+          <Notice kind="info" icon={<ShieldCheck />}>
+            Forgotten later, you sign in with your password and set a new one.
+          </Notice>
+        </div>
+      </>;
+
+      case 'review': return <>
+        <div className="w-title"><h2>One look before we start</h2>
+          <p>Check it over, accept the terms, and your Halqa opens.</p></div>
+        <Card pad={false}>
+          <ReviewRow icon={<Smartphone />} label="Mobile" value={form.phone} onEdit={() => setStep('phone')} />
+          <ReviewRow icon={<ShieldCheck />} label="Name" value={form.fullName + ' · @' + form.username} onEdit={() => setStep('name')} />
+          <ReviewRow icon={<CreditCard />} label="CNIC" value={'•'.repeat(9) + form.cnic.slice(-4)} onEdit={() => setStep('cnic')} />
+          <ReviewRow icon={<MapPin />} label="City and area"
+                     value={form.city + (form.locality ? ' · ' + form.locality : '')} onEdit={() => setStep('where')} />
+          <ReviewRow icon={<Briefcase />} label="Work"
+                     value={(OCCUPATIONS.find(([id]) => id === form.occupationType)?.[1] || '') + (form.jobTitle ? ' · ' + form.jobTitle : '')}
+                     onEdit={() => setStep('work')} />
+          <ReviewRow icon={<Wallet />} label="Collects from"
+                     value={form.accountTitle + ' · ' + (isBank ? form.bankName + ' ' : '') + (form.accountNo.replace(/\s+/g, '').slice(-4))}
+                     onEdit={() => setStep('account')} />
+          <ReviewRow icon={<Lock />} label="App PIN" value="Set" onEdit={() => { setPinStage('set'); setForm(f => ({ ...f, pin: '', pinConfirm: '' })); setStep('pin') }} />
+        </Card>
+        <div className="w-inset">
+          <label className="w-check">
+            <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} />
+            <span>I have read and agree to the{' '}
+              <button type="button" className="inline-link" onClick={() => setDoc('agreement')}>User Agreement</button>,{' '}
+              the <button type="button" className="inline-link" onClick={() => setDoc('privacy')}>Privacy Policy</button>{' '}
+              and the <button type="button" className="inline-link" onClick={() => setDoc('fees')}>Fees and Payments Policy</button>.
+            </span>
+          </label>
+        </div>
+      </>;
+    }
+  };
+
+  return (
+    <main className="auth-layout">
+      <section className="auth-story">
+        <Logo />
+        <div className="auth-copy">
+          <HalqaOrb />
+          <span className="eyebrow">Pakistan's transparent savings network</span>
+          <h1>Save together.<br />Grow with clarity.</h1>
+          <p>Locked schedules, visible turns, and a payment record that follows you.</p>
+        </div>
+      </section>
+
+      <section className="auth-form">
+        <div className="auth-card">
+          <div className="mobile-logo"><Logo /></div>
+
+          {mode === 'login' ? (
+            <>
+              <div className="w-title"><h2>Welcome back</h2><p>Mobile number and password.</p></div>
+              <form onSubmit={login}>
+                <div className="w-inset">
+                  <PhoneInput value={form.identity} onChange={v => setForm({ ...form, identity: v })} />
+                </div>
+                <Field label="Password">
+                  <input type="password" placeholder="Password" autoComplete="current-password"
+                         value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
+                </Field>
+                {error && <div className="w-inset"><Notice kind="bad" icon={<Info />}>{error}</Notice></div>}
+                <div className="w-inset">
+                  <button className="primary full" disabled={busy || form.identity.length < 8 || form.password.length < 4}>
+                    {busy ? 'Please wait' : 'Sign in'}
+                  </button>
+                </div>
+              </form>
+              <button className="text-action" onClick={() => { setMode('register'); setStep('phone'); setError('') }}>
+                New to Halqa? Create an account
+              </button>
+              <div className="demo-note"><b>Demo</b><span>+92 300 1234567 · halqa123</span></div>
+            </>
+          ) : (
+            <>
+              <FlowHeader title={'Step ' + (stepIndex + 1) + ' of ' + REG_STEPS.length} onBack={back} />
+              <Steps step={stepIndex + 1} of={REG_STEPS.length} />
+              {body()}
+              {error && <div className="w-inset"><Notice kind="bad" icon={<Info />}>{error}</Notice></div>}
+              <BottomBar>
+                {step !== 'review'
+                  ? <button className="primary full" disabled={!canContinue || busy} onClick={goNext}>Continue</button>
+                  : <button className="primary full" disabled={!agreed || busy} onClick={register}>
+                      {busy ? 'Creating your account' : 'Agree and open my Halqa'}
+                    </button>}
+              </BottomBar>
+            </>
+          )}
+        </div>
+        <LegalFooter />
+      </section>
+
+      {doc && <LegalDocModal doc={doc} onClose={() => setDoc(null)} />}
+      {scanning && <CnicCapture onClose={() => setScanning(false)} onCaptured={() => { setCnicCaptured(true); setScanning(false) }} />}
+
+      {railSheet && (
+        <Sheet title="What are you linking" onClose={() => setRailSheet(false)}>
+          <SheetGroup label="Instant, and free" />
+          <SheetRow icon={<RailLogo rail="RAAST" size={30} />} title="Raast"
+                    sub="Settles straight into your bank account"
+                    onClick={() => { setForm({ ...form, rail: 'RAAST', accountNo: '' }); setRailSheet(false) }} />
+          <SheetGroup label="Mobile wallets" />
+          <SheetRow icon={<RailLogo rail="JAZZCASH" size={30} />} title="JazzCash"
+                    sub="Your wallet, which is your mobile number"
+                    onClick={() => { setForm({ ...form, rail: 'JAZZCASH', accountNo: '' }); setRailSheet(false) }} />
+          <SheetRow icon={<RailLogo rail="EASYPAISA" size={30} />} title="Easypaisa"
+                    sub="Your wallet, which is your mobile number"
+                    onClick={() => { setForm({ ...form, rail: 'EASYPAISA', accountNo: '' }); setRailSheet(false) }} />
+          <SheetGroup label="Bank" />
+          <SheetRow icon={<RailLogo rail="BANK_TRANSFER" size={30} />} title="Bank account"
+                    sub="Any Pakistani bank, linked by IBAN"
+                    onClick={() => { setForm({ ...form, rail: 'BANK_TRANSFER', accountNo: '' }); setRailSheet(false) }} />
+        </Sheet>
+      )}
+
+      {bankSheet && (
+        <Sheet title="Pick your bank" onClose={() => setBankSheet(false)} search={bankFind} onSearch={setBankFind}>
+          {banks.map(b => (
+            <SheetRow key={b.name}
+                      icon={<i className="bank-dot" style={{ background: 'linear-gradient(135deg,' + b.color + ',' + b.dark + ')' }}>{b.mono}</i>}
+                      title={b.name}
+                      onClick={() => { setForm({ ...form, bankName: b.name }); setBankSheet(false); setBankFind('') }} />
+          ))}
+          {!banks.length && <div className="w-blank"><span><Search /></span><b>No bank matches that</b></div>}
+        </Sheet>
+      )}
+
+      {citySheet && (
+        <Sheet title="Your city" onClose={() => setCitySheet(false)} search={cityFind} onSearch={setCityFind}>
+          {cities.map(c => (
+            <SheetRow key={c} icon={<span className="w-row-icon"><MapPin /></span>} title={c}
+                      onClick={() => { setForm({ ...form, city: c }); setCitySheet(false); setCityFind('') }} />
+          ))}
+          {!cities.length && (
+            <SheetRow icon={<span className="w-row-icon"><MapPin /></span>}
+                      title={'Use "' + cityFind.trim() + '"'}
+                      sub="Not on the list, and that is fine"
+                      onClick={() => { setForm({ ...form, city: cityFind.trim() }); setCitySheet(false); setCityFind('') }} />
+          )}
+        </Sheet>
+      )}
+
+      {jobSheet && (
+        <Sheet title="What do you do" onClose={() => setJobSheet(false)}>
+          {OCCUPATIONS.map(([id, label]) => (
+            <SheetRow key={id} icon={<span className="w-row-icon"><Briefcase /></span>} title={label}
+                      onClick={() => { setForm({ ...form, occupationType: id, employerName: id === 'EMPLOYED' ? form.employerName : '', jobTitle: '' }); setJobSheet(false) }} />
+          ))}
+        </Sheet>
+      )}
+
+      {daySheet && (
+        <Sheet title="When does your pay arrive" onClose={() => setDaySheet(false)}>
+          <SheetRow icon={<span className="w-row-icon"><Wallet /></span>} title="It varies"
+                    sub="We will work it out from your payment history"
+                    onClick={() => { setForm({ ...form, salaryDay: '' }); setDaySheet(false) }} />
+          {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
+            <SheetRow key={d} icon={<span className="w-row-icon"><Wallet /></span>}
+                      title={'The ' + d + ordinal(d)}
+                      onClick={() => { setForm({ ...form, salaryDay: String(d) }); setDaySheet(false) }} />
+          ))}
+        </Sheet>
+      )}
+    </main>
+  );
 }
