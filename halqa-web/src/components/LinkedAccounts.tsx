@@ -1,13 +1,8 @@
 import { RailLogo, SchemeMark } from './RailLogo';
-import { useEffect, useState } from 'react';
-import { api } from '../api';
-import { Field } from './ui';
 
-// Linked collection accounts, wallet-app style: every linked method renders as
-// a bank-branded card (logo, holder name, masked number, verified/preferred
-// badges) and adding one is a stepped flow, rail → bank → details, with a
-// live preview card that fills in as you type. Pointers only, always: the
-// server masks numbers on the way out; no balances, no card numbers.
+// The bank directory, the rail metadata and the account-card face. Pointers
+// only, always: the server masks numbers on the way out, and no balance and no
+// card number is ever stored.
 
 export type LinkedMethod = { id: string; rail: string; accountNo: string; accountTitle?: string; bankName?: string; label: string; preferred: boolean; verified?: boolean; brand?: string; last4?: string; expiry?: string; addressLine?: string; city?: string };
 
@@ -83,123 +78,6 @@ export function AccountCard({ rail, bankName, accountTitle, accountNo, label, ve
   </div>;
 }
 
-export function LinkedAccountsManager() {
-  const [methods, setMethods] = useState<LinkedMethod[]>([]);
-  const [salaryRef, setSalaryRef] = useState<string | null>(null);
-  const [adding, setAdding] = useState(false); const [rail, setRail] = useState('RAAST'); const [bank, setBank] = useState('HBL');
-  const [accountNo, setAccountNo] = useState(''); const [accountTitle, setAccountTitle] = useState('');
-  // Card-only fields. CVC is kept in local state only and NEVER sent onward
-  // once the (sandbox) link is made, real processing is the partner's job.
-  const [cardNumber, setCardNumber] = useState(''); const [expiry, setExpiry] = useState(''); const [cvc, setCvc] = useState('');
-  const [billingAddress, setBillingAddress] = useState(''); const [billingCity, setBillingCity] = useState('');
-  const [busy, setBusy] = useState(false); const [error, setError] = useState('');
-  const [otpFor, setOtpFor] = useState(''); const [otpCode, setOtpCode] = useState(''); const [otpError, setOtpError] = useState(''); const [devCode, setDevCode] = useState('');
-  type SalaryStatus = { salaryDay: number | null; salaryDayLearned: number | null; salaryVerifiedAt: string | null; salaryVerifyMethod: string | null; payslip: { status: string } | null };
-  const [salary, setSalary] = useState<SalaryStatus | null>(null);
-  const [payslipBusy, setPayslipBusy] = useState(false);
-  const load = () => Promise.all([
-    api<{ methods: LinkedMethod[] }>('/profile/payment-methods').then(d => setMethods(d.methods)),
-    api<{ salaryAccountLinked: boolean; salaryAccountRef: string | null }>('/auth/me').then(d => setSalaryRef(d.salaryAccountLinked ? d.salaryAccountRef : null)).catch(() => {}),
-    api<SalaryStatus>('/profile/salary-status').then(setSalary).catch(() => {}),
-  ]).catch(() => {});
-  const setSalaryDay = async (value: string) => { try { await api('/profile/salary-day', { method: 'POST', body: JSON.stringify({ day: value ? Number(value) : null }) }); await load(); } catch { /* refresh next open */ } };
-  // One payslip, one photo. Downscaled on-device to a small JPEG so the upload
-  // is instant on any connection, nobody fights a form for a discount.
-  const uploadPayslip = async (file: File) => { setPayslipBusy(true); try {
-    const img = await new Promise<HTMLImageElement>((resolve, reject) => { const i = new Image(); i.onload = () => resolve(i); i.onerror = reject; i.src = URL.createObjectURL(file); });
-    const scale = Math.min(1, 1000 / Math.max(img.width, img.height));
-    const canvas = document.createElement('canvas'); canvas.width = Math.round(img.width * scale); canvas.height = Math.round(img.height * scale);
-    canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height);
-    URL.revokeObjectURL(img.src);
-    const imageBase64 = canvas.toDataURL('image/jpeg', 0.8);
-    await api('/profile/payslip', { method: 'POST', body: JSON.stringify({ imageBase64 }) });
-    await load();
-  } catch { /* surfaced by status staying unchanged */ } finally { setPayslipBusy(false); } };
-  useEffect(() => { void load(); }, []);
-  const add = async () => { setBusy(true); setError(''); try {
-    const body = rail === 'CARD'
-      ? { rail, cardNumber: cardNumber.replace(/\s+/g, ''), expiry, cvc, accountTitle: accountTitle.trim(), addressLine: billingAddress.trim() || undefined, city: billingCity.trim() || undefined }
-      : { rail, accountNo: accountNo.replace(/\s+/g, ''), accountTitle: accountTitle.trim() || undefined, bankName: rail === 'BANK_TRANSFER' ? bank : undefined };
-    const d = await api<{ method: LinkedMethod; devCode?: string }>('/profile/payment-methods', { method: 'POST', body: JSON.stringify(body) });
-    setAdding(false); setAccountNo(''); setAccountTitle(''); setCardNumber(''); setExpiry(''); setCvc(''); setBillingAddress(''); setBillingCity(''); await load();
-    // Jump straight into verification for the fresh link; in sandbox the code
-    // is surfaced inline so the demo flows end-to-end without a real gateway.
-    setOtpFor(d.method.id); setOtpCode(''); setOtpError(''); setDevCode(d.devCode || '');
-  } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); } };
-  const cardDigits = cardNumber.replace(/\D/g, '');
-  const cardValid = cardDigits.length >= 13 && /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry) && cvc.length >= 3 && accountTitle.trim().length >= 3;
-  const prefer = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}/preferred`, { method: 'POST' }); setMethods(d.methods); } catch { /* refresh next open */ } };
-  const remove = async (id: string) => { try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}`, { method: 'DELETE' }); setMethods(d.methods); if (id === salaryRef) setSalaryRef(null); } catch { /* refresh next open */ } };
-  const markSalary = async (id: string, enabled: boolean) => { try { const d = await api<{ salaryAccountLinked: boolean; salaryAccountRef: string | null }>(`/profile/payment-methods/${id}/salary`, { method: 'POST', body: JSON.stringify({ enabled }) }); setSalaryRef(d.salaryAccountLinked ? d.salaryAccountRef : null); await load(); } catch { /* refresh next open */ } };
-  const verify = async (id: string) => { setOtpError(''); try { const d = await api<{ methods: LinkedMethod[] }>(`/profile/payment-methods/${id}/verify`, { method: 'POST', body: JSON.stringify({ code: otpCode.trim() }) }); setMethods(d.methods); setOtpFor(''); setOtpCode(''); setDevCode(''); } catch (reason) { setOtpError((reason as Error).message); } };
-  const numberLabel = rail === 'BANK_TRANSFER' ? 'IBAN' : rail === 'RAAST' ? 'Raast ID (your mobile number)' : `${RAIL_META[rail].name} wallet number`;
-  return <div className="settings-block">
-    <span className="eyebrow" style={{ display: 'block', marginBottom: 8 }}>Linked collection accounts</span>
-    {salary && <div className="onboard-note" style={{ marginBottom: 10 }}>
-      <b>Salary day{salary.salaryVerifiedAt ? ' · Verified' : salary.payslip?.status === 'PENDING' ? ' · Payslip under review' : ''}</b>
-      <span>
-        {salary.salaryVerifiedAt
-          ? `Verified ${salary.salaryVerifyMethod === 'PATTERN' ? 'from your payment history' : salary.salaryVerifyMethod === 'ALERTS' ? 'from your credit alerts' : salary.salaryVerifyMethod === 'PAYSLIP' ? 'by payslip' : 'for the pilot'}, collection runs on your payday${salary.salaryDayLearned ? ` (around the ${salary.salaryDayLearned}th)` : ''}, before it is even due.`
-          : 'Collection runs the morning your pay arrives. One payslip sets it instantly.'}
-      </span>
-      <div style={{ display: 'flex', gap: 8, marginTop: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-        <select className="field" style={{ maxWidth: 220, margin: 0 }} value={salary.salaryDay ?? ''} onChange={e => void setSalaryDay(e.target.value)}>
-          <option value="">Salary day: varies / not set</option>
-          {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={d}>Pay arrives on the {d}{d === 1 || d === 21 || d === 31 ? 'st' : d === 2 || d === 22 ? 'nd' : d === 3 || d === 23 ? 'rd' : 'th'}</option>)}
-        </select>
-        {!salary.salaryVerifiedAt && salary.payslip?.status !== 'PENDING' && <label className="card-action" style={{ cursor: 'pointer' }}>
-          {payslipBusy ? 'Uploading…' : 'Add one payslip photo'}
-          <input type="file" accept="image/*" capture="environment" style={{ display: 'none' }} disabled={payslipBusy} onChange={e => { const f = e.target.files?.[0]; if (f) void uploadPayslip(f); e.target.value = ''; }} />
-        </label>}
-      </div>
-    </div>}
-    <div className="acct-list">
-      {methods.map(m => <AccountCard key={m.id} rail={m.rail} bankName={m.bankName} accountTitle={m.accountTitle} accountNo={m.accountNo} label={m.label} verified={m.verified} preferred={m.preferred} salary={m.id === salaryRef} brand={m.brand} last4={m.last4} expiry={m.expiry}
-        footer={<div className="acct-card-actions">
-          {!m.verified && (otpFor === m.id
-            ? <span className="otp-strip"><input className="otp-in mono" inputMode="numeric" maxLength={6} placeholder="6-digit code" value={otpCode} onChange={e => setOtpCode(e.target.value.replace(/\D/g, ''))} /><button className="card-action" disabled={otpCode.length !== 6} onClick={() => void verify(m.id)}>Confirm</button>{devCode && <small className="otp-dev">Sandbox code: <b className="mono">{devCode}</b></small>}</span>
-            : <button className="card-action" onClick={() => { setOtpFor(m.id); setOtpCode(''); setOtpError(''); setDevCode(''); }}>Enter WhatsApp code</button>)}
-          {!m.preferred && <button className="card-action" onClick={() => void prefer(m.id)}>Make preferred</button>}
-          {m.id === salaryRef ? <button className="card-action" onClick={() => void markSalary(m.id, false)}>Unset salary</button> : <button className="card-action" onClick={() => void markSalary(m.id, true)}>Mark as salary account</button>}
-          {m.id !== salaryRef && <button className="card-action danger" onClick={() => void remove(m.id)}>Remove</button>}
-        </div>} />)}
-      {otpError && <div className="error-box">{otpError}</div>}
-      {!methods.length && !adding && <p className="muted" style={{ fontSize: 12.5 }}>Nothing linked yet. Link your wallet, Raast ID or bank account once, auto-collection pulls from it and checkout pre-fills it.</p>}
-    </div>
-    {adding ? <div className="add-method">
-      <span className="eyebrow">Step 1 · Where should collections pull from?</span>
-      <div className="rail-grid" style={{ margin: '8px 0 14px' }}>{Object.keys(RAIL_META).map(r => <button key={r} type="button" className={`rail-chip ${rail === r ? 'on' : ''}`} onClick={() => setRail(r)}><RailLogo rail={r} size={30} />{RAIL_META[r].name}</button>)}</div>
-      {rail === 'BANK_TRANSFER' && <>
-        <span className="eyebrow">Step 2 · Pick your bank</span>
-        <div className="bank-grid" style={{ margin: '8px 0 14px' }}>{PK_BANKS.map(b => <button key={b.name} type="button" className={`bank-tile ${bank === b.name ? 'on' : ''}`} onClick={() => setBank(b.name)}><i style={{ background: `linear-gradient(135deg, ${b.color}, ${b.dark})` }}>{b.mono}</i><span>{b.name}</span></button>)}</div>
-      </>}
-      {rail === 'CARD' ? <>
-        <span className="eyebrow">Step 2 · Card details</span>
-        <div style={{ marginTop: 8 }}>
-          <Field label="Cardholder name"><input className="field" value={accountTitle} onChange={e => setAccountTitle(e.target.value)} placeholder="Name as printed on the card" autoComplete="cc-name" /></Field>
-          <Field label="Card number"><input className="field mono" inputMode="numeric" autoComplete="cc-number" value={cardNumber} onChange={e => setCardNumber(formatCard(e.target.value))} placeholder="1234 5678 9012 3456" /></Field>
-          <div className="form-grid">
-            <Field label="Expiry (MM/YY)"><input className="field mono" inputMode="numeric" autoComplete="cc-exp" value={expiry} onChange={e => setExpiry(formatExpiry(e.target.value))} placeholder="08/28" /></Field>
-            <Field label="CVC"><input className="field mono" inputMode="numeric" autoComplete="cc-csc" maxLength={4} value={cvc} onChange={e => setCvc(e.target.value.replace(/\D/g, ''))} placeholder="123" /></Field>
-          </div>
-          <Field label="Billing address"><input className="field" autoComplete="street-address" value={billingAddress} onChange={e => setBillingAddress(e.target.value)} placeholder="House / street / area" /></Field>
-          <Field label="City"><input className="field" autoComplete="address-level2" value={billingCity} onChange={e => setBillingCity(e.target.value)} placeholder="City" /></Field>
-        </div>
-        <div style={{ margin: '10px 0' }}><AccountCard draft rail="CARD" accountTitle={accountTitle} accountNo={cardDigits} brand={cardDigits ? cardBrand(cardDigits) : undefined} expiry={expiry} /></div>
-        {error && <div className="error-box">{error}</div>}
-        <div className="form-actions"><button className="secondary" onClick={() => { setAdding(false); setError(''); }}>Cancel</button><button className="primary" disabled={busy || !cardValid} onClick={add}>{busy ? 'Linking…' : 'Link card'}</button></div>
-        <p className="muted" style={{ fontSize: 11.5 }}>Halqa stores only your card's <b>brand, last 4 digits, expiry and billing address</b>, never the full number, never the CVC. Real card charges run on the licensed payment partner's own PCI-secure page when live rails switch on.</p>
-      </> : <>
-        <span className="eyebrow">{rail === 'BANK_TRANSFER' ? 'Step 3' : 'Step 2'} · Account details</span>
-        <div style={{ marginTop: 8 }}>
-          <Field label="Account holder name"><input className="field" value={accountTitle} onChange={e => setAccountTitle(e.target.value)} placeholder="Exactly as printed on the account" autoComplete="name" /></Field>
-          <Field label={numberLabel}><input className="field mono" inputMode={rail === 'BANK_TRANSFER' ? 'text' : 'numeric'} value={accountNo} onChange={e => setAccountNo(formatEntry(rail, e.target.value))} placeholder={rail === 'BANK_TRANSFER' ? 'PK36 SONE 0000 1234 5678 9012' : '03XX XXXXXXX'} /></Field>
-        </div>
-        <div style={{ margin: '10px 0' }}><AccountCard draft rail={rail} bankName={rail === 'BANK_TRANSFER' ? bank : undefined} accountTitle={accountTitle} accountNo={accountNo} /></div>
-        {error && <div className="error-box">{error}</div>}
-        <div className="form-actions"><button className="secondary" onClick={() => { setAdding(false); setError(''); }}>Cancel</button><button className="primary" disabled={busy || accountNo.replace(/[\s•]+/g, '').length < 10 || accountTitle.trim().length < 3} onClick={add}>{busy ? 'Linking…' : 'Link account'}</button></div>
-        <p className="muted" style={{ fontSize: 11.5 }}>A one-time WhatsApp code confirms the mandate. Halqa stores the identifier only, never balances, never cards. Cards will be entered on the licensed payment partner's own secure page when live rails switch on.</p>
-      </>}
-    </div> : methods.length < 5 && <button className="secondary" style={{ marginTop: 10, padding: '9px 14px', borderRadius: 12, fontSize: 12.5, fontWeight: 700 }} onClick={() => setAdding(true)}>+ Link an account</button>}
-  </div>;
-}
+// The manager lives in LinkedAccountsManager.tsx now, rebuilt on the shared row
+// set. Re-exported here so every existing import path keeps working.
+export { LinkedAccountsManager } from './LinkedAccountsManager';
