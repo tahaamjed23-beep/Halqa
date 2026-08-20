@@ -466,3 +466,67 @@ button.w-row:active{background:var(--l50)}
   padding-top:10px;border-top:1px solid var(--line-2);font-size:11px;color:var(--muted)}
 .term-source a{display:inline-flex;align-items:center;gap:5px;color:var(--l700);font-weight:620}
 .term-source a svg{width:12px;height:12px}
+
+/* ---------- credit report ---------- */
+.cred-band{display:flex;align-items:center;gap:16px;padding:18px 16px;background:var(--hdr);
+  color:#fff;position:relative;overflow:hidden}
+.cred-band::after{content:"";position:absolute;right:-46px;top:-64px;width:190px;height:190px;
+  border-radius:50%;background:rgba(255,255,255,.10)}
+.cred-band>div{flex:1;min-width:0;position:relative;z-index:1}
+.cred-band b{display:block;font-size:19px;font-weight:740;letter-spacing:-.02em}
+.cred-band span{display:block;font-size:12px;opacity:.92;margin-top:4px;line-height:1.5}
+.cred-band .score-ring{flex:none;position:relative;z-index:1}
+.cred-dots{display:flex;flex-wrap:wrap;gap:7px}
+.cred-dots i{width:20px;height:20px;border-radius:6px;display:block}
+.cred-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
+.cred-legend span{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--muted)}
+.cred-legend i{width:9px;height:9px;border-radius:3px}
+.cred-trend{display:flex;align-items:flex-end;gap:5px;height:92px}
+.cred-trend>div{flex:1;height:100%;display:flex;align-items:flex-end}
+.cred-trend i{display:block;width:100%;border-radius:4px 4px 0 0}
+
+/* ---------- about ---------- */
+.about-band{padding:22px 18px 20px;background:var(--l50);text-align:center}
+.about-band h2{font-size:21px;font-weight:740;letter-spacing:-.025em;margin-top:12px;line-height:1.3}
+.about-band p{font-size:13px;color:var(--ink-2);line-height:1.65;margin-top:10px;text-align:left}
+
+/* ---------- account row actions ---------- */
+.acct-acts{display:flex;gap:8px;padding:0 14px 11px;border-bottom:1px solid var(--line-2)}
+.acct-acts:last-child{border-bottom:none}
+.acct-acts button{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;
+  border-radius:var(--r-full);background:var(--line-2);font-size:11.5px;font-weight:620;
+  color:var(--ink-2)}
+.acct-acts button svg{width:13px;height:13px}
+.acct-acts button.danger{color:var(--bad);background:var(--bad-bg)}
+.rail-supported{display:flex;align-items:center;gap:9px;margin-top:12px;padding:11px 12px;
+  background:var(--line-2);border-radius:var(--r-sm);flex-wrap:wrap}
+.rail-supported span{font-size:11px;color:var(--muted);font-weight:600}
+
+/* ---------- streak band ---------- */
+.streak-band{margin:12px 14px;padding:17px;border-radius:var(--r-lg);color:#fff;
+  background:linear-gradient(150deg,#B4560E 0%,#E08A00 55%,#F2A83C 100%);
+  box-shadow:0 10px 30px rgba(180,86,14,.26);position:relative;overflow:hidden}
+.streak-band::after{content:"";position:absolute;right:-48px;bottom:-84px;width:200px;height:200px;
+  border-radius:50%;background:rgba(255,255,255,.11)}
+.streak-band-top{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:620;
+  opacity:.95;position:relative;z-index:1}
+.streak-band-top svg{width:15px;height:15px}
+.streak-band>b{display:block;font-size:40px;font-weight:770;letter-spacing:-.04em;margin:2px 0;
+  font-variant-numeric:tabular-nums;position:relative;z-index:1;line-height:1.05}
+.streak-band>small{display:block;font-size:11.5px;opacity:.92;position:relative;z-index:1}
+.streak-track{margin-top:14px;position:relative;z-index:1}
+.streak-track>div{display:flex;justify-content:space-between;font-size:10.5px;opacity:.92;
+  margin-bottom:6px}
+.streak-track>i{display:block;height:6px;border-radius:3px;background:rgba(255,255,255,.28);
+  overflow:hidden}
+.streak-track em{display:block;height:100%;background:#fff;border-radius:3px}
+
+/* ---------- partners ---------- */
+.partner-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 14px}
+.partner{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);
+  padding:14px;text-align:center;box-shadow:var(--sh-1)}
+.partner-logo{width:44px;height:44px;border-radius:14px;margin:0 auto 9px;display:grid;
+  place-items:center;color:#fff;font-size:13px;font-weight:750;letter-spacing:.02em}
+.partner strong{display:block;font-size:13.5px;font-weight:680}
+.partner span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.partner button{width:100%;margin-top:10px;height:34px;font-size:12px}
