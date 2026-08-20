@@ -20,8 +20,8 @@ export function HostCard({reputation,title='Host record'}:{reputation:Reputation
   {(place||job)&&<div className="host-card-trust">{place&&<span><MapPin size={13}/> {place}</span>}{job&&<span><Briefcase size={13}/> {job}</span>}</div>}
   <div className="host-card-stats"><div><span>Cycles hosted to completion</span><b>{reputation.hostedCompleted}</b></div><div><span>Clean completions</span><b>{reputation.cleanCompletions}</b></div><div><span>On-time payments</span><b>{reputation.onTimePct===null?'No history':`${reputation.onTimePct}%`}</b></div><div><span>Missed payments</span><b>{reputation.missedPayments}</b></div></div>
   {flagged?<div className="host-card-flag"><ShieldAlert/> This account has a recorded default or restriction. Review carefully before committing money.</div>
-    :reputation.paymentsResolved===0&&reputation.hostedCompleted===0?<div className="host-card-flag" style={{background:'#fdf1e3',color:'#a05c10'}}><ShieldAlert/> New account with no verified history yet. {title==='Host record'?'First-time hosts are normal, but start with people you know.':''}</div>
-    :<div className="host-card-clean"><ShieldCheck/> Verified from recorded payment and completion events. Never self-reported.</div>}
+    :reputation.paymentsResolved===0&&reputation.hostedCompleted===0?<div className="host-card-flag" style={{background:'#fdf1e3',color:'#a05c10'}}><ShieldAlert/> New account, no history yet. {title==='Host record'?'First-time hosts are normal. Start with people you know.':''}</div>
+    :<div className="host-card-clean"><ShieldCheck/> Built from payments Halqa recorded, not from anything they typed.</div>}
   </div>;
 }
 

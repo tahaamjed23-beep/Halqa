@@ -11,6 +11,8 @@ import './styles-structure.css'
 import './styles-sections.css'
 // Engine surfaces and the rebuilt HYPER product.
 import './styles-engines.css'
+// The wallet layout set: JazzCash structure, Halqa palette. Loaded last.
+import './styles-wallet.css'
 import App from './App.tsx'
 import { bootAppearance } from './components/Appearance'
 import ErrorBoundary from './components/ErrorBoundary.tsx'

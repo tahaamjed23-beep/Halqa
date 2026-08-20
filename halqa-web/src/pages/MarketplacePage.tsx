@@ -1,10 +1,9 @@
-import { ChevronLeft } from 'lucide-react';
 import { date } from '../lib/format';
 import { useEffect, useState } from 'react';
-import { CalendarDays, Plus, ShieldCheck, Users, Gavel } from 'lucide-react';
+import { ChevronLeft, Gavel, Plus } from 'lucide-react';
 import { api, key, money, tokens } from '../api';
 import type { Committee, User } from '../types';
-import { Empty, Field, TurnPricingChip, type TurnPricing } from '../components/ui';
+import { Empty, Field, type TurnPricing } from '../components/ui';
 import { SHOW_INVESTOR_BRIEFING_FEATURES } from '../config';
 
 type Bid = { id: string; bidderId: string; premiumPaisa: string; status: string; bidder: { id: string; fullName: string; creditScore: number } };
@@ -44,43 +43,26 @@ export default function MarketplacePage({ user, back }: { user: User; back?: () 
         <button className="primary" onClick={() => setSell(true)}><Plus />List a turn</button>
       </div>
 
-      <div className="market-rules">
-        <ShieldCheck />
-        <div>
-          
-          
-        </div>
-      </div>
 
       {error && <div className="error-box">{error}</div>}
 
       <section className="listing-grid">
         {rows.map((listing, index) => (
           <article className="listing-card stagger" style={{ animationDelay: `${index * 55}ms` }} key={listing.id}>
-            <div className="listing-top">
-              <div className="turn-number"><span>Turn</span><b>#{listing.position}{listing.totalTurns?<em className="of-total"> / {listing.totalTurns}</em>:null}</b></div>
-              <div>
-                <span className={`scope scope-${listing.buyerScope.toLowerCase()}`}>
-                  <Users />Inside-circle swap
-                </span>
-                <TurnPricingChip pricing={listing.turnPricing}/>
-                <h3>{listing.committee.name}</h3>
-                <p>Seller {listing.seller.fullName} · score {listing.seller.creditScore}</p>
+            <div className="lst-head">
+              <span className="lst-turn">#{listing.position}<em>/{listing.totalTurns||'?'}</em></span>
+              <div className="lst-id">
+                <b>{listing.committee.name}</b>
+                <span>{listing.seller.fullName} · score {listing.seller.creditScore}</span>
               </div>
+              <span className="lst-premium">+{money(listing.premiumPaisa)}</span>
             </div>
 
-            <div className="listing-values">
-              <div><span>Future payout</span><b>{money(listing.payoutPaisa)}</b></div>
-              <div><span>Asking Premium</span><b className="profit">+{money(listing.premiumPaisa)}</b></div>
-              <div><span>Remaining dues</span><b>{money(listing.remainingDuesPaisa)}</b></div>
-              <div><span>Opening premium</span><b>{money(listing.buyerNetCostPaisa)}</b></div>
+            <div className="lst-strip">
+              <div><span>Collect</span><b>{money(listing.payoutPaisa)}</b></div>
+              <div><span>Still owe</span><b>{money(listing.remainingDuesPaisa)}</b></div>
+              {listing.payoutDate && <div><span>Pays</span><b>{date(listing.payoutDate)}</b></div>}
             </div>
-
-            {listing.payoutDate && (
-              <div className="payout-date">
-                <CalendarDays />Expected payout {date(listing.payoutDate)}
-              </div>
-            )}
 
             {SHOW_INVESTOR_BRIEFING_FEATURES&&<><div className="market-credit-card"><div><span>Committee credit</span><b>{listing.creditHealth.averageCreditScore}</b><small className={`health-${listing.creditHealth.grade.toLowerCase()}`}>{listing.creditHealth.grade}</small></div><div className="credit-evidence"><span><b>{listing.creditHealth.defaults}</b> defaults</span><span><b>{listing.creditHealth.latePayments}</b> late</span><span><b>{listing.creditHealth.earlyPayments}</b> early</span></div></div><div className="engine-tags">{listing.engines.map(engine=><span key={engine}>{engine}</span>)}</div></>}
 

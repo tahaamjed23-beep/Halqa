@@ -1,5 +1,6 @@
+import { Group, Tile, TileGrid } from '../components/wallet';
 import { useEffect, useMemo, useState } from 'react';
-import {ArrowDownLeft, ArrowUpRight, Bell, CalendarClock, CheckCircle2, ChevronRight, CreditCard, Eye, EyeOff, Flame, Gauge, Gift, Landmark, Package, Receipt, Repeat, Users, Wallet, Zap} from 'lucide-react';
+import {ArrowDownLeft, ArrowUpRight, Bell, CalendarClock, CheckCircle2, ChevronRight, CreditCard, Eye, EyeOff, Flame, Gauge, Gift, Package, Receipt, Repeat, Users, Wallet, Zap} from 'lucide-react';
 import { api, money } from '../api';
 import type { Committee, Summary, User } from '../types';
 import { formatDuration } from '../components/ui';
@@ -64,18 +65,19 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
       </div>
     </div>
 
-    <div className="qa">
-      <Action icon={<Zap/>} label="Pay now" solid onClick={()=>go('pay')}/>
-      <Action icon={<Users/>} label="Join circle" onClick={()=>go('circles')}/>
-      <Action icon={<Flame/>} label="HYPER" onClick={()=>go('hyper')}/>
-      <Action icon={<Landmark/>} label="Auto debit" onClick={()=>go('cards')}/>
-      <Action icon={<CreditCard/>} label="Cards" onClick={()=>go('cards')}/>
-      <Action icon={<Repeat/>} label="Buy a turn" onClick={()=>go('market')}/>
-      <Action icon={<Package/>} label="Save for a thing" onClick={()=>go('asset')}/>
-      <Action icon={<Receipt/>} label="Receipts" onClick={()=>go('activity')}/>
-      <Action icon={<Gauge/>} label="Credit score" tone="blue" onClick={()=>go('credit')}/>
-      <Action icon={<Gift/>} label="Rewards" tone="amber" onClick={()=>go('rewards')}/>
-    </div>
+    <Group title="What you can do">
+      <TileGrid>
+        <Tile icon={<Zap/>} label="Pay now" onClick={()=>go('pay')}/>
+        <Tile icon={<Users/>} label="Join a committee" onClick={()=>go('circles')}/>
+        <Tile icon={<Repeat/>} label="Buy a turn" onClick={()=>go('market')}/>
+        <Tile icon={<Package/>} label="Save for a thing" badge="new" onClick={()=>go('asset')}/>
+        <Tile icon={<Flame/>} label="HYPER" badge="hot" onClick={()=>go('hyper')}/>
+        <Tile icon={<CreditCard/>} label="Payment methods" onClick={()=>go('cards')}/>
+        <Tile icon={<Receipt/>} label="Receipts" onClick={()=>go('activity')}/>
+        <Tile icon={<Gauge/>} label="Credit score" onClick={()=>go('credit')}/>
+        <Tile icon={<Gift/>} label="Rewards" onClick={()=>go('rewards')}/>
+      </TileGrid>
+    </Group>
 
     {due&&<div className="sec">
       <div className="card" style={{background:'var(--l50)',borderColor:'var(--l200)'}}>
@@ -116,12 +118,6 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
   </div>;
 }
 
-function Action({icon,label,onClick,solid,tone}:{icon:React.ReactNode;label:string;onClick?:()=>void;solid?:boolean;tone?:'amber'|'blue'}){
-  return <button className="qa-item" onClick={onClick}>
-    <span className={`qa-ic ${solid?'solid':''} ${tone||''}`}>{icon}</span>
-    <span>{label}</span>
-  </button>;
-}
 
 export function CommitteeCard({c,userId,i,open}:{c:Committee;userId:string;i:number;open:(id:string)=>void}){
   const round=c.rounds?.[0];

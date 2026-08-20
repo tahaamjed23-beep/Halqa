@@ -28,30 +28,27 @@ function BankKycPanel({user}:{user:User}){
 
 
 type VaultInfo={enabled:boolean;tier:string;tiers:string[];autoCover:boolean;balancePaisa:string;accruedProfitPaisa:string;ratePct:number;scheme:{name:string;shariahCompliant:boolean;rateAsOf:string}|null};
-const VAULT_TIER_LABEL:Record<string,string>={STANDARD:'Standard',INCOME:'Income',GOLD:'Gold-linked',CRYPTO:'Crypto'};
-const VAULT_TIER_BLURB:Record<string,string>={STANDARD:'Money-market · lowest volatility',INCOME:'Islamic income fund · higher yield',GOLD:'Gold-linked · halal inflation hedge',CRYPTO:'High risk · NOT government-backed'};
+const VAULT_TIER_LABEL:Record<string,string>={STANDARD:'Standard',INCOME:'Income'};
+const VAULT_TIER_BLURB:Record<string,string>={STANDARD:'Lowest ups and downs',INCOME:'Aims a little higher'};
 
 export function VaultPanel(){
-  const [vault,setVault]=useState<VaultInfo|null>(null);const [busy,setBusy]=useState(false);const [error,setError]=useState('');const [swept,setSwept]=useState<{principalPaisa:string;profitPaisa:string}|null>(null);const [topup,setTopup]=useState(5000);const [cryptoConfirm,setCryptoConfirm]=useState(false);
-  const load=useCallback(()=>api<VaultInfo>('/vault').then(setVault).catch(()=>setVault(null)),[]);
+  const [vault,setVault]=useState<VaultInfo|null>(null);const [busy,setBusy]=useState(false);const [error,setError]=useState('');const [swept,setSwept]=useState<{principalPaisa:string;profitPaisa:string}|null>(null);const [topup,setTopup]=useState(5000);const load=useCallback(()=>api<VaultInfo>('/vault').then(setVault).catch(()=>setVault(null)),[]);
   useEffect(()=>{void load()},[load]);
-  const setTier=async(tier:string,acknowledged=false)=>{
-    if(tier==='CRYPTO'&&!acknowledged){setCryptoConfirm(true);return}
-    setBusy(true);setError('');try{await api('/vault/tier',{method:'POST',body:JSON.stringify({tier,...(tier==='CRYPTO'?{acknowledgeExtremeRisk:true}:{})})});await load()}catch(reason){setError((reason as Error).message)}finally{setBusy(false);setCryptoConfirm(false)}};
+  const setTier=async(tier:string)=>{
+    setBusy(true);setError('');try{await api('/vault/tier',{method:'POST',body:JSON.stringify({tier})});await load()}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
   const toggleAutoCover=async()=>{if(!vault)return;setBusy(true);setError('');try{await api('/vault/auto-cover',{method:'POST',body:JSON.stringify({enabled:!vault.autoCover})});await load()}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
   const toggle=async()=>{if(!vault)return;setBusy(true);setError('');try{await api('/vault/toggle',{method:'POST',body:JSON.stringify({enabled:!vault.enabled})});await load()}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
   const withdraw=async()=>{setBusy(true);setError('');try{setSwept(await api<{principalPaisa:string;profitPaisa:string}>('/vault/withdraw',{method:'POST',body:JSON.stringify({idempotencyKey:key()})}));emitHalqaAction('VAULT_SWEEP');await load()}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
   const deposit=async()=>{setBusy(true);setError('');try{await api('/vault/deposit',{method:'POST',body:JSON.stringify({amountPaisa:String(Math.round(topup*100)),idempotencyKey:key()})});emitHalqaAction('VAULT_DEPOSIT');await load()}catch(reason){setError((reason as Error).message)}finally{setBusy(false)}};
   if(!vault)return null;
   return <section className="panel"><div className="panel-head"><div><span className="eyebrow">Vault · halal savings pocket</span><h2>Savings pocket</h2><p>Committee payouts can park here, and you can top up any amount yourself, everything accrues on {vault.scheme?.name||'the Islamic money-market sleeve'} ({vault.ratePct.toFixed(1)}% indicative{vault.scheme&&!vault.scheme.shariahCompliant?'':', Mudarabah'}) until you sweep it out. Principal is yours at any time.</p></div><PiggyBank/></div>
-  <div className="info-stack"><div><span>Parking</span><b>{vault.enabled?'On, new payouts park here':'Off, payouts release directly'}</b></div><div><span>Vault balance</span><b>{money(vault.balancePaisa)}</b></div><div><span>Accrued profit (indicative)</span><b>{money(vault.accruedProfitPaisa)}</b></div></div>
-  <div className="vault-tiers">{vault.tiers.map(t=><button key={t} type="button" className={`vault-tier ${vault.tier===t?'on':''} ${t==='CRYPTO'?'crypto':''}`} disabled={busy} onClick={()=>setTier(t)}><b>{VAULT_TIER_LABEL[t]||t} {t==='CRYPTO'?<i className="rafa-conv">high risk · not Shariah</i>:<i className="rafa-halal">halal</i>}</b><small>{VAULT_TIER_BLURB[t]||''}</small></button>)}</div>
-  {cryptoConfirm&&<div className="modal-backdrop" role="dialog" aria-label="Crypto tier confirmation"><section className="modal"><div className="modal-head"><h2>⚠ Switch vault to crypto?</h2></div><div className="crypto-warn big">Cryptocurrency is <b>not government-backed</b>, <b>not Shariah-compliant</b>, and <b>highly volatile</b>, your vault's indicative value could fall by half or more, fast. The rate shown is speculative, not a promise. Committees never touch crypto; this affects only your personal vault.</div><p className="muted" style={{fontSize:12}}>Only continue if you can afford to lose most of this money.</p><div className="form-actions"><button className="secondary" onClick={()=>setCryptoConfirm(false)}>No, keep me safe</button><button className="danger-button" onClick={()=>setTier('CRYPTO',true)}>I accept the risk, switch</button></div></section></div>}
-  <div className="policy-toggles compact"><label><input type="checkbox" checked={vault.autoCover} disabled={busy} onChange={toggleAutoCover}/><span><b>Auto-cover missed installments (safety net)</b><small>If an installment slips past its deadline and your vault holds enough, it's paid from your vault automatically, the small late adjustment still applies, but it never escalates toward default.</small></span></label></div>
-  <div className="form-grid"><Field label="Top up the vault (PKR)" hint="From Rs 100. Recorded to your vault and accruing from today."><input className="field" type="number" min="100" step="100" value={topup} onChange={e=>setTopup(Math.max(100,+e.target.value))}/></Field><div className="form-actions" style={{alignItems:'end'}}><button className="primary" disabled={busy||topup<100} onClick={deposit}>Record top-up</button></div></div>
+  <div className="info-stack"><div><span>Parking</span><b>{vault.enabled?'On':'Off, payouts release directly'}</b></div><div><span>Vault balance</span><b>{money(vault.balancePaisa)}</b></div><div><span>Profit so far</span><b>{money(vault.accruedProfitPaisa)}</b></div></div>
+  <div className="vault-tiers">{vault.tiers.map(t=><button key={t} type="button" className={`vault-tier ${vault.tier===t?'on':''}`} disabled={busy} onClick={()=>setTier(t)}><b>{VAULT_TIER_LABEL[t]||t} <i className="rafa-halal">halal</i></b><small>{VAULT_TIER_BLURB[t]||''}</small></button>)}</div>
+    <div className="policy-toggles compact"><label><input type="checkbox" checked={vault.autoCover} disabled={busy} onChange={toggleAutoCover}/><span><b>Cover a missed installment</b><small>A missed installment is paid from here, so it never becomes a default.</small></span></label></div>
+  <div className="form-grid"><Field label="Top up the vault (PKR)" hint="From Rs 100."><input className="field" type="number" min="100" step="100" value={topup} onChange={e=>setTopup(Math.max(100,+e.target.value))}/></Field><div className="form-actions" style={{alignItems:'end'}}><button className="primary" disabled={busy||topup<100} onClick={deposit}>Add money</button></div></div>
   {swept&&<div className="warning-box">Swept {money(swept.principalPaisa)} principal + {money(swept.profitPaisa)} recorded profit to your external account.</div>}
   {error&&<div className="error-box">{error}</div>}
-  <div className="form-actions"><button className="secondary" disabled={busy} onClick={toggle}>{vault.enabled?'Turn parking off':'Turn parking on'}</button><button className="primary" disabled={busy||vault.balancePaisa==='0'} onClick={withdraw}>Sweep vault to my account</button></div>
+  <div className="form-actions"><button className="secondary" disabled={busy} onClick={toggle}>{vault.enabled?'Stop parking payouts':'Turn parking on'}</button><button className="primary" disabled={busy||vault.balancePaisa==='0'} onClick={withdraw}>Take my money out</button></div>
   </section>;
 }
 
@@ -68,7 +65,7 @@ function AutoPayPanel({user}:{user:User}){
   const mine=(c:AutoCircle)=>c.members?.find(m=>m.userId===user.id);
   const joined=circles.filter(c=>mine(c));
   if(!joined.length)return <section className="panel"><div className="panel-head"><div><span className="eyebrow">Never miss a round</span><h2>Auto-collection</h2><p>Every circle you join collects automatically on the due date, always on, never removable. If you pay early yourself, there's simply nothing left to collect. Halqa schedules it, never holds it.</p></div><CreditCard/></div><LinkedAccountsManager/></section>;
-  return <section className="panel"><div className="panel-head"><div><span className="eyebrow">Never miss a round</span><h2>Auto-collection</h2><p>Auto-collection is standard on every circle, always on, never removable (it's how Halqa keeps circles safe). If you pay early yourself, there's nothing left to collect that round. Halqa schedules it, never holds it.</p></div><CreditCard/></div>
+  return <section className="panel"><div className="panel-head"><div><span className="eyebrow">Never miss a round</span><h2>Auto-collection</h2><p>Every committee collects automatically. Pay early yourself and there is nothing left to take.</p></div><CreditCard/></div>
   <div className="info-stack">{joined.map(c=>{const m=mine(c)!;return <div key={c.id}><span>{c.name}</span><b>🔒 Auto-collect ON · {m.autoDebitRail||'RAAST'}</b></div>})}</div>
   <LinkedAccountsManager/></section>;
 }

@@ -40,7 +40,7 @@ const PK_CITIES = ['Karachi','Lahore','Islamabad','Rawalpindi','Faisalabad','Mul
 export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
   const [mode,setMode]=useState<'login'|'register'>('login');
   const [step,setStep]=useState<RegStep>('phone');
-  const [form,setForm]=useState({identity:'',password:'',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:'',rail:'RAAST',accountNo:'',accountTitle:'',bankName:'HBL',otpCode:'',addressLine:'',city:'',locality:'',occupationType:'',employerName:'',jobTitle:'',pin:'',pinConfirm:'',salaryDay:''});
+  const [form,setForm]=useState({identity:'',password:'',fullName:'',username:'',phone:'',email:'',cnic:'',regPassword:'',rail:'RAAST',accountNo:'',accountTitle:'',bankName:'HBL',otpCode:'',addressLine:'',city:'',locality:'',occupationType:'',employerName:'',jobTitle:'',pin:'',pinConfirm:'',salaryDay:'',monthlyIncome:''});
   const [agreed,setAgreed]=useState(false);
   const [cnicCaptured,setCnicCaptured]=useState(false);const [scanning,setScanning]=useState(false);
   const [homeLat,setHomeLat]=useState<number|null>(null);const [homeLng,setHomeLng]=useState<number|null>(null);const [locating,setLocating]=useState(false);const [locErr,setLocErr]=useState('');
@@ -126,18 +126,21 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
       <select className="field" value={form.occupationType} onChange={e=>setForm({...form,occupationType:e.target.value,employerName:e.target.value==='EMPLOYED'?form.employerName:'',jobTitle:''})}><option value="">Select…</option>{OCCUPATIONS.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select>
       {form.occupationType&&<><label className="onboard-field-label">{JOB_FIELD[form.occupationType].label}</label>
         <input className="field" placeholder={JOB_FIELD[form.occupationType].ph} value={form.jobTitle} onChange={e=>setForm({...form,jobTitle:e.target.value})}/></>}
+      {form.occupationType&&<><label className="onboard-field-label">Roughly what do you earn a month? <span className="label-private">· private</span></label>
+        <input className="field" inputMode="numeric" placeholder="e.g. 60000" value={form.monthlyIncome} onChange={e=>setForm({...form,monthlyIncome:e.target.value.replace(/\D/g,'')})}/>
+        <div className="onboard-note"><b>This decides what you can join</b><span>Halqa keeps your committees under a third of what you earn. Without it you can only take one small committee.</span></div></>}
       {form.occupationType==='EMPLOYED'&&<><label className="onboard-field-label">Where do you work? <span className="label-private">· private</span></label>
         <input className="field" placeholder="Company / employer name" value={form.employerName} onChange={e=>setForm({...form,employerName:e.target.value})}/>
-        <div className="onboard-note"><b>Salary account = best rate</b><span>Members who collect from a salary account get a 20% fee discount, the most reliable collection there is.</span></div></>}</>;
-    case 'email':return <><h2>Your email address</h2><p>For receipts, records and account recovery. No marketing without your say-so.</p>
+        <div className="onboard-note"><b>Salary account = best rate</b><span>A salary account earns a 20% discount on Halqa's fee.</span></div></>}</>;
+    case 'email':return <><h2>Your email address</h2><p>For receipts and getting back in if you are locked out.</p>
       <input className="field big-field" type="email" autoFocus autoComplete="email" placeholder="you@example.com" value={form.email} onChange={e=>setForm({...form,email:e.target.value})}/></>;
-    case 'cnic':return <><h2>Your CNIC number</h2><p>The 13 digits, no dashes. Scan the card or type it, your record becomes real, usable proof of reliability.</p>
+    case 'cnic':return <><h2>Your CNIC number</h2><p>The 13 digits, no dashes.</p>
       <input className="field big-field mono" inputMode="numeric" autoFocus maxLength={13} placeholder="3520212345671" value={form.cnic} onChange={e=>setForm({...form,cnic:e.target.value.replace(/\D/g,'')})}/>
       {cnicCaptured
-        ?<div className="commitment-ok" style={{marginTop:10}}><ShieldCheck/><div><b>CNIC scanned ✓</b><p>Card photo captured on your device.</p></div></div>
-        :<button type="button" className="secondary" style={{marginTop:10,display:'inline-flex',alignItems:'center',gap:8}} onClick={()=>setScanning(true)}>📷 Scan my CNIC with the camera</button>}
-      <div className="onboard-note"><b>Identity check</b><span>Your CNIC is recorded now and verified against NADRA when live verification activates. It is never shown to other members.</span></div></>;
-    case 'account':return <><h2>Link your collection account</h2><p>Every circle collects automatically from this account on each due date, that's how Halqa keeps circles safe. A one-time code confirms the link and you get a WhatsApp receipt for every collection. Change it any time in Profile.</p>
+        ?<div className="commitment-ok" style={{marginTop:10}}><ShieldCheck/><div><b>CNIC scanned</b><p>Card photo captured on your device.</p></div></div>
+        :<button type="button" className="secondary" style={{marginTop:10,display:'inline-flex',alignItems:'center',gap:8}} onClick={()=>setScanning(true)}>Scan my CNIC with the camera</button>}
+      <div className="onboard-note"><b>Identity check</b><span>Never shown to other members.</span></div></>;
+    case 'account':return <><h2>Link your collection account</h2><p>Committees collect from this account automatically. A one-time code confirms it is yours.</p>
       <div className="rail-grid" style={{marginBottom:12}}>{Object.keys(RAIL_META).map(id=><button type="button" key={id} className={`rail-chip ${form.rail===id?'on':''}`} onClick={()=>setForm({...form,rail:id})}><RailLogo rail={id} size={30} />{RAIL_META[id].name}</button>)}</div>
       {form.rail==='BANK_TRANSFER'&&<><label className="onboard-field-label">Your bank</label>
         <div className="bank-grid" style={{marginBottom:12}}>{PK_BANKS.map(b=><button type="button" key={b.name} className={`bank-tile ${form.bankName===b.name?'on':''}`} onClick={()=>setForm({...form,bankName:b.name})}><i style={{background:`linear-gradient(135deg, ${b.color}, ${b.dark})`}}>{b.mono}</i><span>{b.name}</span></button>)}</div></>}
@@ -198,7 +201,7 @@ export default function AuthPage({onAuth}:{onAuth:(user:User)=>void}){
       {error&&<div className="error-box">{error}</div>}
       {step!=='review'
         ?<button className="primary full" disabled={!canContinue||busy} onClick={goNext}>Continue</button>
-        :<button className="primary full" disabled={!agreed||busy} onClick={register}>{busy?'Opening your Halqa…':'Agree & open my Halqa'}</button>}
+        :<button className="primary full" disabled={!agreed||busy} onClick={register}>{busy?'Creating your account':'Agree and create my account'}</button>}
     </>}
   </div><LegalFooter/></section>
   {doc&&<LegalDocModal doc={doc} onClose={()=>setDoc(null)}/>}

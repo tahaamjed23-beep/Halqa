@@ -35,8 +35,8 @@ export default function MemberStatus({ user }: { user: User }) {
   };
 
   return <section className="panel">
-    <div className="panel-head"><div><span className="eyebrow">Your standing</span><h2>Turn access & rewards</h2><p>Earn cheaper fees and earlier turns by proving you're reliable.</p></div><BadgeCheck /></div>
-    <div className="tenure-note" style={{ background: '#fdecec', borderColor: '#f0b8b8', color: '#8a1d1d' }}>⚠ Be honest, every claim here is checked against your documents when we review your account. Misrepresenting your income, employer or cheque will get you removed and blacklisted.</div>
+    <div className="panel-head"><div><span className="eyebrow">Your standing</span><h2>Turn access & rewards</h2><p>Proving your income lowers your fee and opens earlier turns.</p></div><BadgeCheck /></div>
+    <div className="tenure-note" style={{ background: '#fdecec', borderColor: '#f0b8b8', color: '#8a1d1d' }}>Everything here is checked against your documents.</div>
 
     {/* Tenure */}
     <div className="tenure-note">
@@ -49,12 +49,12 @@ export default function MemberStatus({ user }: { user: User }) {
     {/* Discount + verifications */}
     <div className="status-tiers">
       <div className="verify-row">
-        <span><b>Service-charge discount</b><small>{me.discountReason || 'Verify below to earn a discount'}</small></span>
+        <span><b>Service-charge discount</b><small>{me.discountReason || 'Not verified yet'}</small></span>
         <span className="discount-badge">{discountPct}% off</span>
       </div>
 
       <div className="verify-row">
-        <span><b>Income & employer verified</b><small>Employed? Your employer + pay slip. Housewife/student? Your husband's or guardian's employer + their pay slip → 80% off charges</small></span>
+        <span><b>Income & employer verified</b><small>Add your employer and one payslip for 80% off Halqa's fee. If you do not work, use your husband's or guardian's.</small></span>
         {me.incomeVerifiedAt
           ? <button className="text-action slim-action danger" disabled={busy==='income'} onClick={() => void clearOne('income')}>Remove</button>
           : askEmployer
@@ -63,13 +63,13 @@ export default function MemberStatus({ user }: { user: User }) {
       </div>
 
       <div className="verify-row">
-        <span><b>Guarantee cheque</b><small>A cheque on file → 95% off (our lowest-risk members)</small></span>
+        <span><b>Guarantee cheque</b><small>A cheque on file lowers your fee to almost nothing.</small></span>
         {me.chequeSecuredAt
           ? <button className="text-action slim-action danger" disabled={busy==='cheque'} onClick={() => void clearOne('cheque')}>Remove</button>
           : <button className="text-action slim-action" disabled={busy==='cheque'} onClick={() => void secureCheque()}><Receipt size={13} style={{ verticalAlign: '-2px' }} /> Provide cheque</button>}
       </div>
     </div>
-    {me.chequeSecuredAt ? null : <p className="muted" style={{ fontSize: 11 }}>A guarantee cheque is collected in person by an agent (it's what makes a bounced-cheque case possible). Marking it here reserves the discount; it activates once collected.</p>}
+    {me.chequeSecuredAt ? null : <p className="muted" style={{ fontSize: 11 }}>An agent collects the cheque in person. Marking it here holds the discount until then.</p>}
 
     {/* Biometric */}
     {biometricAvailable() && <label className="settings-toggle" style={{ marginTop: 4 }}>

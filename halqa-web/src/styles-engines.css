@@ -312,3 +312,44 @@
   border-radius:50%;background:var(--surface);color:var(--ink-2);display:grid;place-items:center;
   box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .cmt-avatar-btn svg{width:11px;height:11px}
+
+/* ---------- payment card, branded by its rail ---------- */
+.paycard{border-radius:20px;padding:18px;color:#fff;min-height:186px;display:flex;
+  flex-direction:column;justify-content:space-between;margin-bottom:14px;
+  box-shadow:0 10px 26px rgba(12,20,8,.22);background:linear-gradient(135deg,#334155,#1E293B)}
+.paycard.rail-RAAST{background:linear-gradient(135deg,#0B7A3E,#064E27)}
+.paycard.rail-JAZZCASH{background:linear-gradient(135deg,#2A2A2A,#0F0F0F)}
+.paycard.rail-EASYPAISA{background:linear-gradient(135deg,#1FA05A,#0E5E34)}
+.paycard.rail-BANK_TRANSFER{background:linear-gradient(135deg,#334155,#1E293B)}
+.paycard.rail-CARD{background:linear-gradient(135deg,#1E2436,#0B0F1A)}
+.paycard.rail-NONE{background:linear-gradient(135deg,#64748B,#475569)}
+.paycard-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.paycard-mark{display:inline-flex;align-items:center}
+.paycard-rail{font-size:12.5px;font-weight:660;opacity:.92}
+.paycard-no{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:19px;
+  letter-spacing:.14em;font-weight:600}
+.paycard-bot{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.paycard-bot span{display:block;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;
+  opacity:.78;margin-bottom:2px}
+.paycard-bot b{font-size:13.5px;font-weight:660}
+.paycard-bot .right{text-align:right}
+
+/* ---------- linked account rows ---------- */
+.acct-rows{display:flex;flex-direction:column;gap:9px}
+.acct-row{border:1px solid var(--line-2);border-radius:var(--r-sm);overflow:hidden}
+.acct-row-main{display:flex;align-items:center;gap:11px;padding:11px 12px}
+.acct-row-text{flex:1;min-width:0}
+.acct-row-text b{display:block;font-size:13.5px;font-weight:640}
+.acct-row-text span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;
+  font-variant-numeric:tabular-nums}
+.acct-row-del{width:34px;height:34px;min-height:34px;border-radius:var(--r-sm);color:var(--muted);
+  display:grid;place-items:center;flex:none}
+.acct-row-del:active{background:var(--bad-bg);color:var(--bad)}
+.acct-row-confirm{padding:12px;background:var(--line-2);border-top:1px solid var(--line)}
+.acct-row-confirm p{font-size:12.5px;line-height:1.5;margin-bottom:10px}
+.acct-row-confirm .form-actions{margin-top:0}
+.acct-row-confirm .form-actions>*{flex:1}
+.add-method-btn{margin-top:11px}
+.rail-supported{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;
+  padding-top:12px;border-top:1px solid var(--line-2)}
+.rail-supported span{font-size:11px;color:var(--muted)}

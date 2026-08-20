@@ -17,14 +17,20 @@ router.use(requireAuth);
 const vaultAccount = (userId: string) => `user:${userId}:vault`;
 const clampDays = (ms: number) => Math.max(0, Math.min(365, Math.floor(ms / 86_400_000)));
 
-// Vault yield tiers. STANDARD / INCOME / GOLD are Shariah-compliant sleeves.
-// CRYPTO is the deliberate exception: personal vault ONLY (committees can
-// never touch it), explicitly NOT Shariah-reviewed and NOT government-backed,
-// and switchable only with an explicit extreme-risk acknowledgement.
-const VAULT_TIERS = ['STANDARD', 'INCOME', 'GOLD', 'CRYPTO'] as const;
-const VAULT_TIER_SLUG: Record<string, string> = { STANDARD: FLOAT_SCHEME_SLUG, INCOME: 'islamic-income-fund-basket', GOLD: 'gold-linked-allocation', CRYPTO: 'crypto-basket' };
+// Vault yield sleeves.
+//
+// CRYPTO and GOLD were removed on the chairman's instruction. Crypto put an
+// explicitly non-Shariah, non-government-backed asset inside a product whose
+// entire claim is trustworthiness, and gold-linked duplicated the gold-goal
+// committee while adding price risk to a balance members treat as savings.
+// Both are dropped from the sleeve list; the enum values stay in the database
+// so existing rows keep resolving, and anyone still on one is read as STANDARD.
+const VAULT_TIERS = ['STANDARD', 'INCOME'] as const;
+const VAULT_TIER_SLUG: Record<string, string> = { STANDARD: FLOAT_SCHEME_SLUG, INCOME: 'islamic-income-fund-basket' };
+/** Legacy rows on a retired sleeve fall back to the safest one. */
+const liveTier = (tier: string) => (VAULT_TIERS as readonly string[]).includes(tier) ? tier : 'STANDARD';
 const tierScheme = (db: PrismaClient | Prisma.TransactionClient, tier: string) =>
-  db.scheme.findUnique({ where: { slug: VAULT_TIER_SLUG[tier] ?? FLOAT_SCHEME_SLUG } });
+  db.scheme.findUnique({ where: { slug: VAULT_TIER_SLUG[liveTier(tier)] ?? FLOAT_SCHEME_SLUG } });
 
 // Portion sizing: a saver can split the vault across the four sleeves instead
 // of riding a single tier. Stored as JSON percentages summing to 100; the
@@ -97,7 +103,7 @@ router.get('/', async (req, res, next) => {
     const rates = await vaultRates(prisma, user);
     const state = await vaultState(prisma, req.auth!.userId, rates.blendedRatePct);
     res.json({
-      enabled: user.vaultParkingEnabled, tier: user.vaultTier, tiers: VAULT_TIERS, autoCover: user.vaultAutoCover,
+      enabled: user.vaultParkingEnabled, tier: liveTier(user.vaultTier), tiers: VAULT_TIERS, autoCover: user.vaultAutoCover,
       balancePaisa: state.balance.toString(), accruedProfitPaisa: state.accrued.toString(),
       ratePct: rates.blendedRatePct, scheme: scheme ? { name: scheme.name, shariahCompliant: scheme.shariahCompliant, rateAsOf: scheme.rateAsOf } : null,
       allocation: rates.allocation, tierDetails: rates.tierDetails,
@@ -109,19 +115,14 @@ router.get('/', async (req, res, next) => {
 
 // Set the portion sizing. Percentages must be whole numbers summing to 100;
 // any crypto share demands the same explicit acknowledgement as the tier
-// switch — the API refuses a silent walk into a high-risk, non-Shariah asset.
 router.post('/allocation', async (req, res, next) => {
   try {
-    const { allocation, acknowledgeExtremeRisk } = z.object({
+    const { allocation } = z.object({
       allocation: z.record(z.enum(VAULT_TIERS), z.number().int().min(0).max(100)),
-      acknowledgeExtremeRisk: z.boolean().optional(),
     }).parse(req.body);
     const entries = Object.entries(allocation).filter(([, pct]) => pct > 0);
     const total = entries.reduce((sum, [, pct]) => sum + pct, 0);
     if (total !== 100) return res.status(400).json({ error: 'Allocation percentages must add up to exactly 100' });
-    if ((allocation.CRYPTO ?? 0) > 0 && acknowledgeExtremeRisk !== true) {
-      return res.status(428).json({ error: 'Crypto is high-risk, not government-backed and not Shariah-compliant. Re-send with acknowledgeExtremeRisk: true to confirm you accept you could lose most of this portion.' });
-    }
     for (const [tier] of entries) {
       const scheme = await tierScheme(prisma, tier);
       if (!scheme?.isActive) return res.status(409).json({ error: `The ${tier} sleeve is not available right now` });
@@ -157,14 +158,12 @@ router.post('/auto-cover', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-// Choose the yield tier (STANDARD / INCOME / GOLD). The chosen tier's dated
-// rate applies to the vault's open entries from here on.
+// Choose the sleeve. Its dated rate applies to the vault's open entries from
+// here on. Both remaining sleeves are Shariah-compliant, so there is nothing
+// to acknowledge.
 router.post('/tier', async (req, res, next) => {
   try {
-    const { tier, acknowledgeExtremeRisk } = z.object({ tier: z.enum(VAULT_TIERS), acknowledgeExtremeRisk: z.boolean().optional() }).parse(req.body);
-    // Crypto demands an explicit, per-request acknowledgement — the API itself
-    // refuses a silent switch into an extreme-risk, non-Shariah asset.
-    if (tier === 'CRYPTO' && acknowledgeExtremeRisk !== true) return res.status(428).json({ error: 'Crypto is high-risk, not government-backed and not Shariah-compliant. Re-send with acknowledgeExtremeRisk: true to confirm you accept you could lose most of this money.' });
+    const { tier } = z.object({ tier: z.enum(VAULT_TIERS) }).parse(req.body);
     const scheme = await tierScheme(prisma, tier);
     if (!scheme?.isActive) return res.status(409).json({ error: 'That vault tier is not available right now' });
     // Switching the single tier clears any portion sizing — one control governs at a time.

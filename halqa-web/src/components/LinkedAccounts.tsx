@@ -140,7 +140,7 @@ export function LinkedAccountsManager() {
       <span>
         {salary.salaryVerifiedAt
           ? `Verified ${salary.salaryVerifyMethod === 'PATTERN' ? 'from your payment history' : salary.salaryVerifyMethod === 'ALERTS' ? 'from your credit alerts' : salary.salaryVerifyMethod === 'PAYSLIP' ? 'by payslip' : 'for the pilot'}, collection runs on your payday${salary.salaryDayLearned ? ` (around the ${salary.salaryDayLearned}th)` : ''}, before it is even due.`
-          : 'Set the day your pay arrives and collection runs that morning, while the money is there. It verifies itself from your payment history, or instantly with one payslip photo.'}
+          : 'Collection runs the morning your pay arrives. One payslip sets it instantly.'}
       </span>
       <div style={{ display: 'flex', gap: 8, marginTop: 8, flexWrap: 'wrap', alignItems: 'center' }}>
         <select className="field" style={{ maxWidth: 220, margin: 0 }} value={salary.salaryDay ?? ''} onChange={e => void setSalaryDay(e.target.value)}>

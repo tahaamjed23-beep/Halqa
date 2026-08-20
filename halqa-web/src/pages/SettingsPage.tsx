@@ -59,14 +59,14 @@ export default function SettingsPage({ user, back }: { user: User; back?: () => 
   const setN = (k: keyof typeof notif, v: boolean) => { setNotif({ ...notif, [k]: v }); pref.set(`notif.${k}`, v ? 'on' : 'off'); };
 
   const sections: { id: SectionId; icon: JSX.Element; title: string; sub: string }[] = [
-    { id: 'security', icon: <Fingerprint />, title: 'Sign in & security', sub: 'Password, sessions, account protection' },
-    { id: 'account', icon: <UserCog />, title: 'Account preferences', sub: 'Identity on file, language, display' },
-    { id: 'privacy', icon: <ShieldCheck />, title: 'Data privacy', sub: 'What Halqa shares, your controls, your data' },
-    { id: 'ads', icon: <Megaphone />, title: 'Advertising data', sub: 'Goal-intent sharing and ad choices' },
-    { id: 'notifications', icon: <Bell />, title: 'Notifications', sub: 'Reminders, round updates, marketing' },
-    { id: 'payments', icon: <CreditCard />, title: 'Payments', sub: 'Preferred rail, fees, payment history' },
-    { id: 'legal', icon: <Scale />, title: 'Legal & policies', sub: 'User Agreement, Privacy, Fees, Community' },
-    { id: 'help', icon: <HelpCircle />, title: 'Help & about', sub: 'Support, security reports, version' },
+    { id: 'security', icon: <Fingerprint />, title: 'Sign in & security', sub: 'PIN, password, devices' },
+    { id: 'account', icon: <UserCog />, title: 'Your details', sub: 'Name, picture, language' },
+    { id: 'privacy', icon: <ShieldCheck />, title: 'Data privacy', sub: 'What is shared, and with whom' },
+    { id: 'ads', icon: <Megaphone />, title: 'Advertising', sub: 'What advertisers may see' },
+    { id: 'notifications', icon: <Bell />, title: 'Notifications', sub: 'When Halqa contacts you' },
+    { id: 'payments', icon: <CreditCard />, title: 'Payments', sub: 'Accounts, fees, history' },
+    { id: 'legal', icon: <Scale />, title: 'Legal & policies', sub: 'What you signed' },
+    { id: 'help', icon: <HelpCircle />, title: 'Help', sub: 'Get help' },
   ];
 
   return <div className="page narrow enter">

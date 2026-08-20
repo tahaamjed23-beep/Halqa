@@ -17,14 +17,14 @@ type Row = { page: Page; icon: ReactNode; title: string; sub: string; when?: boo
 
 export function AccountMenu({ go }: { go: (page: Page) => void }) {
   const rows: Row[] = [
-    { page: 'credit',   icon: <ShieldCheck />, title: 'Credit report',   sub: 'Your score and payment record' },
-    { page: 'activity', icon: <Receipt />,     title: 'Activity',        sub: 'Every payment and receipt' },
-    { page: 'market',   icon: <Repeat />,      title: 'Turn marketplace', sub: 'Buy or sell a turn', when: !SIMPLE_MODE },
-    { page: 'asset',    icon: <Package />,     title: 'Save for something', sub: 'A committee that buys a phone, bike or appliance' },
-    { page: 'rewards',  icon: <Sparkles />,    title: 'Rewards',         sub: 'Points and streaks' },
-    { page: 'terminal', icon: <LineChart />,   title: 'Scheme terminal', sub: 'Where idle funds sit', when: !SIMPLE_MODE },
-    { page: 'settings', icon: <Settings />,    title: 'Settings',        sub: 'Security, privacy, notifications' },
-    { page: 'about',    icon: <Info />,        title: 'About Halqa',     sub: 'How it works, who we are' },
+    { page: 'credit',   icon: <ShieldCheck />, title: 'Credit report',   sub: 'Score 804 and every payment' },
+    { page: 'activity', icon: <Receipt />,     title: 'Activity',        sub: 'Receipts you can share' },
+    { page: 'market',   icon: <Repeat />,      title: 'Turn marketplace', sub: 'Swap your turn with someone', when: !SIMPLE_MODE },
+    { page: 'asset',    icon: <Package />,     title: 'Save for something', sub: 'A phone, bike or appliance' },
+    { page: 'rewards',  icon: <Sparkles />,    title: 'Rewards',         sub: 'What your streak is worth' },
+    { page: 'terminal', icon: <LineChart />,   title: 'Where money sits', sub: 'Where idle money is recorded', when: !SIMPLE_MODE },
+    { page: 'settings', icon: <Settings />,    title: 'Settings',        sub: 'PIN, privacy, reminders' },
+    { page: 'about',    icon: <Info />,        title: 'About Halqa',     sub: 'How Halqa works' },
   ];
   const visible = rows.filter(r => r.when !== false);
 
