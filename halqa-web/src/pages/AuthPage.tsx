@@ -299,11 +299,11 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
           <input autoFocus autoComplete="name" placeholder="Full name" value={form.fullName}
                  onChange={e => setForm({ ...form, fullName: e.target.value })} />
         </Field>
-        <Field label="Username" hint="Letters, numbers, dots and underscores.">
+        <Field label="Username" hint="">
           <input autoComplete="username" placeholder="Pick a username" value={form.username}
                  onChange={e => setForm({ ...form, username: e.target.value.toLowerCase().replace(/[^a-z0-9_.]/g, '') })} />
         </Field>
-        <Field label="Email" hint="For receipts, and for getting back in if you are locked out.">
+        <Field label="Email" hint="For receipts and recovery">
           <input type="email" autoComplete="email" placeholder="you@example.com" value={form.email}
                  onChange={e => setForm({ ...form, email: e.target.value })} />
         </Field>
@@ -322,13 +322,13 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
               </button>}
           {locErr && <Notice kind="bad" icon={<Info />}>{locErr}</Notice>}
         </div>
-        <Field label="Home address" hint="Private. Never shown to another member.">
+        <Field label="Home address" hint="Private">
           <input autoComplete="street-address" placeholder="House, street, area" value={form.addressLine}
                  onChange={e => setForm({ ...form, addressLine: e.target.value })} />
         </Field>
         <PickerRow label="City" icon={<MapPin />} value={form.city} placeholder="Pick your city"
                    onClick={() => setCitySheet(true)} />
-        <Field label="Area or sector" hint="Shown to members. G-13, DHA Phase 2, Gulberg.">
+        <Field label="Area or sector" hint="Shown to members">
           <input placeholder="Your area" value={form.locality}
                  onChange={e => setForm({ ...form, locality: e.target.value })} />
         </Field>
@@ -347,7 +347,7 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
                    onChange={e => setForm({ ...form, jobTitle: e.target.value })} />
           </Field>
         )}
-        <Field label="Roughly what you earn a month" hint="Private. Nobody else sees this.">
+        <Field label="Roughly what you earn a month" hint="Private">
           <input inputMode="numeric" placeholder="60000" value={form.monthlyIncome}
                  onChange={e => setForm({ ...form, monthlyIncome: e.target.value.replace(/\D/g, '') })} />
         </Field>
@@ -362,7 +362,7 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
         )}
         {form.occupationType === 'EMPLOYED' && (
           <>
-            <Field label="Where you work" hint="Private. A salary account earns 20 per cent off Halqa's fee.">
+            <Field label="Where you work" hint="Private. 20 per cent off the fee.">
               <input placeholder="Company or employer" value={form.employerName}
                      onChange={e => setForm({ ...form, employerName: e.target.value })} />
             </Field>
@@ -398,12 +398,12 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
                    value={RAIL_META[form.rail].name} onClick={() => setRailSheet(true)} />
         {isBank && <PickerRow label="Your bank" icon={<Landmark />} value={form.bankName}
                               onClick={() => setBankSheet(true)} />}
-        <Field label="Account holder name" hint="Exactly as registered. A name that does not match is refused.">
+        <Field label="Account holder name" hint="As registered">
           <input autoComplete="name" placeholder="As printed on the account" value={form.accountTitle}
                  onChange={e => setForm({ ...form, accountTitle: e.target.value })} />
         </Field>
         <Field label={numberLabel}
-               hint={isBank ? 'Twenty four characters, starting PK.' : 'Eleven digits, starting 03.'}
+               hint={isBank ? '24 characters, starting PK' : '11 digits, starting 03'}
                error={(isBank ? ibanProblem(form.accountNo) : mobileProblem(form.accountNo)) || undefined}>
           <input className="mono" inputMode={isBank ? 'text' : 'numeric'}
                  placeholder={isBank ? 'PK36 SONE 0000 1234 5678 9012' : '0300 1234567'}
@@ -414,8 +414,7 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
           <AccountCard draft rail={form.rail} bankName={isBank ? form.bankName : undefined}
                        accountTitle={form.accountTitle} accountNo={form.accountNo} />
           <Notice kind="info" icon={<Lock />}>
-            Halqa keeps the identifier only. No balances are read, and no money moves until an
-            instalment is due.
+            The identifier only. No balances, no card numbers.
           </Notice>
         </div>
       </>;
@@ -611,7 +610,7 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
       {daySheet && (
         <Sheet title="When does your pay arrive" onClose={() => setDaySheet(false)}>
           <SheetRow icon={<span className="w-row-icon"><Wallet /></span>} title="It varies"
-                    sub="We will work it out from your payment history"
+                    sub="Worked out from your payments"
                     onClick={() => { setForm({ ...form, salaryDay: '' }); setDaySheet(false) }} />
           {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
             <SheetRow key={d} icon={<span className="w-row-icon"><Wallet /></span>}

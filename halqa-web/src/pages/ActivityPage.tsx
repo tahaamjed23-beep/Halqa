@@ -131,7 +131,7 @@ export default function ActivityPage({ user, back }: { user: User; back: () => v
           </RowGroup>
         )) : (
           <Blank icon={<ReceiptIcon />} title={q ? 'Nothing matches that' : 'Nothing here yet'}
-                 sub="Every instalment and every payout produces a receipt with its own transaction id, and they all land on this screen." />
+                 sub="Every instalment and payout lands here." />
         )}
       </div>
 

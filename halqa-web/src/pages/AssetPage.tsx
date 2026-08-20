@@ -138,7 +138,7 @@ export default function AssetPage({ back, openCommittee }:
           </Card>
 
           <Card title="Name the circle">
-            <Field label="Circle name" hint="Your members see this. Leave it blank and we use the item.">
+            <Field label="Circle name" hint="Leave it blank to use the item">
               <input value={name} maxLength={60} placeholder={asset.name + ' circle'}
                      onChange={e => setName(e.target.value)} />
             </Field>
@@ -147,16 +147,13 @@ export default function AssetPage({ back, openCommittee }:
           {asset.securable ? (
             <div className="w-inset">
               <Notice kind="ok" icon={<Lock />}>
-                This item can be locked remotely if payments stop, so it can be handed over at
-                your turn instead of at the end. You are told what can be locked, and when,
-                before you agree.
+                Can be handed over at your turn, because it can be locked remotely.
               </Notice>
             </div>
           ) : (
             <div className="w-inset">
               <Notice kind="info" icon={<Info />}>
-                Everyone receives on the same day, when the cycle finishes. This item cannot be
-                secured once it is in your home, so handing it over early would make it a loan.
+                Everyone receives on the last day. This item cannot be secured early.
               </Notice>
             </div>
           )}
@@ -205,11 +202,11 @@ export default function AssetPage({ back, openCommittee }:
 
         <RowGroup title="How it works">
           <Row chevron={false} icon={<Users />} title="One turn each"
-               sub={rounds + ' members, ' + rounds + ' months, everybody collects once'} />
+               sub={rounds + ' members, ' + rounds + ' months'} />
           <Row chevron={false} icon={<CalendarDays />} title="Delivered together"
-               sub="Everyone receives on the same day, when the cycle finishes" />
+               sub="Everyone receives on the last day" />
           <Row chevron={false} icon={<Check />} title="Settle early if you want"
-               sub="Pay the plain amount left at any time, no charge for finishing early" />
+               sub="The plain amount left, no charge" />
         </RowGroup>
       </div>
 

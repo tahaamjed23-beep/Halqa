@@ -8,7 +8,6 @@ import type { Page, Partner, User } from '../types';
 import AccountMenu from '../components/AccountMenu';
 import { ScoreRing } from '../components/ui';
 import { SHOW_BANK_RAIL, SIMPLE_MODE } from '../config';
-import { LinkedAccountsManager } from '../components/LinkedAccounts';
 import MemberStatus from '../components/MemberStatus';
 import { Card, Field, Notice, Row, RowGroup } from '../components/wallet';
 
@@ -60,7 +59,7 @@ function BankKycPanel({ user }: { user: User }) {
         <input className="mono" inputMode="numeric" maxLength={13} value={cnic}
                onChange={e => setCnic(e.target.value.replace(/\D/g, ''))} placeholder="3520212345671" />
       </Field>
-      <Field label="IBAN" hint="Your own PK account, checked with the standard checksum.">
+      <Field label="IBAN" hint="Your own PK account">
         <input className="mono" value={iban} onChange={e => setIban(e.target.value.toUpperCase())}
                placeholder="PK36SONE0000123456789012" />
       </Field>
@@ -82,49 +81,46 @@ function VaultRow({ go }: { go?: (page: Page) => void }) {
   return (
     <RowGroup title="Savings">
       <Row icon={<PiggyBank />} title="Your vault"
-           sub={vault.enabled ? 'Payouts park here and earn' : 'Payouts release straight out'}
+           sub={vault.enabled ? 'Parking payouts' : 'Parking off'}
            value={money(vault.balancePaisa)}
            valueSub={money(vault.accruedProfitPaisa) + ' earned'}
            onClick={go ? () => go('vault') : undefined} />
       <Row chevron={false} icon={<ShieldCheck />} title="Covers a missed instalment"
-           sub="Paid from the vault before it becomes a default"
+           sub="Before it becomes a default"
            value={vault.autoCover ? 'On' : 'Off'} tone={vault.autoCover ? 'ok' : undefined} />
     </RowGroup>
   );
 }
 
-// Auto-collection lives here, not buried inside each committee: one list, every
-// active circle, the rail each one pulls over.
+// Auto-collection, as one line rather than one row per circle. A member with
+// ten committees was getting ten identical rows saying the same sentence, which
+// pushed everything below them off the screen. If they all pull the same way,
+// that is one fact, not ten.
 type AutoCircle = { id: string; name: string; status: string; members?: { userId: string; autoDebitEnabled?: boolean; autoDebitRail?: string | null }[] };
 
-function AutoPayPanel({ user }: { user: User }) {
+function AutoCollection({ user, go }: { user: User; go?: (page: Page) => void }) {
   const [circles, setCircles] = useState<AutoCircle[]>([]);
   const load = useCallback(() => api<AutoCircle[]>('/committees')
-    .then(rows => setCircles(rows.filter(r => r.status === 'ACTIVE' || r.status === 'FORMING'))), []);
+    .then(rows => setCircles(rows.filter(r => r.status === 'ACTIVE' || r.status === 'FORMING')))
+    .catch(() => {}), []);
   useEffect(() => { void load() }, [load]);
+
   const mine = (c: AutoCircle) => c.members?.find(m => m.userId === user.id);
   const joined = circles.filter(mine);
+  const rails = Array.from(new Set(joined.map(c => mine(c)?.autoDebitRail || 'Raast')));
 
   return (
-    <>
-      {joined.length > 0 && (
-        <RowGroup title="Auto collection">
-          {joined.map(c => {
-            const m = mine(c)!;
-            return <Row key={c.id} chevron={false} icon={<Lock />} title={c.name}
-                        sub={'Collects over ' + (m.autoDebitRail || 'Raast') + ' on the due date'}
-                        value="On" tone="ok" />;
-          })}
-        </RowGroup>
-      )}
-      <div className="w-inset">
-        <Notice kind="info" icon={<Info />}>
-          Every committee collects automatically. Pay early yourself and there is nothing left to
-          take. Halqa schedules the collection and never holds the money.
-        </Notice>
-      </div>
-      <LinkedAccountsManager />
-    </>
+    <RowGroup title="Collection">
+      <Row chevron={false} icon={<Lock />} title="Auto collection"
+           sub={joined.length
+             ? joined.length + ' committee' + (joined.length === 1 ? '' : 's') + ', collected over '
+               + rails.join(' and ') + ' on each due date'
+             : 'On from your first committee'}
+           value={joined.length ? 'On' : 'Ready'} tone={joined.length ? 'ok' : undefined} />
+      <Row icon={<CreditCard />} title="Where it pulls from"
+           sub="Accounts, payday, order"
+           onClick={go ? () => go('cards') : undefined} />
+    </RowGroup>
   );
 }
 
@@ -199,11 +195,11 @@ export default function ProfilePage({ user, openCredit, go }:
         {!SIMPLE_MODE && <VaultRow go={go} />}
         <MemberStatus user={user} />
         {SHOW_BANK_RAIL && <BankKycPanel user={user} />}
-        <AutoPayPanel user={user} />
+        <AutoCollection user={user} go={go} />
 
         {payments.length > 0 && (
           <RowGroup title="Recorded instalments">
-            {payments.slice(0, 12).map(p => (
+            {payments.slice(0, 5).map(p => (
               <Row key={p.id} chevron={false} icon={<CreditCard />}
                    title={p.round.committee.name}
                    sub={'Turn ' + p.round.roundNumber}
@@ -213,10 +209,12 @@ export default function ProfilePage({ user, openCredit, go }:
             ))}
           </RowGroup>
         )}
-        {payments.length > 12 && (
-          <p className="w-foot">
-            The other {payments.length - 12} are on the Activity screen, each with its receipt.
-          </p>
+        {payments.length > 5 && (
+          <div className="w-inset">
+            <button className="secondary" onClick={() => go?.('activity')}>
+              See all {payments.length}, each with its receipt
+            </button>
+          </div>
         )}
       </div>
     </div>

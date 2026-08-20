@@ -115,9 +115,7 @@ export default function TerminalPage({ back }: { back?: () => void }) {
           <>
             <div className="w-inset">
               <Notice kind="ok" icon={<Sparkles />}>
-                These earn for you in the background, with no decision from you. Your idle pool
-                days, your security deposit and any parked payout go to work in these disclosed,
-                halal instruments.
+                Idle pool days, deposits and parked payouts earn here on their own.
               </Notice>
             </div>
             {engineSchemes.length ? engineSchemes.map(s => (
@@ -142,9 +140,7 @@ export default function TerminalPage({ back }: { back?: () => void }) {
           <>
             <div className="w-inset">
               <Notice kind="warn" icon={<TrendingUp />}>
-                Optional, and advanced. A host can put a slice of the pool into one of these when
-                creating a circle. They carry real market risk, unlike the halal earning engine,
-                so choosing one is a deliberate decision.
+                Optional. A host may put a slice of the pool here. Real market risk.
               </Notice>
             </div>
 
@@ -184,7 +180,7 @@ export default function TerminalPage({ back }: { back?: () => void }) {
               </RowGroup>
             ) : (
               <Blank icon={<Filter />} title="Nothing in this band"
-                     sub="No scheme sits under your risk ceiling. Raise it, or pick another band." />
+                     sub="Raise the ceiling, or change band." />
             )}
 
             {scheme && (

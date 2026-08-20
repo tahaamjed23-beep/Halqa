@@ -170,12 +170,11 @@ export default function PayPage({ user, back }: { user: User; back: () => void }
           <div className="w-inset">
             {short && (
               <Notice kind="warn" icon={<Info />}>
-                That is {money(scheduled - paisa)} short of this turn's instalment. The rest still
-                counts as due.
+                {money(scheduled - paisa)} short. The rest stays due.
               </Notice>
             )}
             <Notice kind="info" icon={<Check />}>
-              Members pay no charge to contribute, on any rail. That does not change.
+              No charge to contribute, on any rail.
             </Notice>
           </div>
         </div>
@@ -207,7 +206,7 @@ export default function PayPage({ user, back }: { user: User; back: () => void }
           )) : (
             <div className="w-inset">
               <Notice kind="warn" icon={<Info />}>
-                You have not linked an account yet. Collections and payments both need one.
+                Link an account first.
               </Notice>
             </div>
           )}
@@ -249,7 +248,7 @@ export default function PayPage({ user, back }: { user: User; back: () => void }
 
         <div className="w-inset">
           <Notice kind="ok" icon={<Zap />}>
-            Members pay no charge to contribute. Raast settles bank to bank, instantly, at no cost.
+            No charge to contribute. Raast is instant and free.
           </Notice>
         </div>
       </div>

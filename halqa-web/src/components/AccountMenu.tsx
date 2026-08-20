@@ -17,14 +17,14 @@ type Entry = { page: Page; icon: ReactNode; title: string; sub: string; when?: b
 
 export function AccountMenu({ go }: { go: (page: Page) => void }) {
   const rows: Entry[] = [
-    { page: 'credit',   icon: <ShieldCheck />, title: 'Credit report',      sub: 'Your score, and every payment behind it' },
-    { page: 'activity', icon: <Receipt />,     title: 'Activity',           sub: 'Every receipt, newest first' },
-    { page: 'market',   icon: <Repeat />,      title: 'Turn marketplace',   sub: 'Swap your turn with somebody in the same circle', when: !SIMPLE_MODE },
-    { page: 'asset',    icon: <Package />,     title: 'Save for something', sub: 'A phone, a bike, an appliance' },
+    { page: 'credit',   icon: <ShieldCheck />, title: 'Credit report',      sub: 'Score, band and history' },
+    { page: 'activity', icon: <Receipt />,     title: 'Activity',           sub: 'Receipts, newest first' },
+    { page: 'market',   icon: <Repeat />,      title: 'Turn marketplace',   sub: 'Swap turns inside a circle', when: !SIMPLE_MODE },
+    { page: 'asset',    icon: <Package />,     title: 'Save for something', sub: 'Phone, bike, appliance' },
     { page: 'rewards',  icon: <Sparkles />,    title: 'Rewards',            sub: 'What your streak is worth' },
-    { page: 'terminal', icon: <LineChart />,   title: 'Where money sits',   sub: 'Every recorded balance, and where', when: !SIMPLE_MODE },
+    { page: 'terminal', icon: <LineChart />,   title: 'Where money sits',   sub: 'Every recorded balance', when: !SIMPLE_MODE },
     { page: 'settings', icon: <Settings />,    title: 'Settings',           sub: 'PIN, privacy, notifications' },
-    { page: 'about',    icon: <Info />,        title: 'About Halqa',        sub: 'How a Halqa committee works' },
+    { page: 'about',    icon: <Info />,        title: 'About Halqa',        sub: 'How a committee works' },
   ];
 
   return (

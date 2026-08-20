@@ -121,8 +121,7 @@ export default function RewardsPage({ user, back }: { user: User; back: () => vo
 
         <div className="w-inset">
           <Notice kind="info" icon={<Info />}>
-            Every reward is either a retailer's own discount or a Halqa charge waived. Nothing
-            here converts to cash, at any tier.
+            A retailer discount or a waived fee. Never cash.
           </Notice>
         </div>
       </div>

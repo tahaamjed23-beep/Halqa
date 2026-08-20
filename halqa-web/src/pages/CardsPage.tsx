@@ -97,7 +97,7 @@ export default function CardsPage({ user, back }: { user: User; back: () => void
 
         {!loading && !methods.length && (
           <Blank icon={<ShieldCheck />} title="Nothing linked yet"
-                 sub="Add the account Halqa should collect your instalments from. It takes about a minute." />
+                 sub="Add the account Halqa collects from." />
         )}
 
         {methods.length > 0 && (
@@ -123,20 +123,19 @@ export default function CardsPage({ user, back }: { user: User; back: () => void
 
         <RowGroup title="Auto collection">
           <Row chevron={false} icon={<Zap />} title="Collected on your payday"
-               sub="Taken the morning your pay arrives, ahead of the due date"
+               sub="The morning your pay arrives"
                value="On" tone="ok" />
           <Row chevron={false} icon={<CalendarClock />} title="Your payday"
                sub={payday
                  ? 'The ' + payday + ordinal(payday) + (salary?.salaryVerifiedAt ? ', verified' : ', as you told us')
-                 : 'Not set. Add one payslip in Settings and Halqa works it out.'}
+                 : 'Not set'}
                value={payday ? String(payday) + ordinal(payday) : 'Not set'}
                tone={payday ? 'ok' : 'warn'} />
         </RowGroup>
 
         <div className="w-inset">
           <Notice kind="info" icon={<Info />}>
-            Halqa keeps the identifier only. No balances are read, no card number is stored, and
-            nothing moves until an instalment falls due.
+            The identifier only. No balances, no card numbers.
           </Notice>
           <div className="rail-supported">
             <span>Works with</span>
@@ -162,8 +161,7 @@ export default function CardsPage({ user, back }: { user: User; back: () => void
         <Sheet title="Remove this account" onClose={() => setConfirmId(null)}>
           <div className="w-inset" style={{ paddingTop: 12 }}>
             <Notice kind="warn" icon={<Info />}>
-              Collection moves to your next linked account. If this is your only one, your
-              committees have nothing to pull from.
+              Collection moves to your next account.
             </Notice>
           </div>
           <BottomBar>

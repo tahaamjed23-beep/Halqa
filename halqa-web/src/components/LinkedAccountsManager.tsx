@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { CalendarClock, Plus, ShieldCheck } from 'lucide-react';
 import { api } from '../api';
+import { maskAccount } from '../lib/format';
 import AddSource from './AddSource';
 import { RailLogo, SchemeMark } from './RailLogo';
-import { RAIL_META, groupAccount, type LinkedMethod } from './LinkedAccounts';
+import { RAIL_META, type LinkedMethod } from './LinkedAccounts';
 import { BottomBar, Field, Notice, Row, RowGroup, Sheet, SheetRow } from './wallet';
 
 // ---------------------------------------------------------------------------
@@ -114,7 +115,7 @@ export function LinkedAccountsManager() {
             <Row chevron={false}
                  icon={m.rail === 'CARD' ? <SchemeMark brand={m.brand} size={22} /> : <RailLogo rail={m.rail} size={22} />}
                  title={m.label || RAIL_META[m.rail]?.name || m.rail}
-                 sub={groupAccount(m.accountNo) + (m.verified ? '' : ' · not verified yet')}
+                 sub={maskAccount(m.accountNo) + (m.verified ? '' : ' · not verified yet')}
                  value={m.preferred ? 'Default' : m.id === salaryRef ? 'Salary' : undefined}
                  tone={m.preferred || m.id === salaryRef ? 'ok' : undefined} />
             <div className="acct-acts">
@@ -129,7 +130,7 @@ export function LinkedAccountsManager() {
         ))}
         {!methods.length && (
           <Row chevron={false} title="Nothing linked yet"
-               sub="Link a wallet, a Raast ID or a bank account and collection pulls from it." />
+               sub="Link a wallet, Raast ID or bank" />
         )}
       </RowGroup>
 
@@ -142,9 +143,9 @@ export function LinkedAccountsManager() {
       {salary && (
         <RowGroup title="When collection runs">
           <Row icon={<CalendarClock />} title="Your payday"
-               sub={day ? 'Collection runs that morning, before the instalment is even due'
-                 : learned ? 'It looks like about the ' + learned + ordinal(learned) + ', from your payment history'
-                 : 'Set it and collection runs while the money is there'}
+               sub={day ? 'Collected that morning'
+                 : learned ? 'About the ' + learned + ordinal(learned)
+                 : 'Not set'}
                value={day ? 'The ' + day + ordinal(day) : learned ? 'About the ' + learned : 'Not set'}
                tone={day ? 'ok' : 'warn'}
                onClick={() => setDaySheet(true)} />
@@ -153,8 +154,8 @@ export function LinkedAccountsManager() {
                  ? 'Confirmed ' + (salary.salaryVerifyMethod === 'PATTERN' ? 'from your payment history'
                    : salary.salaryVerifyMethod === 'ALERTS' ? 'from your credit alerts'
                    : salary.salaryVerifyMethod === 'PAYSLIP' ? 'by your payslip' : 'for the pilot')
-                 : salary.payslip?.status === 'PENDING' ? 'Your payslip is being checked'
-                 : 'One payslip photo confirms it instantly'}
+                 : salary.payslip?.status === 'PENDING' ? 'Payslip under review'
+                 : 'One payslip confirms it'}
                value={salary.salaryVerifiedAt ? 'Yes' : salary.payslip?.status === 'PENDING' ? 'Checking' : 'No'}
                tone={salary.salaryVerifiedAt ? 'ok' : undefined} />
         </RowGroup>
@@ -176,7 +177,7 @@ export function LinkedAccountsManager() {
 
       {verifyFor && (
         <Sheet title="Confirm it is yours" onClose={() => { setVerifyFor(null); setError('') }}>
-          <Field label="Six digit code" hint="Sent to the number on that account.">
+          <Field label="Six digit code" hint="">
             <input className="mono" inputMode="numeric" maxLength={6} value={code}
                    onChange={e => setCode(e.target.value.replace(/\D/g, ''))} placeholder="000000" />
           </Field>
@@ -191,7 +192,7 @@ export function LinkedAccountsManager() {
       {daySheet && (
         <Sheet title="When does your pay arrive" onClose={() => setDaySheet(false)}>
           <SheetRow icon={<span className="w-row-icon"><CalendarClock /></span>} title="It varies"
-                    sub="We will work it out from your payment history"
+                    sub="Worked out from your payments"
                     onClick={() => void setSalaryDay(null)} />
           {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
             <SheetRow key={d} icon={<span className="w-row-icon"><CalendarClock /></span>}

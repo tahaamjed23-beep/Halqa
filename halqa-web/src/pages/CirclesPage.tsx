@@ -121,16 +121,16 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
               </div>
             ) : (
               <Blank icon={<Users />} title="No committees yet"
-                     sub="Start one with people you know, or find an open circle in Discover."
+                     sub="Start one, or find an open circle."
                      action={<button className="primary" onClick={create}>Start one</button>} />
             )}
 
             <RowGroup title="Other ways in">
               <Row icon={<Copy />} title="Join with an invite code"
-                   sub="Six characters, from whoever invited you"
+                   sub="From whoever invited you"
                    onClick={() => setCodeSheet(true)} />
               <Row icon={<Send />} title="Invite people to a committee"
-                   sub="WhatsApp, contacts, or a link you paste anywhere"
+                   sub="WhatsApp, contacts or a link"
                    onClick={() => setInvite(true)} />
             </RowGroup>
           </>
@@ -143,7 +143,7 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
 
             <RowGroup>
               <Row chevron={false} icon={<Globe />} title="Public circles only"
-                   sub="Circles anyone on Halqa can find"
+                   sub="Anyone can find these"
                    value={publicOnly ? 'On' : 'Off'} tone={publicOnly ? 'ok' : undefined}
                    onClick={() => setPublicOnly(!publicOnly)} />
             </RowGroup>
@@ -151,9 +151,7 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
             {publicOnly && (
               <div className="w-inset">
                 <Notice kind="info" icon={<Eye />}>
-                  Anyone on Halqa sees these listings, their instalment and how many places are
-                  left. Join one and your name, area and credit score become visible to that
-                  circle's members.
+                  Join one and that circle sees your name, area and credit score.
                 </Notice>
               </div>
             )}
@@ -166,7 +164,7 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
               </div>
             ) : (
               <Blank icon={<Globe />} title="Nothing open right now"
-                     sub="No public circle currently has a place you are eligible for. New ones open every week." />
+                     sub="New circles open every week." />
             )}
           </>
         )}
@@ -178,7 +176,7 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
 
       {codeSheet && (
         <Sheet title="Join with a code" onClose={() => { setCodeSheet(false); setError('') }}>
-          <Field label="Invite code" hint="Six characters. Case does not matter.">
+          <Field label="Invite code" hint="">
             <input className="mono w-code" value={code} maxLength={8} placeholder="ABCD12"
                    onChange={e => setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))} />
           </Field>
@@ -195,7 +193,7 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
         <Sheet title="Invite people" onClose={() => setInvite(false)}>
           <div className="w-inset" style={{ paddingTop: 10 }}>
             <Notice kind="info" icon={<Info />}>
-              Send it however they actually talk to you. The link opens straight onto your circle.
+              The link opens straight onto your circle.
             </Notice>
           </div>
           <div className="w-shares">

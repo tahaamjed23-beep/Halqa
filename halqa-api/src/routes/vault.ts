@@ -93,12 +93,33 @@ async function vaultState(db: PrismaClient | Prisma.TransactionClient, userId: s
   const now = Date.now();
   const openEntries = entries.filter(entry => entry.credit === account && entry.createdAt.getTime() > lastSweep);
   const accrued = openEntries.reduce((sum, entry) => sum + projectedReturn(entry.amountPaisa, ratePct, clampDays(now - entry.createdAt.getTime())), 0n);
-  return { balance, accrued, openEntries };
+
+  // What the member sees on the screen. Newest first, each line saying which
+  // way the money went, where it came from, and what it has earned since it
+  // landed. A balance with no history is a number nobody can check.
+  const history = [...entries].reverse().slice(0, 40).map(entry => {
+    const inbound = entry.credit === account;
+    const open = inbound && entry.createdAt.getTime() > lastSweep;
+    return {
+      id: entry.id,
+      at: entry.createdAt.toISOString(),
+      direction: inbound ? 'IN' : 'OUT',
+      amountPaisa: entry.amountPaisa.toString(),
+      reason: entry.reason,
+      // Profit this particular deposit has earned so far, zero once swept.
+      earnedPaisa: open
+        ? projectedReturn(entry.amountPaisa, ratePct, clampDays(now - entry.createdAt.getTime())).toString()
+        : '0',
+      daysHeld: open ? clampDays(now - entry.createdAt.getTime()) : 0,
+    };
+  });
+
+  return { balance, accrued, openEntries, history, lastSweep };
 }
 
 router.get('/', async (req, res, next) => {
   try {
-    const user = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { vaultParkingEnabled: true, vaultTier: true, vaultAutoCover: true, vaultAllocation: true } });
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { vaultParkingEnabled: true, vaultTier: true, vaultAutoCover: true, vaultAllocation: true, vaultGoalPaisa: true, vaultGoalName: true } });
     const scheme = await tierScheme(prisma, user.vaultTier);
     const rates = await vaultRates(prisma, user);
     const state = await vaultState(prisma, req.auth!.userId, rates.blendedRatePct);
@@ -109,6 +130,10 @@ router.get('/', async (req, res, next) => {
       allocation: rates.allocation, tierDetails: rates.tierDetails,
       blendedRatePct: rates.blendedRatePct, blendedRiskScore: rates.blendedRiskScore,
       mudaribFeePct: Number(FLOAT_MUDARIB_FEE_PCT), custodyStage: 'RECORD_ONLY',
+      history: state.history,
+      goal: user.vaultGoalPaisa
+        ? { targetPaisa: user.vaultGoalPaisa.toString(), name: user.vaultGoalName ?? 'My savings goal' }
+        : null,
     });
   } catch (error) { next(error); }
 });
@@ -173,6 +198,27 @@ router.post('/tier', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+// The savings target. A vault with no purpose is a number on a screen; a vault
+// with a target is a plan, and that is what brings a member back to it. Sending
+// a null target clears it.
+router.post('/goal', async (req, res, next) => {
+  try {
+    const { targetPaisa, name } = z.object({
+      targetPaisa: paisaInput.nullable(),
+      name: z.string().trim().max(60).optional(),
+    }).parse(req.body);
+    if (targetPaisa !== null && targetPaisa < 100_000n) {
+      return res.status(400).json({ error: 'A savings goal starts at Rs 1,000' });
+    }
+    const user = await prisma.user.update({
+      where: { id: req.auth!.userId },
+      data: { vaultGoalPaisa: targetPaisa, vaultGoalName: targetPaisa === null ? null : (name?.trim() || 'My savings goal') },
+    });
+    await audit(prisma, req.auth!.userId, 'VAULT_GOAL_SET', 'User', user.id, { targetPaisa: targetPaisa?.toString() ?? null, name: user.vaultGoalName });
+    res.json({ goal: user.vaultGoalPaisa ? { targetPaisa: user.vaultGoalPaisa.toString(), name: user.vaultGoalName } : null });
+  } catch (error) { next(error); }
+});
+
 // Top-up savings: any amount can be recorded into the vault, not just parked
 // payouts. Same Mudarabah sleeve, same per-entry accrual, same full-sweep
 // withdrawal — a halal savings pocket that needs no committee and no partner.
@@ -190,21 +236,44 @@ router.post('/deposit', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+// Taking money out.
+//
+// The accrual model computes profit per deposit since the last sweep, which is
+// why this was full-sweep only: a partial withdrawal would leave entries whose
+// age no longer matched what had been paid out on them.
+//
+// A partial withdrawal is therefore a full sweep followed by an immediate
+// re-deposit of the remainder. Profit is realised on everything, the Mudarib
+// share is taken once, and what stays behind starts earning again from today.
+// That is exactly what the member is told, and the invariant holds.
 router.post('/withdraw', async (req, res, next) => {
   try {
-    const { idempotencyKey } = z.object({ idempotencyKey: z.string().min(8) }).parse(req.body);
+    const { idempotencyKey, amountPaisa } = z.object({
+      idempotencyKey: z.string().min(8),
+      amountPaisa: paisaInput.optional(),
+    }).parse(req.body);
     const user = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { vaultTier: true, vaultAllocation: true } });
     const rates = await vaultRates(prisma, user);
     const result = await prisma.$transaction(async tx => {
       const state = await vaultState(tx, req.auth!.userId, rates.blendedRatePct);
       if (state.balance <= 0n) throw Object.assign(new Error('The vault is empty'), { status: 409 });
+      if (amountPaisa !== undefined && amountPaisa <= 0n) throw Object.assign(new Error('Enter an amount to take out'), { status: 400 });
+      if (amountPaisa !== undefined && amountPaisa > state.balance) {
+        throw Object.assign(new Error('That is more than the vault holds'), { status: 400 });
+      }
+      const keepPaisa = amountPaisa === undefined ? 0n : state.balance - amountPaisa;
       const feePaisa = state.accrued * FLOAT_MUDARIB_FEE_PCT / 100n;
       const netProfitPaisa = state.accrued - feePaisa;
       await ledger(tx, { actorId: req.auth!.userId, debit: vaultAccount(req.auth!.userId), credit: `user:${req.auth!.userId}:external`, amountPaisa: state.balance, reason: 'VAULT_SWEEP_PRINCIPAL_RECORDED', refType: 'User', refId: req.auth!.userId, idempotencyKey });
       if (netProfitPaisa > 0n) await ledger(tx, { actorId: req.auth!.userId, debit: `user:${req.auth!.userId}:vault_investment`, credit: `user:${req.auth!.userId}:external`, amountPaisa: netProfitPaisa, reason: 'VAULT_PARKING_PROFIT_SIMULATED', refType: 'User', refId: req.auth!.userId, idempotencyKey: `${idempotencyKey}:profit` });
       if (feePaisa > 0n) await ledger(tx, { actorId: req.auth!.userId, debit: `user:${req.auth!.userId}:vault_investment`, credit: 'platform:fees', amountPaisa: feePaisa, reason: 'VAULT_MUDARIB_FEE_5_PERCENT', refType: 'User', refId: req.auth!.userId, idempotencyKey: `${idempotencyKey}:fee` });
-      await audit(tx, req.auth!.userId, 'VAULT_SWEPT', 'User', req.auth!.userId, { principalPaisa: state.balance.toString(), profitPaisa: netProfitPaisa.toString(), feePaisa: feePaisa.toString(), stage: 'SIMULATED' });
-      return { principalPaisa: state.balance, profitPaisa: netProfitPaisa, feePaisa };
+      // Whatever the member is leaving in goes straight back, as a fresh entry
+      // dated today, so its accrual starts from a clean, honest zero.
+      if (keepPaisa > 0n) {
+        await ledger(tx, { actorId: req.auth!.userId, debit: `user:${req.auth!.userId}:external`, credit: vaultAccount(req.auth!.userId), amountPaisa: keepPaisa, reason: 'VAULT_REMAINDER_REPARKED', refType: 'User', refId: req.auth!.userId, idempotencyKey: `${idempotencyKey}:keep` });
+      }
+      await audit(tx, req.auth!.userId, 'VAULT_SWEPT', 'User', req.auth!.userId, { principalPaisa: state.balance.toString(), takenPaisa: (state.balance - keepPaisa).toString(), keptPaisa: keepPaisa.toString(), profitPaisa: netProfitPaisa.toString(), feePaisa: feePaisa.toString(), stage: 'SIMULATED' });
+      return { principalPaisa: state.balance - keepPaisa, keptPaisa: keepPaisa, profitPaisa: netProfitPaisa, feePaisa };
     });
     res.json(result);
   } catch (error) { next(error); }

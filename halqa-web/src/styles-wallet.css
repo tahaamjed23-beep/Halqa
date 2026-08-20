@@ -534,3 +534,41 @@ button.w-row:active{background:var(--l50)}
 /* ---------- payslip upload, styled as a button ---------- */
 .w-upload{display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
 .w-upload input{display:none}
+
+/* ---------- vault goal ---------- */
+.vault-goal{margin-top:14px;position:relative;z-index:1}
+.vault-goal>div{display:flex;justify-content:space-between;gap:12px;font-size:11px;opacity:.94;
+  margin-bottom:6px}
+.vault-goal>i{display:block;height:7px;border-radius:4px;background:rgba(255,255,255,.26);
+  overflow:hidden}
+.vault-goal em{display:block;height:100%;background:#fff;border-radius:4px;transition:width .4s}
+.vault-goal-cta{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:8px 14px;
+  border-radius:var(--r-full);background:rgba(255,255,255,.2);color:#fff;font-size:12px;
+  font-weight:620;position:relative;z-index:1}
+.vault-goal-cta svg{width:15px;height:15px}
+.vault-goal-cta:active{background:rgba(255,255,255,.32)}
+.w-card>button.primary.full{margin-top:12px}
+
+/* ============================================================================
+   THE PHONE FRAME, ENFORCED
+   The app is a phone app. On a desktop window it stays a phone-width column,
+   and nothing inside it is allowed to be wider than that column. A single row
+   of four action buttons was enough to push the whole document sideways and
+   give the page a horizontal scrollbar, which is why every screen looked like
+   it had fallen out of the frame.
+   ============================================================================ */
+html,body{overflow-x:hidden;max-width:100%}
+.app-shell{overflow-x:clip}
+.content{overflow-x:clip}
+.w-screen,.w-screen-body{max-width:100%;min-width:0}
+.w-screen *,.w-screen-body *{min-width:0}
+.w-row,.w-rowgroup,.w-card,.w-title,.w-field,.w-inset,.w-facts{max-width:100%}
+
+/* Any row of small actions wraps rather than widening its parent. */
+.acct-acts{flex-wrap:wrap}
+.w-actions{flex-wrap:wrap}
+.w-chips{max-width:100%}
+.term-filters{max-width:100%}
+
+/* Tables and charts scroll inside themselves, never the page. */
+.table-wrap,.table-scroll,.scheme-scroll{overflow-x:auto;max-width:100%}

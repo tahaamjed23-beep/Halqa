@@ -1,80 +1,126 @@
 import { useEffect, useState } from 'react';
-import { BadgeCheck, Fingerprint, Lock, Receipt, Unlock } from 'lucide-react';
+import { Fingerprint, Info, Lock, Percent, Receipt, Unlock } from 'lucide-react';
 import { api } from '../api';
 import { biometricAvailable, registerBiometric, clearBiometric } from '../lib/webauthn';
 import type { User } from '../types';
+import { BottomBar, Field, Notice, Row, RowGroup, Sheet } from './wallet';
 
-// The member's standing: turn-access tenure, the service-charge discount they've
-// earned by verifying, and the optional biometric unlock. Self-refreshing so the
-// discount/tenure updates live after each action.
+// ---------------------------------------------------------------------------
+// YOUR STANDING
+//
+// Three facts and the actions that change them: which turns you may take, what
+// discount you have earned on Halqa's fee, and whether this device can unlock
+// with a fingerprint.
+//
+// It used to be a panel of paragraphs with an employer input wedged into a row,
+// which on a profile carrying ten committees pushed everything under it off the
+// screen. It is four rows now, and the one thing that needs typing asks for it
+// in a sheet.
+// ---------------------------------------------------------------------------
+
 export default function MemberStatus({ user }: { user: User }) {
   const [me, setMe] = useState<User | null>(user);
   const [busy, setBusy] = useState('');
   const [employer, setEmployer] = useState(user.employerName || '');
   const [askEmployer, setAskEmployer] = useState(false);
+
   const load = () => api<User>('/auth/me').then(setMe).catch(() => {});
-  useEffect(() => { void load(); }, []);
+  useEffect(() => { void load() }, []);
   if (!me) return null;
+
   const clean = me.committeesCompletedClean ?? 0;
   const unlocked = !!me.earlyTurnUnlocked;
   const discountPct = Math.round((me.feeDiscountBps ?? 0) / 100);
 
   const verifyIncome = async () => {
-    if (!employer.trim()) { setAskEmployer(true); return; }
-    setBusy('income'); try { await api('/profile/verify-income', { method: 'POST', body: JSON.stringify({ employerName: employer.trim() }) }); setAskEmployer(false); await load(); } finally { setBusy(''); }
+    setBusy('income');
+    try {
+      await api('/profile/verify-income', { method: 'POST', body: JSON.stringify({ employerName: employer.trim() }) });
+      setAskEmployer(false); await load();
+    } finally { setBusy('') }
   };
-  const secureCheque = async () => { setBusy('cheque'); try { await api('/profile/secure-cheque', { method: 'POST', body: '{}' }); await load(); } finally { setBusy(''); } };
-  const clearOne = async (kind: 'income' | 'cheque') => { setBusy(kind); try { await api('/profile/clear-verification', { method: 'POST', body: JSON.stringify({ kind }) }); await load(); } finally { setBusy(''); } };
+  const secureCheque = async () => {
+    setBusy('cheque');
+    try { await api('/profile/secure-cheque', { method: 'POST', body: '{}' }); await load() }
+    finally { setBusy('') }
+  };
+  const clearOne = async (kind: 'income' | 'cheque') => {
+    setBusy(kind);
+    try { await api('/profile/clear-verification', { method: 'POST', body: JSON.stringify({ kind }) }); await load() }
+    finally { setBusy('') }
+  };
   const toggleBiometric = async () => {
     setBusy('bio');
     try {
-      if (me.hasBiometric) { await api('/auth/set-biometric', { method: 'POST', body: JSON.stringify({ credentialId: null }) }); clearBiometric(); }
-      else { const id = await registerBiometric(me.id, me.fullName); if (id) await api('/auth/set-biometric', { method: 'POST', body: JSON.stringify({ credentialId: id }) }); }
+      if (me.hasBiometric) {
+        await api('/auth/set-biometric', { method: 'POST', body: JSON.stringify({ credentialId: null }) });
+        clearBiometric();
+      } else {
+        const id = await registerBiometric(me.id, me.fullName);
+        if (id) await api('/auth/set-biometric', { method: 'POST', body: JSON.stringify({ credentialId: id }) });
+      }
       await load();
-    } finally { setBusy(''); }
+    } finally { setBusy('') }
   };
 
-  return <section className="panel">
-    <div className="panel-head"><div><span className="eyebrow">Your standing</span><h2>Turn access & rewards</h2><p>Proving your income lowers your fee and opens earlier turns.</p></div><BadgeCheck /></div>
-    <div className="tenure-note" style={{ background: '#fdecec', borderColor: '#f0b8b8', color: '#8a1d1d' }}>Everything here is checked against your documents.</div>
+  return (
+    <>
+      <RowGroup title="Your standing">
+        <Row chevron={false} icon={unlocked ? <Unlock /> : <Lock />}
+             title={unlocked ? 'Any turn is open to you' : 'Late turns only, for now'}
+             sub={unlocked
+               ? 'No seat is closed to you'
+               : Math.min(clean, 2) + ' of 2 clean circles' + (clean >= 2 ? ', verification pending' : '')}
+             value={unlocked ? 'Open' : Math.min(clean, 2) + '/2'}
+             tone={unlocked ? 'ok' : 'warn'} />
 
-    {/* Tenure */}
-    <div className="tenure-note">
-      {unlocked ? <Unlock size={18} /> : <Lock size={18} />}
-      <div>{unlocked
-        ? <><b>Established member.</b> You can take any turn in a circle.</>
-        : <><b>New member, last turns only.</b> You can join circles but only in a late seat until you finish <b>2 circles cleanly</b> and we verify you. Progress: <b>{Math.min(clean, 2)}/2</b> clean circles{clean >= 2 ? ', verification pending.' : '.'}</>}</div>
-    </div>
+        <Row chevron={false} icon={<Percent />} title="Discount on Halqa's fee"
+             sub={me.discountReason || 'Verify income or leave a cheque'}
+             value={discountPct + '% off'} tone={discountPct ? 'ok' : undefined} />
 
-    {/* Discount + verifications */}
-    <div className="status-tiers">
-      <div className="verify-row">
-        <span><b>Service-charge discount</b><small>{me.discountReason || 'Not verified yet'}</small></span>
-        <span className="discount-badge">{discountPct}% off</span>
-      </div>
+        <Row icon={<Receipt />} title="Income and employer"
+             sub={me.incomeVerifiedAt
+               ? 'Verified, 80 per cent off'
+               : 'Employer and one payslip, 80 per cent off'}
+             value={me.incomeVerifiedAt ? 'Verified' : 'Verify'}
+             tone={me.incomeVerifiedAt ? 'ok' : undefined}
+             onClick={() => me.incomeVerifiedAt ? void clearOne('income') : setAskEmployer(true)} />
 
-      <div className="verify-row">
-        <span><b>Income & employer verified</b><small>Add your employer and one payslip for 80% off Halqa's fee. If you do not work, use your husband's or guardian's.</small></span>
-        {me.incomeVerifiedAt
-          ? <button className="text-action slim-action danger" disabled={busy==='income'} onClick={() => void clearOne('income')}>Remove</button>
-          : askEmployer
-            ? <span style={{ display: 'inline-flex', gap: 6 }}><input className="field" style={{ width: 150, padding: '5px 9px', fontSize: 12.5 }} placeholder="Employer name" value={employer} onChange={e => setEmployer(e.target.value)} /><button className="text-action slim-action" disabled={busy==='income'||employer.trim().length<2} onClick={() => void verifyIncome()}>Submit</button></span>
-            : <button className="text-action slim-action" disabled={busy==='income'} onClick={() => void verifyIncome()}>Verify</button>}
-      </div>
+        <Row icon={<Receipt />} title="Guarantee cheque"
+             sub={me.chequeSecuredAt
+               ? 'On file'
+               : 'An agent collects it in person'}
+             value={me.chequeSecuredAt ? 'On file' : 'Arrange'}
+             tone={me.chequeSecuredAt ? 'ok' : undefined}
+             onClick={() => me.chequeSecuredAt ? void clearOne('cheque') : void secureCheque()} />
 
-      <div className="verify-row">
-        <span><b>Guarantee cheque</b><small>A cheque on file lowers your fee to almost nothing.</small></span>
-        {me.chequeSecuredAt
-          ? <button className="text-action slim-action danger" disabled={busy==='cheque'} onClick={() => void clearOne('cheque')}>Remove</button>
-          : <button className="text-action slim-action" disabled={busy==='cheque'} onClick={() => void secureCheque()}><Receipt size={13} style={{ verticalAlign: '-2px' }} /> Provide cheque</button>}
-      </div>
-    </div>
-    {me.chequeSecuredAt ? null : <p className="muted" style={{ fontSize: 11 }}>An agent collects the cheque in person. Marking it here holds the discount until then.</p>}
+        {biometricAvailable() && (
+          <Row chevron={false} icon={<Fingerprint />} title="Unlock with a fingerprint"
+               sub="Instead of the PIN"
+               value={me.hasBiometric ? 'On' : 'Off'} tone={me.hasBiometric ? 'ok' : undefined}
+               onClick={busy === 'bio' ? undefined : () => void toggleBiometric()} />
+        )}
+      </RowGroup>
 
-    {/* Biometric */}
-    {biometricAvailable() && <label className="settings-toggle" style={{ marginTop: 4 }}>
-      <input type="checkbox" checked={!!me.hasBiometric} disabled={busy==='bio'} onChange={() => void toggleBiometric()} />
-      <span><b><Fingerprint size={13} style={{ verticalAlign: '-2px' }} /> Unlock with fingerprint</b><small>Use your device's fingerprint/Face instead of typing the PIN on every open.</small></span>
-    </label>}
-  </section>;
+      {askEmployer && (
+        <Sheet title="Who do you work for" onClose={() => setAskEmployer(false)}>
+          <Field label="Employer" hint="Checked against your documents">
+            <input value={employer} placeholder="Company or employer name"
+                   onChange={e => setEmployer(e.target.value)} />
+          </Field>
+          <div className="w-inset">
+            <Notice kind="info" icon={<Info />}>
+              With one payslip, 80 per cent off the fee.
+            </Notice>
+          </div>
+          <BottomBar>
+            <button className="primary full" disabled={busy === 'income' || employer.trim().length < 2}
+                    onClick={() => void verifyIncome()}>
+              {busy === 'income' ? 'Submitting' : 'Submit'}
+            </button>
+          </BottomBar>
+        </Sheet>
+      )}
+    </>
+  );
 }

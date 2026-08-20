@@ -125,13 +125,13 @@ export default function CreditPage({ user, back }: { user: User; back: () => voi
 
         <RowGroup title="What is behind the number">
           <Row chevron={false} title="Positive events"
-               sub="On-time turns, clean completions, streaks"
+               sub="On-time turns, clean finishes"
                value={String(positives)} tone="ok" />
           <Row chevron={false} title="Negative events"
-               sub="Late or missed instalments, and penalties"
+               sub="Late, missed, penalties"
                value={String(negatives)} tone={negatives ? 'bad' : undefined} />
           <Row chevron={false} title="Identity level"
-               sub="A CNIC on file ranks you ahead for early turns"
+               sub="CNIC on file"
                value={String(user.kycLevel)} />
         </RowGroup>
 

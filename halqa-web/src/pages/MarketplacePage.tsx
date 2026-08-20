@@ -157,8 +157,7 @@ export default function MarketplacePage({ user, back }: { user: User; back?: () 
               ['What does not', 'Your dues'],
             ]} />
             <Notice kind="info" icon={<Info />}>
-              Accepting a bid swaps two future positions. Nobody leaves the committee and no
-              instalment changes, so the money owed over the cycle is the same either way.
+              Two positions swap. Nobody leaves, no instalment changes.
             </Notice>
           </Card>
         )}
@@ -214,8 +213,7 @@ function BidTurn({ listing, close, done }: { listing: Listing; close: () => void
           ['Net cost', money(listing.buyerNetCostPaisa)],
         ]} />
         <Notice kind="info" icon={<Users />}>
-          The seller decides. Nothing is charged unless they accept, and your instalments do not
-          change either way.
+          The seller decides. Nothing is charged unless they accept.
         </Notice>
       </div>
       <BottomBar>
@@ -262,7 +260,7 @@ function SellTurn({ committees, close, done }:
     return (
       <Sheet title="List a turn" onClose={close}>
         <Blank icon={<Store />} title="No turn you can list"
-               sub="A turn can be listed only while it is still ahead of the current round and your instalment is paid." />
+               sub="Only a future turn, instalment paid." />
       </Sheet>
     );
   }
@@ -284,8 +282,7 @@ function SellTurn({ committees, close, done }:
           ['Payout', money(payoutP)],
         ]} />
         <Notice kind="info" icon={<TrendingUp />}>
-          Only active members of this committee may bid. An accepted bid swaps the two positions,
-          nobody exits, and every instalment stays exactly as it was.
+          Only members of this committee may bid.
         </Notice>
         {error && <Notice kind="bad" icon={<Info />}>{error}</Notice>}
       </div>

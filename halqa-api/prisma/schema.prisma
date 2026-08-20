@@ -230,6 +230,11 @@ model User {
   vaultTier String @default("STANDARD")
   vaultAutoCover Boolean @default(false)
   vaultAllocation String @default("")
+  // What the member is saving towards. A vault with no purpose is a number on
+  // a screen; a vault with a target is a plan, and the progress bar is the
+  // whole reason somebody opens the screen twice.
+  vaultGoalPaisa BigInt?
+  vaultGoalName String?
   referredById String?
   referredBy User? @relation("Referrals", fields:[referredById], references:[id])
   referrals User[] @relation("Referrals")

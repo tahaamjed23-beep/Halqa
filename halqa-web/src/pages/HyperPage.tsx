@@ -133,8 +133,7 @@ export default function HyperPage({ user, back }: { user: User; back: () => void
               roster of people who do not know each other.
             </p>
             <Notice kind="warn" icon={<Lock />}>
-              It stops at {money(MAX_DAY_ONE_PAISA)} on day one, the dearest day there is, and
-              falls to a few rupees by the last week. A bid above the cap is refused.
+              Capped at {money(MAX_DAY_ONE_PAISA)} on day one, then falling. Above it is refused.
             </Notice>
           </Card>
 
@@ -161,7 +160,7 @@ export default function HyperPage({ user, back }: { user: User; back: () => void
           {!eligible && (
             <div className="w-inset">
               <Notice kind="bad" icon={<ShieldAlert />}>
-                You cannot bid on a HYPER day yet. Everything above has to be in place first.
+                Clear everything above first.
               </Notice>
             </div>
           )}

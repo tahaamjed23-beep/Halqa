@@ -87,10 +87,10 @@ export default function AddSource({ onClose, onDone, title = 'Link an account' }
 
   const numberLabel = isBank ? 'IBAN' : isRaast ? 'Raast ID, your mobile number' : 'Wallet number';
   const numberHint = isBank
-    ? 'Twenty four characters, starting PK. Copy it from your bank app.'
+    ? '24 characters, starting PK'
     : isRaast
-      ? 'The number your bank has registered as your Raast ID'
-      : 'The number the wallet is registered to, and it must be yours';
+      ? 'Registered with your bank'
+      : 'Must be your own number';
 
   const reset = () => { setNumber(''); setCard(''); setExpiry(''); setCvc(''); };
 
@@ -144,7 +144,7 @@ export default function AddSource({ onClose, onDone, title = 'Link an account' }
                            accountNo={linked.accountNo} brand={linked.brand} last4={linked.last4}
                            expiry={linked.expiry} />
             </div>
-            <Field label="Six digit code" hint="Sent to the number on this account.">
+            <Field label="Six digit code" hint="">
               <input className="mono" inputMode="numeric" maxLength={6} value={code}
                      onChange={e => setCode(e.target.value.replace(/\D/g, ''))} placeholder="000000" />
             </Field>
@@ -232,7 +232,7 @@ export default function AddSource({ onClose, onDone, title = 'Link an account' }
           )}
 
           <Field label={isCard ? 'Name on the card' : 'Account holder name'}
-                 hint="Exactly as it is registered. A name that does not match is refused.">
+                 hint="As registered">
             <input value={holder} autoComplete="name" placeholder="As printed on the account"
                    onChange={e => setHolder(e.target.value)} />
           </Field>
@@ -284,8 +284,7 @@ export default function AddSource({ onClose, onDone, title = 'Link an account' }
           {isWallet && (
             <div className="w-inset">
               <Notice kind="warn" icon={<ShieldCheck />}>
-                The wallet has to be registered in your own name. A wallet in somebody else's
-                name is refused when we check the title.
+                The wallet must be in your own name.
               </Notice>
             </div>
           )}
