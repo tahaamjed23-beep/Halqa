@@ -46,7 +46,7 @@ const includeDetail = {
   depositScheme: { select: { name: true, indicativeRatePct: true, shariahCompliant: true } },
   members: { where: { status: 'ACTIVE' as const }, include: { user: { select: { id: true, fullName: true, username: true, creditScore: true, kycLevel: true, phone: true, displayName: true, avatarUrl: true } } }, orderBy: { turnPosition: 'asc' as const } },
   // (auto-debit mandate fields ride along on each member via the default select)
-  rounds: { include: { recipient: { select: { id: true, fullName: true } }, payments: { include: { payer: { select: { id: true, fullName: true } } } }, investments: { include: { scheme: true } } }, orderBy: { roundNumber: 'asc' as const } },
+  rounds: { include: { recipient: { select: { id: true, fullName: true, phone: true } }, payments: { include: { payer: { select: { id: true, fullName: true } } } }, investments: { include: { scheme: true } } }, orderBy: { roundNumber: 'asc' as const } },
 } satisfies Prisma.CommitteeInclude;
 
 type HealthMember = { user: { creditScore: number } };

@@ -4,7 +4,7 @@ export type Scheme={id:string;slug:string;name:string;category:string;issuer:str
 export type Member={id:string;userId:string;turnPosition:number;hasReceived:boolean;status?:string;autoDebitEnabled?:boolean;autoDebitRail?:string|null;user:{id:string;fullName:string;username:string;creditScore:number;kycLevel:number;phone?:string|null;displayName?:string|null;avatarUrl?:string|null}};
 export type Payment={id:string;payerId:string;amountPaisa:string;status:string;paidVia?:string;txnRef?:string;payer?:{id:string;fullName:string}};
 export type Investment={id:string;principalPaisa:string;ratePctAtDeploy:number;status:string;deployedAt:string;realizedProfitPaisa?:string;scheme:Scheme};
-export type Round={graceDays?:number;id:string;roundNumber:number;recipientId:string;status:string;dueDate:string;payoutDate:string;grossPoolPaisa:string;reinvestPaisa:string;payoutPaisa:string;recipient:{id:string;fullName:string};payments:Payment[];investments:Investment[]};
+export type Round={graceDays?:number;id:string;roundNumber:number;recipientId:string;status:string;dueDate:string;payoutDate:string;grossPoolPaisa:string;reinvestPaisa:string;payoutPaisa:string;recipient:{id:string;fullName:string;phone?:string};payments:Payment[];investments:Investment[]};
 export type Committee={
   /** Group picture, like a messaging group. */
   avatarUrl?:string|null;

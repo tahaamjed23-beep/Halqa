@@ -1,43 +1,81 @@
-import { dateTime } from '../lib/format';
-import { Check, RotateCw, Share2, X } from 'lucide-react';
-import { money } from '../api';
+import { Check, Clock, Copy, Share2, X } from 'lucide-react';
+import { useState } from 'react';
+import { dateTime, money } from '../lib/format';
 import { RailLogo } from './RailLogo';
+
+export type ReceiptParty = { name: string; ref?: string };
 
 export type ReceiptData = {
   title: string;
   amountPaisa: string | number;
+  /** The transaction id members quote when something goes wrong. */
   reference: string;
   rail: string;
   rows: [string, string][];
   feePaisa?: string | number;
-  status?: 'SETTLED' | 'PENDING';
+  status?: 'SETTLED' | 'PENDING' | 'FAILED';
   stamp?: string;
+  from?: ReceiptParty;
+  to?: ReceiptParty;
+  purpose?: string;
 };
 
 // ---------------------------------------------------------------------------
-// The receipt is the product.
+// THE RECEIPT IS THE PRODUCT.
 //
 // A committee member's whole complaint about the informal system is that
-// nothing is written down, so every money event has to end on a document with
-// a reference, a timestamp and an identity on it.
+// nothing is written down. So every money event has to end on a document that
+// can be produced later, and it has to carry what a real wallet receipt
+// carries, not a pretty subset of it:
+//
+//   the transaction id, because that is what a member quotes on a helpline;
+//   the exact date and time to the second;
+//   the status in words, successful or pending or failed;
+//   who sent it and who received it, each with their own identifier;
+//   the amount, the fee, and the total, ruled off in that order;
+//   what it was for; and the rail it travelled over.
 //
 // Laid out the way a Pakistani wallet lays one out, because that is the artefact
-// members already trust: a green tick above a torn paper slip, the transaction
-// id and time in small type, the amount large and centred, then the ledger rows,
-// then the rail it travelled over at the foot. Familiar beats clever here.
+// members already trust: a tick above a torn paper slip, the id and time small,
+// the amount large and centred, the parties, then the totals. Familiar beats
+// clever here.
 // ---------------------------------------------------------------------------
+
+const RAIL_NAME: Record<string, string> = {
+  RAAST: 'Raast', JAZZCASH: 'JazzCash', EASYPAISA: 'Easypaisa',
+  CARD: 'Card', BANK_TRANSFER: 'Bank transfer',
+};
+
 export default function Receipt({ data, onClose }: { data: ReceiptData; onClose: () => void }) {
+  const [copied, setCopied] = useState(false);
   const when = data.stamp || dateTime(new Date());
   const fee = Number(data.feePaisa || 0);
   const total = Number(data.amountPaisa) + fee;
-  const pending = data.status === 'PENDING';
+  const state = data.status || 'SETTLED';
+
+  const asText = [
+    'Halqa receipt',
+    'Transaction id  ' + data.reference,
+    'Status          ' + (state === 'SETTLED' ? 'Successful' : state === 'PENDING' ? 'Pending' : 'Failed'),
+    'Date and time   ' + when,
+    data.from ? 'From            ' + data.from.name + (data.from.ref ? ' (' + data.from.ref + ')' : '') : '',
+    data.to ? 'To              ' + data.to.name + (data.to.ref ? ' (' + data.to.ref + ')' : '') : '',
+    ...data.rows.map(([k, v]) => (k + '                '.slice(0, Math.max(1, 16 - k.length))) + v),
+    'Amount          ' + money(data.amountPaisa),
+    'Fee             ' + money(fee),
+    'Total           ' + money(total),
+    'Paid over       ' + (RAIL_NAME[data.rail] || data.rail),
+  ].filter(Boolean).join('\n');
 
   const share = async () => {
-    const text = `Halqa receipt ${data.reference}\n${data.title}\n${money(total)}\n${when}`;
     try {
-      if (navigator.share) await navigator.share({ title: 'Halqa receipt', text });
-      else { await navigator.clipboard.writeText(text); }
+      if (navigator.share) await navigator.share({ title: 'Halqa receipt', text: asText });
+      else { await navigator.clipboard.writeText(asText); setCopied(true); setTimeout(() => setCopied(false), 1800) }
     } catch { /* dismissed */ }
+  };
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(data.reference); setCopied(true); setTimeout(() => setCopied(false), 1800) }
+    catch { /* clipboard refused */ }
   };
 
   return (
@@ -45,34 +83,52 @@ export default function Receipt({ data, onClose }: { data: ReceiptData; onClose:
       <div className="rcpt-stage" onClick={e => e.stopPropagation()}>
         <button className="rcpt-close" onClick={onClose} aria-label="Close"><X /></button>
 
-        <div className={`rcpt-tick${pending ? ' pending' : ''}`}><Check /></div>
+        <div className={'rcpt-tick' + (state === 'SETTLED' ? '' : ' pending')}>
+          {state === 'SETTLED' ? <Check /> : <Clock />}
+        </div>
 
         <div className="rcpt-slip">
           <div className="rcpt-slip-head">
-            <b>{pending ? 'Payment recorded' : 'Transaction successful'}</b>
-            <span>{data.reference}</span>
+            <b>{state === 'SETTLED' ? 'Transaction successful'
+              : state === 'PENDING' ? 'Payment recorded, not yet settled' : 'Transaction failed'}</b>
             <span>{when}</span>
           </div>
 
           <div className="rcpt-amount">{money(total)}</div>
+          <div className="rcpt-purpose">{data.purpose || data.title}</div>
+
+          {/* Who to whom, the pair a member checks first. */}
+          {(data.from || data.to) && (
+            <div className="rcpt-parties">
+              {data.from && <div><span>From</span><b>{data.from.name}</b>{data.from.ref && <small className="mono">{data.from.ref}</small>}</div>}
+              {data.to && <div><span>To</span><b>{data.to.name}</b>{data.to.ref && <small className="mono">{data.to.ref}</small>}</div>}
+            </div>
+          )}
 
           <div className="rcpt-rows">
-            <div><span>Fee</span><b>{fee ? money(fee) : 'Rs 0'}</b></div>
             {data.rows.map(([k, v]) => <div key={k}><span>{k}</span><b>{v}</b></div>)}
             <div><span>Amount</span><b>{money(data.amountPaisa)}</b></div>
+            <div><span>Halqa fee</span><b>{fee ? money(fee) : 'Rs 0'}</b></div>
+            <div className="rcpt-total"><span>Total</span><b>{money(total)}</b></div>
           </div>
+
+          {/* The id, on its own line, copyable: it is what a member quotes. */}
+          <button className="rcpt-tid" onClick={copy}>
+            <span>Transaction id</span>
+            <b className="mono">{data.reference}</b>
+            <Copy />
+          </button>
 
           <div className="rcpt-rail">
             <span>Paid over</span>
             <RailLogo rail={data.rail} size={24} />
-            <b>{data.rail === 'RAAST' ? 'Raast' : data.rail === 'JAZZCASH' ? 'JazzCash'
-               : data.rail === 'EASYPAISA' ? 'Easypaisa' : data.rail === 'CARD' ? 'Card' : 'Bank'}</b>
+            <b>{RAIL_NAME[data.rail] || data.rail}</b>
           </div>
         </div>
 
         <div className="rcpt-acts">
-          <button onClick={share}><Share2 />Share</button>
-          <button onClick={() => window.print()}><RotateCw />Save</button>
+          <button onClick={share}><Share2 />{copied ? 'Copied' : 'Share'}</button>
+          <button onClick={() => window.print()}><Copy />Save a copy</button>
         </div>
 
         <p className="rcpt-note">
