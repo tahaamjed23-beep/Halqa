@@ -1,38 +1,206 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import {BadgeCheck, BellRing, FileSignature, Handshake, Landmark, LockKeyhole, ShieldCheck } from 'lucide-react';
-import { api, money } from '../api';
+import {
+  BadgeCheck, BellRing, FileSignature, Info, Landmark, LockKeyhole, ShieldCheck,
+} from 'lucide-react';
+import { api } from '../api';
+import { money } from '../lib/format';
 import type { User } from '../types';
-import { Field } from './ui';
 import { SHOW_BANK_RAIL } from '../config';
+import { BottomBar, Card, Facts, Field, Notice, Row, RowGroup, Sheet } from './wallet';
 
-type Commitment={id:string;guarantor?:{id:string;fullName:string;creditScore:number};promissoryRef?:string;autoDebitRef?:string;acceptedTermsAt?:string;verifiedByHostAt?:string};
-type ProtectionMember={membershipId:string;user:{id:string;fullName:string;creditScore:number;defaultFlag:boolean;cooldownUntil?:string};turnPosition:number;hasReceived:boolean;status:string;currentPayment:null|{id:string;status:string;dueDate:string;penaltyPaisa:string};daysToDeadline:number|null;remainingDuesPaisa:string;heldDepositPaisa:string;heldPayoutPaisa:string;defaultImpactPaisa:string;commitment?:Commitment;forwardLiabilityPaisa?:string;requiredSecurityPaisa?:string;postedSecurityPaisa?:string;securityShortfallPaisa?:string;securitySatisfied?:boolean;securityGateActive?:boolean};
-type ProtectionSummary={policy:Record<string,unknown>;payoutBufferBps:number;forwardLiabilityGateEnabled?:boolean;latePenaltyBps:number;activeRound:null|{roundNumber:number;dueDate:string;payoutDate:string};openRecoveryCases:number;matrix:ProtectionMember[];partnerGates:{key:string;label:string;status:string}[]};
-const flag=(value:unknown,fallback=true)=>typeof value==='boolean'?value:fallback;
-const title=(value:string)=>value.toLowerCase().replaceAll('_',' ').replace(/(^|\s)\S/g,letter=>letter.toUpperCase());
+// ---------------------------------------------------------------------------
+// CIRCLE SAFETY
+//
+// This was two panels of prose, a nine-row list of ACTIVE / OFF with wrapped
+// labels, a table of members with four columns, and a commitment form sitting
+// open underneath all of it. On a phone it was a wall.
+//
+// A member opens this tab to answer three questions: what do I still owe, am I
+// covered, and is anybody behind. Those are the top of the screen. The
+// safeguards are one line each, the members are rows, and the optional
+// assurance form is a sheet, because most members never touch it.
+// ---------------------------------------------------------------------------
 
-export default function ProtectionCenter({committeeId,user,host}:{committeeId:string;user:User;host:boolean}){
-  const [summary,setSummary]=useState<ProtectionSummary|null>(null);const [error,setError]=useState('');const [busy,setBusy]=useState('');
-  const [guarantorUsername,setGuarantorUsername]=useState('');const [promissoryRef,setPromissoryRef]=useState('');const [autoDebitRef,setAutoDebitRef]=useState('');
-  const load=useCallback(()=>api<ProtectionSummary>(`/protection/committee/${committeeId}`).then(setSummary).catch(reason=>setError(reason.message)),[committeeId]);
-  useEffect(()=>{void load()},[load]);
-  const mine=useMemo(()=>summary?.matrix.find(item=>item.user.id===user.id),[summary,user.id]);
-  const act=async(key:string,run:()=>Promise<unknown>)=>{setBusy(key);setError('');try{await run();await load()}catch(reason){setError((reason as Error).message)}finally{setBusy('')}};
-  if(!summary)return <div className="risk-loading"><ShieldCheck/>Loading protection controls…</div>;
-  const controls=[
-    ['Graduated deposits',true,`${money(mine?.heldDepositPaisa||0)} currently held`],
-    ['Rolling payout holdback',flag(summary.policy.payoutHoldbackEnabled),`${summary.payoutBufferBps/100}% until clean follow-up payments`],
-    ['Forward-liability security',summary.forwardLiabilityGateEnabled===true,summary.forwardLiabilityGateEnabled===true?'Early payouts are secured to the installments still owed after the turn':'Not enabled for this circle'],
-    ['Progressive penalties',flag(summary.policy.progressivePenalties),`Up to 10%; current base ${summary.latePenaltyBps/100}%`],
-    ['Profit collateral',flag(summary.policy.profitCollateral),'Profit stays locked while obligations remain'],
-    ['Feature lock on default',flag(summary.policy.featureLockOnDefault),'Join, hosting and marketplace access are blocked'],
-    ['Credit-weighted turns',true,'Higher reliability receives earlier eligibility'],
-    ['Smart countdown nudges',flag(summary.policy.smartNudges),'Private reminders before score damage'],
-    ['Rehabilitation path',true,`${Number(summary.policy.rehabilitationCooldownMonths??6)}-month cooldown after recovery`],
-  ] as const;
-  return <div className="protection-stack"><section className="protection-hero"><div><span className="eyebrow">Circle safety</span><h2>{mine?.hasReceived?'Your circle, protected':'Your payout protection plan'}</h2><p>Every amount below comes straight from the locked schedule.</p></div><div className="default-impact"><ShieldCheck/><span>Your remaining commitment</span><strong>{money(mine?.remainingDuesPaisa||mine?.defaultImpactPaisa||0)}</strong><small>The installments still ahead of you in this circle, it shrinks every time you pay</small></div></section>
-  <section className="protection-grid"><div className="panel"><div className="panel-head"><div><span className="eyebrow">Live safeguards</span><h2>Prevention stack</h2></div><ShieldCheck/></div><div className="control-list">{controls.map(([label,on,detail])=><article key={label}><i className={on?'on':''}>{on?<BadgeCheck/>:<LockKeyhole/>}</i><div><b>{label}</b><p>{detail}</p></div><span>{on?'ACTIVE':'OFF'}</span></article>)}</div></div>
-  <div className="panel"><div className="panel-head"><div><span className="eyebrow">Your commitment</span><h2>Extra assurance (optional)</h2></div><FileSignature/></div>{(()=>{const collateral=Number(mine?.heldDepositPaisa||0)+Number(mine?.heldPayoutPaisa||0);const dues=Number(mine?.remainingDuesPaisa||0);const coverage=dues>0?Math.round(collateral/dues*100):100;return <div className="info-stack"><div><span>Deposit held</span><b>{money(mine?.heldDepositPaisa||0)}</b></div><div><span>Payout held back</span><b>{money(mine?.heldPayoutPaisa||0)}</b></div><div><span>Remaining dues</span><b>{money(mine?.remainingDuesPaisa||0)}</b></div><div><span>Collateral coverage of your dues</span><b className={coverage>=100?'profit':undefined}>{coverage}%{coverage<100&&mine?.hasReceived?' · add a guarantor to fully cover':''}</b></div><div><span>Current deadline</span><b>{mine?.daysToDeadline==null?'No active installment':mine.daysToDeadline>=0?`${mine.daysToDeadline} day(s) left`:`${Math.abs(mine.daysToDeadline)} day(s) overdue`}</b></div>{summary.forwardLiabilityGateEnabled&&mine&&<><div><span>Security required (your turn)</span><b>{money(mine.requiredSecurityPaisa||0)}</b></div><div><span>Security posted</span><b className={mine.securitySatisfied?'profit':undefined}>{money(mine.postedSecurityPaisa||0)}</b></div>{Number(mine.securityShortfallPaisa||0)>0&&<div><span>Still to secure</span><b>{money(mine.securityShortfallPaisa||0)}</b></div>}</>}</div>})()}{mine?.commitment?<div className="commitment-ok"><BadgeCheck/><div><b>Commitment recorded</b><p>{mine.commitment.guarantor?`Guarantor: ${mine.commitment.guarantor.fullName}`:'No guarantor'} · {mine.commitment.promissoryRef?'Promissory reference added':'No promissory reference'} · {mine.commitment.verifiedByHostAt?'Host verified':'Awaiting host review'}</p></div></div>:<div className="commitment-form"><Field label="Guarantor username (optional)"><input className="field" value={guarantorUsername} onChange={event=>setGuarantorUsername(event.target.value)} placeholder="700+ score Halqa member"/></Field><Field label="Promissory note reference (optional)"><input className="field" value={promissoryRef} onChange={event=>setPromissoryRef(event.target.value)} placeholder="Signed undertaking / promissory note reference"/></Field><Field label="Auto-debit reference (optional)"><input className="field" value={autoDebitRef} onChange={event=>setAutoDebitRef(event.target.value)} placeholder="Auto-debit mandate reference"/></Field><button className="primary full" disabled={busy==='commit'} onClick={()=>act('commit',()=>api(`/protection/committee/${committeeId}/commitment`,{method:'PUT',body:JSON.stringify({guarantorUsername:guarantorUsername||undefined,promissoryRef:promissoryRef||undefined,autoDebitRef:autoDebitRef||undefined,acceptedTerms:true})}))}>Accept & record protection terms</button></div>}</div></section>
-  <section className="panel"><div className="panel-head"><div><span className="eyebrow">Real-time accountability</span><h2>Member protection matrix</h2><p>Payment status is shared inside this committee; private reminders are rate-limited.</p></div><BellRing/></div><div className="protection-table">{summary.matrix.map(member=><article key={member.membershipId}><div className="avatar">{member.user.fullName[0]}</div><div><b>{member.user.fullName}{member.user.id===user.id?' · You':''}</b><p>Turn #{member.turnPosition} · score {member.user.creditScore}{member.hasReceived?' · payout received':''}</p></div><div><span>Collateral</span><b>{money(Number(member.heldDepositPaisa)+Number(member.heldPayoutPaisa))}</b></div><div><span>Installment</span><b className={`status status-${(member.currentPayment?.status||'pending').toLowerCase()}`}>{member.currentPayment?.status||''}</b></div>{member.user.id!==user.id&&flag(summary.policy.peerNudges)&&<button className="secondary" disabled={busy===`nudge-${member.user.id}`} onClick={()=>act(`nudge-${member.user.id}`,()=>api(`/protection/committee/${committeeId}/peer-nudge/${member.user.id}`,{method:'POST'}))}><BellRing/>Nudge</button>}{host&&member.commitment&&!member.commitment.verifiedByHostAt&&<button className="secondary" disabled={busy===`verify-${member.membershipId}`} onClick={()=>act(`verify-${member.membershipId}`,()=>api(`/protection/committee/${committeeId}/commitment/${member.membershipId}/verify`,{method:'POST'}))}>Verify</button>}{host&&member.currentPayment?.status==='MISSED'&&<button className="danger-button" disabled={busy===`cover-${member.currentPayment.id}`} onClick={()=>act(`cover-${member.currentPayment!.id}`,()=>api(`/committees/${committeeId}/default-cover/${member.currentPayment!.id}`,{method:'POST'}))}>Use collateral</button>}</article>)}</div></section>
-  {SHOW_BANK_RAIL&&<section className="partner-gates"><div><span className="eyebrow">External enforcement gates</span><h2>Prepared, not falsely activated</h2><p>These require licensed counterparties or legal agreements. The app exposes readiness without claiming a live integration.</p></div>{summary.partnerGates.map(gate=><article key={gate.key}>{gate.key==='PAYROLL'?<Landmark/>:<Handshake/>}<div><b>{gate.label}</b><span>{title(gate.status)}</span></div></article>)}</section>}{error&&<div className="error-box">{error}</div>}</div>;
+type Commitment = { id: string; guarantor?: { id: string; fullName: string; creditScore: number }; promissoryRef?: string; autoDebitRef?: string; acceptedTermsAt?: string; verifiedByHostAt?: string };
+type ProtectionMember = { membershipId: string; user: { id: string; fullName: string; creditScore: number; defaultFlag: boolean; cooldownUntil?: string }; turnPosition: number; hasReceived: boolean; status: string; currentPayment: null | { id: string; status: string; dueDate: string; penaltyPaisa: string }; daysToDeadline: number | null; remainingDuesPaisa: string; heldDepositPaisa: string; heldPayoutPaisa: string; defaultImpactPaisa: string; commitment?: Commitment; forwardLiabilityPaisa?: string; requiredSecurityPaisa?: string; postedSecurityPaisa?: string; securityShortfallPaisa?: string; securitySatisfied?: boolean; securityGateActive?: boolean };
+type ProtectionSummary = { policy: Record<string, unknown>; payoutBufferBps: number; forwardLiabilityGateEnabled?: boolean; latePenaltyBps: number; activeRound: null | { roundNumber: number; dueDate: string; payoutDate: string }; openRecoveryCases: number; matrix: ProtectionMember[]; partnerGates: { key: string; label: string; status: string }[] };
+
+const flag = (value: unknown, fallback = true) => typeof value === 'boolean' ? value : fallback;
+const title = (v: string) => v.toLowerCase().replaceAll('_', ' ').replace(/(^|\s)\S/g, l => l.toUpperCase());
+const payWord = (s?: string) =>
+  s === 'PAID' ? 'Paid' : s === 'LATE' ? 'Late' : s === 'MISSED' ? 'Missed' : s === 'WAIVED' ? 'Waived' : 'Due';
+
+export default function ProtectionCenter({ committeeId, user, host }:
+  { committeeId: string; user: User; host: boolean }) {
+  const [summary, setSummary] = useState<ProtectionSummary | null>(null);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState('');
+  const [assure, setAssure] = useState(false);
+  const [guarantorUsername, setGuarantorUsername] = useState('');
+  const [promissoryRef, setPromissoryRef] = useState('');
+  const [autoDebitRef, setAutoDebitRef] = useState('');
+
+  const load = useCallback(() =>
+    api<ProtectionSummary>('/protection/committee/' + committeeId)
+      .then(setSummary).catch(reason => setError(reason.message)), [committeeId]);
+  useEffect(() => { void load() }, [load]);
+
+  const mine = useMemo(() => summary?.matrix.find(m => m.user.id === user.id), [summary, user.id]);
+
+  const act = async (key: string, run: () => Promise<unknown>) => {
+    setBusy(key); setError('');
+    try { await run(); await load() }
+    catch (reason) { setError((reason as Error).message) }
+    finally { setBusy('') }
+  };
+
+  if (!summary) return <Row chevron={false} icon={<ShieldCheck />} title="Loading the safety controls" />;
+
+  const collateral = Number(mine?.heldDepositPaisa || 0) + Number(mine?.heldPayoutPaisa || 0);
+  const dues = Number(mine?.remainingDuesPaisa || 0);
+  const coverage = dues > 0 ? Math.round(collateral / dues * 100) : 100;
+  const behind = summary.matrix.filter(m => m.currentPayment && m.currentPayment.status !== 'PAID').length;
+
+  const controls: [string, boolean, string][] = [
+    ['Security deposits', true, money(mine?.heldDepositPaisa || 0) + ' held'],
+    ['Payout holdback', flag(summary.policy.payoutHoldbackEnabled), summary.payoutBufferBps / 100 + '% until you have paid on'],
+    ['Forward-liability security', summary.forwardLiabilityGateEnabled === true, summary.forwardLiabilityGateEnabled === true ? 'An early turn must be secured first' : 'Not on for this circle'],
+    ['Late penalties', flag(summary.policy.progressivePenalties), 'Base ' + summary.latePenaltyBps / 100 + '%, up to 10%'],
+    ['Profit collateral', flag(summary.policy.profitCollateral), 'Profit locked while you owe'],
+    ['Lock on default', flag(summary.policy.featureLockOnDefault), 'Join, host and marketplace blocked'],
+    ['Credit-weighted turns', true, 'A better record gets an earlier turn'],
+    ['Reminders', flag(summary.policy.smartNudges), 'Private, before any score damage'],
+    ['Rehabilitation', true, Number(summary.policy.rehabilitationCooldownMonths ?? 6) + ' month cooldown after recovery'],
+  ];
+
+  return (
+    <>
+      {/* What you owe, and whether it is covered. */}
+      <Card>
+        <Facts cols={3} items={[
+          ['You still owe', money(mine?.remainingDuesPaisa || mine?.defaultImpactPaisa || 0)],
+          ['Covered', coverage + '%'],
+          ['Behind', String(behind)],
+        ]} />
+        {mine?.daysToDeadline != null && (
+          <Notice kind={mine.daysToDeadline < 0 ? 'bad' : 'info'} icon={<Info />}>
+            {mine.daysToDeadline >= 0
+              ? mine.daysToDeadline + ' day' + (mine.daysToDeadline === 1 ? '' : 's') + ' until your next instalment'
+              : Math.abs(mine.daysToDeadline) + ' day' + (Math.abs(mine.daysToDeadline) === 1 ? '' : 's') + ' overdue'}
+          </Notice>
+        )}
+      </Card>
+
+      <RowGroup title="What protects this circle">
+        {controls.map(([label, on, detail]) => (
+          <Row key={label} chevron={false}
+               icon={on ? <BadgeCheck /> : <LockKeyhole />}
+               title={label} sub={detail}
+               value={on ? 'On' : 'Off'} tone={on ? 'ok' : undefined} />
+        ))}
+      </RowGroup>
+
+      <RowGroup title="Your cover">
+        <Row chevron={false} title="Deposit held" value={money(mine?.heldDepositPaisa || 0)} />
+        <Row chevron={false} title="Payout held back" value={money(mine?.heldPayoutPaisa || 0)} />
+        {summary.forwardLiabilityGateEnabled && mine && (
+          <>
+            <Row chevron={false} title="Security your turn needs" value={money(mine.requiredSecurityPaisa || 0)} />
+            <Row chevron={false} title="Security posted" value={money(mine.postedSecurityPaisa || 0)}
+                 tone={mine.securitySatisfied ? 'ok' : 'warn'} />
+          </>
+        )}
+        {mine?.commitment ? (
+          <Row chevron={false} icon={<FileSignature />} title="Extra assurance"
+               sub={(mine.commitment.guarantor ? mine.commitment.guarantor.fullName : 'No guarantor')
+                 + ' · ' + (mine.commitment.verifiedByHostAt ? 'host verified' : 'awaiting the host')}
+               value="Recorded" tone="ok" />
+        ) : (
+          <Row icon={<FileSignature />} title="Add extra assurance"
+               sub="A guarantor, a promissory note or a mandate"
+               onClick={() => setAssure(true)} />
+        )}
+      </RowGroup>
+
+      <RowGroup title={summary.matrix.length + ' members'}>
+        {summary.matrix.map(m => {
+          const late = m.currentPayment && m.currentPayment.status !== 'PAID';
+          return (
+            <div key={m.membershipId}>
+              <Row chevron={false}
+                   icon={<span className="prot-initial">{m.user.fullName[0]}</span>}
+                   title={m.user.fullName + (m.user.id === user.id ? ' · You' : '')}
+                   sub={'Turn ' + m.turnPosition + ' · score ' + m.user.creditScore + (m.hasReceived ? ' · collected' : '')}
+                   value={payWord(m.currentPayment?.status)}
+                   tone={m.currentPayment?.status === 'PAID' ? 'ok' : late ? 'bad' : undefined} />
+              {(m.user.id !== user.id && flag(summary.policy.peerNudges)) || (host && m.commitment && !m.commitment.verifiedByHostAt) || (host && m.currentPayment?.status === 'MISSED') ? (
+                <div className="acct-acts">
+                  {m.user.id !== user.id && flag(summary.policy.peerNudges) && (
+                    <button disabled={busy === 'nudge-' + m.user.id}
+                            onClick={() => act('nudge-' + m.user.id, () => api('/protection/committee/' + committeeId + '/peer-nudge/' + m.user.id, { method: 'POST' }))}>
+                      <BellRing /> Remind
+                    </button>
+                  )}
+                  {host && m.commitment && !m.commitment.verifiedByHostAt && (
+                    <button disabled={busy === 'verify-' + m.membershipId}
+                            onClick={() => act('verify-' + m.membershipId, () => api('/protection/committee/' + committeeId + '/commitment/' + m.membershipId + '/verify', { method: 'POST' }))}>
+                      Verify
+                    </button>
+                  )}
+                  {host && m.currentPayment?.status === 'MISSED' && (
+                    <button className="danger" disabled={busy === 'cover-' + m.currentPayment.id}
+                            onClick={() => act('cover-' + m.currentPayment!.id, () => api('/committees/' + committeeId + '/default-cover/' + m.currentPayment!.id, { method: 'POST' }))}>
+                      Use collateral
+                    </button>
+                  )}
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
+      </RowGroup>
+
+      {SHOW_BANK_RAIL && summary.partnerGates.length > 0 && (
+        <RowGroup title="External enforcement">
+          {summary.partnerGates.map(g => (
+            <Row key={g.key} chevron={false} icon={g.key === 'PAYROLL' ? <Landmark /> : <ShieldCheck />}
+                 title={g.label} value={title(g.status)} />
+          ))}
+        </RowGroup>
+      )}
+
+      {error && <div className="w-inset"><Notice kind="bad" icon={<Info />}>{error}</Notice></div>}
+
+      {assure && (
+        <Sheet title="Extra assurance" onClose={() => setAssure(false)}>
+          <Field label="Guarantor username" hint="A Halqa member scoring 700 or more">
+            <input value={guarantorUsername} placeholder="Optional"
+                   onChange={e => setGuarantorUsername(e.target.value)} />
+          </Field>
+          <Field label="Promissory note reference">
+            <input value={promissoryRef} placeholder="Optional"
+                   onChange={e => setPromissoryRef(e.target.value)} />
+          </Field>
+          <Field label="Auto-debit mandate reference">
+            <input value={autoDebitRef} placeholder="Optional"
+                   onChange={e => setAutoDebitRef(e.target.value)} />
+          </Field>
+          <BottomBar>
+            <button className="primary full" disabled={busy === 'commit'}
+                    onClick={() => { setAssure(false); void act('commit', () => api('/protection/committee/' + committeeId + '/commitment', {
+                      method: 'PUT',
+                      body: JSON.stringify({
+                        guarantorUsername: guarantorUsername || undefined,
+                        promissoryRef: promissoryRef || undefined,
+                        autoDebitRef: autoDebitRef || undefined,
+                        acceptedTerms: true,
+                      }),
+                    })) }}>
+              Record it
+            </button>
+          </BottomBar>
+        </Sheet>
+      )}
+    </>
+  );
 }
