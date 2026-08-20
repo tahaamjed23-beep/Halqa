@@ -79,7 +79,22 @@ export default function VaultPage() {
   const [horizonY, setHorizonY] = useState(3);
   const [monthly, setMonthly] = useState(0);
 
-  const load = useCallback(() => api<VaultX>('/vault').then(v => {
+  const load = useCallback(() => api<VaultX>('/vault').then(raw => {
+    // A response missing a field must degrade, not blank the screen. This one
+    // did exactly that: an older deploy returns no history, .map threw, and the
+    // error boundary swallowed the whole vault.
+    const v: VaultX = {
+      ...raw,
+      tierDetails: raw.tierDetails ?? [],
+      history: raw.history ?? [],
+      goal: raw.goal ?? null,
+      allocation: raw.allocation ?? null,
+      balancePaisa: raw.balancePaisa ?? '0',
+      accruedProfitPaisa: raw.accruedProfitPaisa ?? '0',
+      blendedRatePct: raw.blendedRatePct ?? raw.ratePct ?? 0,
+      blendedRiskScore: raw.blendedRiskScore ?? 0,
+      mudaribFeePct: raw.mudaribFeePct ?? 0,
+    };
     setVault(v);
     const base: Record<string, number> = { STANDARD: 0, INCOME: 0 };
     if (v.allocation) setShares({ ...base, ...v.allocation });

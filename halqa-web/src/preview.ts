@@ -107,7 +107,27 @@ export function previewRoute(path:string):unknown{
     {id:'ce3',delta:40,reason:'Circle completed clean',createdAt:day(-60)}];
   if(path.startsWith('/payments/mine'))return previewCommittees.flatMap(c=>c.rounds.flatMap(r=>r.payments.filter(x=>x.payerId==='u1').map(x=>({...x,dueDate:r.dueDate,roundNumber:r.roundNumber,committee:{id:c.id,name:c.name},round:{roundNumber:r.roundNumber,committee:{id:c.id,name:c.name}}}))));
   if(path.startsWith('/protection/recovery/mine'))return[];
-  if(path.startsWith('/vault'))return{principalPaisa:'0',profitPaisa:'0',tier:'STANDARD',holdings:[]};
+  // The vault fixture has to be the real response shape. It used to be a stub
+  // with none of the fields the screen reads, so preview mode showed the error
+  // boundary instead of the vault, and nobody could eyeball the screen.
+  if(path.startsWith('/vault'))return{
+    enabled:true,tier:'STANDARD',tiers:['STANDARD','INCOME'],autoCover:true,
+    balancePaisa:rs(48500),accruedProfitPaisa:rs(1310),ratePct:10.8,
+    allocation:{STANDARD:70,INCOME:30},
+    tierDetails:[
+      {tier:'STANDARD',sharePct:70,name:'Islamic money market basket',ratePct:10.8,rateAsOf:day(-9),shariahCompliant:true,riskScore:2,volatilityBps:90,liquidityDays:1,issuer:'Al Meezan',sourceUrl:'https://www.almeezangroup.com'},
+      {tier:'INCOME',sharePct:30,name:'Islamic income fund basket',ratePct:12.1,rateAsOf:day(-9),shariahCompliant:true,riskScore:4,volatilityBps:220,liquidityDays:2,issuer:'Al Meezan',sourceUrl:'https://www.almeezangroup.com'},
+    ],
+    blendedRatePct:11.19,blendedRiskScore:2.6,mudaribFeePct:5,custodyStage:'RECORD_ONLY',
+    goal:{targetPaisa:rs(120000),name:'Eid and school fees'},
+    history:[
+      {id:'v5',at:day(-2),direction:'IN',amountPaisa:rs(10000),reason:'VAULT_TOPUP_RECORDED',earnedPaisa:rs(6),daysHeld:2},
+      {id:'v4',at:day(-16),direction:'IN',amountPaisa:rs(30000),reason:'VAULT_PARKING_RECORDED',earnedPaisa:rs(142),daysHeld:16},
+      {id:'v3',at:day(-31),direction:'OUT',amountPaisa:rs(12000),reason:'VAULT_SWEEP_PRINCIPAL_RECORDED',earnedPaisa:'0',daysHeld:0},
+      {id:'v2',at:day(-31),direction:'IN',amountPaisa:rs(8500),reason:'VAULT_REMAINDER_REPARKED',earnedPaisa:rs(88),daysHeld:31},
+      {id:'v1',at:day(-58),direction:'IN',amountPaisa:rs(20000),reason:'VAULT_TOPUP_RECORDED',earnedPaisa:rs(374),daysHeld:58},
+    ],
+  };
   if(path.startsWith('/partner'))return{partner:null};
   if(path.startsWith('/notifications'))return previewNotices;
   if(path.includes('/pay'))return{txnRef:`RCPT-${Math.random().toString(36).slice(2,10).toUpperCase()}`};
