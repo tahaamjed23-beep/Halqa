@@ -118,7 +118,7 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
   const passOk = form.regPassword.length >= 8 && /[a-zA-Z]/.test(form.regPassword) && /\d/.test(form.regPassword);
   const accountNumberOk = isBank ? ibanOk(form.accountNo) : mobileOk(form.accountNo);
   const accountOk = accountNumberOk && form.accountTitle.trim().length >= 3;
-  const whereOk = homeLat != null && form.addressLine.trim().length >= 5 && form.city.trim().length >= 2;
+  const whereOk = form.addressLine.trim().length >= 5 && form.city.trim().length >= 2;
   const workOk = !!form.occupationType && Number(form.monthlyIncome) > 0
     && (form.occupationType !== 'EMPLOYED' || form.employerName.trim().length >= 2);
   const pinOk = /^\d{4}$/.test(form.pin) && form.pin === form.pinConfirm;
@@ -178,7 +178,7 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
       } catch { /* the coordinates alone are enough */ }
       setLocating(false);
     }, err => {
-      setLocErr(err.code === 1 ? 'Allow location access. Your home location is required.' : 'Could not get your location. Try again.');
+      setLocErr(err.code === 1 ? 'No location access. Type your address instead.' : 'Could not get your location. Type it instead.');
       setLocating(false);
     }, { enableHighAccuracy: true, timeout: 15000 });
   };
@@ -318,7 +318,7 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
             : <button type="button" className="w-locate" disabled={locating} onClick={captureLocation}>
                 <MapPin />
                 <span><b>{locating ? 'Getting your location' : 'Use my live location'}</b>
-                  <small>{locating ? 'One moment' : 'Required. This pins your home from the device.'}</small></span>
+                  <small>{locating ? 'One moment' : 'Optional, and quicker than typing'}</small></span>
               </button>}
           {locErr && <Notice kind="bad" icon={<Info />}>{locErr}</Notice>}
         </div>

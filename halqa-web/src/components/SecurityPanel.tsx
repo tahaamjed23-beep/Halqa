@@ -132,9 +132,8 @@ export function SecurityPanel({ user }: { user?: User }) {
     {error && <div className="error-box">{error}</div>}
 
     <div className="info-stack" style={{ marginTop: 10 }}>
-      <div><span>Where the PIN is required</span><b>Every app open, joining a circle, any exit request, and every payout release</b></div>
-      <div><span>How it is stored</span><b>Hashed, never in the clear, and never sent anywhere except to verify</b></div>
-      <div><span>If you forget it</span><b>Sign in with your password, then set a new PIN here</b></div>
+      <div><span>Asked for</span><b>Every open, and every payment</b></div>
+      <div><span>Forgotten it</span><b>Sign in with your password and set a new one</b></div>
     </div>
     <p className="muted" style={{ fontSize: 11.5, marginTop: 8 }}>
       <ShieldCheck size={12} style={{ verticalAlign: '-2px' }} /> Five wrong attempts lock the account for

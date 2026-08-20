@@ -68,11 +68,11 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
     <Group title="What you can do">
       <TileGrid>
         <Tile icon={<Zap/>} label="Pay now" onClick={()=>go('pay')}/>
-        <Tile icon={<Users/>} label="Join a committee" onClick={()=>go('circles')}/>
+        <Tile icon={<Users/>} label="Join circle" onClick={()=>go('circles')}/>
         <Tile icon={<Repeat/>} label="Buy a turn" onClick={()=>go('market')}/>
-        <Tile icon={<Package/>} label="Save for a thing" badge="new" onClick={()=>go('asset')}/>
+        <Tile icon={<Package/>} label="Save for it" badge="new" onClick={()=>go('asset')}/>
         <Tile icon={<Flame/>} label="HYPER" badge="hot" onClick={()=>go('hyper')}/>
-        <Tile icon={<CreditCard/>} label="Payment methods" onClick={()=>go('cards')}/>
+        <Tile icon={<CreditCard/>} label="Cards" onClick={()=>go('cards')}/>
         <Tile icon={<Receipt/>} label="Receipts" onClick={()=>go('activity')}/>
         <Tile icon={<Gauge/>} label="Credit score" onClick={()=>go('credit')}/>
         <Tile icon={<Gift/>} label="Rewards" onClick={()=>go('rewards')}/>

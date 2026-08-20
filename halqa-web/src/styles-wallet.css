@@ -557,7 +557,11 @@ button.w-row:active{background:var(--l50)}
    give the page a horizontal scrollbar, which is why every screen looked like
    it had fallen out of the frame.
    ============================================================================ */
-html,body{overflow-x:hidden;max-width:100%}
+/* overflow-x:hidden on html or body turns them into scroll containers, which
+   kills position:sticky for every descendant. That is what stopped the page
+   scrolling and left the bottom action button stranded off-screen. `clip` does
+   the same job without creating the container. */
+html,body{overflow-x:clip;max-width:100%}
 .app-shell{overflow-x:clip}
 .content{overflow-x:clip}
 .w-screen,.w-screen-body{max-width:100%;min-width:0}
@@ -592,3 +596,153 @@ html,body{overflow-x:hidden;max-width:100%}
   text-overflow:ellipsis}
 .cm-band-facts b{display:block;font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+
+
+/* ============================================================================
+   THE BOTTOM ACTION
+   The tab bar is fixed at the foot of the phone column, so an action that
+   sticks to bottom:0 lands underneath it and cannot be tapped. Inside the
+   shell it stops above the bar; on a full-screen flow with no bar, such as
+   signup, it sits on the floor.
+   ============================================================================ */
+:root{--nav-h:74px}
+.w-bottom{position:sticky;bottom:0;z-index:30}
+.content .w-bottom{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom))}
+.content .w-screen{min-height:calc(100dvh - var(--nav-h))}
+/* A sheet floats over everything, so its action needs no clearance. */
+.w-sheet .w-bottom{bottom:0}
+
+
+/* ============================================================================
+   CALLOUTS, REDRAWN
+   Every note in the app was a tinted rounded rectangle, and a screen with four
+   of them reads as a machine talking at you. A wallet does not do that: it puts
+   a small coloured mark against a line of text on the ordinary surface, and
+   reserves a filled block for the one thing that genuinely stops you.
+   ============================================================================ */
+.w-notice{display:flex;gap:9px;align-items:flex-start;padding:9px 0;margin:8px 0;
+  border-radius:0;background:none;border-top:1px solid var(--line-2)}
+.w-notice:first-child{border-top:none;padding-top:2px}
+.w-notice p{font-size:12px;line-height:1.5;color:var(--ink-2)}
+.w-notice>span{flex:none;display:inline-grid;place-items:center;width:20px;height:20px;
+  border-radius:6px;margin-top:1px}
+.w-notice>span svg{width:13px;height:13px;stroke-width:2.2}
+.w-notice.info>span{background:var(--info-bg);color:var(--info)}
+.w-notice.ok>span{background:var(--ok-bg);color:var(--ok)}
+.w-notice.warn>span{background:var(--warn-bg);color:var(--warn)}
+.w-notice.info,.w-notice.ok,.w-notice.warn{color:inherit}
+/* Only a blocking problem gets a filled block, and it is the plainest one. */
+.w-notice.bad{background:var(--bad-bg);color:#8A2820;border-radius:var(--r-sm);
+  padding:10px 12px;border-top:none}
+.w-notice.bad>span{background:none;color:#8A2820}
+
+/* The same treatment for the old callout classes still in the committee and
+   create screens, so the whole app reads one way while they are rewritten. */
+.market-rules,.onboard-note,.halqa-fill-box,.commitment-ok,.tenure-note,
+.vault-callout,.assembly,.disclaimer-box{
+  background:none!important;border:none!important;border-radius:0!important;
+  border-top:1px solid var(--line-2)!important;padding:10px 0!important;
+  color:var(--ink-2)!important;font-size:12px!important;line-height:1.5!important}
+.market-rules b,.onboard-note b,.halqa-fill-box b,.commitment-ok b,.assembly b{
+  font-size:12.5px;font-weight:660;color:var(--ink)}
+.market-rules p,.onboard-note span,.commitment-ok p,.assembly p{
+  font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:2px}
+.market-rules>svg,.commitment-ok>svg,.assembly>svg{width:17px;height:17px;color:var(--l600);
+  flex:none;margin-top:1px}
+.warning-box{background:none;border:none;border-top:1px solid var(--line-2);border-radius:0;
+  padding:10px 0;font-size:12px;color:var(--ink-2);line-height:1.5}
+.error-box{background:var(--bad-bg);color:#8A2820;border-radius:var(--r-sm);padding:10px 12px;
+  font-size:12.5px;margin:8px 0}
+
+/* The payout block. It was a filled green card with three lines of prose and a
+   floating "#1"; it is a row like every other headline figure. */
+.your-payout{display:flex;align-items:center;gap:12px;background:var(--surface);
+  border:1px solid var(--line-2);border-radius:var(--r);padding:13px 14px;margin:10px 0;
+  box-shadow:var(--sh-1)}
+.your-payout>div{flex:1;min-width:0}
+.your-payout span{display:block;font-size:11px;color:var(--muted)}
+.your-payout b{display:block;font-size:21px;font-weight:750;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;margin:2px 0 1px}
+.your-payout small{display:block;font-size:11px;color:var(--muted)}
+.your-payout i{flex:none;width:34px;height:34px;border-radius:11px;background:var(--l50);
+  color:var(--l700);display:grid;place-items:center;font-style:normal;font-size:13px;
+  font-weight:740}
+
+/* ============================================================================
+   RAFA
+   It was fixed to the viewport, so on any window wider than a phone it floated
+   somewhere off in the middle of the desktop. It belongs against the right edge
+   of the phone column, clear of the bottom action.
+   ============================================================================ */
+.rafa-fab{bottom:calc(var(--nav-h) + 74px)!important}
+@media(min-width:900px){
+  .rafa-fab{left:calc(50% + 158px)!important;right:auto!important}
+  .rafa-hint{left:auto!important;right:auto!important}
+}
+
+/* ============================================================================
+   THE HOME TILES, COMPACT
+   The three-across grid with 96px tiles pushed the committees below the fold.
+   Four across, smaller icon, one short word underneath: eight actions in the
+   space the old grid used for six.
+   ============================================================================ */
+.w-tiles{grid-template-columns:repeat(4,1fr);gap:8px}
+.w-tile{min-height:74px;padding:11px 4px;gap:6px;border-radius:var(--r-sm)}
+.w-tile-icon{width:26px;height:26px}
+.w-tile-icon svg{width:20px;height:20px}
+.w-tile-label{font-size:10.5px;line-height:1.25}
+.w-tile-badge{top:4px;right:4px;font-size:7.5px;padding:1px 4px}
+
+/* ============================================================================
+   RISK AND PROTECTION
+   Long lists of ACTIVE / OFF with wrapped labels and a decimal score under each
+   bar. Same information, one line each.
+   ============================================================================ */
+.risk-factor,.policy-row,.deposit-board>div{display:flex;align-items:center;gap:11px;
+  padding:9px 0;border-top:1px solid var(--line-2)}
+.risk-factor b,.policy-row b{font-size:12.5px;font-weight:640;flex:1;min-width:0}
+.risk-factor span,.policy-row span{font-size:11px;color:var(--muted)}
+.status,.chip{white-space:nowrap}
+
+
+/* ============================================================================
+   DARK
+   The appearance control has written data-theme onto the root since the day it
+   shipped, and nothing read it, so picking Dark changed nothing. These are the
+   same tokens, in the dark. Lime stays the accent and lifts a little so it
+   holds its contrast on a dark ground; ivory and ink swap roles.
+   ============================================================================ */
+:root[data-theme="dark"]{
+  --l50:#16240C; --l100:#1E3212; --l200:#2C4A1B; --l300:#4A7F2D;
+  --l400:#6FB543; --l500:#8ADC42; --l600:#A2E765; --l700:#BEEF92; --l900:#E3F8CA;
+  --ink:#EDF3E6; --ink-2:#C8D3BE; --muted:#8E9C85; --faint:#6B7864;
+  --line:#2A3324; --line-2:#212A1C; --bg:#0E140A; --surface:#161E11;
+  --ok:#4ED17E; --warn:#F0A93A; --bad:#F0705F; --info:#5FA3F0;
+  --ok-bg:#12291B; --warn-bg:#2C2110; --bad-bg:#2E1714; --info-bg:#111F2E;
+  --sh-1:0 1px 2px rgba(0,0,0,.4);
+  --sh-2:0 4px 16px rgba(0,0,0,.45);
+  --sh-3:0 12px 34px rgba(0,0,0,.55);
+  --sh-lime:0 10px 30px rgba(138,220,66,.16);
+  --hdr:linear-gradient(150deg,#2C4A1B 0%,#3E6B24 46%,#4A7F2D 100%);
+  color-scheme:dark;
+}
+:root[data-theme="dark"] body{background:var(--bg);color:var(--ink)}
+:root[data-theme="dark"] .tabs{background:rgba(22,30,17,.96)}
+:root[data-theme="dark"] .w-sheet-wrap,:root[data-theme="dark"] .rcpt-wrap,
+:root[data-theme="dark"] .modal-backdrop{background:rgba(0,0,0,.66)}
+:root[data-theme="dark"] .rcpt-slip{background:var(--surface)}
+:root[data-theme="dark"] .w-bottom{background:linear-gradient(180deg,rgba(14,20,10,0),var(--bg) 34%)}
+:root[data-theme="dark"] .w-notice.bad{color:#F6BDB3}
+:root[data-theme="dark"] .error-box{color:#F6BDB3}
+:root[data-theme="dark"] .w-notice.info{color:inherit}
+:root[data-theme="dark"] .about-band{background:var(--line-2)}
+/* Bank and rail marks keep their own brand colour; only the text around them
+   follows the theme. */
+@media(min-width:900px){
+  :root[data-theme="dark"] body{background:#080C06}
+}
+
+/* The profile band avatar now holds a photo, so it must not also draw a ring. */
+.prof-avatar{background:none;border:none;padding:0;overflow:visible}
+.prof-avatar .avatar{border:1.5px solid rgba(255,255,255,.45);background:rgba(255,255,255,.22)}
+.avatar .pfp{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}

@@ -7,6 +7,7 @@ import { money } from '../lib/format';
 import type { Page, Partner, User } from '../types';
 import AccountMenu from '../components/AccountMenu';
 import { ScoreRing } from '../components/ui';
+import { Pfp } from '../components/Appearance';
 import { SHOW_BANK_RAIL, SIMPLE_MODE } from '../config';
 import MemberStatus from '../components/MemberStatus';
 import { Card, Field, Notice, Row, RowGroup } from '../components/wallet';
@@ -130,6 +131,7 @@ type Recovery = { id: string; outstandingPaisa: string; penaltyPaisa: string; st
 export default function ProfilePage({ user, openCredit, go }:
   { user: User; openCredit?: () => void; go?: (page: Page) => void }) {
   const [payments, setPayments] = useState<PaymentRow[]>([]);
+  const [photo, setPhoto] = useState<string | null>(null);
   const [recoveries, setRecoveries] = useState<Recovery[]>([]);
   const [refs, setRefs] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
@@ -140,6 +142,10 @@ export default function ProfilePage({ user, openCredit, go }:
     api<Recovery[]>('/protection/recovery/mine'),
   ]).then(([rows, cases]) => { setPayments(rows); setRecoveries(cases) }), []);
   useEffect(() => { void load() }, [load]);
+  useEffect(() => {
+    void api<{ avatarUrl: string | null }>('/profile/appearance')
+      .then(a => setPhoto(a.avatarUrl)).catch(() => {});
+  }, []);
 
   const resolve = async (id: string) => {
     setBusy(id); setError('');
@@ -155,7 +161,7 @@ export default function ProfilePage({ user, openCredit, go }:
     <div className="w-screen">
       {/* Who you are, and what a circle sees. */}
       <section className="prof-band">
-        <div className="prof-avatar">{user.fullName[0]}</div>
+        <div className="prof-avatar"><Pfp url={photo} name={user.fullName} size={56} /></div>
         <div className="prof-id">
           <b>{user.fullName}</b>
           <span>@{user.username} · {user.phone}</span>
