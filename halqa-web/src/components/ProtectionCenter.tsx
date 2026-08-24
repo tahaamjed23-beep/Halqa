@@ -45,7 +45,11 @@ export default function ProtectionCenter({ committeeId, user, host }:
       .then(setSummary).catch(reason => setError(reason.message)), [committeeId]);
   useEffect(() => { void load() }, [load]);
 
-  const mine = useMemo(() => summary?.matrix.find(m => m.user.id === user.id), [summary, user.id]);
+  // A summary without a matrix is a bad response, not a crash. The preview
+  // fixture fell through to an empty array, which is truthy, so .matrix was
+  // undefined and .find threw the whole Safety tab into the error boundary.
+  const ok = !!summary && Array.isArray(summary.matrix) && !!summary.policy;
+  const mine = useMemo(() => ok ? summary!.matrix.find(m => m.user.id === user.id) : undefined, [ok, summary, user.id]);
 
   const act = async (key: string, run: () => Promise<unknown>) => {
     setBusy(key); setError('');
@@ -54,7 +58,13 @@ export default function ProtectionCenter({ committeeId, user, host }:
     finally { setBusy('') }
   };
 
-  if (!summary) return <Row chevron={false} icon={<ShieldCheck />} title="Loading the safety controls" />;
+  if (!ok) return (
+    <RowGroup>
+      <Row chevron={false} icon={<ShieldCheck />}
+           title={error ? 'Could not load the safety controls' : 'Loading the safety controls'}
+           sub={error || undefined} />
+    </RowGroup>
+  );
 
   const behind = summary.matrix.filter(m => m.currentPayment && m.currentPayment.status !== 'PAID').length;
 

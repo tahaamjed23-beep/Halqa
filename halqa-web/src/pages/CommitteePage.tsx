@@ -21,6 +21,7 @@ import ProtectionCenter from '../components/ProtectionCenter';
 import { HostCardById } from '../components/HostCard';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { ExitSheet } from '../components/ExitSheet';
+import { Blank, FlowHeader } from '../components/wallet';
 
 const ProjectionChart=lazy(()=>import('../components/ProjectionChart'));
 const PersonalGrowthChart=lazy(()=>import('../components/PersonalGrowthChart'));
@@ -45,7 +46,15 @@ const railName = (r?: string | null) => (r && RAIL_WORDS[r]) || r || 'Raast';
 export default function CommitteePage({id,user,onBack}:{id:string;user:User;onBack:()=>void}){
   const [committee,setCommittee]=useState<Committee|null>(null);const [tab,setTab]=useState<Tab>('turns');const [error,setError]=useState('');const [exitOpen,setExitOpen]=useState(false);
   const load=useCallback(()=>api<Committee>(`/committees/${id}`).then(setCommittee).catch(reason=>setError(reason.message)),[id]);useEffect(()=>{void load()},[load]);
-  if(!committee)return <div className="splash">{error||'Loading committee…'}</div>;
+  // A committee that came back in the wrong shape is a bad response, not a
+  // reason to blank the app. Without this the page threw on committee.rounds
+  // and the error boundary swallowed the whole screen.
+  const usable=committee&&Array.isArray(committee.rounds)&&Array.isArray(committee.members);
+  if(!usable)return <div className="w-screen"><FlowHeader title="Committee" onBack={onBack}/>
+    <Blank icon={<Users/>} title={error?'Could not open this committee':'Opening the committee'}
+           sub={error||undefined}
+           action={error?<button className="primary" onClick={()=>{setError('');void load()}}>Try again</button>:undefined}/>
+  </div>;
   const host=committee.hostId===user.id;const active=committee.rounds.find(round=>['COLLECTING','INVESTED'].includes(round.status));const membership=committee.members.find(member=>member.userId===user.id);const myRound=committee.rounds.find(round=>round.recipientId===user.id&&round.status!=='CLOSED');const myPayment=active?.payments.find(payment=>payment.payerId===user.id);
   const action=async(path:string,body:unknown={})=>{try{setError('');await api(`/committees/${id}/${path}`,{method:'POST',body:JSON.stringify(body)});await load()}catch(reason){setError((reason as Error).message)}};
   const full=committee.members.length>=committee.memberCap;

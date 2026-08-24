@@ -97,6 +97,10 @@ export const previewMethods=[
 export function previewRoute(path:string):unknown{
   if(path.startsWith('/auth/me'))return previewUser;
   if(path.startsWith('/committees/discover'))return previewDiscover;
+  if(/^\/committees\/[^/?]+$/.test(path.split('?')[0])){
+    const id=path.split('?')[0].split('/')[2];
+    return previewCommittees.find(c=>c.id===id)??previewCommittees[0];
+  }
   if(path.startsWith('/committees'))return previewCommittees;
   if(path.startsWith('/profile/summary'))return previewSummary;
   if(path.startsWith('/profile/payment-methods'))return{methods:previewMethods};
@@ -106,6 +110,18 @@ export function previewRoute(path:string):unknown{
     {id:'ce2',delta:10,reason:'Installment paid on time',createdAt:day(-32)},
     {id:'ce3',delta:40,reason:'Circle completed clean',createdAt:day(-60)}];
   if(path.startsWith('/payments/mine'))return previewCommittees.flatMap(c=>c.rounds.flatMap(r=>r.payments.filter(x=>x.payerId==='u1').map(x=>({...x,dueDate:r.dueDate,roundNumber:r.roundNumber,committee:{id:c.id,name:c.name},round:{roundNumber:r.roundNumber,committee:{id:c.id,name:c.name}}}))));
+  if(path.startsWith('/protection/committee/'))return{
+    policy:{payoutHoldbackEnabled:true,progressivePenalties:true,featureLockOnDefault:true,
+      smartNudges:true,rehabilitationCooldownMonths:6},
+    payoutBufferBps:1500,latePenaltyBps:200,forwardLiabilityGateEnabled:false,
+    matrix:previewCommittees[0].members.map((m,i)=>({
+      user:{id:m.userId,fullName:m.user.fullName},
+      turnPosition:m.turnPosition,
+      remainingDuesPaisa:rs(60000),heldDepositPaisa:'0',heldPayoutPaisa:'0',
+      defaultImpactPaisa:rs(60000),daysToDeadline:i===0?6:12,
+      currentPayment:{status:i%4===3?'PENDING':'PAID'},
+    })),
+  };
   if(path.startsWith('/protection/recovery/mine'))return[];
   // The vault fixture has to be the real response shape. It used to be a stub
   // with none of the fields the screen reads, so preview mode showed the error

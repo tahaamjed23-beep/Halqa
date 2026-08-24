@@ -44,6 +44,10 @@ export default function App(){
   useEffect(()=>{
     const url=new URL(window.location.href);
     const q=new URLSearchParams();
+    // Preview mode is a property of the session, not of the screen. Rebuilding
+    // the query from scratch dropped it the moment anybody navigated, which is
+    // why opening a committee in preview silently left preview.
+    if(new URLSearchParams(url.search).get('preview')==='1')q.set('preview','1');
     if(page!=='home')q.set('screen',page);
     if(joinCode)q.set('join',joinCode);
     if(committeeId)q.set('committee',committeeId);
