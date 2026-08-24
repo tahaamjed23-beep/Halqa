@@ -138,6 +138,14 @@ export default function PayPage({ user, back }: { user: User; back: () => void }
             <div className="proc-steps">
               {STEPS.map((s, i) => <div className={'proc-step ' + (phase > i ? 'done' : phase === i ? 'now' : '')} key={s}><i />{s}</div>)}
             </div>
+            {/* A screen with no way out is the worst kind of stuck, so after a
+                few seconds there is always one. Nothing is cancelled: the
+                request carries its own deadline. */}
+            {phase >= STEPS.length && (
+              <button className="proc-out" onClick={() => { setBusy(false); setPhase(0); setPin('') }}>
+                Taking a while. Close this and check Activity.
+              </button>
+            )}
           </div></div>
         )}
         {receipt && <Receipt data={receipt} onClose={() => { setReceipt(null); back() }} />}

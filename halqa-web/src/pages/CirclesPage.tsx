@@ -215,7 +215,9 @@ function DiscoverRow({ r, busy, join }: { r: Discover; busy: boolean; join: () =
   return (
     <Card>
       <div className="disc-head">
-        <span className="disc-badge">{initials}</span>
+        <span className="disc-badge">{(r as { avatarUrl?: string }).avatarUrl
+          ? <img className="pfp" src={(r as { avatarUrl?: string }).avatarUrl} alt="" />
+          : initials}</span>
         <div className="disc-id">
           <b>{r.name}</b>
           <span>{r.hostName} · credit score {r.hostScore}</span>

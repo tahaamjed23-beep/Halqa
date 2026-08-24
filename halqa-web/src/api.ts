@@ -34,6 +34,7 @@ export class ApiError extends Error {
 }
 
 const OFFLINE='You appear to be offline. Your payments are safe; try again when you have signal.';
+const TIMEOUT='That took too long to answer. Check your Activity before trying again, in case it went through.';
 const SERVER='Halqa could not be reached just now. Nothing was charged. Please try again.';
 
 async function request<T>(path:string,init:RequestInit,retried:boolean):Promise<T>{
@@ -42,8 +43,22 @@ async function request<T>(path:string,init:RequestInit,retried:boolean):Promise<
   }
   let response:Response;
   try{
-    response=await fetch(`${BASE}${path}`,{...init,headers:{'Content-Type':'application/json',...(tokens.get()?{Authorization:`Bearer ${tokens.get()}`}:{ }),...init.headers}});
-  }catch{
+    // Every request gets a deadline. Without one a cold serverless function on
+    // a cross-region pooler can leave a request hanging indefinitely, and the
+    // screen that started it sits on "Paying" forever with no way out. The
+    // function itself dies at 30 seconds, so 35 is past the point where waiting
+    // any longer could still succeed.
+    response=await fetch(`${BASE}${path}`,{
+      ...init,
+      signal:init.signal??(typeof AbortSignal!=='undefined'&&'timeout' in AbortSignal?AbortSignal.timeout(35_000):undefined),
+      headers:{'Content-Type':'application/json',...(tokens.get()?{Authorization:`Bearer ${tokens.get()}`}:{ }),...init.headers},
+    });
+  }catch(reason){
+    // A timeout is not the same as being offline: the request may well have
+    // reached the ledger, so the member is told to check rather than to retry.
+    if(reason instanceof DOMException&&(reason.name==='TimeoutError'||reason.name==='AbortError')){
+      throw new ApiError(TIMEOUT,0,'TIMEOUT',false);
+    }
     // A network-level failure. Never a server decision, so it is always safe to
     // retry: no write reached the ledger.
     throw new ApiError(OFFLINE,0,'NETWORK',true);

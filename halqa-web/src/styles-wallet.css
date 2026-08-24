@@ -823,3 +823,11 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 .projection-summary p{flex:1 0 100%;width:100%;min-width:0;font-size:12.5px;line-height:1.6;
   margin-top:10px;color:var(--muted)}
 .create-blocked{font-size:12px;color:var(--warn);text-align:center;padding:8px 16px 2px;line-height:1.5}
+
+/* The committee picture fills its badge, the way a group chat photo does. */
+.cm-badge,.disc-badge{overflow:hidden;padding:0}
+.cm-badge .pfp,.disc-badge .pfp{width:100%;height:100%;object-fit:cover;display:block}
+
+/* A way out of the processing overlay, once it has clearly stalled. */
+.proc-out{margin-top:16px;padding:10px 16px;border-radius:var(--r-full);font-size:12.5px;
+  font-weight:620;background:rgba(255,255,255,.16);color:#fff}

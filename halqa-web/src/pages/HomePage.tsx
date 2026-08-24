@@ -4,6 +4,7 @@ import {ArrowDownLeft, ArrowUpRight, Bell, CalendarClock, CheckCircle2, ChevronR
 import { api, money } from '../api';
 import type { Committee, Summary, User } from '../types';
 import { formatDuration } from '../components/ui';
+import { Pfp } from '../components/Appearance';
 
 const GREETINGS=['Assalam-o-alaikum','السلام علیکم','آداب','خوش آمدید','جی آیاں نوں','پخیر راغلې','ڀلي ڪري آيا'];
 
@@ -16,6 +17,7 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
   const [hide,setHide]=useState(()=>localStorage.getItem('halqa.hideBal')==='1');
   const [,tick]=useState(0);
   const [greeting]=useState(()=>GREETINGS[Math.floor(Math.random()*GREETINGS.length)]);
+  const [photo,setPhoto]=useState<string|null>(()=>cached('home.photo',null));
 
   useEffect(()=>{void Promise.all([
     api<Committee[]>('/committees?scope=mine').catch(()=>[] as Committee[]),
@@ -25,6 +27,8 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
     setCommittees(mine);keep('home.committees',mine);
     if(data){setSummary(data);keep('home.summary',data)}
   })},[user.id]);
+  useEffect(()=>{void api<{avatarUrl:string|null}>('/profile/appearance')
+    .then(a=>{setPhoto(a.avatarUrl);keep('home.photo',a.avatarUrl)}).catch(()=>{})},[]);
   useEffect(()=>{const t=setInterval(()=>tick(v=>v+1),60000);return()=>clearInterval(t)},[]);
 
   const sorted=useMemo(()=>[...committees].sort((a,b)=>Number(b.status==='ACTIVE')-Number(a.status==='ACTIVE')),[committees]);
@@ -36,7 +40,7 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
   return <div className="enter">
     <header className="hdr">
       <div className="hdr-row">
-        <div className="avatar">{user.fullName.charAt(0).toUpperCase()}</div>
+        <Pfp url={photo} name={user.fullName} size={42} />
         <div className="hdr-id">
           <small>{greeting}</small>
           <strong>{user.fullName}</strong>
@@ -128,7 +132,9 @@ export function CommitteeCard({c,userId,i,open}:{c:Committee;userId:string;i:num
   const initials=c.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
   return <button className="cm-card stagger" style={{animationDelay:`${i*60}ms`}} onClick={()=>open(c.id)}>
     <div className="cm-top">
-      <div className="cm-badge">{initials}</div>
+      <div className="cm-badge">{c.avatarUrl
+        ? <img className="pfp" src={c.avatarUrl} alt="" />
+        : initials}</div>
       <div className="cm-t">
         <h3>{c.name}</h3>
         <p>{c.hostId===userId?'You host this':`Hosted by ${c.host?.fullName||''}`}</p>
