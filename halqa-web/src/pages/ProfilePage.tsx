@@ -128,8 +128,8 @@ function AutoCollection({ user, go }: { user: User; go?: (page: Page) => void })
 type PaymentRow = { id: string; amountPaisa: string; status: string; round: { roundNumber: number; committee: { name: string } } };
 type Recovery = { id: string; outstandingPaisa: string; penaltyPaisa: string; status: string; openedAt: string; committee: { id: string; name: string }; round: { roundNumber: number } };
 
-export default function ProfilePage({ user, openCredit, go }:
-  { user: User; openCredit?: () => void; go?: (page: Page) => void }) {
+export default function ProfilePage({ user, openCredit, go, onLogout }:
+  { user: User; openCredit?: () => void; go?: (page: Page) => void; onLogout?: () => void }) {
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [photo, setPhoto] = useState<string | null>(null);
   const [recoveries, setRecoveries] = useState<Recovery[]>([]);
@@ -171,7 +171,7 @@ export default function ProfilePage({ user, openCredit, go }:
       </section>
 
       <div className="w-screen-body">
-        {go && <AccountMenu go={go} />}
+        {go && <AccountMenu go={go} onLogout={onLogout} />}
 
         {open.length > 0 && (
           <Card title={open.length + ' unresolved default case' + (open.length > 1 ? 's' : '')}>

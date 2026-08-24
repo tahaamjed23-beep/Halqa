@@ -580,7 +580,7 @@
   animation:blink 4.2s infinite}
 @keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.12)}}
 .rafa3d-pupil{position:absolute;top:1.5px;left:2px;width:3px;height:3px;border-radius:50%;
-  background:#fff}
+  background:var(--surface)}
 .rafa3d-mouth{position:absolute;top:60%;left:50%;transform:translateX(-50%);width:11px;height:5px;
   border-radius:0 0 11px 11px;background:#0C1408}
 .rafa3d-mouth--happy{height:6px}

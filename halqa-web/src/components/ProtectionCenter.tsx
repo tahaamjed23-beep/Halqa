@@ -56,17 +56,12 @@ export default function ProtectionCenter({ committeeId, user, host }:
 
   if (!summary) return <Row chevron={false} icon={<ShieldCheck />} title="Loading the safety controls" />;
 
-  const collateral = Number(mine?.heldDepositPaisa || 0) + Number(mine?.heldPayoutPaisa || 0);
-  const dues = Number(mine?.remainingDuesPaisa || 0);
-  const coverage = dues > 0 ? Math.round(collateral / dues * 100) : 100;
   const behind = summary.matrix.filter(m => m.currentPayment && m.currentPayment.status !== 'PAID').length;
 
   const controls: [string, boolean, string][] = [
-    ['Security deposits', true, money(mine?.heldDepositPaisa || 0) + ' held'],
     ['Payout holdback', flag(summary.policy.payoutHoldbackEnabled), summary.payoutBufferBps / 100 + '% until you have paid on'],
     ['Forward-liability security', summary.forwardLiabilityGateEnabled === true, summary.forwardLiabilityGateEnabled === true ? 'An early turn must be secured first' : 'Not on for this circle'],
     ['Late penalties', flag(summary.policy.progressivePenalties), 'Base ' + summary.latePenaltyBps / 100 + '%, up to 10%'],
-    ['Profit collateral', flag(summary.policy.profitCollateral), 'Profit locked while you owe'],
     ['Lock on default', flag(summary.policy.featureLockOnDefault), 'Join, host and marketplace blocked'],
     ['Credit-weighted turns', true, 'A better record gets an earlier turn'],
     ['Reminders', flag(summary.policy.smartNudges), 'Private, before any score damage'],
@@ -79,7 +74,7 @@ export default function ProtectionCenter({ committeeId, user, host }:
       <Card>
         <Facts cols={3} items={[
           ['You still owe', money(mine?.remainingDuesPaisa || mine?.defaultImpactPaisa || 0)],
-          ['Covered', coverage + '%'],
+          ['Turns left', String(summary.matrix.length - behind)],
           ['Behind', String(behind)],
         ]} />
         {mine?.daysToDeadline != null && (
@@ -150,7 +145,7 @@ export default function ProtectionCenter({ committeeId, user, host }:
                   {host && m.currentPayment?.status === 'MISSED' && (
                     <button className="danger" disabled={busy === 'cover-' + m.currentPayment.id}
                             onClick={() => act('cover-' + m.currentPayment!.id, () => api('/committees/' + committeeId + '/default-cover/' + m.currentPayment!.id, { method: 'POST' }))}>
-                      Use collateral
+                      Use the cover
                     </button>
                   )}
                 </div>

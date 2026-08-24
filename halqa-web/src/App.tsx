@@ -29,6 +29,7 @@ const HyperPage=lazy(()=>import('./pages/HyperPage'));
 const CardsPage=lazy(()=>import('./pages/CardsPage'));
 const ActivityPage=lazy(()=>import('./pages/ActivityPage'));
 const AssetPage=lazy(()=>import('./pages/AssetPage'));
+const AppearancePage=lazy(()=>import('./pages/AppearancePage'));
 
 export default function App(){
   const [user,setUser]=useState<User|null>(PREVIEW?previewUser as unknown as User:null);
@@ -90,7 +91,7 @@ export default function App(){
       {view==='market'&&<MarketplacePage user={user} back={()=>setPage('profile')}/>}
       {view==='terminal'&&<TerminalPage back={()=>setPage('profile')}/>}
       {view==='vault'&&<VaultPage/>}
-      {view==='profile'&&<ProfilePage user={user} openCredit={()=>setPage('credit')} go={p=>setPage(p)}/>}
+      {view==='profile'&&<ProfilePage user={user} openCredit={()=>setPage('credit')} go={p=>setPage(p)} onLogout={()=>{tokens.clear();setUser(null)}}/>}
       {view==='credit'&&<CreditPage user={user} back={()=>setPage('profile')}/>}
       {view==='about'&&<AboutPage back={()=>setPage('profile')}/>}
       {view==='create'&&<CreateCirclePage user={user} done={setCommitteeId} cancel={()=>setPage('home')}/>}
@@ -101,6 +102,7 @@ export default function App(){
       {view==='cards'&&<CardsPage user={user} back={()=>setPage('home')}/>}
       {view==='activity'&&<ActivityPage user={user} back={()=>setPage('home')}/>}
       {view==='asset'&&<AssetPage back={()=>setPage('home')} openCommittee={setCommitteeId}/>}
+      {view==='appearance'&&<AppearancePage back={()=>setPage('profile')}/>}
     </Suspense>
     </ErrorBoundary>
     {gate}

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Info, LineChart, Package, Receipt, Repeat, Settings, ShieldCheck, Sparkles } from 'lucide-react';
+import { Info, LineChart, LogOut, Package, Palette, Receipt, Repeat, Settings, ShieldCheck, Sparkles } from 'lucide-react';
 import type { Page } from '../types';
 import { SIMPLE_MODE } from '../config';
 import { Row, RowGroup } from './wallet';
@@ -15,7 +15,7 @@ import { Row, RowGroup } from './wallet';
 
 type Entry = { page: Page; icon: ReactNode; title: string; sub: string; when?: boolean };
 
-export function AccountMenu({ go }: { go: (page: Page) => void }) {
+export function AccountMenu({ go, onLogout }: { go: (page: Page) => void; onLogout?: () => void }) {
   const rows: Entry[] = [
     { page: 'credit',   icon: <ShieldCheck />, title: 'Credit report',      sub: 'Score, band and history' },
     { page: 'activity', icon: <Receipt />,     title: 'Activity',           sub: 'Receipts, newest first' },
@@ -23,6 +23,7 @@ export function AccountMenu({ go }: { go: (page: Page) => void }) {
     { page: 'asset',    icon: <Package />,     title: 'Save for something', sub: 'Phone, bike, appliance' },
     { page: 'rewards',  icon: <Sparkles />,    title: 'Rewards',            sub: 'What your streak is worth' },
     { page: 'terminal', icon: <LineChart />,   title: 'Where money sits',   sub: 'Every recorded balance', when: !SIMPLE_MODE },
+    { page: 'appearance', icon: <Palette />,  title: 'Look and feel',      sub: 'Theme, colour, text size, photo' },
     { page: 'settings', icon: <Settings />,    title: 'Settings',           sub: 'PIN, privacy, notifications' },
     { page: 'about',    icon: <Info />,        title: 'About Halqa',        sub: 'How a committee works' },
   ];
@@ -32,6 +33,11 @@ export function AccountMenu({ go }: { go: (page: Page) => void }) {
       {rows.filter(r => r.when !== false).map(r => (
         <Row key={r.page} icon={r.icon} title={r.title} sub={r.sub} onClick={() => go(r.page)} />
       ))}
+      {/* Signing out had no control anywhere in the app. It does now. */}
+      {onLogout && (
+        <Row icon={<LogOut />} title="Sign out" sub="You will need your password to get back in"
+             onClick={onLogout} />
+      )}
     </RowGroup>
   );
 }
