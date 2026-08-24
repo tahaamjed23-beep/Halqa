@@ -831,3 +831,39 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 /* A way out of the processing overlay, once it has clearly stalled. */
 .proc-out{margin-top:16px;padding:10px 16px;border-radius:var(--r-full);font-size:12.5px;
   font-weight:620;background:rgba(255,255,255,.16);color:#fff}
+
+/* ============================================================================
+   NOTICES, QUIETLY
+   Every warning in the app was a fat tinted card with a rounded corner and a
+   coloured icon, and a screen with three of them read as a lecture rather than
+   as an app. A wallet marks a caution with a hairline rule and a coloured edge,
+   not with a block of colour: same information, a fraction of the weight.
+   ============================================================================ */
+.w-notice,.warning-box,.error-box,.market-rules{
+  border-radius:0 var(--r-xs) var(--r-xs) 0;
+  border-left:3px solid var(--line);
+  background:var(--line-2);
+  padding:10px 12px;
+  font-size:12.5px;
+  line-height:1.5;
+  margin:10px 0;
+  color:var(--ink-2);
+}
+.w-notice.info{border-left-color:var(--info);background:var(--line-2);color:var(--ink-2)}
+.w-notice.ok{border-left-color:var(--ok);background:var(--line-2);color:var(--ink-2)}
+.w-notice.warn,.warning-box{border-left-color:var(--warn);background:var(--line-2);color:var(--ink-2)}
+.w-notice.bad,.error-box{border-left-color:var(--bad);background:var(--line-2);color:var(--bad)}
+.market-rules{border-left-color:var(--l500)}
+.w-notice>span svg{width:15px;height:15px;color:var(--muted)}
+.w-notice.bad>span svg{color:var(--bad)}
+.w-notice p{font-size:12.5px}
+
+/* ---------- the payout figure, as a row rather than a slab ---------- */
+.your-payout{background:none;border:none;border-top:1px solid var(--line-2);
+  border-bottom:1px solid var(--line-2);border-radius:0;padding:13px 2px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0}
+.your-payout b{font-size:20px;font-weight:740;letter-spacing:-.03em;color:var(--ink)}
+.your-payout span{font-size:11.5px;color:var(--muted)}
+.your-payout small{font-size:11px;color:var(--muted)}
+.your-payout i{font-style:normal;font-size:13px;font-weight:700;color:var(--l700);
+  background:var(--l50);border-radius:var(--r-full);padding:5px 11px;flex:none}
