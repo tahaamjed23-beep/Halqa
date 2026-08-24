@@ -867,3 +867,46 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 .your-payout small{font-size:11px;color:var(--muted)}
 .your-payout i{font-style:normal;font-size:13px;font-weight:700;color:var(--l700);
   background:var(--l50);border-radius:var(--r-full);padding:5px 11px;flex:none}
+
+/* ============================================================================
+   THE ACTION PANEL, AS IT WAS
+   Nine separate cards, each with its own border and shadow, is nine boxes on a
+   page. The original was one panel with the actions laid out inside it, icon in
+   a soft square, label underneath, which is how every wallet on a Pakistani
+   phone draws this. That is what it is again.
+   ============================================================================ */
+.w-tiles{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:4px;
+  background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);
+  box-shadow:var(--sh-1);padding:14px 8px;
+}
+.w-tile{
+  background:none;border:none;box-shadow:none;border-radius:var(--r-sm);
+  min-height:0;padding:10px 4px;gap:8px;
+}
+.w-tile:active{background:var(--l50);border-color:transparent}
+.w-tile-icon{
+  width:46px;height:46px;border-radius:16px;
+  background:var(--l50);color:var(--l700);display:grid;place-items:center;
+}
+.w-tile-icon svg{width:22px;height:22px;stroke-width:1.8}
+.w-tile-label{font-size:11px;font-weight:560;color:var(--ink-2);line-height:1.25;
+  letter-spacing:-.01em}
+.w-tile-badge{top:2px;right:6px;font-size:8px;padding:2px 5px}
+
+/* The panel supplies its own margin, so the group around it adds none. */
+.w-group:has(.w-tiles) .w-group-body{margin:0}
+.w-inset .w-tiles{margin:0}
+
+/* ---------- committee picture ---------- */
+.cmt-avatar.editable{cursor:pointer;padding:0;border:none;background:var(--l50)}
+.cmt-avatar.editable:active{opacity:.8}
+.cmt-avatar-btn{position:absolute;right:-3px;bottom:-3px;width:20px;height:20px;border-radius:50%;
+  background:var(--l500);color:#fff;display:grid;place-items:center;
+  border:2px solid var(--surface);pointer-events:none}
+.cmt-avatar-btn svg{width:10px;height:10px}
+.cmt-photo-cta{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;text-align:left;
+  border:1.5px dashed var(--l300);border-radius:var(--r-sm);background:var(--l50);color:var(--l700)}
+.cmt-photo-cta svg{width:20px;height:20px;flex:none}
+.cmt-photo-cta b{display:block;font-size:13.5px;font-weight:660;color:var(--ink)}
+.cmt-photo-cta small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
