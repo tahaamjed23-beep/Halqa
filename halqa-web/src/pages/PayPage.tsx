@@ -71,13 +71,13 @@ export default function PayPage({ user, back }: { user: User; back: () => void }
   const scheduled = Number(committee?.contributionPaisa || 0);
   const short = paisa > 0 && scheduled > 0 && paisa < scheduled;
 
-  const run = async () => {
+  const run = async (enteredPin: string) => {
     if (!committee || paisa <= 0) return;
     setBusy(true); setError(''); setPhase(0);
     const timers = STEPS.map((_, i) => setTimeout(() => setPhase(i + 1), 450 + i * 520));
     try {
       // The PIN is the authorisation. Nothing moves if it is wrong.
-      await api('/auth/verify-pin', { method: 'POST', body: JSON.stringify({ pin }) });
+      await api('/auth/verify-pin', { method: 'POST', body: JSON.stringify({ pin: enteredPin }) });
       let ref = 'HLQ' + key().replace(/[^a-zA-Z0-9]/g, '').slice(0, 10).toUpperCase();
       if (round) {
         try {
@@ -125,7 +125,12 @@ export default function PayPage({ user, back }: { user: User; back: () => void }
             <p>To {committee?.name}, turn {round?.roundNumber || 1}</p>
           </div>
           <Keypad length={4} filled={pin.length}
-                  onKey={d => { if (pin.length < 4) { const v = pin + d; setPin(v); if (v.length === 4) void run() } }}
+                  onKey={d => setPin(p => {
+                    if (p.length >= 4) return p;
+                    const v = p + d;
+                    if (v.length === 4) void run(v);
+                    return v;
+                  })}
                   onBackspace={() => setPin(p => p.slice(0, -1))} />
           {error && <div className="w-inset"><Notice kind="bad" icon={<Info />}>{error}</Notice></div>}
         </div>

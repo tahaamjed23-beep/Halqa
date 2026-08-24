@@ -234,20 +234,28 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
     } catch (reason) { setError((reason as Error).message) } finally { setBusy(false) }
   };
 
+  // Each keypress must read the digits that are already there, not the ones
+  // that were there when this render was drawn. Reading form.pin from the
+  // closure meant four fast taps all saw the same empty string, so only one
+  // digit ever landed and the PIN step could never be completed.
   const pressPin = (d: string) => {
-    if (pinStage === 'set') {
-      const v = (form.pin + d).slice(0, 4);
-      setForm(f => ({ ...f, pin: v }));
-      if (v.length === 4) setPinStage('again');
-    } else {
-      const v = (form.pinConfirm + d).slice(0, 4);
-      setForm(f => ({ ...f, pinConfirm: v }));
-    }
+    setForm(f => {
+      if (pinStage === 'set') {
+        const v = (f.pin + d).slice(0, 4);
+        if (v.length === 4) setPinStage('again');
+        return { ...f, pin: v };
+      }
+      return { ...f, pinConfirm: (f.pinConfirm + d).slice(0, 4) };
+    });
   };
   const backPin = () => {
-    if (pinStage === 'again' && !form.pinConfirm) { setPinStage('set'); setForm(f => ({ ...f, pin: f.pin.slice(0, -1) })); return }
-    if (pinStage === 'again') setForm(f => ({ ...f, pinConfirm: f.pinConfirm.slice(0, -1) }));
-    else setForm(f => ({ ...f, pin: f.pin.slice(0, -1) }));
+    setForm(f => {
+      if (pinStage === 'again') {
+        if (!f.pinConfirm) { setPinStage('set'); return { ...f, pin: f.pin.slice(0, -1) } }
+        return { ...f, pinConfirm: f.pinConfirm.slice(0, -1) };
+      }
+      return { ...f, pin: f.pin.slice(0, -1) };
+    });
   };
 
   const cities = cityFind.trim() ? PK_CITIES.filter(c => c.toLowerCase().includes(cityFind.trim().toLowerCase())) : PK_CITIES;
