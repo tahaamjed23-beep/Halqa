@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useBackToClose } from '../lib/back';
 import { LEGAL_DOCS, type DocId } from '../legal/content';
 
 // The corporate footer (LinkedIn-style) + the modal document reader. Rendered
@@ -7,6 +8,7 @@ import { LEGAL_DOCS, type DocId } from '../legal/content';
 
 export function LegalDocModal({ doc, onClose }: { doc: DocId; onClose: () => void }) {
   const d = LEGAL_DOCS[doc];
+  useBackToClose(true, onClose);
   return <div className="modal-backdrop" role="dialog" aria-label={d.title} onClick={onClose}>
     <section className="modal legal-modal" onClick={e => e.stopPropagation()}>
       <div className="modal-head"><h2>{d.title}</h2><button className="text-action" onClick={onClose}>Close</button></div>

@@ -15,6 +15,7 @@ import { AppearancePanel } from '../components/Appearance';
 import { CollectionOrder } from '../components/CollectionOrder';
 import { SecurityPanel } from '../components/SecurityPanel';
 import { Card, Field, FlowHeader, Notice, Row, RowGroup } from '../components/wallet';
+import { useBackToClose } from '../lib/back';
 
 // ---------------------------------------------------------------------------
 // SETTINGS
@@ -113,6 +114,7 @@ export default function SettingsPage({ user, back }: { user: User; back?: () => 
   ];
 
   const section = sections.find(s => s.id === open);
+  useBackToClose(!!section, () => setOpen(null));
 
   // ---- a sub-screen -------------------------------------------------------
   if (section) {

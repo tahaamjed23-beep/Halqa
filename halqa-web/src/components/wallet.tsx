@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useBackToClose } from '../lib/back';
 import { ChevronLeft, ChevronRight, Delete, Fingerprint, Search, X } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
@@ -91,6 +92,8 @@ export function BottomBar({ children }: { children: ReactNode }) {
 /** A bottom sheet: handle, title, optional search, then whatever list. */
 export function Sheet({ title, onClose, search, onSearch, children }:
   { title: string; onClose: () => void; search?: string; onSearch?: (v: string) => void; children: ReactNode }) {
+  // A sheet is a place you can be, so back gets you out of it.
+  useBackToClose(true, onClose);
   return (
     <div className="w-sheet-wrap" onClick={onClose}>
       <div className="w-sheet" onClick={e => e.stopPropagation()}>
