@@ -293,8 +293,18 @@ router.post('/', async (req, res, next) => {
     // Pooled dividends route every early fee through the completion patience
     // split instead of equal monthly payouts — that split only exists on Sigma.
     if (input.dividendPooled && input.tier !== 'SIGMA') return res.status(400).json({ error: 'Pooled dividends require the Sigma tier (they are distributed through the patience split)' });
+    // How many circles one person may run at once. Five is the right ceiling for
+    // somebody the system only knows through their score: a host carries every
+    // member's turn, and five circles is already a lot of other people's money
+    // to keep straight.
+    //
+    // A manually verified host is a different case. earlyTurnVerifiedAt is set
+    // by hand, after Halqa has actually spoken to them, and it is the same fact
+    // that lifts the tenure quarantine. Somebody we have vouched for ourselves
+    // is not the person this cap was written for.
+    const HOSTED_CAP = host.earlyTurnVerifiedAt ? 50 : 5;
     const activeHosted = await prisma.committee.count({ where: { hostId: host.id, status: { in: ['FORMING','ACTIVE'] } } });
-    if (activeHosted >= 5) return res.status(403).json({ error: 'Maximum of five active hosted committees reached' });
+    if (activeHosted >= HOSTED_CAP) return res.status(403).json({ error: `Maximum of ${HOSTED_CAP} active hosted committees reached` });
     let selectedScheme: { riskScore: number; liquidityDays: number; volatilityBps: number } | null = null;
     if (input.schemeId) {
       const scheme = await prisma.scheme.findUnique({ where: { id: input.schemeId } });

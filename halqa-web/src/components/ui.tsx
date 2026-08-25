@@ -11,7 +11,7 @@ import { money } from '../api';
 export type TurnPricing={kind:'EARLY_FEE'|'FLAT';earlyFeeBps:number;pooled?:boolean};
 export const pricingOf=(earlyFeeBps?:number):TurnPricing=>earlyFeeBps&&earlyFeeBps>0?{kind:'EARLY_FEE',earlyFeeBps}:{kind:'FLAT',earlyFeeBps:0};
 export function TurnPricingChip({pricing}:{pricing:TurnPricing}){
-  if(pricing.kind!=='EARLY_FEE')return <span className="pricing-chip flat"><Coins size={12}/>Flat, no turn pricing</span>;
+  if(pricing.kind!=='EARLY_FEE')return null;
   return <span className="pricing-chip premium"><Coins size={12}/>Turn pricing · {(pricing.earlyFeeBps/100).toFixed(pricing.earlyFeeBps%100?1:0)}% early fee → late bonus</span>;
 }
 

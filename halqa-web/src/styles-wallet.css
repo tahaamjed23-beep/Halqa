@@ -910,3 +910,18 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 .cmt-photo-cta svg{width:20px;height:20px;flex:none}
 .cmt-photo-cta b{display:block;font-size:13.5px;font-weight:660;color:var(--ink)}
 .cmt-photo-cta small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+
+/* ---------- the committee screen, inside the frame ---------- */
+/* It used to render outside the shell and set its own 520px column. Inside the
+   frame the column is the frame's, and its own header bleeds to the edges the
+   same way the home header does. */
+.committee-page{padding-bottom:0}
+.committee-content{padding:0;max-width:none;margin:0}
+.committee-header{border-radius:0}
+
+/* ---------- status chips stop shouting ---------- */
+/* SHOUTING SNAKE CASE reads as a system message, not as a fact about your
+   circle. The words are already written properly; the stylesheet was the one
+   doing the shouting. */
+.circle-status{text-transform:none;letter-spacing:.01em;font-size:11px;font-weight:660}
+.w-rowgroup h4,.w-sheet-group{letter-spacing:.05em}

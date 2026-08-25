@@ -19,7 +19,6 @@ const ProfilePage=lazy(()=>import('./pages/ProfilePage'));
 const VaultPage=lazy(()=>import('./pages/VaultPage'));
 const CreateCirclePage=lazy(()=>import('./pages/CreateCirclePage'));
 const CommitteePage=lazy(()=>import('./pages/CommitteePage'));
-const RafaBot=lazy(()=>import('./components/RafaBot'));
 const SettingsPage=lazy(()=>import('./pages/SettingsPage'));
 const CreditPage=lazy(()=>import('./pages/CreditPage'));
 const AboutPage=lazy(()=>import('./pages/AboutPage'));
@@ -75,15 +74,24 @@ export default function App(){
     if(user.hasPin)return <PinLock user={user} mode="verify" onUnlock={()=>setUnlocked(true)} onLogout={()=>{tokens.clear();setUser(null)}}/>;
     if(!pinDeferred)return <PinLock user={user} mode="setup" onUnlock={()=>{setUser({...user,hasPin:true});setUnlocked(true)}} onSkip={()=>{setPinDeferred(true);setUnlocked(true)}} onLogout={()=>{tokens.clear();setUser(null)}}/>;
   }
-  // Rafa rides along on the committee page too, it renders outside the Shell,
-  // and this is exactly where the pay/payout reactions fire.
-  // Rafa is wrapped in its own scoped boundary everywhere it renders, so a
-  // guide/chat failure can never blank the whole application.
-  const rafa=(p:Page)=><ErrorBoundary scoped label="Rafa"><RafaBot page={p} setPage={next=>{setCommitteeId(null);setPage(next)}}/></ErrorBoundary>;
+  // Rafa is rendered by the Shell now that every logged-in screen, the committee
+  // page included, lives inside it. One instance, one place.
   // The weekly undertaking overlay rides on every logged-in branch: it shows
   // right after account creation, then re-appears each week (or on any 428).
   const gate=PREVIEW?null:<ErrorBoundary scoped label="Undertaking"><AgreementGate userName={user.fullName}/></ErrorBoundary>;
-  if(committeeId)return <Suspense fallback={<PageLoader/>}><ErrorBoundary resetKey={committeeId} label="Committee"><CommitteePage id={committeeId} user={user} onBack={()=>setCommitteeId(null)}/></ErrorBoundary>{rafa('circles')}{gate}</Suspense>;
+  // The committee screen used to render outside the Shell entirely, so it got
+  // none of the phone frame: on a desktop window it sprawled to 1265px, and it
+  // had no bottom bar, which meant a member inside a committee could not reach
+  // Home, the Vault or their Account at all. It lives inside the frame now,
+  // with the Committees tab lit, like every other screen.
+  if(committeeId)return <><OfflineBanner/><Shell user={user} page="circles" setPage={p=>{setCommitteeId(null);setPage(p)}} onLogout={()=>{tokens.clear();setUser(null)}}>
+    <ErrorBoundary resetKey={committeeId} label="Committee">
+      <Suspense fallback={<PageLoader/>}>
+        <CommitteePage id={committeeId} user={user} onBack={()=>setCommitteeId(null)}/>
+      </Suspense>
+    </ErrorBoundary>
+    {gate}
+  </Shell></>;
   // In simple mode the investment surfaces are hidden; coerce any stale route
   // to home. The turn marketplace stays live in simple mode.
   const view=SIMPLE_MODE&&['terminal','vault'].includes(page)?'home':page;

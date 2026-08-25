@@ -67,10 +67,13 @@ export default function ProtectionCenter({ committeeId, user, host }:
   );
 
   const behind = summary.matrix.filter(m => m.currentPayment && m.currentPayment.status !== 'PAID').length;
+  // Nothing is owed until the first turn opens, so the same figure means a
+  // different thing before and after that.
+  const started = !!summary.activeRound;
 
   const controls: [string, boolean, string][] = [
-    ['Payout holdback', flag(summary.policy.payoutHoldbackEnabled), summary.payoutBufferBps / 100 + '% until you have paid on'],
-    ['Forward-liability security', summary.forwardLiabilityGateEnabled === true, summary.forwardLiabilityGateEnabled === true ? 'An early turn must be secured first' : 'Not on for this circle'],
+    ['Payout holdback', flag(summary.policy.payoutHoldbackEnabled), summary.payoutBufferBps / 100 + '% of a payout is held until the next instalments are in'],
+    ['Cover on early turns', summary.forwardLiabilityGateEnabled === true, summary.forwardLiabilityGateEnabled === true ? 'An early turn must be covered before it pays out' : 'Not on for this circle'],
     ['Late penalties', flag(summary.policy.progressivePenalties), 'Base ' + summary.latePenaltyBps / 100 + '%, up to 10%'],
     ['Lock on default', flag(summary.policy.featureLockOnDefault), 'Join, host and marketplace blocked'],
     ['Credit-weighted turns', true, 'A better record gets an earlier turn'],
@@ -83,9 +86,10 @@ export default function ProtectionCenter({ committeeId, user, host }:
       {/* What you owe, and whether it is covered. */}
       <Card>
         <Facts cols={3} items={[
-          ['You still owe', money(mine?.remainingDuesPaisa || mine?.defaultImpactPaisa || 0)],
-          ['Turns left', String(summary.matrix.length - behind)],
-          ['Behind', String(behind)],
+          [started ? 'You still owe' : 'Over the cycle',
+           money(mine?.remainingDuesPaisa || mine?.defaultImpactPaisa || 0)],
+          ['Members', String(summary.matrix.length)],
+          [started ? 'Behind' : 'Not started', started ? String(behind) : 'Yet'],
         ]} />
         {mine?.daysToDeadline != null && (
           <Notice kind={mine.daysToDeadline < 0 ? 'bad' : 'info'} icon={<Info />}>

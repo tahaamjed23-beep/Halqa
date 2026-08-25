@@ -27,11 +27,20 @@ import {
 // whole page to get back to the committee it just joined.
 // ---------------------------------------------------------------------------
 
+// The shape /committees/discover actually returns. The page used to read
+// members, hostName, hostScore, listedPublicly, startsAt, openSlots and
+// cleanStreak, none of which exist on it, so every card showed a blank host,
+// "credit score undefined" and NaN places left.
 type Discover = {
-  id: string; name: string; hostName: string; hostScore: number; memberCap: number;
-  members: number; contributionPaisa: string; periodDays: number; status: string;
-  listedPublicly: boolean; earlyFeeBps: number; openSlots: number[]; cleanStreak: number;
-  startsAt: string; riskBand: string;
+  id: string; name: string; contributionPaisa: string; periodDays: number;
+  status: string; memberCap: number; memberCount: number;
+  host: { id: string; fullName: string; creditScore: number };
+  availability: 'OPEN' | 'WAITLIST' | 'FULL' | string;
+  eligiblePositions: number[];
+  projectedCycleStart: string;
+  riskBand: string;
+  creditHealth: { averageCreditScore: number; grade: string; defaults: number; latePayments: number };
+  waitlisted?: boolean;
 };
 
 export default function CirclesPage({ user, openCommittee, create, joinCode, onJoinHandled }:
@@ -59,7 +68,7 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
   }, []);
 
   const shown = useMemo(() => rows
-    .filter(r => !publicOnly || r.listedPublicly)
+    .filter(r => !publicOnly || r.availability === 'OPEN')
     .filter(r => !q || r.name.toLowerCase().includes(q.toLowerCase())), [rows, publicOnly, q]);
 
   const link = 'https://halqa-seven.vercel.app/join/' + (mine[0]?.inviteCode || 'HALQA');
@@ -142,8 +151,8 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
             </div>
 
             <RowGroup>
-              <Row chevron={false} icon={<Globe />} title="Public circles only"
-                   sub="Anyone can find these"
+              <Row chevron={false} icon={<Globe />} title="Only circles I can join"
+                   sub="Hide the ones that are full or waitlisted"
                    value={publicOnly ? 'On' : 'Off'} tone={publicOnly ? 'ok' : undefined}
                    onClick={() => setPublicOnly(!publicOnly)} />
             </RowGroup>
@@ -210,8 +219,9 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
 
 /** One open circle, compact enough that three fit on a phone screen. */
 function DiscoverRow({ r, busy, join }: { r: Discover; busy: boolean; join: () => void }) {
-  const left = r.memberCap - r.members;
+  const left = Math.max(0, r.memberCap - r.memberCount);
   const initials = r.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+  const open = r.availability === 'OPEN' && left > 0;
   return (
     <Card>
       <div className="disc-head">
@@ -220,20 +230,25 @@ function DiscoverRow({ r, busy, join }: { r: Discover; busy: boolean; join: () =
           : initials}</span>
         <div className="disc-id">
           <b>{r.name}</b>
-          <span>{r.hostName} · credit score {r.hostScore}</span>
+          <span>{r.host?.fullName || 'Host'} · credit score {r.host?.creditScore ?? '—'}</span>
         </div>
-        {r.listedPublicly && <em className="disc-pub"><Globe />Public</em>}
+        <em className="disc-pub"><Globe />{r.riskBand === 'LOW' ? 'Low risk' : r.riskBand === 'MEDIUM' ? 'Medium' : 'Higher risk'}</em>
       </div>
       <Facts cols={3} items={[
         ['Instalment', money(r.contributionPaisa)],
         ['Places left', left > 0 ? String(left) : 'Full'],
-        ['Starts', formatDuration(r.startsAt)],
+        ['Starts', formatDuration(r.projectedCycleStart)],
       ]} />
-      {r.cleanStreak > 0 && (
-        <p className="disc-clean"><Check />{r.cleanStreak} clean turns so far</p>
-      )}
-      <button className="primary full" disabled={busy || left <= 0} onClick={join}>
-        {busy ? 'Joining' : left > 0 ? <>Join this circle <ArrowRight /></> : 'Full'}
+      <p className="disc-clean"><Check />
+        {r.creditHealth
+          ? 'Circle score ' + r.creditHealth.averageCreditScore
+            + (r.creditHealth.defaults ? ' · ' + r.creditHealth.defaults + ' default' + (r.creditHealth.defaults > 1 ? 's' : '') : ' · no defaults')
+          : 'Every ' + r.periodDays + ' days'}
+      </p>
+      <button className="primary full" disabled={busy || !open} onClick={join}>
+        {busy ? 'Joining'
+          : open ? <>Join this circle <ArrowRight /></>
+          : r.availability === 'WAITLIST' ? 'Waitlist only' : 'Full'}
       </button>
     </Card>
   );
