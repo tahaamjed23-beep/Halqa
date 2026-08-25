@@ -8,6 +8,11 @@ import { Pfp } from '../components/Appearance';
 
 const GREETINGS=['Assalam-o-alaikum','السلام علیکم','آداب','خوش آمدید','جی آیاں نوں','پخیر راغلې','ڀلي ڪري آيا'];
 
+// A rail is a brand, not an enum. RAAST is the column value; Raast is its name.
+const RAIL_WORD:Record<string,string>={RAAST:'Raast',JAZZCASH:'JazzCash',EASYPAISA:'Easypaisa',
+  BANK_TRANSFER:'Bank transfer',CARD:'Card',CASH:'Cash'};
+const railWord=(r?:string|null)=>(r&&RAIL_WORD[r])||r||'Raast';
+
 export function cached<T>(cacheKey:string,fallback:T):T{try{const raw=localStorage.getItem(`halqa.cache.${cacheKey}`);return raw?JSON.parse(raw) as T:fallback}catch{return fallback}}
 export function keep(cacheKey:string,value:unknown){try{localStorage.setItem(`halqa.cache.${cacheKey}`,JSON.stringify(value))}catch{/* full */}}
 
@@ -162,8 +167,8 @@ function Activity({committees,userId}:{committees:Committee[];userId:string}){
       r.payments?.filter(p=>p.payerId===userId).forEach(p=>out.push({
         id:p.id,
         kind:p.status==='PAID'?'out':'wait',
-        title:p.status==='PAID'?'Installment paid':'Installment due',
-        sub:`${c.name} · ${p.paidVia||'Raast'}`,
+        title:p.status==='PAID'?'Instalment paid':'Instalment due',
+        sub:`${c.name} · ${railWord(p.paidVia)}`,
         amt:money(p.amountPaisa),
       }));
     }));
