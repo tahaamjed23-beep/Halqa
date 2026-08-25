@@ -925,3 +925,9 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
    doing the shouting. */
 .circle-status{text-transform:none;letter-spacing:.01em;font-size:11px;font-weight:660}
 .w-rowgroup h4,.w-sheet-group{letter-spacing:.05em}
+
+/* ---------- eyebrows stop shouting ---------- */
+/* LOCKED ORDER, CIRCLE, ROUND. A word in caps above a heading is a magazine
+   device, not a wallet one, and there were three of them on one screen. */
+.eyebrow{text-transform:none;letter-spacing:.01em;font-size:11.5px;font-weight:620;color:var(--muted)}
+.auth-copy .eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:10px}
