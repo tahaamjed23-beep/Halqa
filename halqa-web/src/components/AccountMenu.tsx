@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Info, LineChart, LogOut, Package, Palette, Receipt, Repeat, Settings, ShieldCheck, Sparkles } from 'lucide-react';
+import { FileText, Gauge, Info, LifeBuoy, LineChart, LogOut, Monitor, Package, Palette, Receipt, Repeat, Settings, ShieldCheck, Sparkles } from 'lucide-react';
 import type { Page } from '../types';
 import { SIMPLE_MODE } from '../config';
 import { Row, RowGroup } from './wallet';
@@ -23,7 +23,11 @@ export function AccountMenu({ go, onLogout }: { go: (page: Page) => void; onLogo
     { page: 'asset',    icon: <Package />,     title: 'Save for something', sub: 'Phone, bike, appliance' },
     { page: 'rewards',  icon: <Sparkles />,    title: 'Rewards',            sub: 'What your streak is worth' },
     { page: 'terminal', icon: <LineChart />,   title: 'Where money sits',   sub: 'Every recorded balance', when: !SIMPLE_MODE },
+    { page: 'statement', icon: <FileText />,  title: 'Statement',          sub: 'A period, its totals, every line' },
+    { page: 'limits',    icon: <Gauge />,     title: 'Limits and level',   sub: 'What applies, and what lifts it' },
     { page: 'appearance', icon: <Palette />,  title: 'Look and feel',      sub: 'Theme, colour, text size, photo' },
+    { page: 'devices',   icon: <Monitor />,   title: 'Where you are signed in', sub: 'Sessions, and signing others out' },
+    { page: 'support',   icon: <LifeBuoy />,  title: 'Help',               sub: 'Answers, and raising a case' },
     { page: 'settings', icon: <Settings />,    title: 'Settings',           sub: 'PIN, privacy, notifications' },
     { page: 'about',    icon: <Info />,        title: 'About Halqa',        sub: 'How a committee works' },
   ];

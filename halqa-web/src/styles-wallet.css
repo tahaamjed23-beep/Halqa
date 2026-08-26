@@ -945,3 +945,49 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
    rate stamp beside it. */
 .risk-badge{text-transform:none;letter-spacing:.01em}
 .rate-stamp{text-transform:none;letter-spacing:.01em;font-size:10.5px;font-weight:620}
+
+/* ============================================================================
+   HELP, STATEMENT, LIMITS, DEVICES
+   The four screens every wallet a Pakistani member already uses has, and this
+   one did not.
+   ============================================================================ */
+.sup-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.sup-head b{display:block;font-size:14.5px;font-weight:680;line-height:1.35}
+.sup-head small{display:block;font-size:11.5px;color:var(--muted);margin-top:3px}
+.sup-status{flex:none;font-style:normal;font-size:10.5px;font-weight:680;padding:4px 9px;
+  border-radius:var(--r-full);background:var(--line-2);color:var(--muted)}
+.sup-status.s-open{background:var(--warn-bg);color:#7A4B00}
+.sup-status.s-answered{background:var(--info-bg);color:#1B4E93}
+.sup-status.s-resolved{background:var(--ok-bg);color:#0D6B37}
+
+.sup-thread{display:flex;flex-direction:column;gap:9px;padding:2px 14px 6px}
+.sup-msg{max-width:86%;padding:11px 13px;border-radius:var(--r);background:var(--surface);
+  border:1px solid var(--line-2);align-self:flex-start}
+.sup-msg.mine{align-self:flex-end;background:var(--l50);border-color:var(--l200)}
+.sup-msg p{font-size:13px;line-height:1.55;white-space:pre-wrap}
+.sup-msg small{display:block;font-size:10.5px;color:var(--muted);margin-top:6px}
+
+/* A textarea has to sit in the field frame like every other control. */
+.w-field textarea{width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);
+  padding:11px 13px;font-size:14.5px;line-height:1.5;background:var(--surface);color:var(--ink);
+  resize:vertical;min-height:84px;font-family:inherit}
+.w-field textarea:focus{border-color:var(--l500);outline:none}
+
+/* ---------- the level band ---------- */
+.lim-band{margin:12px 14px;padding:16px;border-radius:var(--r-lg);color:#fff;
+  background:linear-gradient(150deg,var(--l700) 0%,var(--l500) 58%,var(--l400) 100%);
+  box-shadow:var(--sh-lime);position:relative;overflow:hidden}
+.lim-band::after{content:"";position:absolute;right:-46px;bottom:-78px;width:190px;height:190px;
+  border-radius:50%;background:rgba(255,255,255,.10)}
+.lim-band-top{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:620;opacity:.94;
+  position:relative;z-index:1}
+.lim-band-top svg{width:15px;height:15px}
+.lim-band>b{display:block;font-size:24px;font-weight:750;letter-spacing:-.03em;margin:6px 0 3px;
+  position:relative;z-index:1}
+.lim-band>small{display:block;font-size:12px;opacity:.92;position:relative;z-index:1}
+
+/* The way to say a receipt is wrong, on the receipt itself. */
+.rcpt-dispute{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;
+  margin-top:14px;height:40px;border-radius:var(--r-full);font-size:12.5px;font-weight:620;
+  background:rgba(255,255,255,.14);color:#fff}
+.rcpt-dispute svg{width:15px;height:15px}

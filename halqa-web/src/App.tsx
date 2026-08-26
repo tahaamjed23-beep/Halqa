@@ -29,6 +29,11 @@ const CardsPage=lazy(()=>import('./pages/CardsPage'));
 const ActivityPage=lazy(()=>import('./pages/ActivityPage'));
 const AssetPage=lazy(()=>import('./pages/AssetPage'));
 const AppearancePage=lazy(()=>import('./pages/AppearancePage'));
+const SupportPage=lazy(()=>import('./pages/SupportPage'));
+const StatementPage=lazy(()=>import('./pages/StatementPage'));
+const LimitsPage=lazy(()=>import('./pages/LimitsPage'));
+const DevicesPage=lazy(()=>import('./pages/DevicesPage'));
+const NoticesPage=lazy(()=>import('./pages/NoticesPage'));
 
 export default function App(){
   const [user,setUser]=useState<User|null>(PREVIEW?previewUser as unknown as User:null);
@@ -37,6 +42,8 @@ export default function App(){
   const [committeeId,setCommitteeId]=useState<string|null>(()=>new URLSearchParams(window.location.search).get('committee'));
   // An invite link (?join=CODE) opens the app straight onto that committee.
   const [joinCode,setJoinCode]=useState<string|null>(()=>new URLSearchParams(window.location.search).get('join'));
+  // The payment a member is disputing, carried from a receipt into Help.
+  const [dispute,setDispute]=useState<string|null>(null);
   // Page and open committee live in the URL, so the hardware back button, a
   // refresh and a shared link all behave the way a member expects. Without this
   // back exits the app from anywhere inside it.
@@ -112,9 +119,14 @@ export default function App(){
       {view==='rewards'&&<RewardsPage user={user} back={()=>setPage('home')}/>}
       {view==='hyper'&&<HyperPage user={user} back={()=>setPage('home')}/>}
       {view==='cards'&&<CardsPage user={user} back={()=>setPage('home')}/>}
-      {view==='activity'&&<ActivityPage user={user} back={()=>setPage('home')}/>}
+      {view==='activity'&&<ActivityPage user={user} back={()=>setPage('home')} onDispute={id=>{setDispute(id);setPage('support')}}/>}
       {view==='asset'&&<AssetPage back={()=>setPage('home')} openCommittee={setCommitteeId}/>}
       {view==='appearance'&&<AppearancePage back={()=>setPage('profile')}/>}
+      {view==='support'&&<SupportPage back={()=>{setDispute(null);setPage(dispute?'activity':'profile')}} disputePaymentId={dispute}/>}
+      {view==='statement'&&<StatementPage back={()=>setPage('profile')}/>}
+      {view==='limits'&&<LimitsPage back={()=>setPage('profile')}/>}
+      {view==='devices'&&<DevicesPage back={()=>setPage('profile')}/>}
+      {view==='notices'&&<NoticesPage back={()=>setPage('home')}/>}
     </Suspense>
     </ErrorBoundary>
     {gate}

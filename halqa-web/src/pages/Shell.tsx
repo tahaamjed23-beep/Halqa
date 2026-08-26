@@ -1,9 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Gift, Home, PiggyBank, UserPlus, User as UserIcon, Users, X, Bell } from 'lucide-react';
+import { Gift, Home, PiggyBank, UserPlus, User as UserIcon, Users, X } from 'lucide-react';
 import { JoinSheet } from '../components/JoinSheet';
 import { SIMPLE_MODE } from '../config';
-import { api } from '../api';
-import type { Notice, Page, User } from '../types';
+import type { Page, User } from '../types';
 import RafaBot from '../components/RafaBot';
 import ErrorBoundary from '../components/ErrorBoundary';
 
@@ -27,17 +26,11 @@ const TABS:[Page,string,ReactNode][]=SIMPLE_MODE?[
 ];
 
 export default function Shell({user,page,setPage,onLogout,children}:{user:User;page:Page;setPage:(page:Page)=>void;onLogout:()=>void;children:ReactNode}){
-  const [notices,setNotices]=useState<Notice[]>([]);
-  const [showNotices,setShowNotices]=useState(false);
   const [joinOpen,setJoinOpen]=useState(false);
-  useEffect(()=>{void api<Notice[]>('/notifications').then(setNotices).catch(()=>{})},[]);
-  const unread=notices.filter(n=>!n.isRead).length;
-  const openNotices=()=>{
-    setShowNotices(true);
-    if(unread)void api('/notifications/read-all',{method:'PATCH'}).then(()=>setNotices(items=>items.map(i=>({...i,isRead:true})))).catch(()=>{});
-  };
   useEffect(()=>{
-    const handler=()=>openNotices();
+    // The bell now opens the notifications screen. The sheet stays for anything
+    // that still asks for it, but nothing does.
+    const handler=()=>setPage('notices');
     window.addEventListener('halqa:open-notices',handler);
     return()=>window.removeEventListener('halqa:open-notices',handler);
   });
@@ -51,26 +44,7 @@ export default function Shell({user,page,setPage,onLogout,children}:{user:User;p
         {children}
       </main>
 
-      {showNotices&&<div className="rcpt-wrap" onClick={()=>setShowNotices(false)}>
-        <div className="rcpt" onClick={e=>e.stopPropagation()}>
-          <div className="topbar" style={{borderRadius:'26px 26px 0 0'}}>
-            <h1>Notifications</h1>
-            <button className="back" onClick={()=>setShowNotices(false)}><X/></button>
-          </div>
-          <div style={{padding:14}}>
-            {notices.length?<div className="list">{notices.map(n=>(
-              <div className="row" key={n.id}>
-                <div className="row-ic"><Bell/></div>
-                <div className="row-body">
-                  <strong>{n.type.replaceAll('_',' ').toLowerCase().replace(/^\w/,c=>c.toUpperCase())}</strong>
-                  <span>{n.message}</span>
-                </div>
-              </div>
-            ))}</div>:<Blank/>}
-          </div>
-        </div>
-      </div>}
-
+      
       <ErrorBoundary scoped label="Rafa"><RafaBot page={page} setPage={setPage}/></ErrorBoundary>
 
       {joinOpen&&<JoinSheet onClose={()=>setJoinOpen(false)} onJoined={()=>{setJoinOpen(false);setPage('circles')}}/>}
@@ -95,4 +69,3 @@ export default function Shell({user,page,setPage,onLogout,children}:{user:User;p
   );
 }
 
-function Blank(){return <div className="empty"><div className="empty-ic"><Bell/></div><strong>Nothing yet</strong><p>Payment receipts, payout alerts and committee updates land here.</p></div>}

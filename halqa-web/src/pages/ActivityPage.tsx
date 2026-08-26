@@ -37,7 +37,8 @@ function dayLabel(iso: string): string {
   return date(iso);
 }
 
-export default function ActivityPage({ user, back }: { user: User; back: () => void }) {
+export default function ActivityPage({ user, back, onDispute }:
+  { user: User; back: () => void; onDispute?: (paymentId: string) => void }) {
   const [committees, setCommittees] = useState<Committee[]>([]);
   const [q, setQ] = useState('');
   const [filter, setFilter] = useState<'all' | 'in' | 'out' | 'wait'>('all');
@@ -97,6 +98,10 @@ export default function ActivityPage({ user, back }: { user: User; back: () => v
       ? { name: user.fullName, ref: phone(user.phone) }
       : { name: i.counterparty, ref: i.counterRef },
     rows: [['Committee', i.committee], ['Turn', String(i.round)]],
+    // Only a real instalment can be disputed; a payout is the circle paying
+    // you, and there is nothing of yours to dispute in it.
+    paymentId: i.kind === 'in' ? undefined : i.id,
+    onDispute,
   });
 
   return (

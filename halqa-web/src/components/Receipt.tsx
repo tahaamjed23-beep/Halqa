@@ -1,4 +1,4 @@
-import { Check, Clock, Copy, Share2, X } from 'lucide-react';
+import { Check, Clock, Copy, Share2, ShieldAlert, X } from 'lucide-react';
 import { useState } from 'react';
 import { dateTime, money } from '../lib/format';
 import { RailLogo } from './RailLogo';
@@ -18,6 +18,9 @@ export type ReceiptData = {
   from?: ReceiptParty;
   to?: ReceiptParty;
   purpose?: string;
+  /** The payment this receipt is for, so it can be disputed from here. */
+  paymentId?: string;
+  onDispute?: (paymentId: string) => void;
 };
 
 // ---------------------------------------------------------------------------
@@ -130,6 +133,12 @@ export default function Receipt({ data, onClose }: { data: ReceiptData; onClose:
           <button onClick={share}><Share2 />{copied ? 'Copied' : 'Share'}</button>
           <button onClick={() => window.print()}><Copy />Save a copy</button>
         </div>
+
+        {data.paymentId && data.onDispute && (
+          <button className="rcpt-dispute" onClick={() => data.onDispute!(data.paymentId!)}>
+            <ShieldAlert /> Something is wrong with this
+          </button>
+        )}
 
         <p className="rcpt-note">
           Money moved directly between the two members. Halqa never held it.

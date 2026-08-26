@@ -235,6 +235,7 @@ model User {
   // whole reason somebody opens the screen twice.
   vaultGoalPaisa BigInt?
   vaultGoalName String?
+  supportTickets SupportTicket[]
   referredById String?
   referredBy User? @relation("Referrals", fields:[referredById], references:[id])
   referrals User[] @relation("Referrals")
@@ -990,4 +991,48 @@ model RestitutionDebt {
   settledAt DateTime?
   createdAt DateTime @default(now())
   @@index([requestId])
+}
+
+// ---------------------------------------------------------------------------
+// SUPPORT AND DISPUTES
+//
+// Every wallet a Pakistani member already uses has one thing Halqa did not: a
+// way to say "this is wrong" and get a reference number back. Without it the
+// only route is an email address on a settings page, which is not a route a
+// member in trouble will take.
+//
+// A ticket is either a plain question or a dispute against one payment. The
+// reference is what the member quotes, the same way they quote a transaction
+// id, so it is short and human-readable rather than a cuid.
+// ---------------------------------------------------------------------------
+model SupportTicket {
+  id String @id @default(cuid())
+  reference String @unique
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  // QUESTION, PAYMENT, PAYOUT, ACCOUNT, CIRCLE, OTHER
+  category String @default("QUESTION")
+  subject String
+  body String
+  // OPEN, ANSWERED, RESOLVED, CLOSED
+  status String @default("OPEN")
+  // Set when the ticket disputes one recorded payment.
+  paymentId String?
+  committeeId String?
+  messages SupportMessage[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId])
+  @@index([status])
+}
+
+model SupportMessage {
+  id String @id @default(cuid())
+  ticketId String
+  ticket SupportTicket @relation(fields:[ticketId], references:[id], onDelete:Cascade)
+  // MEMBER or HALQA
+  author String
+  body String
+  createdAt DateTime @default(now())
+  @@index([ticketId])
 }

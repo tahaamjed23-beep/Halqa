@@ -23,6 +23,8 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
   const [,tick]=useState(0);
   const [greeting]=useState(()=>GREETINGS[Math.floor(Math.random()*GREETINGS.length)]);
   const [photo,setPhoto]=useState<string|null>(()=>cached('home.photo',null));
+  // The dot means something now: it appears only when there is unread news.
+  const [unread,setUnread]=useState(0);
 
   useEffect(()=>{void Promise.all([
     api<Committee[]>('/committees?scope=mine').catch(()=>[] as Committee[]),
@@ -32,6 +34,8 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
     setCommittees(mine);keep('home.committees',mine);
     if(data){setSummary(data);keep('home.summary',data)}
   })},[user.id]);
+  useEffect(()=>{void api<{isRead:boolean}[]>('/notifications')
+    .then(rows=>setUnread(rows.filter(r=>!r.isRead).length)).catch(()=>{})},[]);
   useEffect(()=>{void api<{avatarUrl:string|null}>('/profile/appearance')
     .then(a=>{setPhoto(a.avatarUrl);keep('home.photo',a.avatarUrl)}).catch(()=>{})},[]);
   useEffect(()=>{const t=setInterval(()=>tick(v=>v+1),60000);return()=>clearInterval(t)},[]);
@@ -50,8 +54,8 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
           <small>{greeting}</small>
           <strong>{user.fullName}</strong>
         </div>
-        <button className="hdr-btn" aria-label="Notifications" onClick={()=>window.dispatchEvent(new CustomEvent('halqa:open-notices'))}>
-          <Bell/><i className="dot"/>
+        <button className="hdr-btn" aria-label="Notifications" onClick={()=>go('notices')}>
+          <Bell/>{unread>0&&<i className="dot"/>}
         </button>
       </div>
     </header>
