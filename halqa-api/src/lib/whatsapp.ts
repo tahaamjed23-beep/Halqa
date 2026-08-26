@@ -12,9 +12,16 @@ import { audit } from './audit';
 
 export const receiptNo = (paymentId: string) => `RCPT-${paymentId.slice(-8).toUpperCase()}`;
 
+// A rail is a brand, not an enum. This is text a member reads.
+const RAIL_NAME: Record<string, string> = {
+  RAAST: 'Raast', JAZZCASH: 'JazzCash', EASYPAISA: 'Easypaisa',
+  BANK_TRANSFER: 'bank transfer', CARD: 'card', CASH: 'cash',
+};
+const railName = (r: string) => RAIL_NAME[r] ?? r;
+
 export function debitReceiptText(args: { committeeName: string; roundNumber: number; amountPaisa: bigint; rail: string; txnRef: string; paymentId: string; penaltyPaisa?: bigint }): string {
   const rupees = (v: bigint) => `Rs ${(Number(v) / 100).toLocaleString('en-PK')}`;
-  return `Halqa receipt ${receiptNo(args.paymentId)} — ${rupees(args.amountPaisa)} collected for ${args.committeeName}, round ${args.roundNumber}, via ${args.rail}${args.penaltyPaisa && args.penaltyPaisa > 0n ? ` (incl. late adjustment ${rupees(args.penaltyPaisa)})` : ''}. Ref ${args.txnRef}. This counts toward your reliability score. Halqa records the movement — it never holds your money.`;
+  return `Halqa receipt ${receiptNo(args.paymentId)} — ${rupees(args.amountPaisa)} collected for ${args.committeeName}, turn ${args.roundNumber}, via ${railName(args.rail)}${args.penaltyPaisa && args.penaltyPaisa > 0n ? ` (incl. late adjustment ${rupees(args.penaltyPaisa)})` : ''}. Ref ${args.txnRef}. This counts toward your reliability score. Halqa records the movement — it never holds your money.`;
 }
 
 export async function queueWhatsApp(tx: Prisma.TransactionClient, args: { userId: string; kind: 'DEBIT_RECEIPT' | 'MANDATE_OTP'; text: string; refType: string; refId: string }) {

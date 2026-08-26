@@ -1,6 +1,6 @@
 import { Group, Tile, TileGrid } from '../components/wallet';
 import { useEffect, useMemo, useState } from 'react';
-import {ArrowDownLeft, ArrowUpRight, Bell, CalendarClock, CheckCircle2, ChevronRight, CreditCard, Eye, EyeOff, Flame, Gauge, Gift, Package, Receipt, Repeat, Users, Wallet, Zap} from 'lucide-react';
+import {ArrowDownLeft, ArrowUpRight, Bell, Search, CalendarClock, CheckCircle2, ChevronRight, CreditCard, Eye, EyeOff, Flame, Gauge, Gift, Package, Receipt, Repeat, Users, Wallet, Zap} from 'lucide-react';
 import { api, money } from '../api';
 import type { Committee, Summary, User } from '../types';
 import { formatDuration } from '../components/ui';
@@ -54,6 +54,7 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
           <small>{greeting}</small>
           <strong>{user.fullName}</strong>
         </div>
+        <button className="hdr-btn" aria-label="Search" onClick={()=>go('search')}><Search/></button>
         <button className="hdr-btn" aria-label="Notifications" onClick={()=>go('notices')}>
           <Bell/>{unread>0&&<i className="dot"/>}
         </button>

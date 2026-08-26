@@ -209,15 +209,28 @@ router.get('/devices', async (req, res, next) => {
       return 'A device';
     };
 
+    // A session and a sign-in are two independent lists, so pairing them by
+    // position was a guess. The sign-in closest in time to the moment a token
+    // family was created is the one that made it.
+    const nearest = (at: Date) => events.reduce<typeof events[number] | null>((best, e) => {
+      const d = Math.abs(e.createdAt.getTime() - at.getTime());
+      if (d > 120_000) return best;                        // more than two minutes apart is not it
+      if (!best) return e;
+      return d < Math.abs(best.createdAt.getTime() - at.getTime()) ? e : best;
+    }, null);
+
     res.json({
-      sessions: tokens.map((t, i) => ({
-        id: t.familyId,
-        signedInAt: t.createdAt.toISOString(),
-        device: describe(events[i]?.userAgent),
-        // Never the full address: it is the member's own location history.
-        place: events[i]?.ip ? events[i]!.ip!.split('.').slice(0, 2).join('.') + '.x.x' : null,
-        current: i === 0,
-      })),
+      sessions: tokens.map((t, i) => {
+        const e = nearest(t.createdAt);
+        return {
+          id: t.familyId,
+          signedInAt: t.createdAt.toISOString(),
+          device: describe(e?.userAgent),
+          // Never the full address: it is the member's own location history.
+          place: e?.ip ? e.ip.split('.').slice(0, 2).join('.') + '.x.x' : null,
+          current: i === 0,
+        };
+      }),
       recent: events.slice(0, 10).map(e => ({
         at: e.createdAt.toISOString(),
         what: e.type === 'REGISTER' ? 'Account opened' : 'Signed in',

@@ -34,6 +34,7 @@ const StatementPage=lazy(()=>import('./pages/StatementPage'));
 const LimitsPage=lazy(()=>import('./pages/LimitsPage'));
 const DevicesPage=lazy(()=>import('./pages/DevicesPage'));
 const NoticesPage=lazy(()=>import('./pages/NoticesPage'));
+const SearchPage=lazy(()=>import('./pages/SearchPage'));
 
 export default function App(){
   const [user,setUser]=useState<User|null>(PREVIEW?previewUser as unknown as User:null);
@@ -127,6 +128,7 @@ export default function App(){
       {view==='limits'&&<LimitsPage back={()=>setPage('profile')}/>}
       {view==='devices'&&<DevicesPage back={()=>setPage('profile')}/>}
       {view==='notices'&&<NoticesPage back={()=>setPage('home')}/>}
+      {view==='search'&&<SearchPage back={()=>setPage('home')} openCommittee={setCommitteeId} go={p=>setPage(p)}/>}
     </Suspense>
     </ErrorBoundary>
     {gate}

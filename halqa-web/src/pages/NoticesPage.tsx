@@ -26,6 +26,7 @@ const WORD: Record<string, { title: string; icon: JSX.Element; tone?: 'ok' | 'wa
   COMMITTEE_STARTED: { title: 'A committee started', icon: <Users />, tone: 'ok' },
   MEMBER_JOINED:     { title: 'Somebody joined', icon: <Users /> },
   REWARD_EARNED:     { title: 'You earned a reward', icon: <Gift />, tone: 'ok' },
+  WHATSAPP_RECEIPT:  { title: 'Your receipt', icon: <Check />, tone: 'ok' },
 };
 const describe = (type: string) => WORD[type] || {
   title: type.replace(/_/g, ' ').toLowerCase().replace(/^\w/, c => c.toUpperCase()),
