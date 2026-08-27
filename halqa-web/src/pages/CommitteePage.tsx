@@ -9,9 +9,8 @@ import { phone } from '../lib/format';
 import InviteShare from '../components/InviteShare';
 import { date, dateShort, dateTime } from '../lib/format';
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
-import { io, type Socket } from 'socket.io-client';
-import { Check, ChevronLeft, Clock, Crown, Landmark, Lock, Send, ShieldCheck, UserRound, Users, X } from 'lucide-react';
-import { API_ORIGIN, api, key, money, tokens } from '../api';
+import { Check, ChevronLeft, Clock, Crown, Landmark, Lock, Send, UserRound, Users, X } from 'lucide-react';
+import { api, key, money } from '../api';
 import { emitHalqaAction } from '../lib/events';
 import type { Committee, Round, User } from '../types';
 import { Field, TurnPricingChip, formatDuration, pricingOf, scoreColor } from '../components/ui'; // orderingLabel dropped, mode label removed from header
@@ -233,7 +232,67 @@ function PaymentModal({round,committee,user,amountPaisa,close,done}:{round:Round
 function Growth({committee,active,host,action,myPosition}:{committee:Committee;active?:Round;host:boolean;action:(path:string,body?:unknown)=>Promise<void>;myPosition?:number}){const investment=active?.investments.find(item=>item.status==='ACTIVE');const principal=Number(active?.grossPoolPaisa||0)/100*committee.reinvestRatio;return <div className="growth-stack">{myPosition&&committee.mode!=='INVESTMENT'&&<section className="panel"><div className="panel-head"><div><span className="eyebrow">Your circle · turn #{myPosition}</span><h2>Month by month</h2><p>What you pay in, and what you collect at your turn.</p></div></div><Suspense fallback={<div className="chart-skeleton"/>}><PersonalGrowthChart committee={committee} turnPosition={myPosition}/></Suspense></section>}<RiskConsole committeeId={committee.id} host={host}/><div className="detail-grid"><section className="panel"><div className="panel-head"><div><span className="eyebrow">Member-visible performance</span><h2>{committee.scheme?.name||'No scheme selected'}</h2><p>{committee.scheme?.indicativeRatePct||0}% indicative · risk {committee.scheme?.riskScore||1}/10 · dated source</p></div></div><Suspense fallback={<div className="chart-skeleton"/>}><ProjectionChart principal={principal} rate={committee.scheme?.indicativeRatePct||0} months={Math.max(1,Math.ceil(committee.periodDays/30))}/></Suspense><div className="warning-box">Only the host can execute the group mandate.</div></section><section className="panel"><span className="eyebrow">Host execution</span><h2>{investment?'Simulation deployed':'Ready to deploy'}</h2><div className="info-stack"><div><span>Turn order</span><b>{committee.mode==='INVESTMENT'?'Investment':'Rotating'}</b></div><div><span>Allocation</span><b>{Math.round(committee.reinvestRatio*100)}%</b></div><div><span>Principal this round</span><b>{money(principal*100)}</b></div><div><span>Liquidity</span><b>{committee.scheme?.liquidityDays||0} days</b></div><div><span>Access</span><b>{host?'Host control':'Read only'}</b></div></div>{host&&active&&committee.reinvestRatio>0&&(investment?<button className="primary full" onClick={()=>action('liquidate',{idempotencyKey:key()})}>Simulate liquidation</button>:<button className="primary full" onClick={()=>action('invest',{idempotencyKey:key()})}>Simulate deployment</button>)}</section></div></div>}
 
 type ChatMessage={id:string;senderId:string;body:string;sentAt:string;sender?:{fullName:string}};
-type ChatHistoryResponse={messages?:ChatMessage[];error?:string};
 
 function chatTime(iso:string){const d=new Date(iso);return isNaN(d.getTime())?'':d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
-function Chat({committeeId,user}:{committeeId:string;user:User}){const [messages,setMessages]=useState<ChatMessage[]>([]);const [body,setBody]=useState('');const [down,setDown]=useState(false);const socket=useRef<Socket|null>(null);const end=useRef<HTMLDivElement|null>(null);useEffect(()=>{let client:Socket|null=null;try{client=io(API_ORIGIN,{auth:{token:tokens.get()},reconnectionAttempts:3});socket.current=client;client.on('connect_error',()=>setDown(true));client.emit('join_room',{committeeId});client.emit('get_history',{committeeId},(response:ChatHistoryResponse)=>{if(response&&Array.isArray(response.messages))setMessages(response.messages)});client.on('new_message',(message:ChatMessage)=>{if(message&&message.id)setMessages(items=>[...items,message])})}catch{setDown(true)}return()=>{try{client?.emit('leave_room',{committeeId});client?.disconnect()}catch{/* already gone */}}},[committeeId]);useEffect(()=>{try{end.current?.scrollIntoView({behavior:'smooth'})}catch{/* jsdom */}},[messages]);const send=()=>{const value=body.trim();if(!value)return;setBody('');try{socket.current?.emit('send_message',{committeeId,body:value})}catch{setDown(true)}};return <section className="chat-panel"><header><div><h2>Committee chat</h2><p>Verified members only</p></div><ShieldCheck/></header>{down&&<div className="warning-box">Live chat is temporarily unreachable. Your committee and payments are unaffected.</div>}<div className="messages">{messages.map(message=><article className={message.senderId===user.id?'mine':''} key={message.id}><div><b>{message.sender?.fullName||'Member'}</b><p>{message.body}</p><span>{chatTime(message.sentAt)}</span></div></article>)}<div ref={end}/></div><footer><input className="field" maxLength={2000} value={body} onChange={e=>setBody(e.target.value)} onKeyDown={e=>{if(e.key==='Enter')send()}} placeholder="Message the committee…"/><button className="primary" onClick={send}><Send/></button></footer></section>}
+function Chat({committeeId,user}:{committeeId:string;user:User}){
+  const [messages,setMessages]=useState<ChatMessage[]>([]);
+  const [body,setBody]=useState('');
+  const [error,setError]=useState('');
+  const [sending,setSending]=useState(false);
+  const end=useRef<HTMLDivElement|null>(null);
+  const lastId=useRef<string|null>(null);
+
+  // Messages come over HTTP now. The socket server this used to talk to is
+  // started by server.ts, and production runs the Express app alone: a
+  // serverless function cannot hold a socket open, so the Messages tab never
+  // connected once in production. Polling is slower, and it works.
+  useEffect(()=>{
+    let alive=true;
+    const pull=async()=>{
+      try{
+        const after=lastId.current;
+        const d=await api<{messages:ChatMessage[]}>(`/chat/${committeeId}${after?`?after=${after}`:''}`);
+        if(!alive||!d.messages?.length)return;
+        lastId.current=d.messages[d.messages.length-1].id;
+        setMessages(items=>after?[...items,...d.messages]:d.messages);
+      }catch(reason){if(alive)setError((reason as Error).message)}
+    };
+    void pull();
+    const timer=setInterval(()=>{void pull()},6000);
+    return()=>{alive=false;clearInterval(timer)};
+  },[committeeId]);
+
+  useEffect(()=>{end.current?.scrollIntoView({behavior:'smooth'})},[messages.length]);
+
+  const send=async()=>{
+    const text=body.trim();
+    if(!text)return;
+    setSending(true);setError('');
+    try{
+      const m=await api<ChatMessage>(`/chat/${committeeId}`,{method:'POST',body:JSON.stringify({body:text})});
+      lastId.current=m.id;
+      setMessages(items=>[...items,m]);setBody('');
+    }catch(reason){setError((reason as Error).message)}
+    finally{setSending(false)}
+  };
+
+  return <section className="panel">
+    <div className="panel-head"><div><h2>Messages</h2><p>Everyone in this committee can read these.</p></div></div>
+    {error&&<div className="w-notice bad"><p>{error}</p></div>}
+    <div className="chat-log">
+      {messages.map(m=><div key={m.id} className={`chat-msg${m.senderId===user.id?' mine':''}`}>
+        {m.senderId!==user.id&&<small className="chat-who">{m.sender?.fullName||'A member'}</small>}
+        <p>{m.body}</p>
+        <small className="chat-at">{chatTime(m.sentAt)}</small>
+      </div>)}
+      {!messages.length&&<p className="chat-empty">Nothing said yet. Say the first thing.</p>}
+      <div ref={end}/>
+    </div>
+    <div className="chat-send">
+      <input value={body} maxLength={2000} placeholder="Write to the committee"
+             onChange={e=>setBody(e.target.value)}
+             onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();void send()}}}/>
+      <button className="primary" disabled={sending||!body.trim()} onClick={()=>void send()}><Send/></button>
+    </div>
+  </section>;
+}

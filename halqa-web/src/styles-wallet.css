@@ -1023,3 +1023,21 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 /* The exit bar is one button; it does not need a tagline beside it. */
 .exit-bar{display:block;padding:14px 0 4px}
 .exit-bar button{width:100%}
+
+/* ---------- committee messages ---------- */
+.chat-log{display:flex;flex-direction:column;gap:8px;max-height:52dvh;overflow-y:auto;
+  padding:4px 0 10px}
+.chat-msg{max-width:82%;padding:9px 12px;border-radius:var(--r);background:var(--line-2);
+  align-self:flex-start}
+.chat-msg.mine{align-self:flex-end;background:var(--l50)}
+.chat-msg p{font-size:13.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.chat-who{display:block;font-size:10.5px;font-weight:660;color:var(--l700);margin-bottom:3px}
+.chat-at{display:block;font-size:10px;color:var(--muted);margin-top:4px;text-align:right}
+.chat-empty{font-size:12.5px;color:var(--muted);text-align:center;padding:22px 10px}
+.chat-send{display:flex;gap:8px;align-items:center;padding-top:10px;
+  border-top:1px solid var(--line-2)}
+.chat-send input{flex:1;min-width:0;height:44px;border:1.5px solid var(--line);
+  border-radius:var(--r-full);padding:0 15px;font-size:14px;background:var(--surface)}
+.chat-send input:focus{border-color:var(--l500);outline:none}
+.chat-send button{width:44px;height:44px;min-height:44px;border-radius:50%;padding:0;flex:none;
+  display:grid;place-items:center}
