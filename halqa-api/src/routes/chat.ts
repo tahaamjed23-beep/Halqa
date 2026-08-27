@@ -32,7 +32,10 @@ const activeMember = async (committeeId: string, userId: string) =>
 const normalise = (body: string) => body.replace(/\s+/g, ' ').trim().slice(0, 2000);
 
 const withSender = {
-  id: true, body: true, pinned: true, sentAt: true,
+  // senderId is what the client compares against the reader to decide which
+  // side a message sits on. Without it every message looked like somebody
+  // else's, including your own.
+  id: true, senderId: true, body: true, pinned: true, sentAt: true,
   sender: { select: { id: true, fullName: true, avatarUrl: true } },
 } as const;
 
