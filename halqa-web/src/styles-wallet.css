@@ -991,3 +991,35 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
   margin-top:14px;height:40px;border-radius:var(--r-full);font-size:12.5px;font-weight:620;
   background:rgba(255,255,255,.14);color:#fff}
 .rcpt-dispute svg{width:15px;height:15px}
+
+/* ============================================================================
+   WHO HAS PAID
+   This was a grid of 78px columns holding an avatar, a full name, an amount and
+   a status stacked vertically, so every name broke onto two lines and the whole
+   block read as rubble. Worse, the stylesheet targeted div and the markup
+   rendered article, so none of it applied anyway.
+   One member per row, name left, amount right, state after it.
+   ============================================================================ */
+.pay-rows{display:flex;flex-direction:column}
+.pay-row{display:flex;align-items:center;gap:11px;padding:11px 0;
+  border-bottom:1px solid var(--line-2)}
+.pay-row:last-child{border-bottom:none}
+.pay-who{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.pay-who i{width:32px;height:32px;border-radius:50%;flex:none;display:grid;place-items:center;
+  background:var(--l50);color:var(--l700);font-style:normal;font-size:13px;font-weight:700}
+.pay-who b{font-size:13.5px;font-weight:620;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;min-width:0}
+.pay-amt{flex:none;font-size:13.5px;font-weight:680;font-variant-numeric:tabular-nums}
+.pay-state{flex:none;font-size:10.5px;font-weight:660;padding:3px 9px;border-radius:var(--r-full);
+  background:var(--line-2);color:var(--muted);min-width:52px;text-align:center}
+.pay-state.s-paid{background:var(--ok-bg);color:#0D6B37}
+.pay-state.s-late{background:var(--warn-bg);color:#7A4B00}
+.pay-state.s-missed{background:var(--bad-bg);color:#9B2B21}
+
+/* The mutual guarantee link, given a line of its own rather than trailing a
+   sentence that is no longer there. */
+.cm-guarantee{padding:10px 0 2px;border-top:1px solid var(--line-2);margin-top:10px}
+
+/* The exit bar is one button; it does not need a tagline beside it. */
+.exit-bar{display:block;padding:14px 0 4px}
+.exit-bar button{width:100%}

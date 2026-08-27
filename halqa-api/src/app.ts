@@ -20,6 +20,7 @@ import rewardRoutes from './routes/rewards';
 import exitRoutes from './routes/exits';
 import supportRoutes from './routes/support';
 import accountRoutes from './routes/account';
+import chatRoutes from './routes/chat';
 import { prisma } from './db';
 import { jsonSafe } from './lib/money';
 import { verifyPassport } from './lib/passport';
@@ -141,6 +142,7 @@ app.use('/api/rewards', rewardRoutes);
 app.use('/api/exits', exitRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/account', accountRoutes);
+app.use('/api/chat', chatRoutes);
 app.use((_req, res) => res.status(404).json({ error: 'Route not found' }));
 app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   if (error instanceof ZodError) return res.status(400).json({ error: 'Invalid request', details: error.flatten() });
