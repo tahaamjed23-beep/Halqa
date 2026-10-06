@@ -279,7 +279,7 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
         <div className="w-title"><h2>Confirm your number</h2>
           <p>A six digit code went to {form.phone}.</p></div>
         <Field label="The code">
-          <input className="mono" inputMode="numeric" autoFocus maxLength={6} placeholder="000000"
+          <input aria-label="000000" className="mono" inputMode="numeric" autoFocus maxLength={6} placeholder="000000"
                  value={form.otpCode} disabled={otpVerified}
                  onChange={e => setForm({ ...form, otpCode: e.target.value.replace(/\D/g, '') })} />
         </Field>
@@ -304,15 +304,15 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
         <div className="w-title"><h2>Your name, as on your CNIC</h2>
           <p>Circles run on real names. It is how members know who they are trusting.</p></div>
         <Field label="Full name">
-          <input autoFocus autoComplete="name" placeholder="Full name" value={form.fullName}
+          <input aria-label="Full name" autoFocus autoComplete="name" placeholder="Full name" value={form.fullName}
                  onChange={e => setForm({ ...form, fullName: e.target.value })} />
         </Field>
         <Field label="Username" hint="">
-          <input autoComplete="username" placeholder="Pick a username" value={form.username}
+          <input aria-label="Pick a username" autoComplete="username" placeholder="Pick a username" value={form.username}
                  onChange={e => setForm({ ...form, username: e.target.value.toLowerCase().replace(/[^a-z0-9_.]/g, '') })} />
         </Field>
         <Field label="Email" hint="For receipts and recovery">
-          <input type="email" autoComplete="email" placeholder="you@example.com" value={form.email}
+          <input aria-label="you@example.com" type="email" autoComplete="email" placeholder="you@example.com" value={form.email}
                  onChange={e => setForm({ ...form, email: e.target.value })} />
         </Field>
       </>;
@@ -331,13 +331,13 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
           {locErr && <Notice kind="bad" icon={<Info />}>{locErr}</Notice>}
         </div>
         <Field label="Home address" hint="Private">
-          <input autoComplete="street-address" placeholder="House, street, area" value={form.addressLine}
+          <input aria-label="House, street, area" autoComplete="street-address" placeholder="House, street, area" value={form.addressLine}
                  onChange={e => setForm({ ...form, addressLine: e.target.value })} />
         </Field>
         <PickerRow label="City" icon={<MapPin />} value={form.city} placeholder="Pick your city"
                    onClick={() => setCitySheet(true)} />
         <Field label="Area or sector" hint="Shown to members">
-          <input placeholder="Your area" value={form.locality}
+          <input aria-label="Your area" placeholder="Your area" value={form.locality}
                  onChange={e => setForm({ ...form, locality: e.target.value })} />
         </Field>
       </>;
@@ -351,12 +351,12 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
                    placeholder="Pick one" onClick={() => setJobSheet(true)} />
         {form.occupationType && (
           <Field label={JOB_FIELD[form.occupationType].label}>
-            <input placeholder={JOB_FIELD[form.occupationType].ph} value={form.jobTitle}
+            <input aria-label="What you do" placeholder={JOB_FIELD[form.occupationType].ph} value={form.jobTitle}
                    onChange={e => setForm({ ...form, jobTitle: e.target.value })} />
           </Field>
         )}
         <Field label="Roughly what you earn a month" hint="Private">
-          <input inputMode="numeric" placeholder="60000" value={form.monthlyIncome}
+          <input aria-label="60000" inputMode="numeric" placeholder="60000" value={form.monthlyIncome}
                  onChange={e => setForm({ ...form, monthlyIncome: e.target.value.replace(/\D/g, '') })} />
         </Field>
         {Number(form.monthlyIncome) > 0 && (
@@ -371,7 +371,7 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
         {form.occupationType === 'EMPLOYED' && (
           <>
             <Field label="Where you work" hint="Private. 20 per cent off the fee.">
-              <input placeholder="Company or employer" value={form.employerName}
+              <input aria-label="Company or employer" placeholder="Company or employer" value={form.employerName}
                      onChange={e => setForm({ ...form, employerName: e.target.value })} />
             </Field>
             <PickerRow label="Which day your pay arrives" icon={<Wallet />}
@@ -385,7 +385,7 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
         <div className="w-title"><h2>Your CNIC number</h2>
           <p>Thirteen digits. Used to confirm who you are, and never shown to another member.</p></div>
         <Field label="CNIC">
-          <input className="mono" inputMode="numeric" autoFocus maxLength={15}
+          <input aria-label="35202-1234567-1" className="mono" inputMode="numeric" autoFocus maxLength={15}
                  placeholder="35202-1234567-1" value={groupCnic(form.cnic)}
                  onChange={e => setForm({ ...form, cnic: cleanCnic(e.target.value) })} />
         </Field>
@@ -407,13 +407,13 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
         {isBank && <PickerRow label="Your bank" icon={<Landmark />} value={form.bankName}
                               onClick={() => setBankSheet(true)} />}
         <Field label="Account holder name" hint="As registered">
-          <input autoComplete="name" placeholder="As printed on the account" value={form.accountTitle}
+          <input aria-label="As printed on the account" autoComplete="name" placeholder="As printed on the account" value={form.accountTitle}
                  onChange={e => setForm({ ...form, accountTitle: e.target.value })} />
         </Field>
         <Field label={numberLabel}
                hint={isBank ? '24 characters, starting PK' : '11 digits, starting 03'}
                error={(isBank ? ibanProblem(form.accountNo) : mobileProblem(form.accountNo)) || undefined}>
-          <input className="mono" inputMode={isBank ? 'text' : 'numeric'}
+          <input aria-label="Account number" className="mono" inputMode={isBank ? 'text' : 'numeric'}
                  placeholder={isBank ? 'PK36 SONE 0000 1234 5678 9012' : '0300 1234567'}
                  value={isBank ? groupIban(form.accountNo) : groupMobile(form.accountNo)}
                  onChange={e => setForm({ ...form, accountNo: e.target.value })} />
@@ -431,7 +431,7 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
         <div className="w-title"><h2>Create a password</h2>
           <p>Eight characters or more, with letters and numbers.</p></div>
         <Field label="Password">
-          <input type="password" autoFocus autoComplete="new-password" placeholder="Password"
+          <input aria-label="Password" type="password" autoFocus autoComplete="new-password" placeholder="Password"
                  value={form.regPassword} onChange={e => setForm({ ...form, regPassword: e.target.value })} />
         </Field>
         <div className="w-inset">
@@ -522,7 +522,7 @@ export default function AuthPage({ onAuth }: { onAuth: (user: User) => void }) {
                   <PhoneInput value={form.identity} onChange={v => setForm({ ...form, identity: v })} />
                 </div>
                 <Field label="Password">
-                  <input type="password" placeholder="Password" autoComplete="current-password"
+                  <input aria-label="Password" type="password" placeholder="Password" autoComplete="current-password"
                          value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
                 </Field>
                 {error && <div className="w-inset"><Notice kind="bad" icon={<Info />}>{error}</Notice></div>}

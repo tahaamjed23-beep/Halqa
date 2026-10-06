@@ -33,7 +33,9 @@ export default function LimitsPage({ back }: { back?: () => void }) {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    void api<Limits>('/account/limits').then(setData)
+    void api<Limits>('/account/limits')
+      .then(d => Array.isArray(d?.limits) && Array.isArray(d?.raise)
+        ? setData(d) : setError('Your limits could not be read. Try again in a moment.'))
       .catch(reason => setError((reason as Error).message));
   }, []);
 
@@ -71,7 +73,7 @@ export default function LimitsPage({ back }: { back?: () => void }) {
                    title={l.label} sub={l.note}
                    value={hasCount ? l.used + ' of ' + l.cap
                      : l.capPaisa ? money(l.capPaisa)
-                     : l.value || '—'}
+                     : l.value || 'No limit set'}
                    tone={atCap ? 'warn' : undefined} />
             );
           })}

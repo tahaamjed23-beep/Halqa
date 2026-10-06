@@ -1,6 +1,6 @@
 import { Group, Tile, TileGrid } from '../components/wallet';
 import { useEffect, useMemo, useState } from 'react';
-import {ArrowDownLeft, ArrowUpRight, Bell, Search, CalendarClock, CheckCircle2, ChevronRight, CreditCard, Eye, EyeOff, Flame, Gauge, Gift, Package, Receipt, Repeat, Users, Wallet, Zap} from 'lucide-react';
+import {ArrowDownLeft, ArrowUpRight, Bell, Search, Sparkles, CalendarClock, CalendarDays, CheckCircle2, CreditCard, Eye, EyeOff, FileText, Flame, Gauge, Gift, LifeBuoy, Package, Receipt, Repeat, Users, Wallet, Zap} from 'lucide-react';
 import { api, money } from '../api';
 import type { Committee, Summary, User } from '../types';
 import { formatDuration } from '../components/ui';
@@ -51,11 +51,22 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
       <div className="hdr-row">
         <Pfp url={photo} name={user.fullName} size={42} />
         <div className="hdr-id">
-          <small>{greeting}</small>
+          {/* The greeting rotates through Urdu, Punjabi, Pashto and Sindhi. A
+              screen reader pronounces whatever it is handed with the language
+              of the page, so a passage in another language has to say so, or it
+              comes out as English letters read aloud (WCAG 3.1.2). */}
+          <small lang={/[؀-ۿ]/.test(greeting) ? 'ur' : 'en'}
+                 dir={/[؀-ۿ]/.test(greeting) ? 'rtl' : undefined}>{greeting}</small>
           <strong>{user.fullName}</strong>
         </div>
         <button className="hdr-btn" aria-label="Search" onClick={()=>go('search')}><Search/></button>
-        <button className="hdr-btn" aria-label="Notifications" onClick={()=>go('notices')}>
+        {/* The assistant's fixed entry point. It replaced a character that
+            floated over the content of every screen. */}
+        <button className="hdr-btn" aria-label="Ask Rafa"
+          onClick={()=>window.dispatchEvent(new CustomEvent('halqa:open-assistant'))}>
+          <Sparkles/>
+        </button>
+        <button className="hdr-btn" aria-label={unread>0?`Notifications, ${unread} unread`:'Notifications'} onClick={()=>go('notices')}>
           <Bell/>{unread>0&&<i className="dot"/>}
         </button>
       </div>
@@ -65,15 +76,19 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
       <div className="bal-card">
         <div className="bal-top">
           <div>
-            <div className="bal-lab"><Wallet/> Total recorded</div>
+            {/* "Total recorded" named the system's filing habit, not the
+                member's money. This is what they have committed across every
+                circle they hold. */}
+            <div className="bal-lab"><Wallet/> Committed across your circles</div>
             <div className="bal-amt">{mask(money(summary?.balancePaisa||0))}</div>
             <div className="bal-sub">Across {summary?.activeCommittees||0} active {summary?.activeCommittees===1?'committee':'committees'}</div>
           </div>
           <button className="bal-eye" onClick={toggle} aria-label={hide?'Show balance':'Hide balance'}>{hide?<EyeOff/>:<Eye/>}</button>
         </div>
-        <div className="bal-split">
-          <div><span>Next installment</span><strong>{due?mask(money(due.amountPaisa)):''}</strong></div>
-          <div><span>Due in</span><strong>{due?formatDuration(due.dueAt):'Nothing due'}</strong></div>
+        <div className={due?'bal-split':'bal-split two'}>
+          <div><span>Next installment</span>
+            <strong>{due?mask(money(due.amountPaisa)):'Nothing due'}</strong></div>
+          {due&&<div><span>Due in</span><strong>{formatDuration(due.dueAt)}</strong></div>}
           <div><span>Credit score</span><strong style={{color:'var(--l600)'}}>{user.creditScore}</strong></div>
         </div>
       </div>
@@ -90,13 +105,16 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
         <Tile icon={<Receipt/>} label="Receipts" onClick={()=>go('activity')}/>
         <Tile icon={<Gauge/>} label="Credit score" onClick={()=>go('credit')}/>
         <Tile icon={<Gift/>} label="Rewards" onClick={()=>go('rewards')}/>
+        <Tile icon={<CalendarDays/>} label="Schedule" onClick={()=>go('schedule')}/>
+        <Tile icon={<FileText/>} label="Statement" onClick={()=>go('statement')}/>
+        <Tile icon={<LifeBuoy/>} label="Help" onClick={()=>go('support')}/>
       </TileGrid>
     </Group>
 
     {due&&<div className="sec">
       <div className="card" style={{background:'var(--l50)',borderColor:'var(--l200)'}}>
         <div style={{display:'flex',alignItems:'center',gap:12}}>
-          <div className="row-ic" style={{background:'var(--l500)',color:'#fff'}}><CalendarClock/></div>
+          <div className="row-ic" style={{background:'var(--l500)',color:'var(--on-accent)'}}><CalendarClock/></div>
           <div className="row-body">
             <strong>{due.committee.name}</strong>
             <span>Installment of {money(due.amountPaisa)} · due {formatDuration(due.dueAt)}</span>
@@ -133,6 +151,9 @@ export default function HomePage({user,openCommittee,create,go}:{user:User;openC
 }
 
 
+const every=(d:number)=>d===1?'a day':d===7?'a week':d===14?'a fortnight'
+  :d===30||d===31?'a month':d===365?'a year':`every ${d} days`;
+
 export function CommitteeCard({c,userId,i,open}:{c:Committee;userId:string;i:number;open:(id:string)=>void}){
   const round=c.rounds?.[0];
   const paid=round?.payments?.filter(p=>p.status==='PAID').length||0;
@@ -147,14 +168,16 @@ export function CommitteeCard({c,userId,i,open}:{c:Committee;userId:string;i:num
         : initials}</div>
       <div className="cm-t">
         <h3>{c.name}</h3>
-        <p>{c.hostId===userId?'You host this':`Hosted by ${c.host?.fullName||''}`}</p>
+        <p>{[
+          c.hostId===userId?'You host this':`Hosted by ${c.host?.fullName||''}`,
+          mine?.turnPosition?`turn ${mine.turnPosition} of ${c.memberCap}`:null,
+          `${c.members?.length||0} joined`,
+        ].filter(Boolean).join(' · ')}</p>
       </div>
-      <ChevronRight style={{color:'var(--faint)',flex:'none',marginTop:4}}/>
-    </div>
-    <div className="cm-grid">
-      <div><span>Installment</span><strong>{money(c.contributionPaisa)}</strong></div>
-      <div><span>Members</span><strong>{c.members?.length||0}/{c.memberCap}</strong></div>
-      <div><span>Your turn</span><strong>{mine?.turnPosition?`#${mine.turnPosition}`:''}</strong></div>
+      <div className="cm-amt">
+        <b>{money(c.contributionPaisa)}</b>
+        <small>{every(c.periodDays)}</small>
+      </div>
     </div>
     {total>0&&<div className="cm-bar">
       <div className="cm-bar-top"><span>Round {round?.roundNumber||1} collection</span><b>{paid}/{total} paid</b></div>

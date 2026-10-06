@@ -1,0 +1,9 @@
+Source: State Bank of Pakistan, PSD Circular No. 02 of 2021, Pricing of Interbank Fund Transfer (IBFT) Services, 16 June 2021, https://www.sbp.org.pk/circulars/psd-circular-no-02-of-2021, read 25 September 2026.
+
+2. It has now been decided that Banks/MFBs/EMIs shall continue to provide free of cost IBFT services to their individual customers up to, at least, a minimum aggregate sending limit of Rs.25,000 per month per account/wallet. Hence, individual customers of Banks/MFBs/EMIs shall continue to send out as many free IBFT transactions as long as they remain within their monthly limit of Rs.25,000.
+3. After the monthly limit of Rs.25,000 is exhausted, Banks/MFBs/EMIs may charge their individual customers, a transaction fee of 0.1% of the transaction amount or Rs.200, whichever is lower. However, Banks/MFBs/EMIs are encouraged to provide free of cost IBFT services to their customers to promote adoption of digital payments in the country.
+4. All Intra Bank Fund Transfers as well as incoming interbank fund transfer services shall remain free of charge.
+5. Banks/MFBs/EMIs shall ensure proper disclosure of charged and free IBFT amounts along with applicable fees to their customers by sending regular notifications through SMS, apps and email. After every digital transaction, the customer shall receive free of charge SMS on their registered mobile numbers intimating them about the transaction amount and the charges being recovered.
+7. With immediate effect, it is further advised that Banks/MFBs/EMIs shall not limit the number of fund transfer transactions on their customer accounts/wallets unless there are genuine concerns related to AML/CFT or frauds.
+
+Also listed on the State Bank circulars page: PSD Circular Letter No. 03 of 2021, IBAN Implementation Guidelines for EMIs, 15 June 2021; PSD Circular Letter No. 02 of 2021, Regulations for Payment Card Security, 19 February 2021.

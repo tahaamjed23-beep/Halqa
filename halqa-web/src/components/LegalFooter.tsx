@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDismissable } from '../lib/dismissable';
 import { useBackToClose } from '../lib/back';
 import { LEGAL_DOCS, type DocId } from '../legal/content';
 
@@ -9,8 +10,13 @@ import { LEGAL_DOCS, type DocId } from '../legal/content';
 export function LegalDocModal({ doc, onClose }: { doc: DocId; onClose: () => void }) {
   const d = LEGAL_DOCS[doc];
   useBackToClose(true, onClose);
-  return <div className="modal-backdrop" role="dialog" aria-label={d.title} onClick={onClose}>
-    <section className="modal legal-modal" onClick={e => e.stopPropagation()}>
+  const layer = useDismissable(true, onClose);
+  return <div className="modal-backdrop" aria-hidden="true" onClick={onClose}>
+    {/* The dialog is the section, not the backdrop: a reader should be told it
+        is in a document, and the backdrop is only somewhere to tap. Escape
+        closes it, and so does Close. */}
+    <section className="modal legal-modal" role="dialog" aria-modal="true" aria-label={d.title}
+             ref={layer} tabIndex={-1} onClick={e => e.stopPropagation()}>
       <div className="modal-head"><h2>{d.title}</h2><button className="text-action" onClick={onClose}>Close</button></div>
       <div className="legal-body">
         <p className="legal-updated">{d.updated}</p>
@@ -33,7 +39,10 @@ export default function LegalFooter() {
   const [info, setInfo] = useState('');
   const plain: Record<string, string> = {
     About: 'Halqa is Pakistan\'s digital committee network, create, join, pay and collect kametis with full records and portable trust.',
-    Accessibility: 'Halqa supports system font scaling, screen-reader labels on core flows, and اردو across the app. Report accessibility issues from Help Center.',
+    // The one Urdu word in an English sentence. It is written out in English
+    // here rather than wrapped in a lang attribute, because this value is a
+    // plain string passed to a text node and cannot carry markup.
+    Accessibility: 'Halqa supports system font scaling, screen-reader labels on core flows, and Urdu across the app. Report accessibility issues from Help Center.',
     'Help Center': 'Questions or complaints: email support@halqa.pk, we answer within 2 working days. Security reports: security@halqa.pk.',
   };
   return <footer className="legal-footer">

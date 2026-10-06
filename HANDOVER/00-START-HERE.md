@@ -1,5 +1,11 @@
 # HALQA — COLD START HANDOVER
 
+> **READ `MASTER-CONTEXT.md` IN THIS FOLDER FIRST (29 September 2026).** It is the current state, the latest
+> updates, the decision log and the list of what must not be reverted. The files 00 to 12 below were written on
+> 9 to 11 August 2026 and are now HISTORICAL: since 28 September Halqa works through a partner bank (Mashreq Bank
+> Pakistan), which reverses "no bank partner, ever", "never hold member money" as the operating design, and
+> "members pay Rs 0". Use 00 to 12 only for August-era detail.
+
 **Written 9 August 2026. Assumes you know nothing.**
 
 You are picking up a live fintech project mid-flight. This folder is everything —

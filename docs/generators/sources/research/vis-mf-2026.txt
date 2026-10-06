@@ -1,0 +1,737 @@
+ 
+ 
+ 
+VIS 
+Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+1 
+Microfinance Sector
+MAY 2026
+ 
+ 
+MICROFINANCE SECTOR  
+VIS 
+Credit Rating Company Limited 
+
+ 
+ 
+ 
+VIS 
+Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+2 
+Microfinance Sector
+MAY 2026
+GLOBAL MICROFINANCE 
+The global microfinance sector had expanded into a USD ~250–300bn+ industry by 2025, supported by strong 
+structural demand. A large unbanked population, and policy emphasis on inclusive finance, with Asia-Pacific accounting 
+for the largest share of activity. Growth remained robust, generally in the low double digits, driven by digitalization, 
+mobile-based lending platforms, and fintech partnerships that have significantly lowered customer acquisition and 
+servicing costs. However, 2025 also highlighted the sector’s cyclical vulnerabilities, as rapid credit expansion in certain 
+regions led to rising borrower over-indebtedness and asset quality stress, with portfolio-at-risk levels increasing 
+materially in key markets. This, coupled with elevated funding costs amid tight global monetary conditions, compressed 
+profitability despite inherently high lending yields. 
+Looking ahead to 2026, the sector is expected to maintain steady growth momentum, supported by continued financial 
+inclusion initiatives and digital transformation. Asset quality is anticipated to gradually stabilize, as lenders strengthen 
+underwriting standards and moderate disbursement growth. However, some risks still remain. These include possible 
+changes in regulations, borrowers being affected by climate-related issues, and fluctuations in funding due to broader 
+emerging market conditions. Overall, while the microfinance sector continues to show strong long-term potential, it is 
+sensitive to economic cycles and is gradually moving toward a more stable model through consolidation, diversification, 
+and a greater focus on sustainable growth. 
+ 
+MICROFINANCE STRUCTURE IN PAKISTAN 
+Pakistan's microfinance sector operates under a dual-regulator, tiered legal framework established through the 
+Microfinance Institutions (MFI) Ordinance, 2001, which bifurcates the industry into two structurally distinct segments. 
+The first comprises Microfinance Banks (MFBs) — deposit-taking institutions licensed and supervised by the State Bank 
+of Pakistan (SBP) under dedicated Prudential Regulations. SBP maintains a separate regulatory and supervisory 
+framework for MFBs, distinct from that applicable to the broader banking sector, in recognition of the unique dynamics 
+and social mandate of microfinance. Under the Ordinance, MFBs may be licensed at three operational tiers: national-
+level, provincial-level, and district-level. While this tiered structure remains in force for licensing purposes, the May 
+2025 revised Prudential Regulations have significantly raised and unified the minimum capital standard: all MFBs, 
+irrespective of their operational category, are now required to maintain a minimum paid-up capital (net of losses) of at 
+least PKR 2 billion, to be achieved by existing MFBs in a phased manner. National and provincial MFBs must raise their 
+capital to PKR 2 billion by June 2027, while the Capital Adequacy Ratio (CAR) requirement remains at 15% of risk-
+weighted assets. As of 2025, ten MFBs operate under SBP's regulatory umbrella. Telenor Microfinance Bank has been 
+converted from a microfinance bank to a Digital Retail Bank, now operating under the name "Easypaisa Bank Limited," 
+becoming the first institution to receive a Digital Retail Bank license from the SBP.  
+The second segment comprises Non-Bank Microfinance Companies (NBMFCs) regulated by the Securities and 
+Exchange Commission of Pakistan (SECP) under the Non-Banking Finance Companies and Notified Entities (NBFC&NE) 
+Regulations, 2008. This segment includes for-profit NBMFCs alongside Rural Support Programs (RSPs) operating as 
+Section 42 not-for-profit entities. Unlike MFBs, NBMFCs are not permitted to accept public deposits; they fund their 
+operations primarily through borrowings from commercial banks, grants, and government and development finance 
+channels. The sector's policy and market infrastructure are further supported by the Pakistan Microfinance Network 
+(PMN) as the national industry association, and the Pakistan Microfinance Investment Company (PMIC) as the wholesale 
+
+ 
+ 
+ 
+VIS 
+Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+3 
+Microfinance Sector
+MAY 2026
+apex lender, which channels multilateral funding from institutions including the World Bank, ADB, and IFC into the 
+sector.  
+Microfinance Industry Performance Indicators 
+  
+(in '000) 
+MFBs 
+NBMFC  
+24-Dec 
+25-Dec 
+24-Dec 
+25-Dec 
+Credit Outreach  
+Active Borrowers  
+No. 
+9,006 
+9,835 
+3,134 
+3,603 
+Average Loan Size  
+PKR  
+50.8 
+55.5 
+44.8 
+85.5 
+Loan Portfolio 
+by Gender 
+Male  
+No. 
+6,018 
+7,129 
+576 
+686 
+Female  
+No. 
+2,988 
+2,797 
+2,564 
+2,917 
+Segment 
+Distribution 
+Agriculture  
+% 
+27.9 
+25.2 
+5.6 
+1.9 
+Livestock/Poultry 
+29.8 
+27 
+19.5 
+9.4 
+Trade/Services 
+16.8 
+17.5 
+50.3 
+25.1 
+Manufacturing/Production 
+0.2 
+0.3 
+11.2 
+7.3 
+Housing 
+10.1 
+8.1 
+8.2 
+53.2 
+Nano Loans 
+6.3 
+6.8 
+- 
+0 
+Other 
+8.9 
+15.2 
+5.2 
+3.1 
+Active 
+Depositors 
+Branches  
+No. 
+8,930 
+11,247 
+3,362 
+12,170 
+Mobile Wallets  
+106,487 
+128,404 
+- 
+- 
+Deposits Value  
+Branches  
+PKR  
+465,271,224 
+551,987,382 
+1,547,810 
+2,639,500 
+Mobile Wallets  
+162,968,684 
+238,029,328 
+- 
+- 
+Source: PMN 
+ 
+Microfinance Banks (MFBs) 
+The microfinance banking sector in Pakistan showed early signs of stabilization in CY25, as 
+underlying credit demand remained resilient despite the lagged effects of macroeconomic 
+tightening and climate-related disruptions. Gross advances expanded by 15.5% to PKR 536.0 
+billion, signaling firm core borrower demand, At the same time, the sector adopted a more 
+conservative balance sheet stance, with elevated provisioning pushing the provisioning coverage 
+to 138.1%.  
+On the funding side, the surge in concessional borrowings seen in CY24 to capitalize on high-yield 
+government securities began to unwind in CY25 with monetary easing. Consequently, borrowings 
+declined by 55%, accompanied by a notable contraction in the investment book and a moderation 
+in total assets.  
+Asset quality trends point to partial stabilization rather than a full recovery. The gross infection 
+ratio improved to 9.1%, although this was partly a function of loan book expansion rather than a 
+meaningful decline in absolute non-performing loans. The sector’s elevated provisioning levels 
+
+ 
+ 
+ 
+VIS 
+Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+4 
+Microfinance Sector
+MAY 2026
+remain a key mitigant. Stress composition continues to vary across segments: agriculture and 
+livestock portfolios remain vulnerable due to structural and climate-related risks, while consumer 
+lending has shown marked improvement.  
+Profitability in CY25 was primarily supported by the easing monetary cycle. Lower funding costs 
+drove an increase in net interest income and expanded margins, as asset yields adjusted more 
+gradually. Although the sector remains marginally loss-making, the significant narrowing of losses 
+and improvement in operational self-sufficiency signals an inflection point. However, solvency 
+remains the key structural constraint. Accumulated losses have eroded capital, pushing the 
+aggregate capital adequacy ratio into negative territory and well below regulatory requirements. 
+Importantly, this weakness is concentrated in a few distressed institutions rather than being broad-
+based across the sector. 
+Financial Indicators (in PKR million)  
+Balance Sheet  
+Dec-23 
+Dec-24 
+Dec-25 
+Gross Advances  
+407,790 
+463,993 
+535,984 
+Net Advances  
+379,946 
+421,227 
+468,346 
+Net Investments  
+163,477 
+387,305 
+250,925 
+Total Assets  
+771,336 
+1,068,533 
+1,029,467 
+Borrowings  
+58,461 
+204,233 
+91,887 
+Deposits  
+597,023 
+732,959 
+830,477 
+Liabilities  
+733,937 
+1,031,310 
+1,003,882 
+Paid up Capital  
+42,379 
+59,280 
+63,180 
+Equity  
+37,399 
+37,223 
+25,586 
+Income Statement  
+Net Interest Income  
+70,752 
+93,180 
+121,177 
+Profit After Tax  
+-8,118 
+-16,212 
+-2,059 
+Ratios (in %) 
+Gross Infection  
+7 
+10 
+9 
+Net Infection  
+0.0 
+1.0 
+-4.0 
+Total Provisioning Coverage  
+102 
+95 
+138 
+Net NPL/Tier-1 CAR  
+-2.0 
+21 
+388 
+Operational Self Sufficiency (OSS) 
+79 
+75 
+85 
+Liquid Assets to (Deposits, Borrowings, and Bill 
+Payable)  
+35 
+50 
+35 
+Capital Adequacy Ratio 
+8 
+3 
+-1.0 
+ROA  
+-1.0 
+-2.0 
+0.0 
+ROE 
+-20.0 
+-50.0 
+-8.0 
+Sources: SBP 
+ 
+
+ 
+ 
+ 
+VIS 
+Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+5 
+Microfinance Sector
+MAY 2026
+ 
+        
+ 
+ 
+        
+ 
+ Note: The data is included for all microfinance banks for which financial statements were available as of December 31, 
+2025. *For EasyPaisa Digital Bank Limited, the data pertains to the nine-month period ended CY25.                                             
+Source: VIS Database 
+-50.0%
+0.0%
+50.0%
+100.0%
+150.0%
+200.0%
+Advances Growth (%)
+MFBs
+Advances Growth YoY - 2025
+-50.0%
+0.0%
+50.0%
+100.0%
+150.0%
+200.0%
+Deposit Growth (%)
+MFBs
+Deposit Growth YoY - 2025 
+-2,000
+0
+2,000
+4,000
+6,000
+PAT (in PKR million)
+MFBs
+Profit/(Loss) after Tax - 2025
+-20.0%
+-10.0%
+0.0%
+10.0%
+20.0%
+ROAA (%)
+MFBs
+Return on Average Asset - 2025
+
+ 
+ 
+ 
+VIS 
+Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+6 
+Microfinance Sector
+MAY 2026
+Microfinance Banks -Key Indicators & Ratings 
+Entity 
+MCR 
+Compliant* 
+CAR 
+Compliant* 
+Profitable* 
+Government 
+Support 
+VIS** 
+PACRA** 
+Apna Microfinance Bank 
+ Yes 
+No 
+No 
+No 
+- 
+BB/A4 
+(Negative) 
+ASA Microfinance Bank 
+(Pakistan) Limited 
+Yes 
+Yes 
+Yes 
+No 
+A-/A2 
+(Positive) 
+A-/A2 
+(Stable) 
+ABHI Microfinance 
+(Formerly: FINCA 
+Microfinance Bank 
+N/A 
+N/A 
+N/A 
+No 
+A-/A2 (Rating 
+Watch - 
+Developing) 
+BBB+/A3 
+(Negative) 
+Limited) 
+Halan Microfinance Bank 
+(Formerly: Advans 
+Pakistan Microfinance 
+Bank Ltd) 
+Yes 
+Yes 
+No 
+No 
+BBB+ / A3 
+(Stable) 
+- 
+HBL Microfinance Bank 
+Limited 
+Yes 
+Yes 
+Yes 
+No 
+A+/A1 
+(Positive) 
+A+/A1 
+(Stable) 
+Khushhali Microfinance 
+Bank Limited 
+Yes 
+No 
+Yes 
+No 
+A-/A2 (Rating 
+Watch - 
+Developing) 
+- 
+LOLC Microfinance Bank 
+Limited 
+Yes 
+Yes 
+No 
+No 
+A-/A2 (Stable) 
+- 
+Mobilink Microfinance 
+Bank Limited 
+Yes 
+Yes 
+Yes 
+No 
+A+/A1 
+(Stable) 
+A/A1 
+(Stable) 
+NRSP Micro Finance 
+Bank Ltd 
+Yes 
+Yes 
+Yes 
+Yes 
+A-/A2 (Stable) 
+A-/A2 
+(Stable) 
+Sindh Microfinance Bank 
+Yes 
+Yes 
+Yes 
+Yes  
+A/A1 (Stable) 
+A/A1 
+(Stable) 
+Easypaisa Bank Limited 
+(formerly Telenor 
+Microfinance Bank 
+Limited) 
+Yes 
+Yes 
+Yes 
+No 
+- 
+A+/A1 
+(Stable) 
+U Microfinance Bank 
+Limited* (formerly 
+Rozgar Microfinance 
+Bank Limited) 
+N/A 
+N/A 
+N/A 
+Yes (Indirect 
+Support) 
+A+/A1 
+(Stable) 
+A+/A1 
+(Stable) 
+* Includes data for all microfinance banks for which financial statements were available as of December 31, 2025. 
+**Ratings outstanding as of May 25, 2026. 
+
+ 
+ 
+ 
+VIS 
+Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+7 
+Microfinance Sector
+MAY 2026
+NON-BANK MICROFINANCE COMPANIES (NBMFCS) 
+The Non-Banking Microfinance Companies (NBMFC) sector in Pakistan exhibited strong growth 
+in CY25, underpinned by a significant expansion in its lending book alongside a shift in portfolio 
+mix. The gross loan portfolio more than doubled to PKR 308 billion, far exceeding the 15% increase 
+in active borrowers, signaling a clear transition toward higher ticket lending—particularly in 
+enterprise and housing finance. The pronounced growth in housing loans, now forming a 
+meaningful share of the overall portfolio, reflects the sector’s alignment with government-backed 
+affordable housing initiatives. 
+On the funding side, the sector remains heavily reliant on wholesale borrowings, which continue 
+to constitute the majority of liabilities, while deposits contribute only marginally. This structural 
+dependence on external funding exposes NBMFCs to potential liquidity pressures, particularly in 
+a tightening monetary environment or in the event of constrained bank lending.  
+Asset quality has shown signs of stabilization, with stress from COVID-19 and flood-related 
+disruptions largely subsiding. However, PAR>30 has shown volatility, spiking to 6.01% before 
+normalizing to 3.9% in January 2026 end. From a solvency standpoint, net worth has remained 
+stable, supported by sustained equity growth and ongoing support from sponsors and 
+development finance institutions. CAR remained sound at 17% at end-Dec 2025. 
+Financial Indicators (figures in million) 
+  
+24-Dec 
+25-Dec 
+Assets 
+313,233.7 
+403,247.4 
+Gross Loan Portfolio 
+140,329.6 
+308,016 
+Deposit Value  
+1,547.8 
+2,639.5 
+Equity  
+50,950.9 
+73,947 
+PAR>30 Days (%) 
+1.6 
+6 
+Liabilities  
+253,629.7 
+330,103.1 
+Source: PMN 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+VIS 
+Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+8 
+Microfinance Sector
+MAY 2026
+ 
+ 
+ 
+Note: Data pertains only to VIS-rated NBMFCs for which financial statements were available as of June 30, 2025. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+0.00%
+20.00%
+40.00%
+60.00%
+80.00%
+CSC
+DSP
+RCDP
+GoldFin
+Advances Growth (%)
+NBMFC
+Advances Growth YoY - 2025
+0.0
+500.0
+1,000.0
+1,500.0
+GoldFin
+CSC
+DSP
+RCDP
+PAT (in PKR million)
+NBMFC
+Profit/(Loss) after Tax - 2025
+0.00%
+10.00%
+20.00%
+30.00%
+DSP
+CSC
+GoldFin
+RCDP
+ROAA (%)
+NBMFC
+Return on Average Asset - 2025
+
+ 
+ 
+ 
+VIS 
+Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+9 
+Microfinance Sector
+MAY 2026
+               Non-Bank Microfinance Companies - Key Indicators & Ratings 
+Entity* 
+MER 
+Compliant* 
+Profitable*  
+Government 
+Support 
+VIS-Ratings** 
+GoldFin Limited (FY) 
+Yes 
+Yes 
+ No 
+A-/A2  
+(Stable) 
+Rural Community Development 
+Programs (FY) 
+Yes 
+Yes 
+ No 
+BBB+/A2 
+(Stable)  
+Taleem Finance Company Limited (CY) 
+Yes 
+Yes 
+ No 
+BBB/A2 
+(Stable)  
+Damen Support Programme (FY) 
+Yes 
+Yes 
+ No 
+BBB/A3 
+(Stable)  
+CSC Empowerment & Inclusion 
+Programme 
+Yes 
+Yes 
+ No 
+BBB-/A3 
+(Positive) 
+*The data pertains to VIS-rated NBMFCs only. 
+** Ratings outstanding as of May 25, 2026. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+VIS 
+Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+vis.com.pk 
+VIS Credit Rating Company Limited 
+10 
+Microfinance Sector
+MAY 2026
+Sources 
+ 
+Secondary Research Firms (Fortune Business Insights, Precedence Research, Mordor 
+Intelligence) 
+ 
+State Bank of Pakistan (SBP) 
+ 
+Pakistan Microfinance Network (PMN)  
+ 
+VIS Database  
+ 
+Companies’ Financials 
+ 
+Disclaimer: VIS has exercised due diligence in the preparation of this report. The information contained in the report has been obtained from sources we believe to be reliable, however, we 
+do not guarantee its accuracy, completeness, or that the figures provided are exact. 

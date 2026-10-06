@@ -16,8 +16,9 @@ export default function AboutPage({ back }: { back?: () => void }) {
           For generations Pakistani families have saved through the kameti: a circle of people, a
           fixed amount, one member collecting the pool each turn. It runs on trust, and it works,
           until memory fails, a register goes missing, or somebody walks away with the pot. Halqa
-          keeps everything that makes the committee good and adds the one thing it never had, a
-          record that cannot be argued with.
+          keeps everything that makes the committee good and adds what it never had: every
+          contribution and every turn written down as it happens, and a licensed bank holding and
+          moving the money.
         </p>
       </section>
 
@@ -27,7 +28,7 @@ export default function AboutPage({ back }: { back?: () => void }) {
             ['Through committees a year', 'Rs 1 trillion'],
             ['Saving adults who use one', '1 in 3'],
             ['Adults with no credit file', 'Over 100 million'],
-            ['What a member pays Halqa', 'Rs 0'],
+            ['What a member pays Halqa', 'Rs 85 an instalment'],
           ]} />
         </Card>
 

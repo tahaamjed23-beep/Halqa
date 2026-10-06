@@ -13,15 +13,26 @@
 // ============================================================================
 
 import { forwardObligationPaisa } from './exit-ladder';
+import { eligiblePositions, seatReason, standingOf, type CreditStanding } from './score-bands';
 
 export type SwapParty = {
   userId: string;
   /** Seat this party holds today. */
   seat: number;
   creditScore: number;
-  band: string;
-  /** Completed circles with a clean record; gates the tenure quarantine. */
+  /**
+   * Kept so existing callers still compile, and no longer read. It used to
+   * decide which seats were allowed, which let a caller hand in a band that
+   * disagreed with the score; the band is now derived from the score inside
+   * score-bands.ts, where it cannot be contradicted.
+   */
+  band?: string;
+  /** Completed circles with a clean record. One opens every seat (score-bands.ts). */
   cleanCompletedCircles: number;
+  /** What the bureau knows. Absent means nothing is known, which is not the same as bad. */
+  creditStanding?: CreditStanding | null;
+  /** Security pledged against the pot, in paisa, where the member has pledged any. */
+  securityPledgedPaisa?: number | null;
   /** Sum of forward liability across every other circle, in paisa. */
   existingExposureP: bigint;
   /** Verified net monthly income, in paisa. Zero when unverified. */
@@ -31,8 +42,12 @@ export type SwapParty = {
 export type SwapContext = {
   members: number;
   contributionP: bigint;
-  /** Members still inside the tenure quarantine may take only the last 3 seats. */
-  quarantineSeats: number;
+  /**
+   * Retained so existing callers still type-check. The seat blocks now come
+   * from score-bands.ts, which clamps the last block itself, so this number no
+   * longer decides anything.
+   */
+  quarantineSeats?: number;
 };
 
 export type SwapCheck = { ok: boolean; reasons: string[] };
@@ -42,23 +57,21 @@ export const liabilityAt = (seat: number, ctx: SwapContext): bigint =>
   ctx.contributionP * BigInt(Math.max(0, ctx.members - seat));
 
 /**
- * A new member may take only one of the last three seats, whatever their score,
- * until they have two clean completed circles. A swap must not be a way around
- * that, which is precisely what an unchecked marketplace would become.
+ * Which seats this party may hold at all.
+ *
+ * This file used to carry its own copy of the rule: a hard-coded "two clean
+ * circles" quarantine and a band-only seat table. Three copies of one rule in
+ * three files is how a marketplace quietly becomes the way around it, so the
+ * question is now asked of score-bands.ts, the same engine the join route and
+ * the bid route use. The seat matrix of 5 October 2026 lives in one place.
  */
-function quarantined(p: SwapParty): boolean {
-  return p.cleanCompletedCircles < 2;
-}
-
-function bandAllowsSeat(band: string, seat: number, ctx: SwapContext): boolean {
-  const n = ctx.members;
-  switch (band) {
-    case 'EXCELLENT':
-    case 'GOOD':      return true;
-    case 'DECENT':    return seat > Math.floor(n / 2);          // second half only
-    default:          return seat > n - 3;                       // last three only
-  }
-}
+const seatsAllowed = (p: SwapParty, ctx: SwapContext): number[] =>
+  eligiblePositions(ctx.members, standingOf({
+    creditScore: p.creditScore,
+    committeesCompletedClean: p.cleanCompletedCircles,
+    creditStanding: p.creditStanding,
+    securityPledgedPaisa: p.securityPledgedPaisa,
+  }, Number(ctx.contributionP) * ctx.members));
 
 /**
  * Forward exposure cap: total liability across every circle stays under four
@@ -85,11 +98,14 @@ export function checkSwap(seller: SwapParty, buyer: SwapParty, ctx: SwapContext)
   ];
 
   for (const [party, newSeat, who] of pairs) {
-    if (quarantined(party) && newSeat <= ctx.members - ctx.quarantineSeats) {
-      reasons.push(`${who} has not completed two clean circles yet, so they may only hold one of the last ${ctx.quarantineSeats} turns.`);
-    }
-    if (!bandAllowsSeat(party.band, newSeat, ctx)) {
-      reasons.push(`${who}'s score does not allow turn ${newSeat}.`);
+    const allowed = seatsAllowed(party, ctx);
+    if (!allowed.includes(newSeat)) {
+      reasons.push(`${who} may not hold turn ${newSeat}. ${seatReason(standingOf({
+        creditScore: party.creditScore,
+        committeesCompletedClean: party.cleanCompletedCircles,
+        creditStanding: party.creditStanding,
+        securityPledgedPaisa: party.securityPledgedPaisa,
+      }, Number(ctx.contributionP) * ctx.members))}`);
     }
     if (!withinExposure(party, newSeat, ctx)) {
       reasons.push(`${who} would owe more than their verified income supports.`);

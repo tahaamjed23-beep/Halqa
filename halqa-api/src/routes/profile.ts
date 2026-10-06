@@ -1,3 +1,6 @@
+import { safeRouter } from '../lib/safe-router';
+import { ID, idParam } from '../lib/params';
+import { readPage, sendPage } from '../lib/page';
 import { Router } from 'express';
 import { createHash, randomInt } from 'node:crypto';
 import { z } from 'zod';
@@ -12,7 +15,9 @@ import { INCOME_DISCOUNT_BPS, CHEQUE_DISCOUNT_BPS } from '../lib/discounts';
 import { titleFetch, type Rail } from '../lib/payment-provider';
 import { evaluateSalaryPattern } from '../lib/salary-pattern';
 
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 router.use(requireAuth);
 
 // Income & employer verification → 80% discount on Halqa's service charges. In
@@ -21,8 +26,10 @@ router.use(requireAuth);
 router.post('/verify-income', async (req, res, next) => {
   try {
     const input = z.object({ employerName: z.string().trim().min(2).max(80) }).parse(req.body);
-    await prisma.user.update({ where: { id: req.auth!.userId }, data: { incomeVerifiedAt: new Date(), employerName: input.employerName } });
-    await audit(prisma, req.auth!.userId, 'INCOME_VERIFIED', 'User', req.auth!.userId, { employerName: input.employerName });
+    await prisma.$transaction(async tx => {
+      await tx.user.update({ where: { id: req.auth!.userId }, data: { incomeVerifiedAt: new Date(), employerName: input.employerName } });
+      await audit(tx, req.auth!.userId, 'INCOME_VERIFIED', 'User', req.auth!.userId, { employerName: input.employerName });
+    });
     res.json({ incomeVerified: true, feeDiscountBps: INCOME_DISCOUNT_BPS });
   } catch (error) { next(error); }
 });
@@ -32,8 +39,10 @@ router.post('/verify-income', async (req, res, next) => {
 // an agent physically collects the cheque.
 router.post('/secure-cheque', async (req, res, next) => {
   try {
-    await prisma.user.update({ where: { id: req.auth!.userId }, data: { chequeSecuredAt: new Date() } });
-    await audit(prisma, req.auth!.userId, 'CHEQUE_SECURED', 'User', req.auth!.userId, {});
+    await prisma.$transaction(async tx => {
+      await tx.user.update({ where: { id: req.auth!.userId }, data: { chequeSecuredAt: new Date() } });
+      await audit(tx, req.auth!.userId, 'CHEQUE_SECURED', 'User', req.auth!.userId, {});
+    });
     res.json({ chequeSecured: true, feeDiscountBps: CHEQUE_DISCOUNT_BPS });
   } catch (error) { next(error); }
 });
@@ -41,13 +50,32 @@ router.post('/secure-cheque', async (req, res, next) => {
 router.post('/clear-verification', async (req, res, next) => {
   try {
     const { kind } = z.object({ kind: z.enum(['income', 'cheque']) }).parse(req.body);
-    await prisma.user.update({ where: { id: req.auth!.userId }, data: kind === 'income' ? { incomeVerifiedAt: null } : { chequeSecuredAt: null } });
+    // Clearing a verification raises the member's fee, so it is written down
+    // with the clearing itself and in the same transaction as it.
+    await prisma.$transaction([
+      prisma.user.update({ where: { id: req.auth!.userId }, data: kind === 'income' ? { incomeVerifiedAt: null } : { chequeSecuredAt: null } }),
+      prisma.auditLog.create({ data: {
+        actorId: req.auth!.userId, action: 'VERIFICATION_CLEARED',
+        entityType: 'User', entityId: req.auth!.userId, payloadJson: { kind },
+      } }),
+    ]);
     res.json({ cleared: kind });
   } catch (error) { next(error); }
 });
-router.get('/credit', async (req, res) => res.json(await prisma.creditEvent.findMany({ where: { userId: req.auth!.userId }, orderBy: { scoredAt: 'desc' }, take: 50 })));
+router.get('/credit', async (req, res) => {
+  // Was a fixed 50 with no cursor: a member could not see the event that moved
+  // their score if fifty newer ones had landed since.
+  const { take, cursorArgs } = readPage(req.query);
+  const rows = await prisma.creditEvent.findMany({
+    where: { userId: req.auth!.userId },
+    orderBy: [{ scoredAt: 'desc' }, { id: 'desc' }],   // id breaks ties, so a cursor is sound
+    take, ...cursorArgs,
+  });
+  sendPage(res, rows, take);
+});
 
 router.get('/reputation/:userId', async (req, res) => {
+  z.object({ userId: ID }).parse(req.params);
   const reputation = await reputationFor(req.params.userId);
   if (!reputation) return res.status(404).json({ error: 'User not found' });
   res.json(reputation);
@@ -96,8 +124,11 @@ router.get('/consent', async (req, res) => {
 router.patch('/consent', async (req, res, next) => {
   try {
     const { enabled } = z.object({ enabled: z.boolean() }).parse(req.body);
-    const u = await prisma.user.update({ where: { id: req.auth!.userId }, data: { dataConsent: enabled }, select: { dataConsent: true } });
-    await audit(prisma, req.auth!.userId, 'DATA_CONSENT_SET', 'User', req.auth!.userId, { enabled });
+    const u = await prisma.$transaction(async tx => {
+      const u = await tx.user.update({ where: { id: req.auth!.userId }, data: { dataConsent: enabled }, select: { dataConsent: true } });
+      await audit(tx, req.auth!.userId, 'DATA_CONSENT_SET', 'User', req.auth!.userId, { enabled });
+      return u;
+    });
     res.json({ dataConsent: u.dataConsent });
   } catch (error) { next(error); }
 });
@@ -209,11 +240,20 @@ router.post('/payment-methods/:id/verify', async (req, res, next) => {
 
 router.post('/payment-methods/:id/preferred', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     const u = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { paymentMethodsJson: true } });
     const methods = methodsOf(u.paymentMethodsJson);
     if (!methods.some(m => m.id === req.params.id)) return res.status(404).json({ error: 'Linked method not found' });
     const updated = methods.map(m => ({ ...m, preferred: m.id === req.params.id }));
-    await prisma.user.update({ where: { id: req.auth!.userId }, data: { paymentMethodsJson: updated } });
+    // Which rail money is pulled from is exactly the kind of change a member
+    // later says they did not make, so both writes go together.
+    await prisma.$transaction([
+      prisma.user.update({ where: { id: req.auth!.userId }, data: { paymentMethodsJson: updated } }),
+      prisma.auditLog.create({ data: {
+        actorId: req.auth!.userId, action: 'PAYMENT_METHOD_PREFERRED',
+        entityType: 'User', entityId: req.auth!.userId, payloadJson: { methodId: req.params.id },
+      } }),
+    ]);
     res.json({ methods: updated.map(publicMethod) });
   } catch (error) { next(error); }
 });
@@ -233,18 +273,22 @@ router.post('/payment-methods/:id/salary', async (req, res, next) => {
     // full discount loop is exercisable; production earns verification from
     // evidence only — payslip, pattern or alerts (lib/salary-pattern.ts).
     const sandboxVerify = enabled && process.env.NODE_ENV !== 'production';
-    const updated = await prisma.user.update({ where: { id: req.auth!.userId }, data: {
-      salaryAccountLinked: enabled, salaryAccountRef: enabled ? method.id : null,
-      ...(sandboxVerify ? { salaryVerifiedAt: new Date(), salaryVerifyMethod: 'SANDBOX' } : {}),
-      ...(!enabled ? { salaryVerifiedAt: null, salaryVerifyMethod: null } : {}),
-    }, select: { salaryAccountLinked: true, salaryAccountRef: true, salaryVerifiedAt: true, salaryVerifyMethod: true } });
-    await audit(prisma, req.auth!.userId, 'SALARY_ACCOUNT_SET', 'User', req.auth!.userId, { enabled, methodRail: method.rail });
+    const updated = await prisma.$transaction(async tx => {
+      const updated = await tx.user.update({ where: { id: req.auth!.userId }, data: {
+        salaryAccountLinked: enabled, salaryAccountRef: enabled ? method.id : null,
+        ...(sandboxVerify ? { salaryVerifiedAt: new Date(), salaryVerifyMethod: 'SANDBOX' } : {}),
+        ...(!enabled ? { salaryVerifiedAt: null, salaryVerifyMethod: null } : {}),
+      }, select: { salaryAccountLinked: true, salaryAccountRef: true, salaryVerifiedAt: true, salaryVerifyMethod: true } });
+      await audit(tx, req.auth!.userId, 'SALARY_ACCOUNT_SET', 'User', req.auth!.userId, { enabled, methodRail: method.rail });
+      return updated;
+    });
     res.json(updated);
   } catch (error) { next(error); }
 });
 
 router.delete('/payment-methods/:id', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     const u = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { paymentMethodsJson: true } });
     const methods = methodsOf(u.paymentMethodsJson);
     const target = methods.find(m => m.id === req.params.id);
@@ -256,8 +300,10 @@ router.delete('/payment-methods/:id', async (req, res, next) => {
     if (me.salaryAccountRef === req.params.id) return res.status(409).json({ error: 'This is your salary account — collections anchor to it. Mark another account as your salary account first, then remove this one.' });
     let remaining = methods.filter(m => m.id !== req.params.id);
     if (target.preferred && remaining.length) remaining = remaining.map((m, i) => ({ ...m, preferred: i === 0 }));
-    await prisma.user.update({ where: { id: req.auth!.userId }, data: { paymentMethodsJson: remaining, ...(me.salaryAccountRef === req.params.id ? { salaryAccountLinked: false, salaryAccountRef: null } : {}) } });
-    await audit(prisma, req.auth!.userId, 'PAYMENT_METHOD_REMOVED', 'User', req.auth!.userId, { rail: target.rail });
+    await prisma.$transaction(async tx => {
+      await tx.user.update({ where: { id: req.auth!.userId }, data: { paymentMethodsJson: remaining, ...(me.salaryAccountRef === req.params.id ? { salaryAccountLinked: false, salaryAccountRef: null } : {}) } });
+      await audit(tx, req.auth!.userId, 'PAYMENT_METHOD_REMOVED', 'User', req.auth!.userId, { rail: target.rail });
+    });
     res.json({ methods: remaining.map(publicMethod) });
   } catch (error) { next(error); }
 });
@@ -272,8 +318,10 @@ router.delete('/payment-methods/:id', async (req, res, next) => {
 router.post('/salary-day', async (req, res, next) => {
   try {
     const { day } = z.object({ day: z.number().int().min(1).max(31).nullable() }).parse(req.body);
-    await prisma.user.update({ where: { id: req.auth!.userId }, data: { salaryDay: day, ...(day === null ? {} : {}) } });
-    await audit(prisma, req.auth!.userId, 'SALARY_DAY_SET', 'User', req.auth!.userId, { day });
+    await prisma.$transaction(async tx => {
+      await tx.user.update({ where: { id: req.auth!.userId }, data: { salaryDay: day, ...(day === null ? {} : {}) } });
+      await audit(tx, req.auth!.userId, 'SALARY_DAY_SET', 'User', req.auth!.userId, { day });
+    });
     const evaluation = await evaluateSalaryPattern(req.auth!.userId);
     res.json({ salaryDay: day, evaluation });
   } catch (error) { next(error); }
@@ -328,6 +376,9 @@ router.post('/salary-signals', async (req, res, next) => {
         update: { dayOfMonth: e.dayOfMonth, amountBand: e.amountBand },
       });
     }
+    await audit(prisma, req.auth!.userId, 'SALARY_SIGNALS_RECORDED', 'User', req.auth!.userId, {
+      count: events.length, months: events.map(e => e.observedMonth),
+    });
     const evaluation = await evaluateSalaryPattern(req.auth!.userId);
     res.status(201).json({ recorded: events.length, evaluation });
   } catch (error) { next(error); }
@@ -390,18 +441,21 @@ router.patch('/appearance', requireAuth, async (req, res, next) => {
   try {
     const input = appearanceSchema.parse(req.body);
     const { notifyPrefs, ...rest } = input;
-    const user = await prisma.user.update({
-      where: { id: req.auth!.userId },
-      data: {
-        ...rest,
-        ...(notifyPrefs ? { notifyPrefsJson: notifyPrefs } : {}),
-      },
-      select: {
-        displayName: true, avatarUrl: true, accentColor: true, themePref: true,
-        langPref: true, textScale: true, highContrast: true, notifyPrefsJson: true,
-      },
+    const user = await prisma.$transaction(async tx => {
+      const user = await tx.user.update({
+        where: { id: req.auth!.userId },
+        data: {
+          ...rest,
+          ...(notifyPrefs ? { notifyPrefsJson: notifyPrefs } : {}),
+        },
+        select: {
+          displayName: true, avatarUrl: true, accentColor: true, themePref: true,
+          langPref: true, textScale: true, highContrast: true, notifyPrefsJson: true,
+        },
+      });
+      await audit(tx, req.auth!.userId, 'APPEARANCE_UPDATED', 'User', req.auth!.userId, { keys: Object.keys(input) });
+      return user;
     });
-    await audit(prisma, req.auth!.userId, 'APPEARANCE_UPDATED', 'User', req.auth!.userId, { keys: Object.keys(input) });
     res.json(user);
   } catch (error) { next(error); }
 });
@@ -434,18 +488,20 @@ router.patch('/payment-methods/order', requireAuth, async (req, res, next) => {
 
     const salaryMethod = input.salaryMethodId ? next.find(m => m.id === input.salaryMethodId) : undefined;
 
-    await prisma.user.update({
-      where: { id: req.auth!.userId },
-      data: {
-        paymentMethodsJson: next as unknown as Prisma.InputJsonValue,
-        ...(input.salaryMethodId !== undefined ? {
-          salaryAccountLinked: Boolean(salaryMethod),
-          salaryAccountRef: salaryMethod?.id ?? null,
-        } : {}),
-      },
+    await prisma.$transaction(async tx => {
+      await tx.user.update({
+        where: { id: req.auth!.userId },
+        data: {
+          paymentMethodsJson: next as unknown as Prisma.InputJsonValue,
+          ...(input.salaryMethodId !== undefined ? {
+            salaryAccountLinked: Boolean(salaryMethod),
+            salaryAccountRef: salaryMethod?.id ?? null,
+          } : {}),
+        },
+      });
+      await audit(tx, req.auth!.userId, 'COLLECTION_ORDER_SET', 'User', req.auth!.userId,
+        { order: next.map(m => m.id), salaryMethodId: input.salaryMethodId ?? null });
     });
-    await audit(prisma, req.auth!.userId, 'COLLECTION_ORDER_SET', 'User', req.auth!.userId,
-      { order: next.map(m => m.id), salaryMethodId: input.salaryMethodId ?? null });
     res.json({ methods: next, salaryMethodId: salaryMethod?.id ?? null });
   } catch (error) { next(error); }
 });

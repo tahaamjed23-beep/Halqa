@@ -58,7 +58,7 @@ export function ScoreSimulator({ score }: { score: number }) {
         <div className="sim-arrow">{moved === 0 ? '' : moved > 0 ? 'up' : 'down'}</div>
         <div className={`sim-next${moved > 0 ? ' up' : moved < 0 ? ' down' : ''}`}>
           <span>{event ? 'After' : 'Pick one'}</span>
-          <b>{event ? next : '—'}</b>
+          <b>{event ? next : 'Pick one'}</b>
         </div>
       </div>
 

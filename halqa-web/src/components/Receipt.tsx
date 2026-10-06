@@ -1,6 +1,8 @@
 import { Check, Clock, Copy, Share2, ShieldAlert, X } from 'lucide-react';
+import { useDismissable } from '../lib/dismissable';
 import { useState } from 'react';
 import { dateTime, money } from '../lib/format';
+import { SERVICE_FEE_PAISA } from '../lib/fees';
 import { RailLogo } from './RailLogo';
 
 export type ReceiptParty = { name: string; ref?: string };
@@ -52,7 +54,10 @@ const RAIL_NAME: Record<string, string> = {
 export default function Receipt({ data, onClose }: { data: ReceiptData; onClose: () => void }) {
   const [copied, setCopied] = useState(false);
   const when = data.stamp || dateTime(new Date());
-  const fee = Number(data.feePaisa || 0);
+  // A receipt that does not name a fee is a receipt for an instalment, and the
+  // fee on an instalment is Rs 85. Falling back to nought understated what the
+  // member paid (30 September 2026).
+  const fee = Number(data.feePaisa || 0) || SERVICE_FEE_PAISA;
   const total = Number(data.amountPaisa) + fee;
   const state = data.status || 'SETTLED';
 
@@ -81,9 +86,13 @@ export default function Receipt({ data, onClose }: { data: ReceiptData; onClose:
     catch { /* clipboard refused */ }
   };
 
+  const layer = useDismissable(true, onClose);
   return (
-    <div className="rcpt-wrap" onClick={onClose}>
-      <div className="rcpt-stage" onClick={e => e.stopPropagation()}>
+    // The receipt is the dialog; the wrap is somewhere to tap. Escape closes it
+    // and so does the Close button, both from a keyboard.
+    <div className="rcpt-wrap" onClick={onClose} aria-hidden="true">
+      <div className="rcpt-stage" role="dialog" aria-modal="true" aria-label="Payment receipt"
+           ref={layer} tabIndex={-1} onClick={e => e.stopPropagation()}>
         <button className="rcpt-close" onClick={onClose} aria-label="Close"><X /></button>
 
         <div className={'rcpt-tick' + (state === 'SETTLED' ? '' : ' pending')}>
@@ -111,7 +120,10 @@ export default function Receipt({ data, onClose }: { data: ReceiptData; onClose:
           <div className="rcpt-rows">
             {data.rows.map(([k, v]) => <div key={k}><span>{k}</span><b>{v}</b></div>)}
             <div><span>Amount</span><b>{money(data.amountPaisa)}</b></div>
-            <div><span>Halqa fee</span><b>{fee ? money(fee) : 'Rs 0'}</b></div>
+            {/* The fee on a receipt is the fee that was actually charged. It
+                used to fall back to "Rs 0", which stopped being true when the
+                fee became Rs 85 on every instalment (30 September 2026). */}
+            <div><span>Halqa fee</span><b>{money(fee)}</b></div>
             <div className="rcpt-total"><span>Total</span><b>{money(total)}</b></div>
           </div>
 

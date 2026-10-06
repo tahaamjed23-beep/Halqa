@@ -1,3 +1,5 @@
+import { safeRouter } from '../lib/safe-router';
+import { ID } from '../lib/params';
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../db';
@@ -20,7 +22,9 @@ import { requireAuth } from '../lib/auth';
 // committee may read or write, ten messages per ten seconds, 2000 characters.
 // ---------------------------------------------------------------------------
 
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 router.use(requireAuth);
 
 const activeMember = async (committeeId: string, userId: string) =>
@@ -42,6 +46,7 @@ const withSender = {
 /** The recent messages, oldest first so the client can append. */
 router.get('/:committeeId', async (req, res, next) => {
   try {
+    z.object({ committeeId: ID }).parse(req.params);
     const { committeeId } = req.params;
     if (!(await activeMember(committeeId, req.auth!.userId))) {
       return res.status(403).json({ error: 'Only members of this committee can read its messages' });
@@ -63,6 +68,7 @@ router.get('/:committeeId', async (req, res, next) => {
 
 router.post('/:committeeId', async (req, res, next) => {
   try {
+    z.object({ committeeId: ID }).parse(req.params);
     const { committeeId } = req.params;
     const { body } = z.object({ body: z.string().min(1).max(2000) }).parse(req.body ?? {});
     if (!(await activeMember(committeeId, req.auth!.userId))) {

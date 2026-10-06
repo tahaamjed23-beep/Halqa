@@ -26,12 +26,21 @@ describe('pakistan-calibrated simulation', () => {
     }
   });
 
-  it('keeps contribution burden inside the calibrated 8–15% band', () => {
+  it('keeps contribution burden inside the calibrated 8 to 15 per cent band', () => {
+    // Asserted on the extremes rather than once per member. 50,000 members used
+    // to mean 100,000 assertion calls, which ran for seconds and tipped over
+    // the default timeout whenever the machine was busy: the test failed in a
+    // full run and passed on its own, which is the worst kind of test. The
+    // extremes prove the same thing, in one pass, and name the member that
+    // broke the band instead of stopping at the first.
     const members = drawMembers(50_000, rng(SEED));
+    let lowest = members[0], highest = members[0];
     for (const m of members) {
-      expect(m.burden).toBeGreaterThanOrEqual(0.08);
-      expect(m.burden).toBeLessThanOrEqual(0.15);
+      if (m.burden < lowest.burden) lowest = m;
+      if (m.burden > highest.burden) highest = m;
     }
+    expect(lowest.burden, `lightest burden, ${lowest.seg.key}`).toBeGreaterThanOrEqual(0.08);
+    expect(highest.burden, `heaviest burden, ${highest.seg.key}`).toBeLessThanOrEqual(0.15);
   });
 
   it('Halqa cuts post-receipt defaults by at least 3x vs paper', () => {

@@ -1,4 +1,7 @@
 import { Router } from 'express';
+import { once } from '../lib/idempotency';
+import { readPage, sendPage } from '../lib/page';
+import { safeRouter } from '../lib/safe-router';
 import { z } from 'zod';
 import { prisma } from '../db';
 import { requireAuth } from '../lib/auth';
@@ -7,7 +10,9 @@ import { settleContribution } from '../lib/settlement';
 import { initiatePayment, type Rail } from '../lib/payment-provider';
 import { requireFreshUndertaking } from '../lib/agreements';
 
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 router.use(requireAuth);
 // Recording money movements requires a live weekly undertaking (the 428 tells
 // the web client to open the signing overlay). Read endpoints stay open.
@@ -40,7 +45,15 @@ router.post('/initiate', undertakingGate, async (req, res, next) => {
 });
 
 router.get('/mine', async (req, res) => {
-  res.json(await prisma.payment.findMany({ where: { payerId: req.auth!.userId }, include: { round: { include: { committee: { select: { id: true, name: true } } } } }, orderBy: { dueDate: 'desc' } }));
+  // Had no bound at all: every payment the member ever made, on every load of
+  // four different screens. Fine at twelve rows, an outage at twelve thousand.
+  const { take, cursorArgs } = readPage(req.query);
+  const rows = await prisma.payment.findMany({
+    where: { payerId: req.auth!.userId },
+    include: { round: { include: { committee: { select: { id: true, name: true } } } } },
+    orderBy: [{ dueDate: 'desc' }, { id: 'desc' }], take, ...cursorArgs,   // id breaks ties, so a cursor is sound
+  });
+  sendPage(res, rows, take);
 });
 
 router.post('/', undertakingGate, async (req, res, next) => {
@@ -56,9 +69,19 @@ router.post('/', undertakingGate, async (req, res, next) => {
     const payment = await prisma.payment.findUnique({ where: { roundId_payerId: { roundId: round.id, payerId: req.auth!.userId } } });
     if (!payment) return res.status(404).json({ error: 'Payment obligation not found' });
     if (payment.status === 'PAID') return res.json(payment);
-    const updated = await prisma.$transaction(tx => settleContribution(tx, { round, payment, paidVia: input.paidVia, txnRef: input.txnRef, idempotencyKey: input.idempotencyKey, actorId: req.auth!.userId }));
-    await prisma.paymentAttempt.create({ data: { userId: req.auth!.userId, paymentId: payment.id, rail: input.paidVia, outcome: 'COLLECTED', source: 'MANUAL', amountPaisa: payment.amountPaisa, calendarDay: new Date().getDate() } }).catch(() => {});
-    res.status(201).json(updated);
+    // Recorded once, whatever the network does. A retry with the same key gets
+    // the answer the first attempt gave rather than a conflict from the
+    // ledger's unique constraint, which read to the client as a failure and
+    // sent the member off to pay a second time by hand.
+    const outcome = await once(prisma, { userId: req.auth!.userId, route: 'POST /api/payments', key: input.idempotencyKey },
+      async tx => {
+        const updated = await settleContribution(tx, { round, payment, paidVia: input.paidVia, txnRef: input.txnRef, idempotencyKey: input.idempotencyKey, actorId: req.auth!.userId });
+        return { statusCode: 201, body: updated };
+      });
+    if (!outcome.replayed) {
+      await prisma.paymentAttempt.create({ data: { userId: req.auth!.userId, paymentId: payment.id, rail: input.paidVia, outcome: 'COLLECTED', source: 'MANUAL', amountPaisa: payment.amountPaisa, calendarDay: new Date().getDate() } }).catch(() => {});
+    }
+    res.status(outcome.statusCode).json(outcome.body);
   } catch (error) { next(error); }
 });
 

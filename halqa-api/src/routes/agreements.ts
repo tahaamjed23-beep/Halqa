@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { safeRouter } from '../lib/safe-router';
 import { z } from 'zod';
 import { prisma } from '../db';
 import { requireAuth } from '../lib/auth';
@@ -10,7 +11,9 @@ import {
   hashText, mutualPgText, platformUndertakingText,
 } from '../lib/agreements';
 
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 router.use(requireAuth);
 
 // Drives the signing overlay: is the weekly undertaking live, and (optionally)
@@ -35,7 +38,16 @@ router.get('/status', async (req, res, next) => {
 // The exact text the member signs (personalised, versioned, hashed).
 router.get('/text', async (req, res, next) => {
   try {
-    const doc = req.query.doc === 'MUTUAL_PG' ? 'MUTUAL_PG' : 'PLATFORM_UNDERTAKING';
+    // An unrecognised doc used to fall through to the undertaking, so a typo in
+    // the parameter showed the member a DIFFERENT legal document and said
+    // nothing. For a paper somebody is about to sign that is the one default
+    // that cannot be allowed to be quiet. Absent still means the undertaking,
+    // which is what every existing client relies on.
+    const asked = req.query.doc;
+    if (asked !== undefined && asked !== 'MUTUAL_PG' && asked !== 'PLATFORM_UNDERTAKING') {
+      return res.status(400).json({ error: 'Ask for PLATFORM_UNDERTAKING or MUTUAL_PG' });
+    }
+    const doc = asked === 'MUTUAL_PG' ? 'MUTUAL_PG' : 'PLATFORM_UNDERTAKING';
     if (doc === 'MUTUAL_PG') {
       const committeeId = typeof req.query.committeeId === 'string' ? req.query.committeeId : '';
       if (!committeeId) return res.status(400).json({ error: 'committeeId is required for the mutual guarantee text' });
@@ -78,14 +90,20 @@ router.post('/sign', async (req, res, next) => {
       await assertMember(input.committeeId, userId);
       const committee = await prisma.committee.findUniqueOrThrow({ where: { id: input.committeeId } });
       const text = mutualPgText(committee.name, committee.contributionPaisa, committee.memberCap, committee.cycleNumber);
-      const row = await prisma.agreementSignature.create({ data: { userId, committeeId: committee.id, docType: 'MUTUAL_PG', version: MUTUAL_PG_VERSION, textHash: hashText(text), ip: clientIp(req) } });
-      await audit(prisma, userId, 'MUTUAL_PG_SIGNED', 'Committee', committee.id, { version: MUTUAL_PG_VERSION, textHash: row.textHash });
+      const row = await prisma.$transaction(async tx => {
+        const row = await tx.agreementSignature.create({ data: { userId, committeeId: committee.id, docType: 'MUTUAL_PG', version: MUTUAL_PG_VERSION, textHash: hashText(text), ip: clientIp(req) } });
+        await audit(tx, userId, 'MUTUAL_PG_SIGNED', 'Committee', committee.id, { version: MUTUAL_PG_VERSION, textHash: row.textHash });
+        return row;
+      });
       return res.status(201).json({ signedAt: row.signedAt, version: row.version, textHash: row.textHash });
     }
     const text = platformUndertakingText(user.fullName, user.cnic);
     const expiresAt = new Date(Date.now() + UNDERTAKING_VALID_DAYS * 86_400_000);
-    const row = await prisma.agreementSignature.create({ data: { userId, docType: 'PLATFORM_UNDERTAKING', version: PLATFORM_UNDERTAKING_VERSION, textHash: hashText(text), signedName: input.signedName, signatureData: input.signatureData, expiresAt, ip: clientIp(req) } });
-    await audit(prisma, userId, 'PLATFORM_UNDERTAKING_SIGNED', 'User', userId, { version: PLATFORM_UNDERTAKING_VERSION, textHash: row.textHash, signedName: input.signedName, hasDrawnSignature: Boolean(input.signatureData), expiresAt: expiresAt.toISOString() });
+    const row = await prisma.$transaction(async tx => {
+      const row = await tx.agreementSignature.create({ data: { userId, docType: 'PLATFORM_UNDERTAKING', version: PLATFORM_UNDERTAKING_VERSION, textHash: hashText(text), signedName: input.signedName, signatureData: input.signatureData, expiresAt, ip: clientIp(req) } });
+      await audit(tx, userId, 'PLATFORM_UNDERTAKING_SIGNED', 'User', userId, { version: PLATFORM_UNDERTAKING_VERSION, textHash: row.textHash, signedName: input.signedName, hasDrawnSignature: Boolean(input.signatureData), expiresAt: expiresAt.toISOString() });
+      return row;
+    });
     res.status(201).json({ signedAt: row.signedAt, expiresAt, version: row.version, textHash: row.textHash });
   } catch (error) { next(error); }
 });

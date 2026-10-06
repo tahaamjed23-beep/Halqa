@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDismissable } from '../lib/dismissable';
 import { KeyRound, MessageCircle, Mail, MessageSquare, Search, X, Check } from 'lucide-react';
 import { api } from '../api';
 
@@ -50,8 +51,11 @@ export function JoinSheet({ onClose, onJoined }: { onClose: () => void; onJoined
     { id: 'mail', label: 'Email', icon: <Mail size={18} />, bg: '#C5221F', href: `mailto:?subject=Halqa%20invite%20code&body=${askText}` },
   ];
 
-  return <div className="sheet-wrap" role="dialog" aria-label="Join a committee">
-    <div className="sheet-bg" onClick={onClose} />
+  const layer = useDismissable(true, onClose);
+  return <div className="sheet-wrap" role="dialog" aria-modal="true" aria-label="Join a committee" ref={layer} tabIndex={-1}>
+    {/* Escape and the Close button are the keyboard ways out; the backdrop is
+        a convenience and is hidden from screen readers. */}
+    <div className="sheet-bg" onClick={onClose} aria-hidden="true" />
     <div className="sheet">
       <div className="sheet-head">
         <div><span className="eyebrow">Join a committee</span><h2>Have an invite?</h2></div>
@@ -94,10 +98,10 @@ export function JoinSheet({ onClose, onJoined }: { onClose: () => void; onJoined
         <div className="join-ways">
           {ways.map(w => w.href
             ? <a key={w.id} className="join-way" href={w.href} target="_blank" rel="noreferrer">
-                <em style={{ background: w.bg, color: '#fff' }}>{w.icon}</em>{w.label}
+                <em style={{ background: w.bg, color: 'var(--on-accent)' }}>{w.icon}</em>{w.label}
               </a>
             : <button key={w.id} className="join-way" onClick={w.onClick}>
-                <em style={{ background: w.bg, color: '#fff' }}>{w.icon}</em>{w.label}
+                <em style={{ background: w.bg, color: 'var(--on-accent)' }}>{w.icon}</em>{w.label}
               </button>)}
         </div>
         <p className="muted" style={{ fontSize: 11.5, marginTop: 10 }}>
@@ -121,14 +125,23 @@ export function ShareInvite({ code, name, contribution }: { code: string; name: 
     { id: 'sms', label: 'Messages', icon: <MessageSquare size={18} />, bg: '#0B84FF', href: `sms:?&body=${text}` },
     { id: 'mail', label: 'Email', icon: <Mail size={18} />, bg: '#C5221F', href: `mailto:?subject=${encodeURIComponent(`Join ${name} on Halqa`)}&body=${text}` },
   ];
+  const copyCode = () => {
+    void navigator.clipboard?.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1600);
+  };
   return <div>
-    <div className="invite-code" onClick={() => { void navigator.clipboard?.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 1600); }}
+    {/* It had role="button" and tabIndex, which tells a reader it is a button,
+        and no key handler, so pressing Enter or Space on it did nothing. */}
+    <div className="invite-code"
+      onClick={copyCode}
+      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyCode(); } }}
       style={{ cursor: 'pointer' }} role="button" tabIndex={0}>
       <span>{copied ? 'Copied' : 'Invite code · tap to copy'}</span><b>{code}</b>
     </div>
     <div className="join-ways">
       {ways.map(w => <a key={w.id} className="join-way" href={w.href} target="_blank" rel="noreferrer">
-        <em style={{ background: w.bg, color: '#fff' }}>{w.icon}</em>{w.label}
+        <em style={{ background: w.bg, color: 'var(--on-accent)' }}>{w.icon}</em>{w.label}
       </a>)}
     </div>
   </div>;

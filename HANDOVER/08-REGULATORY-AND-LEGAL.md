@@ -11,11 +11,30 @@ exactly one licence, and each is avoided by architecture rather than by contract
 |---|---|---|---|
 | **1** | **Holding the pot** | **SBP EMI** — *Regulations for Electronic Money Institutions, 2019*, **Rs 200M capital** | Money settles payer-to-recipient. Halqa issues no balances and holds none. Even Stage-2 savings sit with CDC. |
 | **2** | **Lending or pooling at scale** | **SECP NBFC** — Investment Finance Services, *NBFC Regulations 2008*, needs a **public** limited company, 3-year renewal | Members fund each other. Stage-2 funds are deployed only by a licensed AMC under its own licence. |
-| **3** | **Formal credit-bureau reporting** | Bureau membership rules | Bureau *writes* are out of scope for stages one and two. |
+| **3** | **Formal credit-bureau reporting** | Bureau membership under the *Credit Bureaus Act 2015* | Bureau *writes* are out of scope for stages one and two. **s.11(1)**: membership for a furnisher that is not a credit institution "shall be notified by the Federal Government accordingly" — not a purely commercial choice. |
+| **4** | **Member paying member for position** | **SECP P2P permission** — lending NBFC + **Rs 20M** additional equity, *NBFC Regulations 2008* | Defined as "the extension of loans by the lender to the borrower through the P2P Lending Platform". Removed by routing all position money member↔Halqa (ruling of 2026-09-22). |
+| **5** | **Own cover facility** | **SECP insurer registration** — *Insurance Ordinance 2000* s.6(1), and s.5(1) admits only a public company | s.2(xxvii) catches any promise to pay on a contingent loss "in consideration of a premium received". Cover must be written by a licensed takaful operator and distributed by Halqa as a corporate insurance agent. |
 
-A fourth, adjacent: **operating a payment system** would trigger **PSO/PSP** under
-the *Payment Systems and EFT Act 2007*. Halqa operates none — it initiates over a
-licensed aggregator's.
+Adjacent: **operating a payment system** would trigger **PSO/PSP** under the
+*Payment Systems and EFT Act 2007*. Halqa operates none — it initiates over a
+licensed aggregator's. Stated precisely: **s.4(1)** makes designation
+discretionary ("The State Bank **may**, if it finds it to be necessary in the
+public interest, by a written order designate a Payment System a Designated
+Payment System") and **s.14(1)** lets SBP prohibit any person from issuing or
+using a Payment Instrument. There is no licence to avoid; there is a discretion
+SBP may exercise over Halqa at any time.
+
+**The clause that carries the whole no-custody design** is *Companies Act 2017*
+**s.84(1)**: "no company shall invite, accept or renew deposits from the public".
+The Explanation defines a deposit as "any deposit of money with, and includes any
+amount borrowed by, a company", excluding "an advance against sale of goods or
+**provision of services in the ordinary course of business**" — which is what
+lets Halqa charge its own fee in advance. **s.84(2)(a)** sets a penalty of not
+less than the amount of deposit accepted; **s.84(3)** adds imprisonment up to two
+years and a fine up to Rs 5 million for **every officer in default**, personally.
+
+Full clause-by-clause verification, with the errors it found:
+`Halqa — Licensing Verification and Clause Authority` (Google Doc, 2026-09-22).
 
 > **The regulated activities do not occur anywhere in the architecture, so the
 > licences that govern them cannot apply.** This is not a workaround. It was
@@ -269,7 +288,34 @@ arbitration, linked accounts, record-only status.
 2. TASDEEQ contributor terms and the consent wording the Credit Bureaus Act 2015
    mandates
 3. Payroll-deduction formalities (for employer committees)
-4. The tripartite trustee form for Stage 2
+4. The tripartite trustee form for Stage 2. **Note the constraint found
+   2026-09-22:** *ETO 2002* **s.31(1)(c)** excludes "a trust defined to the Trust
+   Act 1882 ... but excluding constructive, implied and resulting trusts" from the
+   Ordinance, so an express trust cannot be created or evidenced electronically.
+   Any trustee form needs paper execution. Use contract, not trust, wherever the
+   onboarding must stay digital.
+5. Whether Halqa is a **reporting entity** under *AML Act 2010* s.2(xxxiv). The
+   definition of "financial institution" in **s.2(xiv)** includes "any person
+   carrying on" (d) money or value transfer and (xii) "carrying out business as
+   intermediary". If it bites, s.7 STRs and s.7A CDD follow.
+6. The **adverse-action duty** in *Credit Bureaus Act 2015* **s.31**: a user who
+   restricts a member on the strength of a bureau report must hand over the report,
+   the bureau's contact details, the statutory summary of rights, and a statement
+   that the bureau did not make the decision. **Not built.**
+7. Whether surfacing one member's `creditScore` to other members in a circle is
+   authorised disclosure under **s.26** (fine up to Rs 5M, or 3 months, or both).
+
+### Bureau access — the operative clause
+
+Halqa is **not** a "credit institution" as defined in **s.2(l)** (banking company,
+microfinance bank, financial institution, modaraba, leasing company, investment
+bank, financing company, unit trust, NBFC, or a Federal-Government-notified body).
+It therefore **cannot** use s.19(1)(a). Every pull must run through **s.19(1)(b)** —
+"on written or electronic request or instructions of the debtor, to whom it
+relates, received from such debtor or **through a duly constituted attorney
+thereof**". Consumer-permissioned access is lawful and needs no licence, but the
+consent wording and the attorney relationship are **product requirements**, not
+paperwork.
 
 ---
 
@@ -303,5 +349,28 @@ arbitration, linked accounts, record-only status.
 | **Undertaking and PG unreviewed** | Gate-2 budgeted item |
 | **Committee classification by SECP** | Unresolved; the reason for the sandbox approach |
 | **Google Play classification** | A committee is arguably peer-lending, and precise location is on Google's prohibited list for personal-loan apps. **Have the savings-app classification argument ready before Play submission; downgrade the home pin to coarse locality if it bites.** |
+| **Sandbox exclusion II** | *SBP Regulatory Sandbox Guidelines 2025* bar "Similar product/solution already deployed in the market at commercial scale". JazzCash Committee launched 13 Aug 2026. Answer it on **mechanism**, and prefer applying jointly with the aggregator under **s.3.1(c)**. |
+| **Prize draw vs PPC s.294-A** | `prizeDrawEnabled` exists in schema and create route (wizard hard-codes `false`). The second limb of 294-A punishes *publishing* a proposal to pay on the drawing of a lot. Keep it off, or take advice before marketing it. |
+
+---
+
+## 11 · Verification against the live product — 2026-09-22
+
+The architecture above is sound. **The shipped code does not implement it.** Every
+item below was confirmed in source, and the production API answers `401` (mounted)
+rather than `404` on each route named.
+
+| Finding | Where | Clause engaged |
+|---|---|---|
+| **Members pay members for position.** Turn marketplace ledgers a premium `debit buyer:external → credit seller:external`, Halqa takes 10% | `halqa-api/src/routes/exchange.ts` | SECP P2P definition — one member pays another for earlier money, Halqa is the online intermediary |
+| **Early fee distributed to other members, "never to Halqa"** | `halqa-api/src/routes/committees.ts` (Sigma/Bazaar engine text) | Same. The exact inverse of the 2026-09-22 ruling |
+| **Vault holds member balances that accrue a money-market rate** | `halqa-api/src/routes/vault.ts`, mounted unconditionally | *Companies Act 2017* **s.84(1)** — a deposit of money with a company |
+| **Security deposits held with `accruedYieldPaisa`; payout holdbacks held** | Prisma `SecurityDeposit`, `PayoutHoldback` | **s.84(1)**, same |
+| **`SIMPLE_MODE = false`** — the investment layer is NOT hidden | `halqa-web/src/config.ts:21` | The record says the vault was stripped from the UI. The flag that would strip it is off |
+| Float sweep takes a 5% mudarib fee on idle pool days | `halqa-api/src/lib/sukoon.ts` | Managing others' money for a fee, and the money must sit somewhere |
+| `custodyMode: BANK_CUSTODY` exists; consent text says custody is *simulated* | `routes/committees.ts`; gated by `SHOW_BANK_RAIL = false` | Correctly gated. Live EMI question the moment it is switched on |
+
+**Remedy is removal, not drafting.** No sandbox application should be filed while
+the code contradicts the application.
 
 Yes boss

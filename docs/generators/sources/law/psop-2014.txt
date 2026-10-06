@@ -1,0 +1,974 @@
+ 
+ 
+ 
+ 
+RULES FOR  
+PAYMENT SYSTEM OPERATORS  
+AND PAYMENT SERVICE PROVIDERS 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+PAYMENT SYSTEMS DEPARTMENT 
+STATE BANK OF PAKISTAN 
+  
+
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 2 of 24 
+1. Rules for Payment System Operators (PSOs) and Payment Service 
+Providers (PSPs) 
+ 
+In exercise of the powers conferred upon the State Bank of Pakistan by Section 3 of the  
+Payment Systems & Electronic Fund Transfers (PS&EFT) Act, 2007, the State Bank, for 
+regulating the Payment System Operators  and Payment Service Providers, hereby makes 
+following rules, namely 
+1. Short Title and Commencement:   
+i. These rules may be called “Rules for Payment System Operators  (PSOs) and 
+Payment Service Providers (PSPs)”;  
+ii. They shall come into force at once; 
+iii. These rules are subject to review by SBP at any stage. 
+2. Scope and applicability : These Rules are applicable with immediate effect to all 
+entities currently operating or desirous to operate as PSOs and PSPs.  
+2. Definitions 
+ 
+Whenever the words used in these rules are not defined, definitions given in SBP Act, 1956; 
+Banking Companies Ordinance (BCO) , 1962; Companies Ordinance 1984, PS&EFT Act 
+2007, Electronic Transactions Ordinance, 2002 , Foreign Exchange Regulations Act (FERA) 
+1947, Anti-Money Laundering (AML) Act, 20 10 and Rules, Regulations, Guidelines and 
+Circulars issued by SBP from time to time will be applicable.   
+a. Acquiring Bank  (or acquirer) is the entity that holds deposit accounts for card 
+acceptors/merchants and to which the card acceptors/merchants transmit  the data 
+relating to the transaction. The acquirer is responsible for the collection of transaction 
+information and settlement with the acceptor/issuer. 
+b. Authorized Party means the same as defined in PS&EFT Act, 2007. 
+c. Chief Executive Officer  means the same  as defined in the Companies Ordinance 
+1984 
+d. Clearing is the process of transmitting, reconciling and, in some cases, confirming 
+transfer orders prior to settlement, potentially including the netting of orders and the 
+establishment of final positions for settlement. 
+e. Company or Companies  means the same as defined in the Companies Ordinance 
+1984. 
+f. Consumer means the same as defined in PS&EFT Act, 2007. 
+g. Director includes any natural person occupying the position of  a Director  on the 
+Board of Directors of PSOs and PSPs that includes sponsor or nominee or by 
+whatever name called. 
+h. Electronic means the same as defined in Electronic Transactions Ordinance, 2002 (LI 
+of 2002). 
+i. Financial Institution means the same as defined in PS&EFT, Act 2007.  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 3 of 24 
+j. Financial Market Infrastructure is a  multilateral system among participating 
+institutions, including the operator of the system, used for the purposes of clearing, 
+settling, or recording payments, securities, derivatives, or other financial transactions. 
+k. Issuing Bank (Issu er) is the bank which issues payment cards (debit/credit /prepaid 
+cards etc) to accountholders/ customers.  
+l. Key Executives  include, C hief Operating Officer, Heads of Internal Audit, IT, 
+Finance, Human Resources and other core Department (s), Company Secretary or any 
+Executive/Officer directly reporting to the CEO. 
+m. Participant(s) means the same as defined under PS&EFT Act, 2007. 
+n. Payment Schemes are a set of interbank rules, practices and standards necessary for 
+the functioning of payment s ervices and m ay include card schemes comprising 
+technical and commercial arrangements, setups to serve one or more brands of card 
+which provides the organizational, legal and operational framework necessary for the 
+functioning of the se rvices marketed by those brands or internet based E -Commerce 
+schemes. 
+o. Payment Systems means the same as defined in PS&EFT Act, 2007. 
+p. Payment System Operator and Payment Service Provider (PSO and PSP) means 
+such Authorized Party that is a company registered under Companies Ordinance 1984 
+and is engaged in operating and/or providing Payment Systems related services like 
+electronic payment gateway, payment scheme, clearing house, ATM Switch, POS 
+Gateway, E -Commerce Gateway etc. acting as an intermed iary for multilateral 
+routing, switching and processing of payment transactions. 
+q. Point of Sale (POS)  refers to the use of payment cards  or electronic payment 
+instrument at a retail location (point of sale) to facilitate payments using an electronic 
+device. The payment information is either captured manually on paper vouchers or by 
+electronic means. 
+r. POS Terminal is a device which enables payments at a POS location. 
+s. SBP BSC  means the SBP Banking Services Corporation established under SBP 
+Banking Services Corporation Ordinance, 2001.  
+t. State Bank of Pakistan  or SBP means the State Bank of Pakistan established under 
+Section-3 of the State Bank of Pakistan Act, 1956 (XXXIII of 1956). 
+ 
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 4 of 24 
+3. Application for permission 
+ 
+1. Company registered with SECP, whether existing or desiring to establish  and operate 
+as Payment System  Operator or Payment S ervice Provider , is required to obtain In 
+Principle  approval from SBP through an application in writing , as per the format 
+given at Annexure-A along with required documents and applicable fe e mentioned 
+therein and addressed to:  
+“The Director Payment System Department, State Bank of Pakistan, 4th Floor, 
+Main Building, I. I. Chundrigar Road, Karachi-74000”  
+2. Fit and Proper Test (FPT)  will be applicable to Sponsor(s) and Shareholder(s) - 
+holding 10% or more shares , directly and/or indirectly,  Directors, CEO and Key 
+Executives of the prospective PSO and PSP . Directors and CEO would require prior 
+clearance from SBP before assuming their responsibilities, while compliance with 
+FPT for Key Executives would be the responsibility of PSO and PSP who will furnish 
+FPT related information as mentioned at Annexure C . Before submitting the case for 
+FPT clearance or for information to SBP, t he PSO and PSP shall perform assessment 
+of fitness and propriety at its own end and ensure that the person fulfills the criteria 
+mentioned in the Annexure-C;  
+3. Where a prospective company is already engaged in any non PSO or non PSP related 
+business activities, SBP may require establishment and registration of a separate 
+subsidiary/entity for the purpose of PSO or PSP business. 
+4. Existing entities performing function(s) of PSO  or PSP must apply for permission 
+from PSD, SBP within ninety (90) days from the date of issuance of these Rules.  
+5. Subject to fulfillment of above requirements and to the satisfaction of SBP, the 
+applicant PSO and PSP shall be granted In Principle approval. 
+6. Subsequent to the issuance of In Principle approval  and fulfillment of conditions 
+mentioned therein, attaining operational readiness and deposit of security amount, the 
+PSO or PSP shall apply for commencement of Pilot operations along with proof that 
+Minimum Initial Capital Requirement has been fulfilled. 
+7. The PSO or PSP shall be required to run Pilot operations for a period to be prescribed 
+by SBP  in the approval letter for Pilot operation . SBP may grant final approval 
+subject to satisfactory assessment of Pilot operations. 
+8. The permission granted under these rules, to PSO  and PSP shall not be considered as 
+‘Designation’ as provi ded under PS&EFT Act, 2007. However, keeping in view the 
+systemic importance of the system, SBP, upon its own discretion may ‘Designate’ a 
+PSO and PSP as ‘Designated Payment System ’ under Section 4 of PS&EFT Act, 
+2007.  
+ 
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 5 of 24 
+4. Minimum Capital Requirements 
+ 
+1. PSOs and PSP s are subject to an Initial Capital Requirement and an On-Going 
+requirement of Minimum Paid-Up Capital (where applicable free of losses) of 
+PKR 200 million  (Rupees Two Hundred Million Only) or any other amount as 
+may be prescribed by SBP from time to time; 
+2. For each PSO or PSP related business  application, an additional 25% of the 
+Capital requirement as mentioned in sub rule (I) would be applicable; 
+3. PSOs and PSPs will maintain at all times at least ten percent (10%) of the required 
+capital or any other amount prescribed by SBP from time to time , as security 
+deposit at SBP-BSC Office. Five percent (5%) of the security deposit will be kept 
+in a non remunerative current account with the SBP-BSC Office and five percent 
+(5%) in the form of Government security to be kept under lien at SBP -BSC 
+Office.  
+5. Powers of SBP 
+ 
+Pursuant to Section 3 of PS&EFT Act, 2007, i.e. “Powers of SBP”: 
+1.  If SBP decides to establish a National Payment Gateway, it would be mandatory for 
+all authorized PSOs and PSPs to integrate with that National Payment Gateway. 
+2. PSOs and PSPs shall be subject to regulatory supervision and oversight of SBP under 
+the PS&EFT Act 2007, Rules for PSOs and PSPs and all related guidelines, rules and 
+regulations, circulars issued by SBP and other applicable laws of the land, issued from 
+time to time. 
+3. SBP may reject any application or cancel permission to operate as PSO and PSP, if it 
+is in the public interest, or if it is found that: 
+a. Any of the requirements of the application have not been fulfilled; 
+b. Any information provided by the PSO  and PSP is found to be misreported or 
+misrepresented to SBP, or there is any contravention with the relevant laws, 
+rules, guidelines and regulations by the PSO and PSP; 
+c. Any of the provisions of the PS&EFT Act, 2007 have not been fulfilled; 
+d. PSO and PSP  fails to co mply with these or any other regulations, rules, 
+guidelines, directions, circulars by SBP issued from time to time and/or other 
+applicable law(s). 
+4. SBP itself or through its assigned auditor may conduct regular and special on-site 
+inspections of PSOs and PSPs, who shall be provided full, timely and unrestricted 
+access to systems (including those outsourced or hosted with third parties), 
+documents, reports, records and officials of PSOs and PSPs.  
+5. In case PSO  or PSP does not comply with any of the provisions of these rules , SBP 
+may take any appropriate action under PS&EFT Act 2007, which may include: 
+a. Imposition of monetary penalty; 
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 6 of 24 
+b. Suspension of operations; 
+c. The cancellation of the permission given to PSO or PSP;  
+d. Any other action. 
+6. SBP reserves the right to directly debit the penalty amount from the security deposit 
+of PSO and PSP . The PSOs and PSPs shall, however, be required to maintain the 
+minimum level of Security Deposit at all times. 
+7. Termination of any service and, or withdrawal of permission for whatever reason 
+shall not discharge the PSO and PSP from any liability or obligation which at the time 
+of termination or cancellation has accrued against it or which thereafter may accrue in 
+respect of any act or omission prior to such termination or cancellation.  
+6. Operations of PSOs and PSPs 
+ 
+1. PSOs and PSPs shall provide an electronic platform for clearing, processing, routing 
+and switching of electronic transactions. It can make agreements with Banks, FIs and 
+other PSO s and PSPs Merchants, e -commerce service providers and any other 
+company for the provision of services mandated to the PSO  and PSP under these 
+rules. 
+2. PSOs and PSPs are required to commence their pilot run within a maximum period of 
+six (6) months from the grant of In Principle approval. After the lapse of this period 
+the prospective PSOs and PSPs will have to submit a fresh application for the required 
+permission or extension to be granted by SBP on case to case basis. 
+3. PSOs and PSPs must have: 
+a. Policies, procedures and controls approved by their Board of Directors; 
+b. Organizational structure approved by its Board of Director with appropriate 
+segregation of organizational functions; 
+c. Adequate staffing and resourcing arrangements technically quali fied and 
+experienced in the relevant field of business;  
+d. Proper documented contracts and agreements pertaining to the critical 
+functions to run the business; 
+e. Properly equipped and maintained facilities to house Technology and 
+Processing Systems within Pakistan.  
+4. PSOs and PSPs are required to take prior approval from PSD, SBP: 
+a. for their products, schemes and services offering.  
+b. about any change in Memorandum or Article of Association, Ownership, 
+CEO, Board of Directors , Technological platforms, Information Security 
+implementations 
+c. any other significant change. 
+5. PSOs and PSPs  will not act as custodian of consumer’s money or perform any 
+banking function(s) as defined in BCO, 1962.  
+6. PSOs and PSPs will make agreements with the Financial Institutions licensed by SBP 
+for this purpose. 
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 7 of 24 
+7. PSOs and PSPs  shall conduct all activities in a professional, ethical and orderly 
+manner and shall ensure provision of quality servi ces at all times with an objective to 
+satisfy its customers. 
+8. Where applicable,  Functions/Operations of PSOs and PSPs  are subject to relevant 
+provisions of AML Act 2010, Foreign Exchange Regulations Act (FERA) 1947, and 
+related instructions issued by SBP from time to time.  
+9. PSOs and PSPs shall not outsource any of their function(s) without prior approval 
+from SBP.  
+10. Where applicable the contract between the concerned parties should have necessary 
+provisions, including but not limited to, the following: 
+a. definition of the rights, expectations, roles and responsibilities of each party; 
+b. set the scope of work to be performed by the concerned parties; 
+c. optimal performance level to be agreed between the parties;  
+d. fee/revenue sharing structure for the work to be p erformed by the concerned 
+parties; 
+e. concerned parties must ensure safe -keeping of all relevant records, data and 
+documents /files; 
+f. SBP will be allowed to inspect data, records, facilities and infrastructure of 
+PSO and PSP; 
+g. concerned parties shall ensure sec recy of all transactions in accordance with 
+all applicable laws, rules and regulations; 
+h. establish a protocol for changing the terms of the service contract and 
+stipulations for default and termination of the contract; 
+i. standard and updated documentation of IT setup & architecture, integration, 
+operations and technical controls for appropriate risks mitigation measures to 
+ensure Data Security & Integrity with  Standard Operations and Procedures for 
+IT Services; 
+j. the ability to meet disaster recovery and business continuity requirements; 
+k. Process Integrity – that system processing is complete, accurate, timely, and 
+authorized; 
+l. fidelity and Secrecy – that personal information obtained during the course of 
+operations is used, disclosed, retained and protected as committed or agreed; 
+m. the customer complaint redressal procedures are in place which clearly define 
+the roles & responsibilities of all concerned parties in handling the customers’ 
+complaints; 
+n. termination of Service Level Agreement for any systemic breach; 
+o. penal action in case of breach of any clause(s) of the agreement and arbitration 
+in case of any dispute between or among the parties; 
+p. obligations of concerned parties subject to Force Majeure; 
+q. any other condition mentioned by SBP from time to time. 
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 8 of 24 
+7. Processing and Settlement of Transactions 
+ 
+1. The roles and responsibilities of the concerned  parties (such as  financial institutions, 
+issuers, acquirers, PSOs and PSPs  etc.) pertaining to the processing, clearing and 
+settlement of transactions must be governed under the relevant contracts/agreements. 
+2. Transactions processed by PSOs and PSPs will be settled amongst the participants at 
+any commercial bank licensed by SBP  or as per the instructions by SBP. At no point 
+in time should the PSO  and PSP have access  to or hold the  consumer’s or 
+participant’s funds. 
+8. Risk Management Mechanism 
+ 
+1. All PSOs and PSPs must have approved Enterprise Risk Management framework and 
+policies and procedures to be implemented accordingly.  
+2. PSOs and PSP s must have approved policies and proce dures for information and 
+system security as well as necessary internal controls in place. Further, they must take 
+proactive measures to detect and prevent fraudulent transactions and unwanted 
+intrusions.  
+3. PSOs and PSPs  must have Business Continuity Plan (BCP) and Disaster Recovery 
+Plan (DRP) in line with international best practice or adopted standard  duly approved 
+by its BOD. 
+4. BCP and DRP drills must be conducted half yearly and results should be recorded in a 
+formal report. 
+5. The abovementioned documents a re required to be submitted to SBP and will be 
+subject to review through inspection. 
+9. Security and Confidentiality  
+ 
+1. PSOs and PSPs will ensure the Security, Integrity, Confidentiality and Availability of 
+data and services  by adopting prevailing international standard (s) or as may be 
+prescribed by SBP from time to time.  
+2. PSO and PSP are required to comply with Section 70 of PS&EFT Act, 2007 relating 
+to Secrecy and Privacy of information. PSOs and PSPs must get their systems audited 
+from  SBP’s approved Audit firms before commencement of their business operations 
+and thereafter on annual basis. The audit reports should be submitted to PSD SBP  
+within ninety (90) days after completion of the financial year. 
+3. All security breaches should immediately be reported to relevant stakeholders 
+including PSD , SBP.  The incident and Analysis Report of security breaches 
+(suspected or compromised) must be furnished on quarterly basis to PSD, SBP as per 
+Annexure-D.   
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 9 of 24 
+10. Dispute Resolution 
+ 
+1. Dispute Resolution Mechanism with defined turnaround time (TAT) should be part of 
+the Contract Agreements between PSO and PSP and relevant parties. 
+2. Bank(s) and PSOs and PSPs  will mutually co -operate in good faith to resolve 
+disputes. If the parties do not reach an agreement within the stipulated time period for 
+dispute settlement, the matter may be referred to mutually agreed arbitrator in 
+Pakistan under their contract agreement and law of the land. 
+3. In such cases, the rights, obligations and responsibilities of the concerned parties are 
+subject to the provisions of the PS&EFT Act, 2007.  
+4. PSOs and PSPs shall be liable to Bank(s) in case it fails to take appropriate measures 
+to process financial transactions, ensure quality of service, security, integrity, and 
+confidentiality in a manner agreed with FIs and in accordance with applicable Laws, 
+Rules, and Regulations.  
+5. The PSOs and PSPs should have comprehensive Complaint Redressal  Mechanism to 
+ensure effective Consumer protection. A report of the outstanding complaints and 
+disputes is required to be submitted to SBP on quarterly basis.  
+6. The liabilities of PSOs  and PSPs and financial institutions are subject to relevant 
+provisions of PS&EFT Act, 2007. 
+11. Reporting Requirements 
+ 
+1. PSOs and PSPs  are required to maintain audited financial statements as per the 
+applicable laws and are required to submit annually  (within ninety  (90) days after 
+completion of the financial year) to SBP or as required by SBP from time to time.  
+a. In pursuance to Section 69 of PS&EFT Act, 2007, PSOs and PSPs are bound 
+to provide SBP:information regarding commencement of any significant legal 
+proceedings by or against the institution;  
+b. details of any development which impacts or potentially impact s on the PSOs 
+and PSPs to a significant extent;  and  
+c. details of fines/penalt ies imposed  on PSOs and PSPs  by any other 
+regulator/government department; 
+d. any information, records, documents etc, as prescribed by SBP. 
+ 
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 10 of 24 
+12. Record Retention 
+ 
+1. PSOs and PSPs are required to retain complete record of all transactions in electronic 
+form in a manner as provided under section 7 of PS&EFT Act, 2007 and for a period 
+of at least ten (10) years from transaction date or as may be determined by SBP.  
+2. PSOs and PSPs  are required to maintain detailed  system, application, database and 
+network logs for a period up to one (1) year,  to enable processing of audit trails 
+required to be reconstructed in the event of any dispute(s) or supervisory concern(s).  
+3. In pursuance to the PS&EFT Act, 2007, the modus operandi of the provision and 
+production of such data/information or log should be  provisioned for in the 
+agreements between the respective parties. 
+13. Pricing Mechanism 
+ 
+1. All charges/fees structure should be pre -agreed through contractual agreements in a 
+fair and transparent manner among all relevant parties commensurate to the service 
+requirements and standards.  
+2. All charges / fees structure schedules should be fixed for a minimum period of six (6) 
+months and should be reported to SBP on half yearly basis. 
+14. Liquidation/Winding Up/Dissolution of Company 
+ 
+1. Liquidation/winding up of the authorized PSOs and PSPs will be carried out as per 
+applicable laws.  
+2. In case of voluntary dissolution, PSD, SBP must be apprised of at least six (6) months 
+prior to actuating such dissolution. The dissolution will not effectuate unless approved 
+by SBP and only after discharging all the liabilities and obligations especially those 
+pertaining to clearing and settlement of payments and resolution of related disputes. 
+3. PSOs and PSPs will surrender/submit all the data , record, information to SBP at the 
+time of liquidation, winding up, voluntary or otherwise. 
+4. Security deposit of PSO  and PSP shall be refunded after settlement of all liabilities 
+and obligations herein. 
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 11 of 24 
+15. Acronyms 
+ 
+ADC Alternative Delivery Channel 
+AML/ CFT Anti-money Laundering / Combating the Financing of Terrorism 
+BCP Business Continuity Plan 
+BOD Board of Directors 
+CEO Chief Executive Officer 
+DRP Disaster Recovery Plan 
+FI Financial Institution 
+FPT Fit and Proper Test 
+PKR Pakistani Rupee 
+POS Point of Sale 
+PS&EFT Act 2007  Payment Systems & Electronic Fund Transfers Act 2007 
+PSD Payment Systems Department 
+PSO Payment System Operator 
+PSP Payment Service Provider 
+SBP State Bank of Pakistan 
+SBP BSC State Bank of Pakistan, Banking Services Corporation 
+SECP Securities & Exchange Commission of Pakistan 
+ 
+ 
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 12 of 24 
+Annexure-A 
+Application Format 
+The Director 
+Payment Systems Department  
+State Bank of Pakistan 
+Main Building 
+I.I Chundrigar Road  
+Karachi 
+ 
+Dear Sir,  
+<Covering Letter on the Company’s Original Letter Head introducing the Company, its Brief 
+Functions and specific Application area of PSO and PSP for which permission is required. > 
+<List of Documents attached with the Application> 
+a. Certified true copy of:  
+1. Certificate of Incorporation with SECP,  
+2. Memorandum of Association (MOA) 
+3. Articles of Association (AOA)  
+b. Copy of receipt of PKR Two Hundred Thousand (Rs. 200,000/ -) deposited in SBP -
+BSC Karachi Office as Non-refundable Application Processing Fee.  
+c. Undertaking as per Annexure-B  
+d. Business feasibility report (consisting of business strategy, plans, viability, financial 
+projections, Return on Investments & Payback period) 
+e. Outsourcing arrangements, if any 
+f. Proof of Net worth of beneficial owner(s) and spo nsor(s) including tax returns and 
+bank statements 
+g. Details of beneficial owner(s), sponsor(s) and shareholder(s) (holding 10% or more 
+shares) in the format as given in Annexure - C 
+h. Details of list of Associated Companies, Subsidiaries and other related part ies of the 
+prospective PSO/PSP 
+i. “Fit and Proper Test” of their Directors, CEOs and Key Executives in the format as 
+given in Annexure – C 
+j. Audited financial statements of the company for the last three (3) years where 
+applicable. 
+k. Any other relevant document (s) 
+   Yours faithfully 
+(                         )  
+President/ Chief Executive Officer   
+Company Seal 
+Date : 
+Place : 
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 13 of 24 
+Annexure-B 
+Format of undertaking to be submitted by PSO and PSP 
+(To be submitted on Stamp Paper Undertaking in accordance with the Stamp Law in 
+force) 
+The Director 
+Payment Systems Department  
+State Bank of Pakistan 
+Main Building 
+I.I Chundrigar Road  
+Karachi 
+ 
+Dear Sir,  
+We____________________________, incorporated / constituted under the 
+___________________________   and having Registered Of fice at 
+_______________________(hereinafter referred to as “ Payment System Operators  and 
+Payment Service Providers ( PSOs and PSPs )”) hereby execute this Undertaking in favor of 
+the State Bank of Pakistan (hereinafter referred to as “SBP”) .  
+And whereas the “ PSO and PSP ” has made an application in writing to SBP for grant of 
+approval for starting the business of __________________ (Please mention specific line of 
+business).   
+And whereas the PSO and PSP  has extended this  Undertaking to abide  by the “Rules f or 
+PSOs and PSPs ”, PS&EFT Act, 2007 and other applicable laws amended from time to time 
+and also by such Rules, Regulations, C irculars, Orders, notifications, instructions, press 
+releases etc. as may be issued by SBP from time to time.  
+And whereas  the PSO and PSP  unconditionally and irrevocably undertakes and agrees as 
+follows:   
+i) The PSO and PSP undertake to furnish such information / data as SBP may require. 
+ii) The PSO and PSP  shall follow and comply with such orders or instructions, whether 
+in the form  of penalty or otherwise as may be issued by SBP under the “Rules on 
+PSOs and PSPs” or other applicable laws, orders, rules and regulations.  
+iii) The PSO and PSP  shall abide by and comply with the “Rules on PSOs and PSPs ” 
+PS&EFT Act, 2007 and other applicable laws amended from time to time and also 
+such circulars, orders, Notifications, press releases, instructions etc. as may be issued 
+by SBP (hereinafter collectively referred to as “The Regulations”).  
+iv) The PSO and PSP  agrees that SBP shall have the absolute d iscretion to part with or 
+disclose or disseminate , such information /data concerning the PSOs and PSPs  as 
+deemed necessary by SBP or required under law , to Regulatory Authorities, 
+Government, law enforcing agencies and other appropriate authorities.  
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 14 of 24 
+v) SBP shall have the right at all times to inspect and supervise all computer systems 
+including software, communication networks/systems and other equipment running at 
+the PSOs and PSPs  end, all sites including primary, backup, disaster recovery and 
+outsourced sites; and functions, operations, transactions, data and books of accounts 
+of the PSO and PSP . The PSO or PSP  agrees to set right deficiencies pointed out by 
+SBP forthwith and take into consideration suggestions of SBP.  
+vi) The PSO or PSP agrees that the liabilities, responsibilities / obligations, if any, arising 
+out of various activities under the ____________________ (Please mention the line 
+of business) shall rest solely on the PSO and PSP. 
+vii) The PSO and PSP  agree to maintain the infrastructural arrangements as specified by 
+the Bank from time to time in good order.  
+viii) The signatory/ies, as under, have the requisite power of attorney / authority (copy 
+enclosed), issued by the relevant and competent authority in our 
+institution/organization to execute this agreement binding our organization/institution 
+thereto. 
+  
+Yours faithfully 
+(                         ) 
+Authorised Official 
+Company Seal 
+Date :  
+Place :  
+ 
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 15 of 24 
+Annexure-C 
+ 
+ 
+ 
+          
+ PROFORMA – FIT & PROPER TEST 
+          
+Full Name          
+          
+Father’s Name          
+Mother’s Name         
+Spouse’s Name         
+         
+Date of Birth      Place of Birth (City and Country) 
+          
+          
+Nationality (ies):      NTN:  
+          
+          
+C.N.I.C. No        
+      
+     
+Passport Number  
+         
+         
+Present Residential Address in Full         
+     
+     
+Permanent Residential Address in Full  
+         
+         
+Residential Telephone Number(s)  
+ 
+Mobile Number(s)  
+ 
+Email Address(es)  
+  
+   
+If you have changed your name, state previous name and reason for change 
+          
+          
+Academic Education          
+Qualification  Name & Address of Degree  Date of Completion 
+   Awarding Institution    
+   
+ 
+       
+  
+PHOTOGRAPH 
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 16 of 24 
+          
+Professional Education          
+Qualification  Name & Address of Institution/   Date of Completion 
+   Professional Body   
+          
+Training(s); if any          
+          
+Existing Employment    
+    
+Present Designation   Present Department 
+    
+Official Address    
+    
+Telephone Number (s)   Email 
+    
+ 
+Please  provide  complete  and  true  particulars  of  all  business(es),  including  proprietary 
+concern/partnership firms, companies, in which you have been associated as a proprietor, 
+partner or a director thereof during the last ten years and the accounts maintained by them: 
+Name  of  the  Proprietary Name of Bank and/or NBFIs Account Number(s) 
+Concern/Partnership  Firm/ Together with   Name   of  
+Company Branches   
+    
+Position held during the last ten years (along with name and address of company / institution 
+/ body where appointment held, nature of the company/institution/body and dates of appointment) 
+ 
+Position of the shares held in the Payment  Systems 
+Operator and Payment Service Provider   Number of shares held as of _________ 
+As a Sponsor Shareholder  
+ Own name  
+  
+ In name of family member  
+Other than Sponsor Shareholder  
+ Own name  
+  
+ In name of family member  
+ 
+ 
+ 
+(Signature of concerned official) 
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 17 of 24 
+ 
+Affidavit 
+(On Non-Judicial Stamp Paper) 
+ 
+ 
+I (the deponent) , ________________ son/daughter/wife of _______________________ adult, 
+resident of _______________________________________________________________________ 
+and holding CNIC/Passport No. ______________________________ do hereby state on oath/solemn 
+affirmation as under:- 
+ 
+ 
+a. that the deponent hereby confirms that the statement made and the information supplied in 
+the attached questionnaire and the Annexure C -I and the answers thereof are correct and 
+that there are no other facts that are relevant for “Fit and Proper Test”  
+ 
+b. that the deponent undertake s that the State Bank of Pakistan may seek additional 
+information from any third party as it deems necessary in vi ew of assessing “Fit and 
+Proper Test”  
+ 
+c. that the deponent undertake s to bring to the attention of the State Bank of Pakistan any 
+matter which may potentially affect my status as being someone fit and proper as and 
+when it crops up; and  
+ 
+d. that whatever is stated above is correct to the best of my knowledge and belief and 
+nothing has been concealed there from.  
+ 
+ 
+DEPONENT 
+ 
+The Deponent is identified by me 
+ 
+ 
+Signature _______________________ 
+ADVOCATE (Name and Seal) 
+ 
+ 
+Stated on oath/s olemnly affirmed before me on this ______ day of _____________ at 
+______________ by the Deponent above named who is identified to me by ________________, 
+Advocate, who is known to me personally. 
+ 
+ 
+Signature__________________________________________  
+OATH COMMISSIONER FOR TAKING AFFIDAVIT  
+(Name and Seal) 
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 18 of 24 
+Annexure-C-1 
+ 
+QUESTIONNAIRE FOR ACCESSING “FIT & PROPER TEST”  
+ 
+Please answer the following questions by entering a tick ( ) in the appropriate box. If answer 
+of any of these questions in YES and need explanation, use a separate sheet with proper 
+reference to the question. 
+ 
+Sr. Description Yes No 
+1. 
+Have you ever been convicted/involved in any fraud/forgery, financial crime etc, in 
+Pakistan or elsewhere, are subject to any pending proceedings leading to any 
+conviction?   
+2. Have you ever been associated with any illegal activity concerning banking business, 
+deposit taking, financial dealing and other business?   
+3. 
+Have you ever been subject to any adverse findings or any settlement in civil/criminal 
+proceedings particularly with regard to investments, financial/business, misconduct, 
+fraud, formation or management of a corporate body etc by SBP, other regulators, 
+professional bodies or government bodies/agencies?   
+4. Have you ever contravened any of the requirements and standards of regulatory 
+system or the equivalent standards or requirements of other regulatory authorities?   
+5. Have you ever been involved with a company or firm or other organization that has 
+been refused registration/license to carry out trade, business etc?   
+6. 
+Have you ever been involved with a company/firm whose registration/license has 
+been revoked or cancelled or which has gone into liquidation or other similar 
+proceedings?   
+7. Have you ever been debarred for being Chief Executive, Chairman, Director or 
+Sponsor/major Investor of a company, especially financial institutions?   
+8. Have you ever been dismissed/ asked to resign/resigned in Pakistan or elsewhere in 
+order to avoid legal or disciplinary action?   
+9. Have you ever resigned from a professional or regulatory body in  Pakistan  or  
+elsewhere  in  order  to  avoid  legal  or disciplinary action?   
+10. 
+ 
+Have you ever been disqualified/ removed by regulators/Government bodies/ 
+agencies?   
+11. 
+Have you ever been in default of payment of dues owed to any financial institution in 
+individual capacity or as proprietary concern or any partnership firm or in any private 
+unlisted/listed company?   
+12. Have you ever been in default of taxes in individual capacity or as proprietary 
+concern or any partnership firm or in any private listed/unlisted company?   
+13. 
+Have you ever been associated as director and/or chief executive with the corporate 
+bodies whose corporate and tax record, including custom duties, central excise  and 
+sales tax has been unsatisfactory?   
+14. 
+Have you entered into any agreement with any other person (natural or legal) which 
+will influence the way in which you exercise your voting rights or the way in which 
+you otherwise behave in your relationship with the authorized entity?   
+15. Are you a director on the Board of Directors of any other Financial Institution(s) or 
+Payment Systems Operator and Payment Service Provider?   
+16. 
+Are you a Chairman, Chief Executive, Chief Financial Officer, Chief Internal 
+Auditor, Research Analyst or Trader (by whatever name/designation called) of an 
+Exchange Company (firm or sole proprietorship),  member  of  a  Stock  Exchange,  
+Corporate Brokerage House?   
+17. Are you owning/controlling any Exchange Company or Corporate Entity?   
+18. Have you been or are you working as consultant or adviser of Payment Systems   
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 19 of 24 
+Operator and Payment Service Provider or any related business in which you intend 
+to become a director? 
+19. Are you employee of the Payment Systems Operator and Payment Service Provider?   
+20. Are you employee of a company/entity/organization where sponsor shareholders of 
+Payment Systems Operator and Payment Service Provider have substantial interest?   
+21. Are you a member/office bearer of any political party or member of 
+Senate/National/Provincial Assembly/Local Body?   
+22. Any other information that is relevant for the purpose of SBP and needs to be 
+mentioned?   
+  
+ 
+ 
+ 
+Signature _____________________ 
+ 
+Name _____________________ 
+ 
+Position _____________________ 
+Date _____________________ 
+ 
+ 
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 20 of 24 
+Annexure-C-2 
+ 
+PROFORMA – FITNESS & PROPRIETARY OF KEY 
+EXECUTIVES/DIRECTORS/CEOs 
+ 
+Position and Grade held by the Executive 
+Date of assumption of current position (dd/mm/yyyy) 
+ 
+Full Name 
+ 
+Father’s Name 
+ 
+Date of Birth Place of Birth (City and Country) 
+  
+  
+Nationality (ies) NTN Number 
+  
+  
+C.N.I.C. No Email Address(es) 
+  
+  
+Telephone Number(s) Mobile Number(s) 
+  
+ 
+Academic Qualification  
+Qualification Name & Address of Degree Date of Completion 
+ Awarding Institution     
+      
+      
+Professional Qualification      
+Qualification Name & Address of Degree Date of Completion 
+ Awarding Institution     
+      
+      
+Training(s); if any      
+     
+Previous Employment(s) (date-wise)    
+Designation  Department    
+Official Address      
+Telephone Number (s)      
+    
+Has ever been convicted of any offence?  Yes No 
+If yes, nature of offence and penalty imposed    
+   
+   
+Has ever been censured or penalized by any financial regulator (local or  Yes No 
+foreign)?      
+If yes, reasons for adverse findings and amount of penalty imposed (if any)   
+    
+    
+Has ever been dismissed from employment?  Yes No 
+If yes, name of the employer and reason for dismissal    
+      
+(Signature of the concerned official) (Signature and Stamp of Employer)  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 21 of 24 
+Annexure-C-3 
+  
+ASSESSMENT OF FITNESS AND PROPRIETY 
+1. The fitness & pr opriety of Sponsor(s), Director(s), CEO and Key Executives  will be 
+assessed on the following broad elements: 
+A. Integrity, Honesty and Reputation 
+Sponsor(s) of PSO and PSP and any person applying to be appointed as Director, CEO and 
+Key Executives should fulfill the following criteria:  
+a) Has not been convicted, involved in any fraud and/or forgery, financial crime etc, 
+in Pakistan or elsewhere, or is not being subject to any pending proceedings that 
+may lead to such a conviction; 
+b) Has not been subject to any adverse findings or any settlement in civil  and, or 
+criminal proceedings particularly with regard to investments, financial matters , 
+business, misconduct, fraud, formation or management of a corporate body etc by 
+SBP, government bodies or agencies; 
+c) Has not contravened any of the requirements and standards of SB P or the 
+equivalent standards , requirements of other regulatory authorities (outside 
+Pakistan as well), professional bodies or government bodies or agencies; 
+d) Has not been involved with (management or conduct of the affairs of) a company , 
+firm or any other organization that has been refused registration  and, or license to 
+carry out trade, business etc.; 
+e) Has not been involved with (management or conduct of the affairs of) a company , 
+firm whose registration and, or license has been revoked or cancelled or gone  into 
+liquidation or other similar proceedings due to mismanagement of affai rs, 
+financial misconduct or malpractices; 
+f) Has not been debarred for being Chief Executive, Chairman, Director, Controlling 
+Shareholder, Sponsor or Key Executive of a company, firm or in similar capacity. 
+B. Track Record 
+a) The Director/CEO/Key Executives must have an impeccable track record in the 
+companies served either in the capacity of an employee or Director/Chief 
+Executive or as Chairman; 
+b) The Director/CEO/Key Executives have not bee n dismissed from employment or 
+have not been removed or forced to resign  by any regulator  or government body 
+or court order, in the capacity of employee, director, chairman or key executive of 
+the company/firm or any other position of trust. 
+C. Solvency & Financial Integrity 
+a) Has not been associated with any illegal activity concerning banking business, 
+deposit taking, financial dealing and other business; 
+b) Has not been in default of payment of dues owed to any financial institution and/ 
+or default in payment of any taxes in individual capacity or as proprietary concern 
+or any partnership firm or in any private unlisted, listed company; 
+c) Has not been associated as director and/or chief executive with the corporate 
+bodies who have defaulted in payment of Government duties/taxes etc.; 
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 22 of 24 
+d) The Sponsor (s) h as sufficient means to discharge his/her financial obligations, if 
+any. 
+D. Qualification & Experience 
+This section shall apply separately for Directors, CEO and other  Key Executives of PSO 
+and PSP as under: 
+i. Board of Directors 
+a) Must have management or business experience preferably pertaining to payment 
+and settlements systems of at least three ( 3) years at senior level in an active 
+capacity; 
+b) Minimum qualification for a person to be appointed as Director on the Bo ard of 
+Directors is graduation. 
+ii. Chief Executive Officer 
+a) Must be having at least five (5)  years of experience at senior level . Preference 
+must be  given to a person having the said experience in pa yment and settlement 
+systems; 
+b) Must possess expertise and skill set  to undertake responsibilities of the position 
+effectively and prudently; 
+c) Should have minimum qualification of graduation or equivalent preferably 
+relevant experience in information technology,  banking, finance, economics, 
+business administration, commerce  or relevant fields.  
+E. Conflict of Interest 
+a) The CEO will not be the Chairman of the Board of Directors of the same PSO and 
+PSP. 
+b) The Directors on the Board should avoid conflict of interest in their activities 
+with, and commitments to, other organizations; 
+c) Directors and CEO should not be a Director/CEO of any other PSO and PSP; 
+F. Others 
+a) Not more than 50% directors of the same family are permitted to be on the Board 
+of a PSP and PSP; 
+b) No member of Senate, National/ Provincial Assembly, Local bodies shall be 
+appointed/ recommended for appointment as Member of Board of Directors 
+and/or Chief Executive Officer/Key Executive of any PSO and PSP; 
+2. The Applicant must provide details of governance structure to SBP which should include 
+the following:  
+i. Board of Directors 
+a) In case of non-resident Pakistani national, CNIC/NICOP & copy of passport; 
+b) In case of foreign sponsor, copy of passport duly attested by Embassy of Pakistan 
+in that country or their respective embassy located in Pakistan; 
+c) Share holdings in the Company; 
+d) Brief Profile of all Directors. 
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 23 of 24 
+ii. Committees & their terms of references  
+a) Risk Management  
+b) Audit  
+c) Information Technology  
+d) Any other relevant Committee 
+iii. The PSO and PSP is required to appoint a Compliance Officer reporting directly 
+to the CEO.  
+3. Where office of any Director/CEO falls vacant, such position can only be filled with the 
+prior approval of SBP. However, any new appointment / placement of Key Executives 
+shall be intimated to SBP within seven days of appointment / placement; 
+4. Acting CEO appointed pursuant to resignation/removal of the CEO is invariably required 
+to meet the FPT Criteria prescribed for the CEO and the PSO and PSP shall duly submit 
+FPT documents of such person to SBP before assumption of charge. However, in case of 
+temporary vacation (not exceeding one month) of the office of CEO, the PSO and PSP 
+shall ensure to entrust charge of the office of CEO to such an officer who meets the FPT 
+Criteria prescribed for Key Executive and whose FPT documents hav e already been 
+submitted to SBP. 
+ 
+  
+State Bank of Pakistan 
+ Payment Systems Department   
+Rules for Payment System Operators and Payment Service Providers  Page 24 of 24 
+Annexure-D 
+ 
+INCIDENT DETAILS OF INFORMATION SECURITY BREACHES  
+(SUSPECTED AND/OR COMPROMISED) 
+(ON QUARTERLY BASIS)  
+ 
+Sr. 
+No. 
+Source of 
+discovery 
+of breach 
+Nature of 
+Incident 
+Incident occurred due 
+to: 
+(Breach of Control; 
+whether Procedures 
+were not followed; 
+Controls were not 
+appropriately  
+implemented etc)  
+Give a brief 
+description 
+Whether breach 
+was due to: 
+(Technological 
+Gap; Capability 
+Gap; Capacity 
+Gap etc)  
+Give a brief 
+description 
+Value of 
+Maximum 
+Exposure 
+(in PKR) 
+Remarks 
+(any further 
+details on 
+the 
+incident) 
+ 
+ 
+      
+ 
+ 
+ 
+-------------------------------------- End -------------------------------------- 

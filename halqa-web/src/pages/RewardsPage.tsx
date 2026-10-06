@@ -74,7 +74,7 @@ export default function RewardsPage({ user, back }: { user: User; back: () => vo
           <Facts cols={3} items={[
             ['Points', new Intl.NumberFormat('en-PK').format(state.points)],
             ['Longest run', String(state.longestStreak || streak)],
-            ['Next unlock', next.n + ' turns'],
+            ['Next level at', next.n + ' turns'],
           ]} />
         </Card>
 

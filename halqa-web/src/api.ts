@@ -86,7 +86,7 @@ async function request<T>(path:string,init:RequestInit,retried:boolean):Promise<
   return data as T;
 }
 export const api=<T>(path:string,init:RequestInit={}):Promise<T>=>PREVIEW
-  ?new Promise(resolve=>setTimeout(()=>resolve(previewRoute(path) as T),120))
+  ?new Promise(resolve=>setTimeout(()=>resolve(previewRoute(path,init) as T),120))
   :request<T>(path,init,false);
 // Keep the serverless function warm. A cold Vercel function + cross-region
 // Supabase pooler is the real cause of the "super slow" first action, and it

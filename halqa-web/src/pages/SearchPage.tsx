@@ -44,6 +44,7 @@ export default function SearchPage({ back, openCommittee, go }:
     const seen = new Set<string>();
     const out: Person[] = [];
     committees.forEach(c => (c.members || []).forEach(m => {
+      if (!m.user) return;
       const key = m.userId + ':' + c.id;
       if (seen.has(key)) return;
       seen.add(key);
@@ -82,7 +83,7 @@ export default function SearchPage({ back, openCommittee, go }:
 
       <div className="w-search">
         <Search />
-        <input autoFocus value={q} onChange={e => setQ(e.target.value)}
+        <input aria-label="Search Halqa" autoFocus value={q} onChange={e => setQ(e.target.value)}
                placeholder="A circle, a person, an amount" />
       </div>
 

@@ -1,3 +1,5 @@
+// audit-allow: hard-coded-colour — these are other companies' brand marks, and
+// a brand mark that followed Halqa's theme would be the wrong mark.
 // ---------------------------------------------------------------------------
 // Payment rail marks.
 //
@@ -100,8 +102,8 @@ export function RailLogo({ rail, size = 38, plain = false }:
     <span
       className="rail-mark"
       style={{ width: size, height: size, background: brand.bg }}
+      role="img"
       aria-label={brand.name}
-      title={brand.name}
     >{mark}</span>
   );
 }

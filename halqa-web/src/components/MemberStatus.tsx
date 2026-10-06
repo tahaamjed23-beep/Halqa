@@ -105,7 +105,7 @@ export default function MemberStatus({ user }: { user: User }) {
       {askEmployer && (
         <Sheet title="Who do you work for" onClose={() => setAskEmployer(false)}>
           <Field label="Employer" hint="Checked against your documents">
-            <input value={employer} placeholder="Company or employer name"
+            <input aria-label="Company or employer name" value={employer} placeholder="Company or employer name"
                    onChange={e => setEmployer(e.target.value)} />
           </Field>
           <div className="w-inset">

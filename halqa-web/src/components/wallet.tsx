@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useDismissable } from '../lib/dismissable';
 import { useBackToClose } from '../lib/back';
 import { ChevronLeft, ChevronRight, Delete, Fingerprint, Search, X } from 'lucide-react';
 
@@ -19,14 +20,41 @@ import { ChevronLeft, ChevronRight, Delete, Fingerprint, Search, X } from 'lucid
 // tokens in index.css. Nothing here borrows a colour.
 // ---------------------------------------------------------------------------
 
-/** Back on the left, title centred, optional close on the right. */
-export function FlowHeader({ title, onBack, onClose }:
-  { title?: string; onBack?: () => void; onClose?: () => void }) {
+/**
+ * The one navigation pattern, used by 27 screens: a large left aligned title,
+ * a back affordance where one applies, and at most two trailing actions.
+ *
+ * It replaced three patterns that were in use at the same time. The title was
+ * centred and small, so it read as a browser chrome bar rather than as the
+ * name of the screen. Where there was no back button the grid still reserved
+ * its 40px column, which is what left the Committees screen with a bare
+ * centred strip. And the back control was a filled grey circle, which looked
+ * like a button to be pressed for its own sake rather than a way out.
+ *
+ * `actions` takes up to two trailing controls. `onClose` is kept so the
+ * existing call sites do not have to change; it renders as one of them.
+ */
+export function FlowHeader({ title, subtitle, onBack, onClose, actions }:
+  { title?: string; subtitle?: string; onBack?: () => void; onClose?: () => void; actions?: ReactNode }) {
   return (
     <header className="w-head">
-      {onBack ? <button className="w-head-btn" onClick={onBack} aria-label="Back"><ChevronLeft /></button> : <span />}
-      {title ? <h1>{title}</h1> : <span />}
-      {onClose ? <button className="w-head-btn" onClick={onClose} aria-label="Close"><X /></button> : <span />}
+      {(onBack || actions || onClose) && (
+        <div className="w-head-bar">
+          {onBack
+            ? <button className="w-head-btn back" onClick={onBack} aria-label="Back"><ChevronLeft /></button>
+            : <span />}
+          {(actions || onClose) && (
+            <div className="w-head-actions">
+              {actions}
+              {onClose && <button className="w-head-btn" onClick={onClose} aria-label="Close"><X /></button>}
+            </div>
+          )}
+        </div>
+      )}
+      {title && <div className="w-head-text">
+        <h1>{title}</h1>
+        {subtitle && <p>{subtitle}</p>}
+      </div>}
     </header>
   );
 }
@@ -94,15 +122,19 @@ export function Sheet({ title, onClose, search, onSearch, children }:
   { title: string; onClose: () => void; search?: string; onSearch?: (v: string) => void; children: ReactNode }) {
   // A sheet is a place you can be, so back gets you out of it.
   useBackToClose(true, onClose);
+  // And so does Escape, with focus held inside the sheet while it is open and
+  // returned where it came from afterwards (lib/dismissable.ts).
+  const layer = useDismissable(true, onClose);
   return (
-    <div className="w-sheet-wrap" onClick={onClose}>
-      <div className="w-sheet" onClick={e => e.stopPropagation()}>
+    <div className="w-sheet-wrap" onClick={onClose} aria-hidden="true">
+      <div className="w-sheet" role="dialog" aria-modal="true" aria-label={title}
+           ref={layer} tabIndex={-1} onClick={e => e.stopPropagation()}>
         <div className="w-sheet-handle" />
         <div className="w-sheet-head"><h3>{title}</h3></div>
         {onSearch && (
           <div className="w-sheet-search">
             <Search />
-            <input value={search || ''} onChange={e => onSearch(e.target.value)} placeholder="Search" />
+            <input aria-label="Search this list" value={search || ''} onChange={e => onSearch(e.target.value)} placeholder="Search" />
           </div>
         )}
         <div className="w-sheet-body">{children}</div>
@@ -182,7 +214,7 @@ export function Keypad({ length = 4, filled, onKey, onBackspace, onBiometric }:
 export function Tile({ icon, label, badge, onClick }:
   { icon: ReactNode; label: string; badge?: 'new' | 'hot'; onClick: () => void }) {
   return (
-    <button className="w-tile" onClick={onClick}>
+    <button className="w-tile" aria-label={label} onClick={onClick}>
       {badge && <em className={`w-tile-badge ${badge}`}>{badge === 'new' ? 'New' : 'Popular'}</em>}
       <span className="w-tile-icon">{icon}</span>
       <span className="w-tile-label">{label}</span>
@@ -250,13 +282,29 @@ export function Card({ title, action, pad = true, children }: {
 }
 
 /** The list row every screen needs: icon, title, one line under, value, chevron. */
+/** The shape of the rows that are coming, while they are still on the wire. */
+export function RowsLoading({ rows = 4 }: { rows?: number }) {
+  return (
+    <div className="w-rowgroup" aria-hidden>
+      <div className="w-rowgroup-body">
+        {Array.from({ length: rows }, (_, i) => (
+          <div className="w-row w-row-skel" key={i}>
+            <span className="w-row-icon" />
+            <span className="w-row-text"><i style={{ width: 42 + (i % 3) * 18 + '%' }} /><i style={{ width: 26 + (i % 2) * 12 + '%' }} /></span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function Row({ icon, title, sub, value, valueSub, onClick, tone, chevron = true }: {
   icon?: ReactNode; title: string; sub?: string; value?: string; valueSub?: string;
   onClick?: () => void; tone?: 'ok' | 'warn' | 'bad'; chevron?: boolean;
 }) {
   const inner = (
     <>
-      {icon && <span className="w-row-icon">{icon}</span>}
+      {icon && <span className={`w-row-icon${tone ? ' ' + tone : ''}`}>{icon}</span>}
       <span className="w-row-text"><b>{title}</b>{sub && <small>{sub}</small>}</span>
       {value && <span className={`w-row-val${tone ? ' ' + tone : ''}`}><b>{value}</b>{valueSub && <small>{valueSub}</small>}</span>}
       {onClick && chevron && <ChevronRight className="w-row-chev" />}
@@ -299,7 +347,7 @@ export function AmountEntry({ value, onChange, hint, max }:
     <div className="w-amount">
       <div className="w-amount-row">
         <span>Rs</span>
-        <input inputMode="decimal" value={value} placeholder="0"
+        <input aria-label="0" inputMode="decimal" value={value} placeholder="0"
                onChange={e => {
                  const raw = e.target.value.replace(/[^\d.]/g, '');
                  if (max && Number(raw) > max) return onChange(String(max));

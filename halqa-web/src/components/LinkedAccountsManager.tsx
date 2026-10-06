@@ -178,7 +178,7 @@ export function LinkedAccountsManager() {
       {verifyFor && (
         <Sheet title="Confirm it is yours" onClose={() => { setVerifyFor(null); setError('') }}>
           <Field label="Six digit code" hint="">
-            <input className="mono" inputMode="numeric" maxLength={6} value={code}
+            <input aria-label="Six digit code sent to you" className="mono" inputMode="numeric" maxLength={6} value={code}
                    onChange={e => setCode(e.target.value.replace(/\D/g, ''))} placeholder="000000" />
           </Field>
           {error && <div className="w-inset"><Notice kind="bad">{error}</Notice></div>}

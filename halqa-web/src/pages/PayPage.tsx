@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Check, Info, Landmark, Plus, Users, Wallet, Zap } from 'lucide-react';
 import { api, key } from '../api';
 import { money } from '../lib/format';
+import { SERVICE_FEE_PAISA, pspFeePaisa as pspFeeFor, railCarriesPspFee } from '../lib/fees';
 import type { Committee, Summary, User } from '../types';
 import Receipt, { type ReceiptData } from '../components/Receipt';
 import { RailLogo } from '../components/RailLogo';
@@ -68,6 +69,9 @@ export default function PayPage({ user, back }: { user: User; back: () => void }
   const method = methods.find(m => m.id === methodId);
   const paisa = Math.round(Number(amount || 0) * 100);
   const round = committee?.rounds?.[0];
+  // Nil unless the member is paying by wallet or card, which are the only
+  // rails that pass through the payment partner (5 October 2026).
+  const pspFee = pspFeeFor(paisa, method?.rail);
   const scheduled = Number(committee?.contributionPaisa || 0);
   const short = paisa > 0 && scheduled > 0 && paisa < scheduled;
 
@@ -173,11 +177,15 @@ export default function PayPage({ user, back }: { user: User; back: () => void }
                        value={round?.recipient?.fullName || 'This turn'} />
             <Totals
               rows={[
-                ['Amount', money(paisa)],
-                ['Halqa fee', 'Rs 0'],
-                ['Rail charge', method?.rail === 'RAAST' ? 'Rs 0' : 'Covered by Halqa'],
+                ['Instalment', money(paisa)],
+                ['Halqa fee', money(SERVICE_FEE_PAISA)],
+                // The payment partner's fee is charged on wallet and card
+                // payments only; a direct debit at the bank does not pass
+                // through them, so nothing is shown for it (5 October 2026).
+                ...(pspFee > 0 ? [['Payment service fee, 1.5%', money(pspFee)] as [string, string]] : []),
+                ['Takaful or insurance', 'Set by the operator'],
               ]}
-              total={['You pay', money(paisa)]}
+              total={['You pay', money(paisa + SERVICE_FEE_PAISA + pspFee)]}
             />
           </Card>
           <div className="w-inset">
@@ -187,7 +195,9 @@ export default function PayPage({ user, back }: { user: User; back: () => void }
               </Notice>
             )}
             <Notice kind="info" icon={<Check />}>
-              No charge to contribute, on any rail.
+              {pspFee > 0
+                ? 'Paying from a bank account by direct debit avoids the 1.5% payment service fee.'
+                : 'No payment service fee on this method. Only the Rs 85 Halqa fee applies.'}
             </Notice>
           </div>
         </div>
@@ -213,7 +223,10 @@ export default function PayPage({ user, back }: { user: User; back: () => void }
                 <b>{m.rail === 'BANK_TRANSFER' ? (m.bankName || 'Bank account') : RAIL_META[m.rail]?.name || m.rail}</b>
                 <small>{m.accountTitle ? m.accountTitle + ' · ' : ''}{m.accountNo}</small>
               </span>
-              {m.rail === 'RAAST' && <em className="w-free">Free</em>}
+              {/* The rail charge, so the member sees the cost before choosing,
+                  not after. "Free" was never true: the Rs 85 fee applies on
+                  every rail, and only the 1.5% partner fee varies. */}
+              <em className="w-free">{railCarriesPspFee(m.rail) ? '+1.5%' : 'No partner fee'}</em>
               <span className="w-source-tick">{methodId === m.id && <Check />}</span>
             </button>
           )) : (
@@ -261,7 +274,9 @@ export default function PayPage({ user, back }: { user: User; back: () => void }
 
         <div className="w-inset">
           <Notice kind="ok" icon={<Zap />}>
-            No charge to contribute. Raast is instant and free.
+            A Halqa fee of Rs 85 applies to every instalment. Wallet and card
+            payments carry the payment partner's 1.5% as well; paying from a
+            bank account does not.
           </Notice>
         </div>
       </div>

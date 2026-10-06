@@ -1,5 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { api, tokens } from './api';
+import { trackScreen } from './lib/events';
 import type { Page, User } from './types';
 import AuthPage from './pages/AuthPage';
 import Shell from './pages/Shell';
@@ -10,6 +11,7 @@ import AgreementGate from './components/AgreementGate';
 import PinLock from './components/PinLock';
 import { SIMPLE_MODE } from './config';
 import { RegisterMark } from './components/ui';
+import { SkeletonCard, SkeletonList } from './components/system';
 import { PREVIEW, previewUser } from './preview';
 
 const CirclesPage=lazy(()=>import('./pages/CirclesPage'));
@@ -35,6 +37,11 @@ const LimitsPage=lazy(()=>import('./pages/LimitsPage'));
 const DevicesPage=lazy(()=>import('./pages/DevicesPage'));
 const NoticesPage=lazy(()=>import('./pages/NoticesPage'));
 const SearchPage=lazy(()=>import('./pages/SearchPage'));
+const SchedulePage=lazy(()=>import('./pages/SchedulePage'));
+const FeesPage=lazy(()=>import('./pages/FeesPage'));
+const VerifyPage=lazy(()=>import('./pages/VerifyPage'));
+const ReferPage=lazy(()=>import('./pages/ReferPage'));
+const AutoPayPage=lazy(()=>import('./pages/AutoPayPage'));
 
 export default function App(){
   const [user,setUser]=useState<User|null>(PREVIEW?previewUser as unknown as User:null);
@@ -61,6 +68,11 @@ export default function App(){
     const next=`${url.pathname}${q.toString()?'?'+q:''}`;
     if(next!==url.pathname+url.search)window.history.pushState({page,committeeId},'',next);
   },[page,committeeId,joinCode]);
+  // Every screen records that it was seen, here rather than in each of the
+  // thirty screens, so a new screen is counted without anybody remembering to
+  // add the line. The event carries the screen's name and nothing else: no
+  // member, no amount, no circle name (lib/events.ts).
+  useEffect(()=>{trackScreen(page)},[page]);
   useEffect(()=>{
     const pop=()=>{const q=new URLSearchParams(window.location.search);
       setCommitteeId(q.get('committee'));setPage((q.get('screen') as Page)||'home')};
@@ -106,6 +118,7 @@ export default function App(){
   return <><OfflineBanner/><Shell user={user} page={view} setPage={setPage} onLogout={()=>{tokens.clear();setUser(null)}}>
     <ErrorBoundary resetKey={view} label="This page">
     <Suspense fallback={<PageLoader/>}>
+    <div className="ds-page-enter" key={view}>
       {view==='home'&&<HomePage user={user} openCommittee={setCommitteeId} create={()=>setPage('create')} go={p=>setPage(p as Page)}/>}
       {view==='circles'&&<CirclesPage user={user} openCommittee={setCommitteeId} create={()=>setPage('create')} joinCode={joinCode} onJoinHandled={()=>setJoinCode(null)}/>}
       {view==='market'&&<MarketplacePage user={user} back={()=>setPage('profile')}/>}
@@ -118,7 +131,7 @@ export default function App(){
       {view==='settings'&&<SettingsPage user={user} back={()=>setPage('profile')}/>}
       {view==='pay'&&<PayPage user={user} back={()=>setPage('home')}/>}
       {view==='rewards'&&<RewardsPage user={user} back={()=>setPage('home')}/>}
-      {view==='hyper'&&<HyperPage user={user} back={()=>setPage('home')}/>}
+      {view==='hyper'&&<HyperPage user={user} back={()=>setPage('home')} onVerify={()=>setPage('verify')}/>}
       {view==='cards'&&<CardsPage user={user} back={()=>setPage('home')}/>}
       {view==='activity'&&<ActivityPage user={user} back={()=>setPage('home')} onDispute={id=>{setDispute(id);setPage('support')}}/>}
       {view==='asset'&&<AssetPage back={()=>setPage('home')} openCommittee={setCommitteeId}/>}
@@ -129,10 +142,31 @@ export default function App(){
       {view==='devices'&&<DevicesPage back={()=>setPage('profile')}/>}
       {view==='notices'&&<NoticesPage back={()=>setPage('home')}/>}
       {view==='search'&&<SearchPage back={()=>setPage('home')} openCommittee={setCommitteeId} go={p=>setPage(p)}/>}
+      {view==='schedule'&&<SchedulePage userId={user.id} back={()=>setPage('home')} openCommittee={setCommitteeId} go={p=>setPage(p)}/>}
+      {view==='fees'&&<FeesPage back={()=>setPage('profile')}/>}
+      {view==='verify'&&<VerifyPage user={user} back={()=>setPage('profile')} go={p=>setPage(p)}/>}
+      {view==='refer'&&<ReferPage user={user} back={()=>setPage('profile')} go={p=>setPage(p)}/>}
+      {view==='autopay'&&<AutoPayPage userId={user.id} back={()=>setPage('profile')} openCommittee={setCommitteeId} go={p=>setPage(p)}/>}
+    </div>
     </Suspense>
     </ErrorBoundary>
     {gate}
   </Shell></>
 }
 
-function PageLoader(){return <div className="page-loader"><i/><span>Loading Halqa</span></div>}
+// A screen that is still being fetched shows a thin progress line at the top
+// of the frame and the outline of what is coming, rather than replacing the
+// whole app with one spinner and the word "Loading". The line is announced to
+// a screen reader so a blind member is told the screen is loading instead of
+// being read an empty page.
+function PageLoader(){
+  return <>
+    <div className="ds-route-bar" aria-hidden="true"><i/></div>
+    <p className="ds-sr-only" role="status" aria-live="polite">Loading</p>
+    <div style={{padding:'var(--s-4) var(--gutter)'}}>
+      <SkeletonCard lines={2}/>
+      <div style={{height:'var(--s-4)'}}/>
+      <SkeletonList rows={3}/>
+    </div>
+  </>;
+}

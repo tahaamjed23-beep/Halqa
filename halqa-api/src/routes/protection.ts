@@ -1,21 +1,37 @@
 import { Router } from 'express';
+import { once } from '../lib/idempotency';
+import { idParam, twoIdParams } from '../lib/params';
+import { readPage, sendPage } from '../lib/page';
+import { safeRouter } from '../lib/safe-router';
 import { z } from 'zod';
 import { prisma } from '../db';
-import { requireAuth } from '../lib/auth';
+import { requireAuth, requireAdmin } from '../lib/auth';
 import { assertHost, assertMember } from '../lib/guards';
 import { audit, ledger } from '../lib/audit';
 import { assessForwardLiability, type SecurityPolicy } from '../lib/forward-liability';
 import { evaluateDelinquencies } from '../services/delinquency';
 
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 router.use(requireAuth);
 
 // Dev/test-only trigger for the hourly delinquency pass (reminders, vault
 // auto-cover, penalties, escalation). In production the scheduler owns this.
-router.post('/delinquency/run', async (_req, res, next) => {
+// The collector charges late fees, moves credit scores and queues bureau
+// reports. Production refuses it outright, because only the scheduler may run
+// it there; everywhere else it is now admin-only too, so a member on a staging
+// copy of real data cannot set it off either.
+router.post('/delinquency/run', requireAdmin, async (req, res, next) => {
   try {
     if (process.env.NODE_ENV === 'production') return res.status(403).json({ error: 'The delinquency pass is scheduler-only in production' });
-    res.json(await evaluateDelinquencies());
+    const result = await evaluateDelinquencies();
+    // Who set off a pass that charges late fees and queues bureau reports is
+    // the first question asked afterwards.
+    await audit(prisma, req.auth!.userId, 'DELINQUENCY_PASS_RUN', 'System', 'delinquency', {
+      cases: Array.isArray(result) ? result.length : undefined,
+    });
+    res.json(result);
   } catch (error) { next(error); }
 });
 
@@ -23,6 +39,7 @@ const policyOf = (value: unknown) => (value && typeof value === 'object' ? value
 
 router.get('/committee/:id', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     await assertMember(req.params.id, req.auth!.userId);
     const committee = await prisma.committee.findUniqueOrThrow({
       where: { id: req.params.id },
@@ -87,6 +104,7 @@ router.get('/committee/:id', async (req, res, next) => {
 
 router.put('/committee/:id/commitment', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     const membership = await assertMember(req.params.id, req.auth!.userId);
     const input = z.object({
       guarantorUsername: z.string().trim().min(2).max(40).optional(),
@@ -96,33 +114,47 @@ router.put('/committee/:id/commitment', async (req, res, next) => {
     }).parse(req.body);
     let guarantorUserId: string | undefined;
     if (input.guarantorUsername) {
-      const guarantor = await prisma.user.findUnique({ where: { username: input.guarantorUsername.toLowerCase() } });
+      // Only the three columns the check below needs. Reading the whole row
+      // pulled passwordHash and pinHash into memory to answer a question about
+      // somebody's score, which is one careless response away from leaking.
+      const guarantor = await prisma.user.findUnique({
+        where: { username: input.guarantorUsername.toLowerCase() },
+        select: { id: true, isBanned: true, creditScore: true },
+      });
       if (!guarantor || guarantor.isBanned || guarantor.creditScore < 700 || guarantor.id === req.auth!.userId) return res.status(400).json({ error: 'Guarantor must be another unrestricted Halqa user with score 700+' });
       guarantorUserId = guarantor.id;
     }
-    const row = await prisma.protectionCommitment.upsert({
-      where: { membershipId: membership.id },
-      update: { guarantorUserId, promissoryRef: input.promissoryRef, autoDebitRef: input.autoDebitRef, acceptedTermsAt: new Date() },
-      create: { membershipId: membership.id, guarantorUserId, promissoryRef: input.promissoryRef, autoDebitRef: input.autoDebitRef, acceptedTermsAt: new Date() },
+    const row = await prisma.$transaction(async tx => {
+      const row = await tx.protectionCommitment.upsert({
+        where: { membershipId: membership.id },
+        update: { guarantorUserId, promissoryRef: input.promissoryRef, autoDebitRef: input.autoDebitRef, acceptedTermsAt: new Date() },
+        create: { membershipId: membership.id, guarantorUserId, promissoryRef: input.promissoryRef, autoDebitRef: input.autoDebitRef, acceptedTermsAt: new Date() },
+      });
+      await audit(tx, req.auth!.userId, 'PROTECTION_COMMITMENT_RECORDED', 'CommitteeMember', membership.id, { hasGuarantor: Boolean(guarantorUserId), hasPromissoryRef: Boolean(input.promissoryRef), hasAutoDebitRef: Boolean(input.autoDebitRef), stage: 'RECORD_ONLY' });
+      return row;
     });
-    await audit(prisma, req.auth!.userId, 'PROTECTION_COMMITMENT_RECORDED', 'CommitteeMember', membership.id, { hasGuarantor: Boolean(guarantorUserId), hasPromissoryRef: Boolean(input.promissoryRef), hasAutoDebitRef: Boolean(input.autoDebitRef), stage: 'RECORD_ONLY' });
     res.json(row);
   } catch (error) { next(error); }
 });
 
 router.post('/committee/:id/commitment/:membershipId/verify', async (req, res, next) => {
   try {
+    twoIdParams('id', 'membershipId').parse(req.params);
     await assertHost(req.params.id, req.auth!.userId);
     const commitment = await prisma.protectionCommitment.findFirst({ where: { membershipId: req.params.membershipId, membership: { committeeId: req.params.id } } });
     if (!commitment) return res.status(404).json({ error: 'Protection commitment not found' });
-    const row = await prisma.protectionCommitment.update({ where: { id: commitment.id }, data: { verifiedByHostAt: new Date() } });
-    await audit(prisma, req.auth!.userId, 'PROTECTION_COMMITMENT_VERIFIED', 'ProtectionCommitment', row.id, { stage: 'RECORD_ONLY' });
+    const row = await prisma.$transaction(async tx => {
+      const row = await tx.protectionCommitment.update({ where: { id: commitment.id }, data: { verifiedByHostAt: new Date() } });
+      await audit(tx, req.auth!.userId, 'PROTECTION_COMMITMENT_VERIFIED', 'ProtectionCommitment', row.id, { stage: 'RECORD_ONLY' });
+      return row;
+    });
     res.json(row);
   } catch (error) { next(error); }
 });
 
 router.post('/committee/:id/peer-nudge/:userId', async (req, res, next) => {
   try {
+    twoIdParams('id', 'userId').parse(req.params);
     await assertMember(req.params.id, req.auth!.userId);
     await assertMember(req.params.id, req.params.userId);
     if (req.params.userId === req.auth!.userId) return res.status(400).json({ error: 'You cannot nudge yourself' });
@@ -139,7 +171,14 @@ router.post('/committee/:id/peer-nudge/:userId', async (req, res, next) => {
 });
 
 router.get('/recovery/mine', async (req, res) => {
-  res.json(await prisma.recoveryCase.findMany({ where: { userId: req.auth!.userId }, include: { committee: { select: { id: true, name: true } }, round: { select: { roundNumber: true } } }, orderBy: { openedAt: 'desc' } }));
+  // Had no bound at all.
+  const { take, cursorArgs } = readPage(req.query);
+  const rows = await prisma.recoveryCase.findMany({
+    where: { userId: req.auth!.userId },
+    include: { committee: { select: { id: true, name: true } }, round: { select: { roundNumber: true } } },
+    orderBy: [{ openedAt: 'desc' }, { id: 'desc' }], take, ...cursorArgs,   // id breaks ties, so a cursor is sound
+  });
+  sendPage(res, rows, take);
 });
 
 router.post('/recovery/:id/resolve', async (req, res, next) => {
@@ -148,7 +187,12 @@ router.post('/recovery/:id/resolve', async (req, res, next) => {
     const recovery = await prisma.recoveryCase.findFirst({ where: { id: req.params.id, userId: req.auth!.userId, status: 'OPEN' }, include: { payment: true } });
     if (!recovery) return res.status(404).json({ error: 'Open recovery case not found' });
     const rehabilitationFee = recovery.outstandingPaisa / 10n;
-    await prisma.$transaction(async tx => {
+    // Recorded once. A retry gets the same answer rather than a conflict, on
+    // the one route where the member is already in difficulty and a second
+    // transfer is the last thing they can afford.
+    const outcome = await once(prisma,
+      { userId: req.auth!.userId, route: 'POST /api/protection/recovery/:id/resolve', key: input.idempotencyKey },
+      async tx => {
       await tx.payment.update({ where: { id: recovery.paymentId }, data: { status: 'PAID', paidAt: new Date(), paidVia: 'RECOVERY_TRANSFER', txnRef: input.txnRef, penaltyPaisa: recovery.penaltyPaisa + rehabilitationFee } });
       await ledger(tx, { committeeId: recovery.committeeId, actorId: req.auth!.userId, debit: `user:${req.auth!.userId}:external`, credit: `committee:${recovery.committeeId}:default_recovery`, amountPaisa: recovery.outstandingPaisa + recovery.penaltyPaisa + rehabilitationFee, reason: 'DEFAULT_RECOVERY_RECORDED', refType: 'RecoveryCase', refId: recovery.id, idempotencyKey: input.idempotencyKey });
       await tx.recoveryCase.update({ where: { id: recovery.id }, data: { status: 'PAYMENT_RECORDED', resolvedAt: new Date() } });
@@ -159,8 +203,12 @@ router.post('/recovery/:id/resolve', async (req, res, next) => {
         await tx.committeeMember.updateMany({ where: { userId: req.auth!.userId, status: 'BANNED' }, data: { status: 'EXITED', exitedAt: new Date() } });
       }
       await audit(tx, req.auth!.userId, 'DEFAULT_RECOVERY_RECORDED', 'RecoveryCase', recovery.id, { txnRef: input.txnRef, rehabilitationFeePaisa: rehabilitationFee.toString(), stage: 'RECORD_ONLY' });
+      return {
+        statusCode: 200,
+        body: { message: 'Recovery payment recorded. A six-month low-risk cooldown applies after all cases are cleared.' },
+      };
     });
-    res.json({ message: 'Recovery payment recorded. A six-month low-risk cooldown applies after all cases are cleared.' });
+    res.status(outcome.statusCode).json(outcome.body);
   } catch (error) { next(error); }
 });
 

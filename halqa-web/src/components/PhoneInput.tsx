@@ -47,10 +47,10 @@ export default function PhoneInput({ value, onChange, autoFocus }: { value: stri
       <button type="button" className="country-btn" onClick={() => setOpen(o => !o)} aria-label="Select country">
         <span className="flag">{country.flag}</span><span className="dial">+{country.dial}</span><ChevronDown size={15} className={open ? 'rot' : ''} />
       </button>
-      <input className="field phone-num" inputMode="tel" autoFocus={autoFocus} placeholder={country.code === 'PK' ? '3XX XXXXXXX' : 'Phone number'} value={national} onChange={e => typeNumber(e.target.value)} />
+      <input aria-label="Mobile number" className="field phone-num" inputMode="tel" autoFocus={autoFocus} placeholder={country.code === 'PK' ? '3XX XXXXXXX' : 'Phone number'} value={national} onChange={e => typeNumber(e.target.value)} />
     </div>
     {open && <div className="country-menu">
-      <div className="country-search"><Search size={14} /><input autoFocus placeholder="Search country or code" value={query} onChange={e => setQuery(e.target.value)} /></div>
+      <div className="country-search"><Search size={14} /><input aria-label="Search country or code" autoFocus placeholder="Search country or code" value={query} onChange={e => setQuery(e.target.value)} /></div>
       <div className="country-list">{filtered.map(c => <button type="button" key={c.code} className={`country-opt ${c.dial === dial ? 'on' : ''}`} onClick={() => setCountry(c)}><span className="flag">{c.flag}</span><span className="cname">{c.name}</span><span className="cdial">+{c.dial}</span></button>)}{!filtered.length && <p className="muted" style={{ padding: '10px 12px', fontSize: 12 }}>No match</p>}</div>
     </div>}
   </div>;

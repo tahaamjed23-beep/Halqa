@@ -1,0 +1,18 @@
+Source: State Bank of Pakistan, Raast Person to Merchant (P2M), https://www.sbp.org.pk/our-subsidiaries/raast/raast-person-to-merchant, read 25 September 2026.
+
+RAAST P2M IS SBP'S FLAGSHIP SERVICE DESIGNED TO FACILITATE DIGITAL PAYMENT ACCEPTANCE FOR MERCHANTS AND BUSINESSES.
+This service enables payment acceptance using the following modes:
+Request to Pay (RTP) Now
+A request initiated by the receiver of payment to the sender of payment with a shorter expiry period.
+Request to Pay (RTP) Later
+A Request initiated by the receiver of payment to the sender of payment with a longer expiry period.
+International Bank Account Number (IBAN)
+Merchant Alias
+Phone Number, Till codes, Virtual Payment Addresses, Merchant IDs, etc.
+Static and Dynamic QR Codes
+
+Source: State Bank of Pakistan, Raast, https://www.sbp.org.pk/raast, read 25 September 2026.
+Reliability and enhanced security
+Raast uses more secure payment types, ensures that each transaction is authorized by the payer, and offers enhanced data protection and fraud detection services.
+Raast is operated by Raast Payments Pakistan (Private) Limited (RPP), a wholly-owned subsidiary of the State Bank of Pakistan, responsible for the operational management, enablement, and ongoing evolution of the Raast scheme and its services in close coordination with ecosystem participants.
+Raast provides low-cost, universal access for participants across the financial industry - including commercial banks, microfinance banks, government entities, and regulated fintechs (EMIs and PSPs) - to build scalable, always-on payment experiences for customers and merchants.

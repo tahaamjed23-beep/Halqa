@@ -11,8 +11,10 @@
 const PKR = new Intl.NumberFormat('en-PK', { maximumFractionDigits: 0 });
 const PKR2 = new Intl.NumberFormat('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-/** Narrow no-break space: keeps "Rs" welded to the number across a line break. */
-const NB = ' ';
+/** A no-break space: keeps "Rs" welded to the number across a line break. The
+    narrow variant rendered so thin in the app's typeface that "Rs 215,000" read
+    as "Rs215,000". */
+const NB = ' ';
 
 /**
  * The one money formatter. Input is integer paisa, because the ledger is

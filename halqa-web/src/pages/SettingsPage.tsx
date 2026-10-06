@@ -49,11 +49,11 @@ function ChangePassword() {
   return (
     <Card title="Change your password">
       <Field label="Current password">
-        <input type="password" autoComplete="current-password" value={current}
+        <input aria-label="Your current password" type="password" autoComplete="current-password" value={current}
                onChange={e => setCurrent(e.target.value)} />
       </Field>
       <Field label="New password" hint="Eight or more, letters and numbers">
-        <input type="password" autoComplete="new-password" value={next}
+        <input aria-label="Your new password" type="password" autoComplete="new-password" value={next}
                onChange={e => setNext(e.target.value)} />
       </Field>
       {done && <Notice kind="ok" icon={<ShieldCheck />}>Password updated. Every other session was signed out.</Notice>}

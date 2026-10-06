@@ -1,0 +1,2396 @@
+[
+ {
+  "file": "account",
+  "method": "GET",
+  "path": "/api/account/statement",
+  "auth": true,
+  "params": [],
+  "request": "from: z.string().datetime().optional(), to: z.string().datetime().optional(),",
+  "responses": [
+   [
+    "200",
+    "{ member: user, from: start.toISOString(), to: end.toISOString(), totals: { paidInPaisa: paidIn.toString(), collectedPaisa: collected.toString(), penaltiesPaisa ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "account",
+  "method": "GET",
+  "path": "/api/account/limits",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ level: user.kycLevel, levelName: user.kycLevel >= 2 ? 'Bank verified' : user.kycLevel >= 1 ? 'Identity on file' : 'Basic', limits: [ { key: 'committees', labe ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "account",
+  "method": "GET",
+  "path": "/api/account/devices",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ sessions: tokens.map((t, i) => { const e = nearest(t.createdAt); return { id: t.familyId, signedInAt: t.createdAt.toISOString(), device: describe(e?.userAgent ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "account",
+  "method": "POST",
+  "path": "/api/account/devices/sign-out-others",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ signedOut: count }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "agreements",
+  "method": "GET",
+  "path": "/api/agreements/status",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ undertaking: undertaking ? { signedAt: undertaking.signedAt, expiresAt: undertaking.expiresAt, fresh: Boolean(undertaking.expiresAt && undertaking.expiresAt > ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "agreements",
+  "method": "GET",
+  "path": "/api/agreements/text",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "400",
+    "{ error: 'committeeId is required for the mutual guarantee text' }"
+   ],
+   [
+    "404",
+    "{ error: 'Committee not found' }"
+   ],
+   [
+    "200",
+    "{ doc, version: MUTUAL_PG_VERSION, text, textHash: hashText(text) }"
+   ],
+   [
+    "200",
+    "{ doc, version: PLATFORM_UNDERTAKING_VERSION, text, textHash: hashText(text), renewalDays: UNDERTAKING_VALID_DAYS }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "400",
+   "404"
+  ]
+ },
+ {
+  "file": "agreements",
+  "method": "POST",
+  "path": "/api/agreements/sign",
+  "auth": true,
+  "params": [],
+  "request": "doc: z.enum(['PLATFORM_UNDERTAKING', 'MUTUAL_PG']), committeeId: z.string().optional(), accept: z.literal(true), // Adopted digital signature: the member types their full legal name // (verified against the account) and may add a drawn signature (small // PNG data-URL). Required for the undertaking — a checkbox is not a sign. signedName: z.string().trim().min(3).max(120).optional(), signatureData: ...",
+  "responses": [
+   [
+    "400",
+    "{ error: 'Type your full legal name as your signature' }"
+   ],
+   [
+    "400",
+    "{ error: `The signature must match the account name exactly: ${user.fullName}` }"
+   ],
+   [
+    "400",
+    "{ error: 'committeeId is required for the mutual guarantee' }"
+   ],
+   [
+    "201",
+    "{ signedAt: row.signedAt, version: row.version, textHash: row.textHash }"
+   ],
+   [
+    "201",
+    "{ signedAt: row.signedAt, expiresAt, version: row.version, textHash: row.textHash }"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "400"
+  ]
+ },
+ {
+  "file": "auth",
+  "method": "POST",
+  "path": "/api/auth/register",
+  "auth": false,
+  "params": [],
+  "request": "fullName: z.string().trim().min(2).max(80), username: z.string().trim().min(3).max(30), phone: z.string().trim().min(11).max(15), email: z.string().trim().email(), password: z.string().trim().min(8).max(128), referredBy: z.string().trim().min(3).max(30).optional(), // KYC-grade identity at signup (payment-app standard). CNIC optional at // the API so older clients keep working; the web form requir ...",
+  "responses": [
+   [
+    "400",
+    "{ error: 'Password must contain both letters and numbers' }"
+   ],
+   [
+    "409",
+    "{ error: 'Username, email, phone, or CNIC already exists' }"
+   ],
+   [
+    "201",
+    "{ user: withHasPin(user), accessToken: signAccess(payload), refreshToken }"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "400",
+   "409"
+  ]
+ },
+ {
+  "file": "auth",
+  "method": "POST",
+  "path": "/api/auth/phone-otp",
+  "auth": false,
+  "params": [],
+  "request": "phone: z.string().trim().min(11).max(15)",
+  "responses": [
+   [
+    "201",
+    "{ otpSent: true, ...((process.env.NODE_ENV !== 'production' || demoMode()) ? { devCode: code } : {}) }"
+   ]
+  ],
+  "statuses": [
+   "201"
+  ]
+ },
+ {
+  "file": "auth",
+  "method": "POST",
+  "path": "/api/auth/phone-otp/verify",
+  "auth": false,
+  "params": [],
+  "request": "phone: z.string().trim().min(11).max(15), code: z.string().trim().regex(/^\\d{6}$/)",
+  "responses": [
+   [
+    "200",
+    "{ verified: true, demo: true }"
+   ],
+   [
+    "404",
+    "{ error: 'Request a code first' }"
+   ],
+   [
+    "410",
+    "{ error: 'The code expired — request a new one' }"
+   ],
+   [
+    "400",
+    "{ error: attempts >= OTP_MAX_ATTEMPTS ? 'Too many wrong attempts — request a new code' : 'Incorrect code' }"
+   ],
+   [
+    "200",
+    "{ verified: true }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "400",
+   "404",
+   "410"
+  ]
+ },
+ {
+  "file": "auth",
+  "method": "POST",
+  "path": "/api/auth/set-pin",
+  "auth": true,
+  "params": [],
+  "request": "pin: z.string().trim().regex(/^\\d{4,6}$/, 'PIN must be 4 to 6 digits'), currentPin: z.string().trim().optional()",
+  "responses": [
+   [
+    "403",
+    "{ error: 'Current PIN is incorrect' }"
+   ],
+   [
+    "200",
+    "{ hasPin: true }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "403"
+  ]
+ },
+ {
+  "file": "auth",
+  "method": "POST",
+  "path": "/api/auth/verify-pin",
+  "auth": true,
+  "params": [],
+  "request": "pin: z.string().trim().regex(/^\\d{4,6}$/)",
+  "responses": [
+   [
+    "200",
+    "{ verified: true, hasPin: false }"
+   ],
+   [
+    "401",
+    "{ error: 'Incorrect PIN' }"
+   ],
+   [
+    "200",
+    "{ verified: true, hasPin: true }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "401"
+  ]
+ },
+ {
+  "file": "auth",
+  "method": "POST",
+  "path": "/api/auth/set-biometric",
+  "auth": true,
+  "params": [],
+  "request": "credentialId: z.string().trim().min(1).max(512).nullable()",
+  "responses": [
+   [
+    "200",
+    "{ hasBiometric: !!credentialId }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "auth",
+  "method": "POST",
+  "path": "/api/auth/login",
+  "auth": false,
+  "params": [],
+  "request": "identity: z.string().trim().min(1), password: z.string().min(8).max(128)",
+  "responses": [
+   [
+    "423",
+    "{ error: 'Too many failed sign-ins. This account is temporarily locked — try again in a few minutes.' }"
+   ],
+   [
+    "401",
+    "{ error: 'Invalid username or password' }"
+   ],
+   [
+    "200",
+    "{ user: withHasPin(safe), accessToken: signAccess(payload), refreshToken }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "401",
+   "423"
+  ]
+ },
+ {
+  "file": "auth",
+  "method": "POST",
+  "path": "/api/auth/refresh",
+  "auth": false,
+  "params": [],
+  "request": "refreshToken: z.string()",
+  "responses": [
+   [
+    "401",
+    "{ error: 'Refresh token expired' }"
+   ],
+   [
+    "401",
+    "{ error: 'Refresh token invalid' }"
+   ],
+   [
+    "401",
+    "{ error: 'Session security alert: this session was revoked. Please sign in again.' }"
+   ],
+   [
+    "403",
+    "{ error: 'Account unavailable' }"
+   ],
+   [
+    "200",
+    "{ accessToken: signAccess(nextPayload), refreshToken: nextRefresh }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "401",
+   "403"
+  ]
+ },
+ {
+  "file": "auth",
+  "method": "POST",
+  "path": "/api/auth/logout",
+  "auth": true,
+  "params": [],
+  "request": "refreshToken:z.string().optional()",
+  "responses": [
+   [
+    "204",
+    "no content"
+   ]
+  ],
+  "statuses": [
+   "204"
+  ]
+ },
+ {
+  "file": "auth",
+  "method": "GET",
+  "path": "/api/auth/me",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "user ? withHasPin(user) : user"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "chat",
+  "method": "GET",
+  "path": "/api/chat/:committeeId",
+  "auth": true,
+  "params": [
+   "committeeId"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "403",
+    "{ error: 'Only members of this committee can read its messages' }"
+   ],
+   [
+    "200",
+    "{ messages: since ? messages : messages.reverse() }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "403"
+  ]
+ },
+ {
+  "file": "chat",
+  "method": "POST",
+  "path": "/api/chat/:committeeId",
+  "auth": true,
+  "params": [
+   "committeeId"
+  ],
+  "request": "body: z.string().min(1).max(2000)",
+  "responses": [
+   [
+    "403",
+    "{ error: 'Only members of this committee can post here' }"
+   ],
+   [
+    "400",
+    "{ error: 'That message is empty' }"
+   ],
+   [
+    "429",
+    "{ error: 'Slow down a moment' }"
+   ],
+   [
+    "201",
+    "message"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "400",
+   "403",
+   "429"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "GET",
+  "path": "/api/committees",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "rows"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "GET",
+  "path": "/api/committees/discover",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "mapped.filter(c => c.availability !== 'OPEN' || c.eligiblePositions.length > 0)"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "GET",
+  "path": "/api/committees/preview/:inviteCode",
+  "auth": true,
+  "params": [
+   "inviteCode"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "404",
+    "{ error: 'Invite code not found' }"
+   ],
+   [
+    "200",
+    "{ id: committee.id, name: committee.name, mode: committee.mode, status: committee.status, memberCount: committee.members.length, memberCap: committee.memberCap, ..."
+   ]
+  ],
+  "statuses": [
+   "200",
+   "404"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "GET",
+  "path": "/api/committees/:id",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "404",
+    "{ error: 'Committee not found' }"
+   ],
+   [
+    "200",
+    "{ ...committee, guaranteeFundPaisa }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "404"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "POST",
+  "path": "/api/committees",
+  "auth": true,
+  "params": [],
+  "request": "name: z.string().trim().min(3).max(80), memberCap: z.number().int().min(3).max(150), mode: z.enum(['ROTATING','HYBRID','INVESTMENT']).default('ROTATING'), contributionPaisa: paisaInput.refine(value => value <= 10_000_000_000n, 'Contribution exceeds the prototype safety limit'), cadencePreset: z.enum(['VERY_SHORT','SHORT','MID','LONG']), periodDays: z.number().int().min(1).max(365), minMembersToSta ...",
+  "responses": [
+   [
+    "428",
+    "UNDERTAKING_428"
+   ],
+   [
+    "400",
+    "{ error: 'Minimum members cannot exceed member capacity' }"
+   ],
+   [
+    "400",
+    "{ error: `${input.mode} committees allow a maximum ${allocationCap * 100}% investment allocation` }"
+   ],
+   [
+    "400",
+    "{ error: 'Investment circles require at least 50% allocation' }"
+   ],
+   [
+    "400",
+    "{ error: 'Contribution must be at least Rs 100' }"
+   ],
+   [
+    "403",
+    "{ error: 'Restricted accounts cannot host committees' }"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "400",
+   "403",
+   "409",
+   "428"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "POST",
+  "path": "/api/committees/join",
+  "auth": true,
+  "params": [],
+  "request": "inviteCode: z.string().trim().min(3)",
+  "responses": [
+   [
+    "404",
+    "{ error: 'Invite code not found' }"
+   ]
+  ],
+  "statuses": [
+   "404"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "POST",
+  "path": "/api/committees/:id/join-public",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "403",
+    "{ error: 'This circle is invite-only' }"
+   ]
+  ],
+  "statuses": [
+   "403"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "POST",
+  "path": "/api/committees/:id/waitlist",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "preferredPosition: z.number().int().min(1).max(150).nullable().optional()",
+  "responses": [
+   [
+    "428",
+    "UNDERTAKING_428"
+   ],
+   [
+    "404",
+    "{ error: 'Discoverable circle not found' }"
+   ],
+   [
+    "409",
+    "{ error: 'You are already in this circle' }"
+   ],
+   [
+    "400",
+    "{ error: 'Preferred turn exceeds this circle capacity' }"
+   ],
+   [
+    "201",
+    "row"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "400",
+   "404",
+   "409",
+   "428"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "POST",
+  "path": "/api/committees/:id/join",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "position: z.number().int().min(1).max(150).optional()",
+  "responses": [
+   [
+    "428",
+    "UNDERTAKING_428"
+   ],
+   [
+    "403",
+    "{error:'Restricted accounts cannot join committees'}"
+   ],
+   [
+    "403",
+    "{error:`Rehabilitation cooldown applies until ${joiningUser.cooldownUntil.toISOString()}`}"
+   ],
+   [
+    "403",
+    "{error:`Joining is paused under the linked-account policy: an account linked to yours (${linkedDefault.fullName}) has an unresolved default. It clears when thei ..."
+   ],
+   [
+    "404",
+    "{ error: 'Committee not found' }"
+   ],
+   [
+    "409",
+    "{ error: 'Committee has already started' }"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "403",
+   "404",
+   "409",
+   "428"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "POST",
+  "path": "/api/committees/:id/start",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "fundGap: z.boolean().optional()",
+  "responses": [
+   [
+    "409",
+    "{ error: 'Only forming committees can start' }"
+   ],
+   [
+    "409",
+    "{ error: `At least ${committee.minMembersToStart} members are required` }"
+   ],
+   [
+    "409",
+    "{ error: `${members.length - accepted} member risk acknowledgement(s) are still required` }"
+   ],
+   [
+    "409",
+    "{ error: `${unsigned.length} member(s) have not signed the mutual member-to-member guarantee for this circle` }"
+   ],
+   [
+    "409",
+    "{ error: `${missing.length} member protection commitment(s) are incomplete` }"
+   ],
+   [
+    "200",
+    "{ status: 'CONFIRMING', closesAt: new Date(openedAt.getTime() + CONFIRMATION_WINDOW_HOURS * 3_600_000), message: 'Confirmation window open', }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "409"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "GET",
+  "path": "/api/committees/:id/payment-matrix",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "rounds"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "POST",
+  "path": "/api/committees/:id/nudge/:userId",
+  "auth": true,
+  "params": [
+   "id",
+   "userId"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "201",
+    "notice"
+   ]
+  ],
+  "statuses": [
+   "201"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "POST",
+  "path": "/api/committees/:id/payout",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "idempotencyKey: z.string().min(8)",
+  "responses": [
+   [
+    "409",
+    "{ error: 'No active round' }"
+   ],
+   [
+    "409",
+    "{ error: 'Liquidate the active investment before payout' }"
+   ],
+   [
+    "409",
+    "{ error: `Payout is locked until ${round.payoutDate.toISOString()}` }"
+   ],
+   [
+    "409",
+    "{ error: `${blocking} current contribution(s) are not paid` }"
+   ],
+   [
+    "409",
+    "{ error: `The guarantee pool holds ${fundBalance.toString()} paisa and cannot cover ${coverable.length} missed installment(s) totalling ${guaranteeShortfallPais ..."
+   ],
+   [
+    "409",
+    "{ error: 'Recipient did not clear the current installment by the locked seven-day eligibility deadline' }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "409"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "GET",
+  "path": "/api/committees/:id/receivables-pack",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ generatedAt: new Date().toISOString(), disclaimer: 'Stage-1 record-only data: transfers are member-to-member and recorded, not custodied. Figures are ledger-d ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "POST",
+  "path": "/api/committees/:id/leave",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "409",
+    "{ error: 'The host cannot leave their own committee' }"
+   ],
+   [
+    "409",
+    "{ error: 'You can only leave before starting or after a full cycle completes.' }"
+   ],
+   [
+    "409",
+    "{ error: 'Clear all outstanding contributions before leaving.' }"
+   ],
+   [
+    "200",
+    "{ message: 'You have exited the committee' }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "409"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "POST",
+  "path": "/api/committees/:id/listing",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "listed: z.boolean()",
+  "responses": [
+   [
+    "409",
+    "{ error: 'Cancelled circles cannot be listed' }"
+   ],
+   [
+    "200",
+    "{ listedPublicly: listed }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "409"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "POST",
+  "path": "/api/committees/:id/autopay",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "enabled: z.boolean(), rail: z.enum(['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER', 'CASH']).optional()",
+  "responses": [
+   [
+    "200",
+    "{ autoDebitEnabled: updated.autoDebitEnabled, autoDebitRail: updated.autoDebitRail, autoDebitMandateAt: updated.autoDebitMandateAt }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "POST",
+  "path": "/api/committees/:id/withdraw",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "409",
+    "{ error: 'Free withdrawal is only open during the confirmation window' }"
+   ],
+   [
+    "409",
+    "{ error: 'The confirmation window has closed' }"
+   ],
+   [
+    "404",
+    "{ error: 'You are not in this committee' }"
+   ],
+   [
+    "409",
+    "{ error: 'The host cannot withdraw. Cancel the committee instead.' }"
+   ],
+   [
+    "200",
+    "{ message: 'You have left this committee. Nothing is owed.', ...result }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "404",
+   "409"
+  ]
+ },
+ {
+  "file": "committees",
+  "method": "PATCH",
+  "path": "/api/committees/:id/avatar",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "avatarUrl: z.string().max(300_000).nullable(),",
+  "responses": [
+   [
+    "200",
+    "updated"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "exchange",
+  "method": "GET",
+  "path": "/api/exchange",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "listings.map(listing => { const targetRound = listing.committee.rounds.find(round => round.roundNumber === listing.position); const remainingRounds = Math.max(0 ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "exchange",
+  "method": "POST",
+  "path": "/api/exchange",
+  "auth": true,
+  "params": [],
+  "request": "committeeId: z.string(), premiumPaisa: paisaInput",
+  "responses": [
+   [
+    "403",
+    "{ error: 'Marketplace access is locked during default recovery or cooldown' }"
+   ],
+   [
+    "409",
+    "{ error: 'Turn sales are not enabled for this committee' }"
+   ],
+   [
+    "400",
+    "{ error: 'Sukoon and Bazaar circles allow free turn swaps only — list at a zero premium, or use a Classic, Priority or Sigma circle for premium sales' }"
+   ],
+   [
+    "409",
+    "{ error: 'Only a future, unreceived turn can be listed' }"
+   ],
+   [
+    "409",
+    "{ error: 'Record the current installment before listing your turn' }"
+   ],
+   [
+    "400",
+    "{ error: 'Premium must be between zero and 50% of the payout' }"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "400",
+   "403",
+   "409"
+  ]
+ },
+ {
+  "file": "exchange",
+  "method": "POST",
+  "path": "/api/exchange/:id/bid",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "premiumPaisa: paisaInput",
+  "responses": [
+   [
+    "404",
+    "{ error: 'Open listing not found' }"
+   ],
+   [
+    "409",
+    "{ error: 'Cannot bid on your own listing' }"
+   ],
+   [
+    "403",
+    "{ error: 'Turn buying is not available at your reliability band — build your score to unlock the marketplace' }"
+   ],
+   [
+    "403",
+    "{error:'Turn auctions are currently restricted to active members of the same committee'}"
+   ],
+   [
+    "409",
+    "{error:'Only members with a future unreceived turn can bid'}"
+   ],
+   [
+    "409",
+    "{error:'That turn is earlier than your reliability band allows you to hold'}"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "400",
+   "403",
+   "404",
+   "409"
+  ]
+ },
+ {
+  "file": "exchange",
+  "method": "POST",
+  "path": "/api/exchange/:id/bids/:bidId/accept",
+  "auth": true,
+  "params": [
+   "id",
+   "bidId"
+  ],
+  "request": "idempotencyKey: z.string().min(8)",
+  "responses": [
+   [
+    "404",
+    "{ error: 'Open listing not found' }"
+   ],
+   [
+    "403",
+    "{ error: 'Only the seller can accept a bid' }"
+   ],
+   [
+    "404",
+    "{ error: 'Valid bid not found' }"
+   ],
+   [
+    "409",
+    "{ error: 'The buyer no longer has an eligible future turn' }"
+   ],
+   [
+    "200",
+    "{ message: 'Turn positions exchanged', buyerType: 'INSIDE', feePaisa: fee, sellerNetPaisa: sellerNet }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "403",
+   "404",
+   "409"
+  ]
+ },
+ {
+  "file": "exits",
+  "method": "GET",
+  "path": "/api/exits/committee/:id/options",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "rung: z.enum(['WINDOW', 'SUBSTITUTION', 'GROUP_VOTE', 'HARDSHIP']), reason: z.string().max(2_000).optional(), voiceNoteUrl: z.string().url().optional(), substituteUserId: z.string().optional(),",
+  "responses": [
+   [
+    "403",
+    "{ error: 'Not an active member of this circle' }"
+   ],
+   [
+    "200",
+    "{ hasCollected: me.hasReceived, inConfirmationWindow: inWindow(committee), installmentsPaid: paidCount, available: rungs, quotes, vote: VOTE, // A member who al ..."
+   ]
+  ],
+  "statuses": [
+   "200",
+   "403"
+  ]
+ },
+ {
+  "file": "exits",
+  "method": "POST",
+  "path": "/api/exits/committee/:id",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "approve: z.boolean()",
+  "responses": [
+   [
+    "403",
+    "{ error: 'Not an active member of this circle' }"
+   ],
+   [
+    "409",
+    "{ error: 'You have already collected. Leaving now is a default, not an exit.' }"
+   ],
+   [
+    "409",
+    "{ error: 'You already have an open exit request on this circle' }"
+   ],
+   [
+    "409",
+    "{ error: `${RUNG_LABEL[input.rung]} is not available on this circle right now` }"
+   ],
+   [
+    "201",
+    "{ request, restitution: { ...restitution, totalDuePaisa: restitution.totalDuePaisa.toString(), debts: restitution.debts.map(d => ({ ...d, amountPaisa: d.amountP ..."
+   ]
+  ],
+  "statuses": [
+   "201",
+   "403",
+   "409"
+  ]
+ },
+ {
+  "file": "exits",
+  "method": "POST",
+  "path": "/api/exits/:requestId/vote",
+  "auth": true,
+  "params": [
+   "requestId"
+  ],
+  "request": "approve: z.boolean()",
+  "responses": [
+   [
+    "409",
+    "{ error: 'This request is already decided' }"
+   ],
+   [
+    "403",
+    "{ error: 'You cannot vote on your own exit' }"
+   ],
+   [
+    "200",
+    "{ request: updated, outcome }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "403",
+   "409"
+  ]
+ },
+ {
+  "file": "exits",
+  "method": "POST",
+  "path": "/api/exits/:requestId/settle",
+  "auth": true,
+  "params": [
+   "requestId"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "403",
+    "{ error: 'Only the host settles restitution at cycle close' }"
+   ],
+   [
+    "409",
+    "{ error: 'Only an approved exit can be settled' }"
+   ],
+   [
+    "200",
+    "{ ok: true, settled: request.debts.length }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "403",
+   "409"
+  ]
+ },
+ {
+  "file": "exits",
+  "method": "GET",
+  "path": "/api/exits/committee/:id",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "requests.map(r => ({ ...r, restitutionDuePaisa: r.restitutionDuePaisa.toString(), finePaisa: r.finePaisa.toString(), fineToMembersPaisa: r.fineToMembersPaisa.to ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "notifications",
+  "method": "GET",
+  "path": "/api/notifications",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "await prisma.notification.findMany({ where: { userId: req.auth!.userId }, orderBy: { createdAt: 'desc' }, take: 50 })"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "notifications",
+  "method": "PATCH",
+  "path": "/api/notifications/:id/read",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ updated: result.count }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "notifications",
+  "method": "PATCH",
+  "path": "/api/notifications/read-all",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ updated: result.count }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "partner",
+  "method": "GET",
+  "path": "/api/partner",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ partner: partner ? { name: partner.name, shortCode: partner.shortCode, sandbox: partner.sandbox, custodyEnabled: partner.custodyEnabled, kycEnabled: partner.k ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "partner",
+  "method": "POST",
+  "path": "/api/partner/kyc",
+  "auth": true,
+  "params": [],
+  "request": "cnic: z.string().trim().regex(/^\\d{13}$/, 'CNIC must be exactly 13 digits without dashes'), iban: z.string().trim().min(24).max(34),",
+  "responses": [
+   [
+    "409",
+    "{ error: 'No active identity-verification partner' }"
+   ],
+   [
+    "400",
+    "{ error: 'IBAN failed the PK format or checksum test' }"
+   ],
+   [
+    "403",
+    "{ error: 'Restricted accounts cannot upgrade verification' }"
+   ],
+   [
+    "200",
+    "{ kycLevel: user.kycLevel, kycStatus: user.kycStatus, bankVerifiedAt: user.bankVerifiedAt, bankVerifyRef: user.bankVerifyRef, partner: partner.name }"
+   ],
+   [
+    "409",
+    "{ error: 'This CNIC is already verified on another account' }"
+   ],
+   [
+    "201",
+    "{ kycLevel: updated.kycLevel, kycStatus: updated.kycStatus, bankVerifiedAt: updated.bankVerifiedAt, bankVerifyRef, partner: partner.name, sandbox: partner.sandb ..."
+   ]
+  ],
+  "statuses": [
+   "200",
+   "201",
+   "400",
+   "403",
+   "409"
+  ]
+ },
+ {
+  "file": "partner",
+  "method": "POST",
+  "path": "/api/partner/committees/:id/statements",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "lines: z.array(z.object({ lineRef: z.string().trim().min(4).max(60), amountPaisa: paisaInput, narration: z.string().trim().min(3).max(200), postedAt: z.coerce.date(), })).min(1).max(200),",
+  "responses": [
+   [
+    "409",
+    "{ error: 'Statement import is only available for bank-custody circles' }"
+   ],
+   [
+    "409",
+    "{ error: 'No active custody partner' }"
+   ],
+   [
+    "409",
+    "{ error: 'No collecting round to settle against' }"
+   ],
+   [
+    "201",
+    "{ batchId: batch.id, totalLines: input.lines.length, matchedLines: matched, results }"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "409"
+  ]
+ },
+ {
+  "file": "payments",
+  "method": "POST",
+  "path": "/api/payments/initiate",
+  "auth": true,
+  "params": [],
+  "request": "roundId: z.string(), rail: z.enum(['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER', 'CASH']), idempotencyKey: z.string().min(8),",
+  "responses": [
+   [
+    "404",
+    "{ error: 'Round not found' }"
+   ],
+   [
+    "409",
+    "{ error: 'Round is not collecting payments' }"
+   ],
+   [
+    "404",
+    "{ error: 'Payment obligation not found' }"
+   ],
+   [
+    "200",
+    "{ settled: true, payment }"
+   ],
+   [
+    "200",
+    "{ settled: false, instruction }"
+   ],
+   [
+    "201",
+    "{ settled: true, payment: settled, instruction }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "201",
+   "404",
+   "409"
+  ]
+ },
+ {
+  "file": "payments",
+  "method": "GET",
+  "path": "/api/payments/mine",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "await prisma.payment.findMany({ where: { payerId: req.auth!.userId }, include: { round: { include: { committee: { select: { id: true, name: true } } } } }, orde ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "payments",
+  "method": "POST",
+  "path": "/api/payments",
+  "auth": true,
+  "params": [],
+  "request": "roundId: z.string(), paidVia: z.enum(['RAAST','JAZZCASH','EASYPAISA','BANK_TRANSFER','CASH']), txnRef: z.string().trim().min(4).max(100), idempotencyKey: z.string().min(8),",
+  "responses": [
+   [
+    "404",
+    "{ error: 'Round not found' }"
+   ],
+   [
+    "409",
+    "{ error: 'Round is not collecting payments' }"
+   ],
+   [
+    "404",
+    "{ error: 'Payment obligation not found' }"
+   ],
+   [
+    "200",
+    "payment"
+   ],
+   [
+    "201",
+    "updated"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "201",
+   "404",
+   "409"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "POST",
+  "path": "/api/profile/verify-income",
+  "auth": true,
+  "params": [],
+  "request": "employerName: z.string().trim().min(2).max(80)",
+  "responses": [
+   [
+    "200",
+    "{ incomeVerified: true, feeDiscountBps: INCOME_DISCOUNT_BPS }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "POST",
+  "path": "/api/profile/secure-cheque",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ chequeSecured: true, feeDiscountBps: CHEQUE_DISCOUNT_BPS }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "POST",
+  "path": "/api/profile/clear-verification",
+  "auth": true,
+  "params": [],
+  "request": "kind: z.enum(['income', 'cheque'])",
+  "responses": [
+   [
+    "200",
+    "{ cleared: kind }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "GET",
+  "path": "/api/profile/credit",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "await prisma.creditEvent.findMany({ where: { userId: req.auth!.userId }, orderBy: { scoredAt: 'desc' }, take: 50 })"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "GET",
+  "path": "/api/profile/reputation/:userId",
+  "auth": true,
+  "params": [
+   "userId"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "404",
+    "{ error: 'User not found' }"
+   ],
+   [
+    "200",
+    "reputation"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "404"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "POST",
+  "path": "/api/profile/passport",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "404",
+    "{ error: 'User not found' }"
+   ],
+   [
+    "201",
+    "issued"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "404"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "GET",
+  "path": "/api/profile/summary",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ balancePaisa: totalRecordedPaisa + totalInvestmentProfitPaisa, totalRecordedPaisa, totalInvestmentProfitPaisa, activeCommittees: memberships, hostedCommittees ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "GET",
+  "path": "/api/profile/consent",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ dataConsent: u.dataConsent }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "PATCH",
+  "path": "/api/profile/consent",
+  "auth": true,
+  "params": [],
+  "request": "enabled: z.boolean()",
+  "responses": [
+   [
+    "200",
+    "{ dataConsent: u.dataConsent }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "GET",
+  "path": "/api/profile/payment-methods",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ methods: methodsOf(u.paymentMethodsJson).map(publicMethod) }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "POST",
+  "path": "/api/profile/payment-methods",
+  "auth": true,
+  "params": [],
+  "request": "rail: z.enum(['RAAST', 'JAZZCASH', 'EASYPAISA', 'BANK_TRANSFER', 'CARD']), accountNo: z.string().trim().max(34).optional(), accountTitle: z.string().trim().min(3, 'Enter the account holder name').max(60).optional(), bankName: z.string().trim().max(40).optional(), label: z.string().trim().max(40).optional(), preferred: z.boolean().optional(), // Card-only. The full PAN and CVC are accepted transien ...",
+  "responses": [
+   [
+    "409",
+    "{ error: 'A maximum of five linked methods is allowed' }"
+   ],
+   [
+    "400",
+    "{ error: 'Card number, expiry and cardholder name are required' }"
+   ],
+   [
+    "400",
+    "{ error: 'Enter the full account / wallet number' }"
+   ],
+   [
+    "400",
+    "{ error: 'This account is not registered in your name. Auto-collection can only anchor to your own account.' }"
+   ],
+   [
+    "201",
+    "{ method: publicMethod(method), otpSent: true, ...(process.env.NODE_ENV !== 'production' ? { devCode: otp } : {}) }"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "400",
+   "409"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "POST",
+  "path": "/api/profile/payment-methods/:id/verify",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "code: z.string().trim().regex(/^\\d{6}$/, 'Enter the 6-digit code')",
+  "responses": [
+   [
+    "404",
+    "{ error: 'No pending code for this method — re-link it to get a fresh one' }"
+   ],
+   [
+    "410",
+    "{ error: 'The code expired — re-link the method to get a fresh one' }"
+   ],
+   [
+    "400",
+    "{ error: 'Incorrect code' }"
+   ],
+   [
+    "200",
+    "{ methods: updated.map(publicMethod) }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "400",
+   "404",
+   "410"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "POST",
+  "path": "/api/profile/payment-methods/:id/preferred",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "404",
+    "{ error: 'Linked method not found' }"
+   ],
+   [
+    "200",
+    "{ methods: updated.map(publicMethod) }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "404"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "POST",
+  "path": "/api/profile/payment-methods/:id/salary",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "enabled: z.boolean().default(true)",
+  "responses": [
+   [
+    "404",
+    "{ error: 'Linked method not found' }"
+   ],
+   [
+    "200",
+    "updated"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "404"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "DELETE",
+  "path": "/api/profile/payment-methods/:id",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "404",
+    "{ error: 'Linked method not found' }"
+   ],
+   [
+    "409",
+    "{ error: 'This is your salary account — collections anchor to it. Mark another account as your salary account first, then remove this one.' }"
+   ],
+   [
+    "200",
+    "{ methods: remaining.map(publicMethod) }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "404",
+   "409"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "POST",
+  "path": "/api/profile/salary-day",
+  "auth": true,
+  "params": [],
+  "request": "day: z.number().int().min(1).max(31).nullable()",
+  "responses": [
+   [
+    "200",
+    "{ salaryDay: day, evaluation }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "GET",
+  "path": "/api/profile/salary-status",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ ...u, payslip }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "POST",
+  "path": "/api/profile/payslip",
+  "auth": true,
+  "params": [],
+  "request": "imageBase64: z.string().min(64).max(1_400_000)",
+  "responses": [
+   [
+    "400",
+    "{ error: 'Send the payslip as a single photo (JPEG or PNG)' }"
+   ],
+   [
+    "413",
+    "{ error: 'Photo too large — retake it or use the in-app camera' }"
+   ],
+   [
+    "201",
+    "{ status: upload.status, uploadedAt: upload.uploadedAt }"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "400",
+   "413"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "POST",
+  "path": "/api/profile/salary-signals",
+  "auth": true,
+  "params": [],
+  "request": "events: z.array(z.object({ dayOfMonth: z.number().int().min(1).max(31), amountBand: z.string().trim().min(2).max(20), sourceClass: z.enum(['BANK', 'WALLET']), observedMonth: z.string().regex(/^\\d{4}-(0[1-9]|1[0-2])$/), })).min(1).max(6)",
+  "responses": [
+   [
+    "201",
+    "{ recorded: events.length, evaluation }"
+   ]
+  ],
+  "statuses": [
+   "201"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "GET",
+  "path": "/api/profile/leads/summary",
+  "auth": true,
+  "params": [],
+  "request": "displayName: z.string().trim().min(2).max(40).nullable().optional(), avatarUrl: z.string().max(300_000).nullable().optional(), // data URI or hosted URL accentColor: z.enum(ACCENTS).optional(), themePref: z.enum(['system', 'light', 'dark']).optional(), langPref: z.enum(['en', 'ur']).optional(), textScale: z.number().int().min(90).max(140).optional(), highContrast: z.boolean().optional(), notifyPre ...",
+  "responses": [
+   [
+    "200",
+    "{ goals: consentedByGoal }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "GET",
+  "path": "/api/profile/appearance",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ ...user, accents: ACCENTS }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "PATCH",
+  "path": "/api/profile/appearance",
+  "auth": true,
+  "params": [],
+  "request": "order: z.array(z.string()).min(1), // method ids, most-preferred first salaryMethodId: z.string().nullable().optional(),",
+  "responses": [
+   [
+    "200",
+    "user"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "profile",
+  "method": "PATCH",
+  "path": "/api/profile/payment-methods/order",
+  "auth": true,
+  "params": [],
+  "request": "order: z.array(z.string()).min(1), // method ids, most-preferred first salaryMethodId: z.string().nullable().optional(),",
+  "responses": [
+   [
+    "200",
+    "{ methods: next, salaryMethodId: salaryMethod?.id ?? null }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "protection",
+  "method": "POST",
+  "path": "/api/protection/delinquency/run",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "403",
+    "{ error: 'The delinquency pass is scheduler-only in production' }"
+   ],
+   [
+    "200",
+    "await evaluateDelinquencies()"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "403"
+  ]
+ },
+ {
+  "file": "protection",
+  "method": "GET",
+  "path": "/api/protection/committee/:id",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ committeeId: committee.id, policy: policyOf(committee.riskPolicyJson), payoutBufferBps: committee.payoutBufferBps, forwardLiabilityGateEnabled: securityPolicy ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "protection",
+  "method": "PUT",
+  "path": "/api/protection/committee/:id/commitment",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "guarantorUsername: z.string().trim().min(2).max(40).optional(), promissoryRef: z.string().trim().min(4).max(120).optional(), autoDebitRef: z.string().trim().min(4).max(120).optional(), acceptedTerms: z.literal(true),",
+  "responses": [
+   [
+    "400",
+    "{ error: 'Guarantor must be another unrestricted Halqa user with score 700+' }"
+   ],
+   [
+    "200",
+    "row"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "400"
+  ]
+ },
+ {
+  "file": "protection",
+  "method": "POST",
+  "path": "/api/protection/committee/:id/commitment/:membershipId/verify",
+  "auth": true,
+  "params": [
+   "id",
+   "membershipId"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "404",
+    "{ error: 'Protection commitment not found' }"
+   ],
+   [
+    "200",
+    "row"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "404"
+  ]
+ },
+ {
+  "file": "protection",
+  "method": "POST",
+  "path": "/api/protection/committee/:id/peer-nudge/:userId",
+  "auth": true,
+  "params": [
+   "id",
+   "userId"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "400",
+    "{ error: 'You cannot nudge yourself' }"
+   ],
+   [
+    "429",
+    "{ error: 'Peer nudge limit reached for today' }"
+   ],
+   [
+    "201",
+    "{ message: 'Private reminder sent' }"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "400",
+   "429"
+  ]
+ },
+ {
+  "file": "protection",
+  "method": "GET",
+  "path": "/api/protection/recovery/mine",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "await prisma.recoveryCase.findMany({ where: { userId: req.auth!.userId }, include: { committee: { select: { id: true, name: true } }, round: { select: { roundNu ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "protection",
+  "method": "POST",
+  "path": "/api/protection/recovery/:id/resolve",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "txnRef: z.string().trim().min(4).max(120), idempotencyKey: z.string().min(8)",
+  "responses": [
+   [
+    "404",
+    "{ error: 'Open recovery case not found' }"
+   ],
+   [
+    "200",
+    "{ message: 'Recovery payment recorded. A six-month low-risk cooldown applies after all cases are cleared.' }"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "404"
+  ]
+ },
+ {
+  "file": "rewards",
+  "method": "GET",
+  "path": "/api/rewards",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ ...summarise(user.rewardPoints, user.paymentStreak, user.longestStreak), scoreGainedThisCycle: user.scoreGainedThisCycle, completionRewardCapPaisa: COMPLETION ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "rewards",
+  "method": "GET",
+  "path": "/api/rewards/ladder",
+  "auth": true,
+  "params": [],
+  "request": "kind: z.enum(['PAID_ON_TIME', 'PAID_EARLY', 'CIRCLE_COMPLETED_CLEAN', 'PAID_FOR_ANOTHER', 'MISSED']), committeeId: z.string().optional(), roundId: z.string().optional(), settled: z.boolean().default(true),",
+  "responses": [
+   [
+    "200",
+    "{ tiers: LADDER.map(t => ({ ...t, rewardCapPaisa: t.rewardCapPaisa.toString() })), completionRewardCapPaisa: COMPLETION_REWARD_CAP_PAISA.toString(), }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "rewards",
+  "method": "POST",
+  "path": "/api/rewards/record",
+  "auth": true,
+  "params": [],
+  "request": "kind: z.enum(['PAID_ON_TIME', 'PAID_EARLY', 'CIRCLE_COMPLETED_CLEAN', 'PAID_FOR_ANOTHER', 'MISSED']), committeeId: z.string().optional(), roundId: z.string().optional(), settled: z.boolean().default(true),",
+  "responses": [
+   [
+    "403",
+    "{ error: 'Reward events are emitted by settlement, not by clients' }"
+   ],
+   [
+    "200",
+    "result"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "403"
+  ]
+ },
+ {
+  "file": "risk",
+  "method": "GET",
+  "path": "/api/risk/committee/:id",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ ...result, consent, policy: committee.riskPolicyJson, memberConsentRequired: committee.memberConsentRequired, committeeStatus: committee.status, riskTolerance ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "risk",
+  "method": "POST",
+  "path": "/api/risk/committee/:id/refresh",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ ...result, assessmentId: assessment.id }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "risk",
+  "method": "GET",
+  "path": "/api/risk/committee/:id/projection",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "days: z.coerce.number().int().min(1).max(3650).optional()",
+  "responses": [
+   [
+    "200",
+    "{ ...stressProjection(principal, committee.scheme?.indicativeRatePct ?? 0, days, result.score), riskScore: result.score, band: result.band, modelVersion: result ..."
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "risk",
+  "method": "PATCH",
+  "path": "/api/risk/committee/:id/policy",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "payoutBufferBps: z.number().int().min(0).max(3000).default(1500), targetRiskScore: z.number().int().min(1).max(8).default(3), liquidityReserveBps: z.number().int().min(500).max(4000).default(1000), latePenaltyBps: z.number().int().min(0).max(1000).default(200), guarantorRequired: z.boolean().default(false), dynamicDeposit: z.boolean().default(true), profitCollateral: z.boolean().default(true), cap ...",
+  "responses": [
+   [
+    "409",
+    "{ error: 'Risk policy locks when the committee starts' }"
+   ],
+   [
+    "400",
+    "{ error: `${committee.mode} committees permit a maximum risk mandate of ${modeRiskCap}/10` }"
+   ],
+   [
+    "200",
+    "updated"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "400",
+   "409"
+  ]
+ },
+ {
+  "file": "risk",
+  "method": "POST",
+  "path": "/api/risk/committee/:id/consent",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "accepted: z.literal(true)",
+  "responses": [
+   [
+    "201",
+    "row"
+   ]
+  ],
+  "statuses": [
+   "201"
+  ]
+ },
+ {
+  "file": "support",
+  "method": "GET",
+  "path": "/api/support/tickets",
+  "auth": true,
+  "params": [],
+  "request": null,
+  "responses": [
+   [
+    "200",
+    "{ tickets, open: tickets.filter(t => t.status === 'OPEN').length }"
+   ]
+  ],
+  "statuses": [
+   "200"
+  ]
+ },
+ {
+  "file": "support",
+  "method": "GET",
+  "path": "/api/support/tickets/:id",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "404",
+    "{ error: 'No such ticket' }"
+   ],
+   [
+    "200",
+    "ticket"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "404"
+  ]
+ },
+ {
+  "file": "support",
+  "method": "POST",
+  "path": "/api/support/tickets",
+  "auth": true,
+  "params": [],
+  "request": "category: z.enum(CATEGORIES).default('QUESTION'), subject: z.string().trim().min(3).max(120), body: z.string().trim().min(5).max(4000), paymentId: z.string().trim().optional(), committeeId: z.string().trim().optional(),",
+  "responses": [
+   [
+    "404",
+    "{ error: 'That payment is not one of yours' }"
+   ],
+   [
+    "409",
+    "{ error: `You already have an open case on that payment, ${already.reference}` }"
+   ],
+   [
+    "429",
+    "{ error: 'You have ten cases open already. Let those be answered first.' }"
+   ],
+   [
+    "201",
+    "ticket"
+   ]
+  ],
+  "statuses": [
+   "201",
+   "404",
+   "409",
+   "429"
+  ]
+ },
+ {
+  "file": "support",
+  "method": "POST",
+  "path": "/api/support/tickets/:id/reply",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": "body: z.string().trim().min(2).max(4000)",
+  "responses": [
+   [
+    "404",
+    "{ error: 'No such ticket' }"
+   ],
+   [
+    "409",
+    "{ error: 'That case is closed. Open a new one and quote the old reference.' }"
+   ],
+   [
+    "200",
+    "updated"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "404",
+   "409"
+  ]
+ },
+ {
+  "file": "support",
+  "method": "POST",
+  "path": "/api/support/tickets/:id/close",
+  "auth": true,
+  "params": [
+   "id"
+  ],
+  "request": null,
+  "responses": [
+   [
+    "404",
+    "{ error: 'No such ticket' }"
+   ],
+   [
+    "200",
+    "updated"
+   ]
+  ],
+  "statuses": [
+   "200",
+   "404"
+  ]
+ }
+]

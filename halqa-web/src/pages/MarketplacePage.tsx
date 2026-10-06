@@ -273,12 +273,12 @@ function SellTurn({ committees, close, done }:
         </select>
       </Field>
       <Field label="Opening ask, in rupees" hint={'Most allowed ' + money(max) + ', half the payout'}>
-        <input inputMode="decimal" value={premium}
+        <input aria-label="Your offer in rupees" inputMode="decimal" value={premium}
                onChange={e => setPremium(e.target.value.replace(/[^\d.]/g, ''))} />
       </Field>
       <div className="w-inset">
         <Facts cols={2} items={[
-          ['Turn', me ? String(me.turnPosition) : '—'],
+          ['Turn', me ? String(me.turnPosition) : 'Not in this circle'],
           ['Payout', money(payoutP)],
         ]} />
         <Notice kind="info" icon={<TrendingUp />}>

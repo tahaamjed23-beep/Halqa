@@ -55,8 +55,6 @@ export default function CreditPage({ user, back }: { user: User; back: () => voi
     for (const e of events.slice(0, 11)) { s -= e.delta; points.unshift({ score: s }) }
     return points;
   })();
-  const min = Math.min(...trend.map(p => p.score), 640);
-  const max = Math.max(...trend.map(p => p.score), 780);
   const negatives = events.filter(e => e.delta < 0).length;
   const positives = events.filter(e => e.delta > 0).length;
 
@@ -93,10 +91,10 @@ export default function CreditPage({ user, back }: { user: User; back: () => voi
                 })}
               </div>
               <div className="cred-legend">
-                <span><i style={{ background: 'var(--ok)' }} />On time</span>
-                <span><i style={{ background: 'var(--warn)' }} />Late</span>
-                <span><i style={{ background: 'var(--bad)' }} />Missed</span>
-                <span><i style={{ background: 'var(--line)' }} />Not due</span>
+                {[...new Set(recent.map(p => p.status))].map(st => {
+                  const d = DOT(st);
+                  return <span key={st}><i style={{ background: d.c }} />{d.t}</span>;
+                })}
               </div>
             </>
           ) : (
@@ -105,17 +103,35 @@ export default function CreditPage({ user, back }: { user: User; back: () => voi
         </Card>
 
         <Card title="How your score has moved" action={<TrendingUp />}>
-          <div className="cred-trend">
-            {trend.map((p, i) => (
-              <div key={i} title={String(p.score)}>
-                <i style={{
-                  height: Math.max(8, (p.score - min) / (max - min || 1) * 100) + '%',
-                  background: i === trend.length - 1 ? 'var(--l500)' : 'var(--l100)',
-                }} />
-              </div>
-            ))}
-          </div>
-          <p className="w-foot">Each bar is one score event. The last one is where you are today.</p>
+          {trend.length > 1 ? (() => {
+            const W = 300, H = 76, pad = 6;
+            const vals = trend.map(p => p.score);
+            const lo0 = Math.min(...vals), hi0 = Math.max(...vals);
+            const span = Math.max(hi0 - lo0, 12);
+            const mid = (lo0 + hi0) / 2;
+            const lo = mid - span * 0.75, hi = mid + span * 0.75;
+            const x = (i: number) => pad + i * (W - pad * 2) / (trend.length - 1);
+            const y = (v: number) => H - pad - (v - lo) / (hi - lo || 1) * (H - pad * 2);
+            const line = trend.map((p, i) => x(i).toFixed(1) + ',' + y(p.score).toFixed(1)).join(' ');
+            const first = trend[0].score, last = trend[trend.length - 1].score;
+            const move = last - first;
+            return (
+              <>
+                <svg className="cred-spark" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none"
+                     role="img" aria-label={`Score moved from ${first} to ${last}`}>
+                  <polyline points={line} fill="none" stroke="var(--l600)" strokeWidth="2"
+                            strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                  <circle cx={x(trend.length - 1)} cy={y(last)} r="3.5" fill="var(--l600)" />
+                </svg>
+                <div className="cred-spark-foot">
+                  <span>{first}<small>when this started</small></span>
+                  <span className={move >= 0 ? 'up' : 'down'}>
+                    {move >= 0 ? '+' : ''}{move}<small>{trend.length} score events</small></span>
+                  <span><b>{last}</b><small>today</small></span>
+                </div>
+              </>
+            );
+          })() : <p className="w-foot">Your score has not moved yet.</p>}
         </Card>
 
         <Affordability monthlyIncomeP={Number(user.declaredIncomePaisa || 0)}

@@ -1,0 +1,2012 @@
+REGULATIONS FOR  
+ELECTRONIC MONEY INSTITUTIONS 
+(EMIs) 
+P
+AYMENT SYSTEMS POLICY & OVERSIGHT DEPARTMENT 
+STATE BANK OF PAKISTAN 
+Issued on April 01, 2019 
+Revised on June 21, 2023 
+
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 1 of 52 
+Table of Contents 
+1. ACRONYMS...................................................................................................................... 3 
+2. DEFINITIONS ................................................................................................................... 5 
+3. INTRODUCTION .............................................................................................................. 8 
+4. OBJECTIVES OF THE REGULATIONS ......................................................................... 8 
+5. AUTHORITY ..................................................................................................................... 9 
+6. APPLICABILITY .............................................................................................................. 9 
+7. SCOPE OF ACTIVITIES OF EMIS .................................................................................. 9 
+8. LICENSING PROCEDURE ............................................................................................ 10 
+I. LICENSING STAGES ......................................................................................................... 10 
+II. CONDITIONS FOR LICENSING APPLICATION ............................................................ 10 
+III. APPLICATION SUBMISSION FOR LICENSE ................................................................. 11 
+9. SUSPENSION AND REVOCATION OF EMI’S LICENSE .......................................... 12 
+10. GOVERNANCE ARRANGEMENTS ............................................................................. 12 
+I. FIT AND PROPER TEST .................................................................................................... 13 
+II. RESPONSIBILITIES OF THE BOARD OF DIRECTORS AND MANAGEMENT ......... 13 
+11. CAPITAL REQUIREMENTS ......................................................................................... 15 
+12. CUSTOMER DUE DILIGENCE ..................................................................................... 16 
+13. CROSS BORDER E-MONEY PAYMENTS .................................................................. 17 
+14. E-MONEY PAYMENT INSTRUMENTS’ LIMITS ....................................................... 18 
+I. LIMITS DURING PILOT OPERATIONS ........................................................................... 18 
+II. LIMITS DURING COMMERCIAL OPERATIONS ........................................................... 18 
+III. ENHANCED E-MONEY WALLETS .................................................................................. 18 
+IV. BASIC E-MONEY WALLETS FOR MINORS................................................................... 19 
+V. ENHANCED E-MONEY WALLETS FOR MINORS ........................................................ 19 
+VI. EXCLUSIONS IN WALLET LIMITS ................................................................................. 20 
+15. ISSUANCE AND REDEMPTION OF E-MONEY PAYMENT INSTRUMENTS ....... 20 
+16. SAFEGUARDING CUSTOMERS’ FUNDS ................................................................... 20 
+17. USE OF AGENTS ............................................................................................................ 21 
+18. INTEROPERABILITY .................................................................................................... 22 
+19. OUTSOURCING OF FUNCTION(S) TO THE THIRD PARTY (IES) ......................... 22 
+20. COMPLAINT HANDLING MECHANISM ................................................................... 23 
+21. SECURITY AND CONFIDENTIALITY ........................................................................ 23 
+22. AML/CFT REQUIREMENTS ......................................................................................... 23 
+23. RISK MANAGEMENT MECHANISM .......................................................................... 24 
+24. OVERSIGHT & SUPERVISION OF EMIS .................................................................... 24 
+I. REPORTING REQUIREMENTS FOR EMIS ..................................................................... 24 
+II. RECORD RETENTION ....................................................................................................... 25 
+III. POWER TO CONDUCT ONSITE INSPECTION OF EMIS .............................................. 25 
+25. EXIT PLAN ...................................................................................................................... 25 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 2 of 52 
+Annexure A ............................................................................................................................... 27 
+Annexure B ............................................................................................................................... 30 
+Annexure C............................................................................................................................... 32 
+Annexure D .............................................................................................................................. 34 
+Annexure D-1 ........................................................................................................................... 36 
+Annexure D-2 ........................................................................................................................... 38 
+Annexure D-3 ........................................................................................................................... 39 
+Annexure D-4 ........................................................................................................................... 40 
+Annexure D-5 ........................................................................................................................... 42 
+Annexure E ............................................................................................................................... 43 
+Annexure F ............................................................................................................................... 44 
+Annexure G .............................................................................................................................. 45 
+Annexure H .............................................................................................................................. 47 
+Annexure I ................................................................................................................................ 49 
+Annexure J ............................................................................................................................... 52 
+ 
+  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 3 of 52 
+1. ACRONYMS 
+ADC Alternative Delivery Channel 
+ANM Agent Network Management 
+AML/CFT/CPF Anti-Money Laundering, Combating the Financing of Terrorism  & 
+Countering Proliferation Financing  
+APIs   Application Programming Interfaces 
+AOA   Articles of Association 
+BCP   Business Continuity Planning  
+BOD   Board of Directors 
+BPRD   Banking Policy & Regulations Department  
+BVS   Biometric Verification Service 
+CEO   Chief Executive Officer 
+CDD   Customer Due Diligence 
+CNIC Computerized National Identity Card 
+DRP   Disaster Recovery Plan 
+EMI    Electronic Money Institution 
+EDD   Enhanced Due Diligence 
+FMU   Financial Monitoring Unit 
+FPT   Fit and Proper Test 
+IBFT   Inter Bank Fund Transfers 
+IVR   Interactive Voice Response  
+KYC   Know Your Customer 
+MFB   Micro Finance Bank 
+ML/TF   Money Laundering/Terrorist Financing  
+MOA   Memorandum of Association 
+NADRA  National Database and Registration Authority 
+NICOP  National Identity Cards for Overseas Pakistanis  
+NOC   No Objection Certificate 
+NTN   National Tax Number 
+OEB   Outstanding E-Money Balance 
+PBA   Pakistan Bankers Association 
+PKR   Pakistani Rupee 
+PKRV   Pakistan Revaluation Rate 
+POC   Pakistan Origin Card 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 4 of 52 
+PRI   Pakistan Remittance Initiative 
+PSP&OD Payment Systems Policy & Oversight Department (formerly Payment 
+Systems Department (PSD)) 
+PS&EFT Act, 2007 Payment Systems and Electronic Fund Transfer Act, 2007 
+PSOs/PSPs  Payment System Operators/Payment Service Providers 
+RAS    Regulatory Approval System 
+SBP   State Bank of Pakistan 
+SBP-BSC  State Bank of Pakistan-Banking Services Corporation 
+SECP   Securities and Exchange Commission of Pakistan 
+SGLA   Subsidiary General Ledger Account 
+SLA   Service Level Agreement 
+SOPs   Standard Operating Procedures 
+STR   Suspicious Transaction Report 
+TMS    Transaction Monitoring System 
+TPSPs   Third Party Service Providers  
+UN   United Nations 
+2FA   Two Factor Authentication   
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 5 of 52 
+2. DEFINITIONS 
+Agent: means a natural or legal person, non-bank and non-EMI outlets, static or movable, who 
+can provide payment services as well as distribute and/or redeem e-money on behalf of an EMI 
+under a valid agency agreement. 
+Aggregate monthly load limit: means the total amount of e-money transferred/loaded into an 
+e-money account held by an e-money holder over the period of a calendar month. 
+Average outstanding e-money: is the average amount of balances maintained by an EMI with 
+licensed banks related to e-money in issue, for any given period and in the manner as defined 
+by SBP.  
+Bank: means a banking company as defined in Section 5 of the Banking Companies Ordinance, 
+1962. 
+Customer: For the purpose of these Regulations, the customers shall be any person holding 
+electronic money i.e. e-money holder 
+Director: includes any individual occupying the position of a director on the Board of an EMI 
+and includes sponsor  director, nominee and alternate director or by whatever name called  
+which shall be reviewed by SBP from time to time. 
+Electronic Money or E-money: means the monetary value as represented by a claim on the 
+issuer which is stored in an electronic including magnetic device or Payment Instrument, issued 
+on receipt of funds of an amount not less in value than the monetary value issued, accepted as 
+means of payment by undertakings other than t he issuer and includes electronic store of 
+monetary value on an electronic device that may be used for making payments or as may be 
+prescribed by the State Bank of Pakistan. 
+Electronic Money Institution or EMI: for the purpose of these Regulations EMIs means non-
+banking entities duly authorized to issue means of payments in the form of electronic money. 
+E-money holder: refers to any person to whom the e -money has been issued or any person 
+who uses the e -money to make payments for purchases of goods and s ervices and who has a 
+claim on e-money issuer for the e-money issued by the EMI.  
+Escrow Services: refers to a service through a financial agreement whereby money is held by 
+a regulated entity on behalf of two other parties that are in the process of completing a 
+transaction.  
+Executive Director: means a paid employee or executive in the concerned EMI who is also a 
+member of the Board of Directors (BOD).  
+Family Member: in relation to a n individual means his spouse, dependent lineal ascendants 
+and descendants and dependent siblings. 
+Fintech: refers to as technologically enabled innovation in financial services that could result 
+in new business models, applications, processes or products.  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 6 of 52 
+Issuer: for the purpose of these R egulations means the EMI, which issues e -money payment 
+instruments. 
+Key Executive: means key executives of EMI who are entrusted with the following functional 
+responsibilities: 
+a. Any executive, acting as second to CEO including Chief Operating Officer, Deputy 
+Managing Director or by whatever name called.  
+b. Chief Financial Officer/Head of Finance/ Head of Accounts  
+c. Head of Internal Audit 
+d. Head of Compliance 
+e. Head of Operations  
+f. Head of Human Resource 
+g. Head of IT 
+h. Head of Risk Management  
+i. Any other executive with direct reporting to CEO 
+Minor: for the purpose of these Regulations minor means an individual below 18 years of age.   
+Outsourcing: means use of a third party (affiliated entity or un-affiliated) to perform activities, 
+functions or processes normally to save money, time and/or use the skills/technology of another 
+entity on a continuing basis that would normally be undertaken by EMIs, now or in the future. 
+However, it will not cove r consultancy services, purchase contracts for tangible/intangible 
+items, for example, contracts to purchase standardized products such as furniture, Software/IT 
+solutions, Automated Teller Machines (ATM) etc. 
+Payment Instrument: means instrument as defined in Section 2(1)(zc) of PS&EFT Act, 2007.  
+Payment Services: for the purpose of these R egulations mean the services that enable the 
+customers to make payments for goods and services, bill payments, fund transfers, cash deposit 
+and withdrawal from e -money accounts and any other service defined by SBP from time to 
+time. 
+Payment System: means the same as defined in PS&EFT Act, 2007. 
+PSOs/PSPs: mean the same as defined in the Rules for PSOs/PSPs issued by SBP vide PSD 
+Circular No. 3 dated October 23, 2014 as amended from time to time.  
+SBP: means the State Bank of Pakistan established under Section- 3 of the State Bank of 
+Pakistan Act, 1956. 
+Sponsor Director: means the member of the Board of Directors of an EMI holding sponsor 
+shares. 
+Sponsor S hares: of an EMI mean 10% or more share capital of the EMI acquired by a 
+person(s) either individually or in concert with family members (including his spouse, lineal 
+ascendants and descendants  and dependent brothers and sisters), group companies, 
+subsidiaries, and affiliates/associates.  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 7 of 52 
+Sponsor Shareholder: means all those shareholders of an EMI holding sponsor shares. 
+Trust Account: means an account maintained by an EMI with a licensed bank in Pakistan in 
+which the EMI is required to place all funds collected from its customers against the issuance 
+of e-money and is segregated from EMI’s own funds.  
+  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 8 of 52 
+3. INTRODUCTION 
+Payment Systems and Electronic Funds Transfer (PS&EFT) Act, 2007 defines e- money as 
+monetary value stored on an electronic device or payment instrument issued on receipt of funds 
+and accepted as a means of payment by entities other than issuer. E -money globally is widely 
+used for making retail payments in an economy and ha s played a crucial role in digi tizing 
+different types of payments in various countries. 
+Electronic Money Institutions (EMIs) are entities that offer innovative, user-friendly and cost 
+effective low value digital payment prepaid instruments like wallets, prepaid cards, and 
+contactless payment instruments including wearables. Globally, t hese innovative payment 
+instruments have been instrumental in promoting cashless payments like merchant checkouts, 
+e-commerce, transportation and toll payments etc.  
+Traditionally, payment instruments in Pakistan are issued by banks without  participation of 
+non-banking entities. New technological innovations are now enabling non- banking sector to 
+deliver innovative and efficient payment services to consumers at much lower cost. State Bank 
+of Pakistan (SBP), with the objective to remov e the entry barriers for non -banking entities, 
+issued Regulations for EMIs in April 2019 to  provide an enabling regulatory framework for 
+the establishment and operations of EMIs in Pakistan. These Regulations address potential risks 
+in order to ensure consumer protection in line with legal framework of the country while 
+promoting digital payments and financial inclusion.  
+Since issuance of these Regulations, SBP has received an encouraging response f rom the 
+market participants and a number of entities have been licens ed to provide e-money services 
+in the market. SBP’s Regulations for EMIs have also received positive response and acceptance 
+from the foreign investors and the institutions alike. In order to increase the uptake of e-money 
+services, encourage the new as well as already established EMIs to come up with new business 
+models, use cases and technological solutions, SBP has revised the Regulations f or EMIs in 
+light of the indigenous experiences and international best practices. These Regulations shall 
+come into effect with date of issuance.     
+4. OBJECTIVES OF THE REGULATIONS 
+These Regulations are being issued with the following objectives: 
+I. To provide regulatory framework fo r EMIs desirous of offering innovative payment 
+services to the general public.  
+II. To provide licensing procedure for entities desirous for establishing an EMI. 
+III. To prescribe minimum service standards and requirements for EMIs to ensure delivery 
+of payment services in a safe, sound and cost effective manner. 
+IV. To set minimum corporate governance benchmarks for EMIs.  
+V. To outline the permissible activities that can be carried out by an EMI and its agents'  
+network.  
+VI. To provide a baseline for protection of EMI’s customers.   
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 9 of 52 
+VII. To achieve the SBP’s objective of digital payments and financial inclusion.  
+5. AUTHORITY 
+The Regulations are being  issued in exercise of the powers conferred upon the SBP under  
+PS&EFT Act, 2007.  
+6. APPLICABILITY   
+These Regulations are applicable to the EMIs as mentioned in sections 1 and 64 of PS&EFT 
+Act 2007.  
+7. SCOPE OF ACTIVITIES OF EMIS 
+I. E-money providers can offer following activities/services:  
+a) Issue e-money payment instruments.  
+b) Distribute e-money payment instruments.  
+c) Redeem e-money payment instruments. 
+d) Acquire payment instruments of other EMIs and banks/MFBs. 
+e) Multilateral routing, switching and/or processing of payment transactions. 
+f) Services relating to payment aggregation, bill/invoice aggregation, payment 
+initiation, as well as account information etc. However, the funds which are to be 
+remitted abroad for aggregation of funds by an aggregator on behalf of a foreign 
+counterpart, the aggregator must obtain prior approval of SBP. 
+g) Offer escrow services for facilitating domestic e-commerce transactions. However, 
+EMIs shall obtain separate approval from SBP. 
+h) Offer services via secured Application Programming Interface s (APIs) and other 
+secure methods to other Financial Institutions , Third Party Service Providers 
+(TPSPs) and other Fintech. In this regard, the EMIs have to intimate SBP 30 days 
+prior to offering these services.  
+i) Any other activity permitted by SBP. 
+II. E-money shall be used to make payment services i.e. payments for goods and services, 
+bill payments, fund transfers, cash deposits and withdrawals from e-money wallets.  
+III. EMIs shall not conduct the business of banking including the acceptance of funds from 
+public for the purpose of lending, investments  (other than that required under Para 1 6 
+of these R egulations). Moreover, EMIs shall refrain from processing, using, trading, 
+holding, transferring value, promoting and investing in virtual currencies or any other 
+prohibited speculative activity as and when prohibited by SBP from time to time. 
+IV. EMIs desirous of offering cross -border e -money products/services shall follow 
+instructions mentioned in para 13 of these Regulations.   
+V. EMIs shall neither pay interest/returns to customers nor offer anything that adds to the 
+monetary value of e- money, however, EMI may offer discounts etc. on goods and 
+services provided such discounts are not linked to the amount or length of time e-money 
+is held by the customer. 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 10 of 52 
+VI. EMIs shall not issue e -money payment instruments at a discount i.e. issue e -money 
+payment instruments that has a monetary value greater than the funds received from 
+customers. 
+VII. The existing PSO s/PSPs authorized under the Rules for PSOs/PSPs who intend to 
+function as an EMI may  upgrade their PSO/PSP authorizations to EMI license after 
+fulfilling necessary conditions laid down in these Regulations.  
+VIII. SBP may require the applicant to establish a separate subsidiary/entity for the purpose 
+of EMI business. 
+8. LICENSING PROCEDURE 
+I. LICENSING STAGES  
+a) Subject to the fulfilment of conditions mentioned above, SBP under Section 24 of 
+PS&EFT Act, 2007, may grant EMI license in the following four stages:    
+i. “Initiation Phase” approval shall be granted to only those prospective entities that 
+decides to follow the licensing procedure mentioned in Para 8.III (a)(i) of the 
+Regulations.  
+ii. An “In-Principle” approval shall be granted to the applicant to operate as EMI 
+which will contain conditions required to be fulfilled prior to the commencement 
+of pilot operations.   
+iii. EMI shall be allowed to commence “ Pilot Operations” (limited-scale real 
+transactions), once they attain operational readiness, fulfil minimum capital and 
+security deposit requirements and any other requirements as mentioned in In -
+Principle approval. SBP may also conduct off-site evaluations/onsite inspections of 
+the EMIs at any stage of the licensing procedure. 
+iv. Licence to commence “C ommercial Operations/Go Live” shall be granted 
+subject to satisfactory completion of pilot operations and fulfilment of SBP’s all 
+requirements. Further, SBP may at its discretion designate any  licensed EMI as a 
+designated payment system under PS&EFT Act, 2007. 
+b) For each stage of licensing process, the applicant EMI shall ensure to submit the 
+documents/information as per Annexure-A  
+c) The application to obtain In-Principle approval shall be considered to be complete if it 
+contains all the relevant information/documents required at the stage of In-Principle 
+approval as per Annexure C and Annexure G of these Regulations. 
+II. CONDITIONS FOR LICENSING APPLICATION   
+The applicant company shall fulfil the following licensing requirements:  
+a) The applicant company (public/private) shall be registered with SECP having its head 
+office or registered office in Pakistan.   
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 11 of 52 
+b) The applicant shall have necessary financial resources, policies, procedures, systems & 
+controls, IT systems etc. to effectively and efficiently discharge its responsibilities as 
+an EMI. 
+c) SBP reserves the right to reject any application without giving any reason thereof. 
+d) Moreover, approvals granted by SBP as part of licensing of EMIs are based on the 
+information/documentation submitted by applicant EMIs and a review of their 
+application under Regulations for EMIs. At any stage, SBP approvals shall not be 
+construed as an endorsement of an applicant EMI’s proposed business model, financial 
+viability, etc. by SBP. Accordingly, SBP shall not be responsible for any financial, legal 
+and reputational loss to any entity or individual who has established a business 
+relationship with prospective EMIs based on SBP’s approval letter.  
+e) At the time of application for “Initiation Phase” or “In Principle Approval”, details of 
+registration and related documents (i.e. Article and Memorandum) of parent/holding 
+company sh all be shared with SBP. No changes shall be made in shareholding or 
+ownership/company structure without SBP’s prior approval. 
+f) SBP reserves the right to suspend/revoke the approval at any stage, if the applicant EMI 
+fails to comply with the conditions of SBP Approval(s) in a timely manner. 
+III. APPLICATION SUBMISSION FOR LICENSE  
+a) Entities desirous of applying for a license as an EMI may follow the following procedure: 
+i. Entities intending to initiate discussions prior to submission of formal application, 
+may approach SBP by emailing at psdpolicy@sbp.org.pk
+. In this regard, EMIs shall 
+have to fulfil the following criteria: 
+1. The applicant entity shall fulfil all the application requirements as mentioned in 
+Annexure “B”.  
+2. The applicant shall demonstrate the capability of fulfilling its obligations as an 
+EMI as per the relevant Laws, Rules and Regulations including PS&EFT Act, 
+2007 and these Regulations prior to applying for the EMI license. 
+3. The applicant shall demonstrate that they have necessary financial resources  and 
+technical skills to implement policies, procedures, system s & controls and IT 
+systems to effectively and efficiently discharge their responsibilities as an EMI. 
+4. After successful demonstration, SBP may issue time-bound NOC for Permission 
+to apply through Regulatory Approval System (RAS), having a validity of 60 
+days. In case of failure to comply with the SBP’s requirements, the said 
+application shall be cancelled.  
+ii. Further, the entity may directly submit the application for EMI license electronically 
+through SBP’s RAS for which the applicant entity shall comply with the instructions 
+contained in PSP&OD Circular No. 02 of 2022 and as per the format attached at 
+Annexure “C”.  
+iii. In case of non-availability of RAS, the entity may send its application through surface 
+mail, addressed to “The Director, Payment Systems Policy & Oversight Department, 
+State Bank of Pakistan, 4th Floor, Main Building, I. I. Chundrigar Road, Karachi -
+74000  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 12 of 52 
+b) SBP will decide on the fate of an application within sixty days for an In -Principle 
+Approval subject to submission of all required information/documentation and 
+fulfillment of all regulatory requirements in a satisfactory manner by applicant EMI. In 
+case of an application being rejected by SBP, the applicant may apply again after one  
+year of such rejection.  
+9. SUSPENSION AND REVOCATION OF EMI’S LICENSE  
+I. SBP may revoke or suspend the license of an EMI if: 
+a) EMI is found to be involved in illegal or prohibited activities; 
+b) EMI fails to  comply with conditions of the l icense; regulations, rules, guidelines,  
+instructions, directions and circulars issued by SBP from time to time and/or any 
+other applicable laws; 
+c) Any information provided by the EMI is found to be misreported to SBP; 
+d) EMI is not able to safeguard the customers’ funds as mentioned in Para 16 of these 
+Regulations; 
+e) EMI is not able to carry out its day to day operations safely and efficiently; 
+f) The provision of e -money issuance by the EMI endangers  the stability of the 
+payment systems of Pakistan; 
+g) Revocation or suspension is in public interest;  
+h) The EMI enters into insolvency proceedings; 
+i) Any other reason substantiating the need for suspension or revoc ation of license 
+granted to EMI. 
+II. Subject to Para 9 (I), before suspending or revoking the license granted under Para 8 of 
+these Regulations and Section 24 of PS&EFT Act 2007, SBP shall give to the EMI 
+notice in writing of its intention to do so, specifying the ground(s) upon which it 
+proposes to suspend or revoke the license  and shall require the EMI to submit to it 
+within 30 days a written statement of objections to the suspension or revocation of the 
+license.  
+III. Upon consideration of the written statement of objections referred to in Para 9 (II), SBP 
+shall give the EMI written notice of its decision to suspend, revoke or continue the  
+business operations.  
+IV. Notwithstanding Para 9-II, where the SBP is of the opinion that safety, soundness, 
+reliability or efficiency of an EMI is or may be threatened, it may, without prior notice, 
+suspend or revoke the permission of EMI.   
+10. GOVERNANCE ARRANGEMENTS 
+EMI shall ensure to implement an effective corporate governance framework that must include, 
+but not limited to, clear organizational structure with well-defined, transparent and consistent 
+lines of responsibility and control mechanism to ensure integrity of its e-money business.  EMI 
+shall follow the Code of Corporate Governance issued by SECP as far as the provisions thereof 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 13 of 52 
+do not conflict with any provisions of the PS&EFT Act , 2007 and other relevant regulations 
+issued by SBP.  
+I. FIT AND PROPER TEST 
+a) FPT will be applicable to sponsor shareholder(s), Directors, CEO and Key 
+Executives of the prospective EMI. The fitness and propriety will be assessed as 
+per the requirements mentioned at Annexure D-4. 
+b) The Directors and CEO would require prior clearance from SBP before assuming 
+their responsibilities . The compliance of FPT for Key Executives would be the 
+responsibility of EMI and the relevant record shall be made available to SBP as and 
+when required.  
+c) As FPT is an ongoing process, a ny changes in the information pertaining to the 
+individual’s subject to FPT , shall immediately be submitted to PS P&OD. Any 
+violations, misreporting, circumvention, concealment and delay in submission of 
+information to SBP may result in withdrawal of SBP ’s approval/license or penal 
+action or both under PS&EFT Act, 2007. 
+d) Further, any majo r structural change in shareholding or any other material 
+development which could impact future ownership/shareholding shall be subject to 
+prior approval from SBP.  
+e) The appointment, compensation package, promotion/demotion and renewal of the 
+employment contracts of Key Executives shall be duly approved by the Board of 
+Directors (BOD) of the EMI. 
+f) EMI shall also develop and implement appropriate screening procedures to ensure 
+high standards and integrity at the time of hiring all employees whether contractual 
+or permanent. In case it is found at a ny stage or during the course of inspection by 
+SBP that FPT guidelines have not been followed or the incumbent is not a fit and 
+proper person, strict action shall be taken under the relevant provisions of PS&EFT 
+Act, 2007. In addition, EMI may be directed to dispense with services of concerned 
+officer if recruited afresh and in case of existing employee the same may be 
+transferred from the post immediately. 
+II. RESPONSIBILITIES OF THE BOARD OF DIRECTORS AND MANAGEMENT 
+a) The BOD shall clearly define the authorities and key roles and responsibilities of 
+both the directors and senior management. 
+b) The BOD shall approve and monitor the objectives, strategies and the business plans 
+of the EMI and shall oversee that the affairs of the institutions are performed 
+prudently within the framework of applicable laws and regulations.  
+c) Further, the BOD should focus on policy-making and general direction, oversight, 
+supervision of the affairs and business of the EMI, however, the Board shall not 
+play any role in the day-to-day operations of the EMIs. 
+d) The BOD shall determine, review, approve and ensure implementation of internal 
+policies including but not limited to  risk management, internal control systems, 
+audit, IT security, human resource etc. Moreover, the BOD shall also be responsible 
+to review and update existing policies periodically a nd whenever circumstances 
+warrant.  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 14 of 52 
+e) A separate department for internal audit duly approved by the BOD shall be created. 
+f) BOD can remove CEO with a prior notice of 2 months issued where the BOD, 
+acting reasonably, are of the opinion that the CEO has acted fraudulently, 
+negligently, or in material breach of the EMI’s policies, procedures or his/her 
+employment agreement. Acting CEO appointed pursuant to resignation/removal of 
+the CEO is required to meet FPT criteria prescribed for CEO and the EMI shall duly 
+submit FPT documents to SBP before assumption of the charge.  
+g) In case of temporary vacation (not exceeding one month) of the office of CEO, EMI 
+shall ensure to entrust charge of the office of CEO to such an officer who meets the 
+FPT Criteria prescribed for Key Executives  and whose FPT documents have 
+already been submitted to SBP.  
+h) Where office of any Director/CEO falls vacant, such position can only be filled with 
+prior approval of SBP. However, any new appointment / placement of Key 
+Executives other than Directors or CEO shall be intimated to SBP within seven days 
+of appointment / placement. 
+i) The business conditions and markets are ever changing and so are their 
+requirements. The BOD, therefore, is required to ensure  existence of an effective 
+‘Management Information System’ to remain fully informed of the activities, 
+operating performance and financial condition of the institution, the environment in 
+which it operates, the various risks it is exposed to and to evaluat e performance of 
+the Management at regular intervals. 
+j) The BOD should meet frequently (preferably on monthly basis, but in any event, 
+not less than once every quarter) and the individual directors of an institution should 
+attend at least half of the meetings held in a financial year. The BOD should ensure 
+that it receives sufficient information from Management on the agenda items well 
+in advance of each meeting to enable it to effectively participate in and contribute 
+to each meeting.  
+k) EMIs shall submit certified copies of the minutes of meeting of their  BOD and the 
+General Meetings /Extra Ordinary General Meetings (AGMs/EOGMs), within 
+twenty-one days of the date of the meeting to Payment Systems Policy & Oversight 
+Department, State Bank of Pakistan, Karachi.  In case there is any change in the 
+approved minutes from the draft minutes submitted earlier, the EMI shall also 
+submit certified copies of the minutes within ten days of the approval. Further, any 
+change from the draft minutes must be separately highlighted to SBP. 
+l) The BOD should ensure that it receives management letter from the external 
+auditors without delay. It should also be ensured that appropriate action is taken in 
+consultation with the Audit Committee of the BOD  to deal with control or other 
+weaknesses identified in the management letter. 
+m) The BOD should carry out its responsibilities in such a way that the external 
+auditors and supervisors can see and form judgment on the quality of BOD’s work 
+and its contributions through proper and detailed minutes of the deliberations held 
+and decisions taken during the BOD meetings. 
+n) To share the load of activities, the BOD may form specialized committees with 
+well-defined objectives, authorities and tenure. These committees, comprising of at 
+least one non -executive Board member, shall oversee areas like Audit, Risk 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 15 of 52 
+Management & Compliance (mandatory)  and Human Resources (optional). The 
+Chairman of the BOD shall not be member of the aforementioned committees. 
+Further, the Audit Committee of the BOD shall invariab ly be chaired by an 
+Independent Director. These committees of the BOD should not indulge in day-to-
+day affairs/operations. 
+o) The EMIs during a calendar year may pay a reasonable and appropriate 
+remuneration for attending the Board or its committee(s) meeting(s), to their non-
+executive directors and chairman. The scale of remuneration to be paid to the non-
+executive directors and chairman for attending the BOD and/or committee meetings 
+shall be approved by the shareholders on a pre or post facto basis. The EMI should 
+have BOD approved related party policy. 
+p) The BOD shall collectively have adequate knowledge, expertise and skill -mix 
+commensurate with the business model, overall size, complexity and risk profile of 
+the EMIs. Further, the BOD should collectively have a reasonable understanding of 
+local, regional and, if appropriate, global economic and market forces and of the 
+legal and regulatory environment. 
+q) The BOD shall comprise of at least 5 members including Chairman, Directors and 
+Independent Directors. Moreover, out of the total board members at least one (01) 
+shall be Independent Director and one (01) shall be a Woman Director.  
+r) No member of the BOD of an EMI, holding 10% or more of paid-up capital either 
+individually or in concert with family members shall be appointed in the EMI in 
+any capacity except as CEO of the EMI. Further, maximum two members of the 
+BOD of the EMI including its CEO can be the Executive Directors. 
+s) The number of directors who are family members shall not exceed 25% of total 
+board members. 
+t) The BOD of EMI shall appoint a qualified and experienc ed person as Compliance 
+Officer. The Compliance Officer shall report directly to the CEO and shall be 
+responsible for effective compliance of all the relevant rules, regulations, laws and 
+timely submission of required accurate data , returns and other infor mation, as 
+required by SBP from time to time. 
+u) No Executive other than the CEO and Head of Internal Audit shall directly report 
+to BOD and sub-committees of Board.
+ 
+11. CAPITAL REQUIREMENTS 
+I. An entity  desirous of becoming  an EMI is  required to fulfill initial/startup capital 
+requirement of PKR 200 million and the minimum ongoing capital to be maintained at 
+all times shall be as follows: 
+Slabs 
+Average Daily 
+Outstanding E-Money  
+Balance (OEB) 
+On-Going Capital  
+Required  
+1. Up to PKR 4 Billion PKR 200 million 
+2. Between PKR 4 Billion 
+and PKR 10 Billion  
+PKR 200 million plus 5% of Outstanding E-
+Money Balances (OEB) in excess of PKR 4 
+Billion 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 16 of 52 
+3. Between PKR 10 
+Billion and PKR 20 
+Billion 
+PKR 500 Million plus 7.5% of Outstanding E-
+Money Balances (OEB) in excess of PKR 10 
+Billion 
+4. Above PKR 20 Billion  PKR 1.25 Billion plus 10 % of Outstanding E-
+Money Balances (OEB) in excess of PKR 20 
+Billion * 
+*The EMI is required to inform SBP as soon as the OEB exceeds PKR 20 Billion. 
+II. The items qua lified for calculating initial as well as ongoing capital are given in 
+Annexure “E”.  
+III. EMIs shall maintain at all times , at least ten percent (10%) of the required capital or 
+any other amount prescribed by SBP from time to time, as security deposit at SBP BSC 
+Office. Five percent (5%) of the security deposit will be kept in a non- remunerative 
+current account with the SBP BSC and five percent (5%) in the form of Government 
+securities to be kept under lien at SBP  BSC. In this regard, EMIs shall submit the 
+undertaking as per the format attached at Annexure -  H at the time of applying for In -
+Principle Approval. The EMIs, currently at any stage of SBP licensing shall within one 
+month of issuance of these Regulations, submit their undertaking to PSP&OD, SBP. 
+IV. Moreover, the SOPs for EMIs account opening and its maintenance with SBP BSC are 
+attached at Annexure - I of these Regulations. 
+12. CUSTOMER DUE DILIGENCE 
+In order to provide the better user experience, EMIs shall make their customer on boarding 
+process digital keeping in view the risk management and AML/CFT considerations. EMIs shall 
+fulfill the following requirements while issuing e-money payment instruments: 
+I. EMI shall ensure to collect at least the following customer information while issuing e-
+money payment instruments: 
+a) Name  
+b) Father/spouse’s name 
+c) CNIC, NICOP, POC, Passport, Alien Registration Card and POR Card for Afghan 
+Refugees 
+d) Mobile Number 
+e) Residential Address 
+f) Any other two field information which is not present on CNIC such as place of 
+birth, mother’s name etc. 
+g) Live original CNIC and live digital photo (where applicable). 
+II. The EMI shall use at least Two-Factor Authentication for customer verification. 
+III. EMI shall activate e-money payment instruments only after verification of customers’ 
+particulars as mentioned in Para 1 2 (I & II ) above a s well as after pre- screening for 
+designated and proscribed persons be fore initiation of customer relationships or 
+allowing use of payment services. 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 17 of 52 
+IV. EMI may allow their customers one credit/fund transfer transaction before verification 
+of customers’ credentials. In case, the customer’s credentials are not verified then e -
+money payment instrument/account shall be closed and EMI shall file an STR 
+accordingly. 
+V. EMI shall conduct enhanced due diligence of those customers who are categorized as 
+high risk as per AML/CFT regulations and risk based guidelines of SBP.  
+VI. EMI shall take consent of customers on the terms and conditions of e-money payment 
+instruments including the charges/fee associated with such instruments . The copy of 
+terms and conditions shall also be made available to customers through various 
+channels like email, website, brochures, mobile phones, IVR etc.  
+VII. EMIs shall ensure that a CNIC holder can obtain/ open only one e -money payment 
+instrument with an EMI.  
+VIII. EMI shall send transaction alerts in real time to their customers for all transactions. 
+IX. EMI, during issuance of e-money payment instruments or during transaction 
+processing, shall identify any suspicious activity and report such transactions  to FMU 
+in the form of STRs.  
+X. EMIs shall ensure compliance of domestic and international sanctions obligations i.e. 
+freezing of assets and non- provision of services to individuals/entities 
+designated/proscribed by the UN Security Council or by the Government of Pakistan 
+under the Anti-Terrorism Act, 1997. 
+13. CROSS BORDER E-MONEY PAYMENTS 
+I. EMIs shall obtain prior approval from SBP for offering cross -border e -money 
+products/services, including inter alia for inward remittances or payment through cards, 
+involving outflow of foreign exchange. For this purpose, EMIs may approach Exchange 
+Policy Department,  SBP, through an Authorized Dealer, through which such 
+products/services shall be offered/settled, along with the underlying proposal, after 
+obtaining In-Principle approval from PSP&OD. 
+II. While applying to SBP for approval for offering cross -border e -money 
+products/services at any stage of licensing process, the EMIs through its Authorized 
+Dealer shall submit business proposal, draft agreements, detailed terms and conditions 
+and value proposition regarding arrangements of EMIs with Authorized Dealer. 
+III. Inward Remittances (Received through Home Remittance/PRI Channel) 
+a. EMIs are allowed to disburse inward remittances in PKR to their wallet holders, 
+mobilized by Authorized Dealers (under home remittance arrangement), through 
+IBFT functionality or SBP operated systems via their Trust/Settlement Bank.
+ 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 18 of 52 
+b. EMIs shall approach the Authorized Dealer, through which such products/services 
+shall be offered/settled, to request Exchange Policy Department, SBP for the 
+permission to disburse inward remittances as prescribed in Para 13 (III)(a) above. 
+This is subject to the condition that EMIs have all the necessary 
+arrangements/resources and infrastructure in place to receive such funds in PKR.
+ 
+14. E-MONEY PAYMENT INSTRUMENTS’ LIMITS  
+The following e-money payment instrument limits shall be followed:  
+I. LIMITS DURING PILOT OPERATIONS 
+a) The aggregate monthly load limit of an e -money payment instrument during pilot 
+operations shall be PKR 50,000 on CNIC verification (NADRA VeriSys) and PKR 
+200,000 on biometric verification from NADRA. The transaction limits shall be 
+treated separately for both payments and receipts on EMI instruments only. 
+ 
+b) Cash withdrawal limit for e-money holders shall be PKR 10,000 per day subject to 
+biometric verification or at least two-factor authentication.  
+II. LIMITS DURING COMMERCIAL OPERATIONS 
+a) The aggregate monthly load  limit of an e-money payment instrument shall be PKR 
+50,000 on CNIC verification  (NADRA VeriSys)  and PKR 400,000 on biometric 
+verification from NADRA. The transaction limits shall be treated separately for both 
+payments and receipts on EMI instruments only. 
+b) Cash withdrawal limit for e-money holders that are verified through NADRA VeriSys 
+shall be PKR 10,000 per day.  
+c) For e-money holders verified through biometric verification from NADRA, EMIs shall 
+define cash withdrawal limits keeping in view the risk profile of the respective e-money 
+holder.  
+d) Further, EMIs shall ensure that all cash withdrawals through ATMs are subject to 2FA 
+and all cash outs through agents are subject to biometric verification or 2FA where BVS 
+availability is a major challenge. In this regard, EMIs shall make necessary 
+arrangements with PSOs/PSPs and Banks for facilitating their customers.  
+III. ENHANCED E-MONEY WALLETS  
+a) EMIs, after obtaining license for commercial operations , may apply to PSP&OD for 
+enhanced e -money wallet limits . In this regard, t he EMIs shall be allowed to offer 
+increased e -money instrument limits up to PKR 1,000,000 to individual customer’s  
+subject to fulfilment of the following additional controls:  
+ 
+i. Income Proof and Source of funds as prescribed under Annexure-J; 
+ii. CNIC/SIM Pairing of the device on which EMI instrument is opened; 
+iii. EMI should deploy TMS with multiple/robust scenarios to monitor the transactions 
+such as one to many, many to one etc.  
+iv. Detailed customer risk profiling; 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 19 of 52 
+v. Moreover, the function of the aforementioned verification of the controls mentioned 
+in this para from point (i-iv) above shall not be outsourced. 
+IV. BASIC E-MONEY WALLETS FOR MINORS 
+a) EMIs may offer e-money instruments to the minors subject to the following terms and 
+conditions in addition to the requirements prescribed in these Regulations: 
+i. The minors e-money wallets shall be opened in link with parent/guardian’s wallet  
+through parent/guardian’s wallet application only.  
+ii. The aggregate monthly load limit of these wallets shall be PKR 50,000 on CNIC 
+verification (NADRA VeriSys) 
+iii. Cash withdrawal limit shall be PKR 10,000 daily. 
+iv. The Minor’s e -money wallets shall be funded through parent/guardian’s wallet 
+only. 
+v. EMIs shall ensure that customer identification verification requirements are in line 
+with Regulations for EMIs and SBP’s AML/CFT/ CPF regime especially for 
+minors. 
+vi. EMIs shall ensure that parent/guardian shall submit a written/digital undertaking to 
+accept any liability arising out of the action(s) of the minors.  
+vii. EMIs shall deploy the automated transaction monitoring system to proactively 
+monitor the transactions for avoiding the ML/TF risks.  
+viii. EMIs shall set the limits for minor e-money instruments and transactional limits as 
+stipulated in the Regulations. The enhanced limits as mentioned in Para 14.I, 14.II 
+and 14.III above shall not be applicable on minor’s e-money instruments. 
+ix. For record retention relating to minor e -money wallets, EMIs shall ensure that 
+instructions as given in Para 24.II of these Regulations are complied with. 
+V. ENHANCED E-MONEY WALLETS FOR MINORS 
+a) EMIs may offer enhanced e- money instruments to the minors working as freelancers 
+subject to the following terms and conditions in addition to the requirements prescribed 
+in these Regulations: 
+i. The minor e-money wallets shall be opened in link with parent/guardian’s wallet 
+through parent/guardian’s wallet application only.  
+ii. The aggregate monthly load limit of these wallets shall be PKR 400,000 on 
+biometric verification through NADRA.  
+iii. Cash withdrawal limit shall be PKR 10,000 daily. 
+iv. The minor’s e-money wallets shall be funded through parent/guardian’s  wallet or 
+through sources considered appropriate by EMIs . In this regard, the EMIs shall 
+ensure that the source of income is properly verified.  
+v. EMIs shall ensure that customer identification verification requirements are in line 
+with Regulations for EMIs and SBP’s AML/CFT/CPF regime especially for 
+minors. 
+vi. EMIs shall ensure that parent/guardian shall submit a written/digital undertaking to 
+accept any liability arising out of the action(s) of the minors.  
+vii. EMIs shall deploy the automated transaction monitoring system to proactively 
+monitor the transactions for avoiding the ML/TF risks.  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 20 of 52 
+viii. EMIs shall set the limits for minor e-money instruments and transactional limits as 
+stipulated in the Regulations. The enhanced limits as mentioned in Para 14.I, 14. II 
+and 14.III above shall not be applicable on minor’s e-money instruments.   
+ix. For record retention relating to minor e -money wallets, EMIs shall ensure that 
+instructions as given in Para 24.II of these Regulations are complied with. 
+VI. EXCLUSIONS IN WALLET LIMITS 
+a) Fully licensed EMIs with proven track record of successful business operations and 
+regulatory compliance may apply to SBP for exclusion of t he following transactions 
+from the e -money wallet limits  for biometrically verified wallet holders except for 
+minors:  
+i. Credit from employer for salaried persons against proof of employment through 
+authorized financial institutions (i.e. employer’s nominated bank account) . In this 
+regard, it shall be the responsibility of the EMI to ensure veracity of the employer; 
+ii. Inward remittances received through Authorized Dealers up to PKR 1,500,000;  
+iii. Utility Bill Payments. 
+15. ISSUANCE AND REDEMPTION OF E-MONEY PAYMENT INSTRUMENTS 
+I. EMIs shall issue an e-money payment instrument without any delay at par value on 
+receipt of funds. 
+II. E-money payment instruments can be funded through: 
+a) Interbank Fund Transfer (IBFT) using any ADCs 
+b) Cash in at EMI branches/agent locations/ATMs/bank branches subject to biometric 
+verification. 
+III. EMIs shall redeem e -money payment instruments at par value at any time upon the 
+request of e-money holder without any charges. Further, EMI shall ensure to conduct 
+biometric verification of the e-money holder, in case of redemption of e-money in cash.  
+16. SAFEGUARDING CUSTOMERS’ FUNDS 
+I. EMI shall not co -mingle its company funds with the funds received from 
+users/customers. For this purpose, EMI shall place the funds received in exchange for 
+e-money payment instruments in a trust account with a licensed bank (Trustee) that at 
+least has ‘A’ rating from a credit rating agency.  
+II. EMIs shall be bound to follow any change regarding establishing alternate fund 
+safeguarding mechanism as and when advised by SBP.   
+III. EMIs shall not place more than 50% of e -money balances with one Trustee in case its 
+outstanding e-money balance exceeds PKR 300 Million.  
+IV. In case the rating of the trustee is downgraded, then it shall change the trus tee within 
+three months and inform SBP accordingly. Further, EMIs shall inform SBP in advance 
+of any material change in funds safeguarding measures i.e. change of trustees etc.  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 21 of 52 
+V. EMIs shall submit for SBP’s information a copy of their trust account agreement with 
+the trustees. 
+VI. The nature of trust account to be maintained with trust ee shall be determined by the 
+EMI, however, EMIs shall not be allowed to pass on any associated cost  of Trust 
+Account maintenance to EMI customers. 
+VII. EMIs are allowed to invest 75% of the last three months’ daily average outstanding e-
+money balance in government securities with maturity up to one year. In this regard, 
+EMIs shall calculate the average outstanding e -money balance from the date of 
+commencement of pilot operations, on an ongoing basis. For example, if an EMI starts 
+its Pilot operations on 1st July then the EMI after three months  i.e. on the first day of 
+October shall be able to invest 75% of average outstanding e-money balance during the 
+period July-September.   
+17. USE OF AGENTS  
+I. EMI intending to engage agents for providing payment services to EMI’s customers  
+shall solicit prior one-time approval in writing from SBP. 
+II. EMI can use the existing Branchless Banking agent network. 
+III. EMI shall develop a central policy on the Agent Network Management (ANM) duly 
+approved by its Board. This policy, at the minimum, should contain agent on-boarding 
+procedures, agent risk management, agent training and development, service level 
+agreement, roles and responsibilities of agents, agent code of conduct, quality of service 
+parameters, fraud prevention and supervision, agent liquidity management, consumer 
+protection and complaint handling, penalty structure, agent monitoring and agent 
+termination etc.      
+IV. EMI shall ensure that agents acting on its behalf do not represent themselves as an EMI 
+or an employee/staff of the EMI. 
+V. In addition to other powers conferred on SBP, the SBP shall have powers to:  
+a) Advise EMI for such data or information as deemed appropriate. 
+b) Request for any information from any agent directly or through an EMI at any time 
+as SBP may deem necessary. 
+c) Conduct inspection of the books and premises of the agent as and when deemed 
+necessary. 
+d) Direct an EMI to instruct its agent(s) to take such action or desist from such conduct 
+as SBP may deem necessary.  
+e) Direct an EMI to terminate agreement with agent(s); 
+f) Direct an EMI to take such action or measures against or on behalf of the agent as 
+SBP may find appropriate. 
+g) Direct an EMI to take such remedial action arising from the conduct of an agent as 
+it may deem fit. 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 22 of 52 
+VI. EMI shall publish an updated list of all agents and locations on their websites for  
+information of the general public. EMI shall assign transaction limits to agents on the 
+basis of potential business volume to be generated by the agents and risk category of 
+each agent. 
+VII. EMI shall not issue e-money payment instruments through its agents. 
+VIII. EMI shall sign SLA/ Agency Agreement with agent s detailing the functions/activities 
+to be performed by agent, roles, responsibilities and obligations of the EMI and its 
+agents.   
+IX. Fees/revenue sharing structure, responsibility for bearing up -front/ running costs of 
+EMI operations shall be defined in the agreement. 
+X. The agent(s) shall ensure secrecy of customer data/information and all transactions in 
+accordance with all applicable laws, rules and regulations and safe -keeping of a ll 
+relevant records, data and documents /files. 
+18. INTEROPERABILITY 
+I. SBP will mandate interoperability of applicant EMIs with other EMIs, banks/MFBs, 
+PSOs/PSPs at an appropriate time to be decided by SBP using a designated or its own 
+payment gateway/scheme.  
+II. SBP at its discretion may provide Raast membership and connectivity to those EMIs 
+who have been granted go live/commercial launch approval to function as an EMI.  
+III. For this purpose, EMIs shall have open systems enabling them to become interoperable 
+with other payment systems in Pakistan as and when advised by SBP. However, EMIs 
+are encouraged to enter into interoperability arrangements with other EMIs, 
+banks/MFBs and PSOs/PSPs right from their inception. 
+19. OUTSOURCING OF FUNCTION(S) TO THE THIRD PARTY (IES) 
+I. EMIs shall not outsource, outside Pakistan, any of its function(s) without prior written 
+approval from SBP. 
+II. EMIs intending to embrace cloud based services are advised to comply with BPRD’s 
+Circular No. 01 of 2023 dated January 16, 2023 regarding “Framework on Outsourcing 
+to Cloud Service Providers”.  
+III. EMIs shall ensure that any outsourcing arrangement with third parties and group 
+companies shall be at arm’s length. 
+IV. For the purpose of outsourcing, the EMI shall develop and enforce their board approved 
+policies. For developing their outsourcing policies, EMIs, keeping in view the nature, 
+size, complexity and organizational level risks, shall  refer to the Framework for 
+Outsourcing Risk Management issued by SBP from time to time in order to develop 
+their policies. 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 23 of 52 
+V. Outsourcing of any activity/process or systems shall not absolve the EMI from its 
+primary responsibility of security, integrity and confidentiality of data/information. 
+20. COMPLAINT HANDLING MECHANISM  
+I. As the EMIs shall be dealing with a large number of first time customers with low 
+financial literacy level  therefore, EMIs need to ensure that adequate measures for 
+customer protection, awareness and dispute resolution are in place.  
+II. EMIs shall have appropriate customer protection against risks of fraud, loss of privacy 
+and even loss of service.  
+III. EMI, shall have board approved dispute resolution mechanism to settle all disputes 
+between EMI and e-money payment instrument holders. 
+IV. EMI shall have a proper and separate complaint management mechanism for resolution 
+of the customer complaints against the agent(s). 
+V. EMIs shall have customer awareness programs that at a minimum should cover use of 
+e-money payment instruments, protection against frauds and rights and obligations to 
+use EMIs services etc.   
+21. SECURITY AND CONFIDENTIALITY  
+I. For fidelity and secrecy, the EMI shall ensure that personal information of customers 
+obtained during the course of operations is used, disclosed, retained and protected as 
+committed or agreed. 
+II. EMIs shall ensure the Security, Integrity, Confidentiality and Availability of data and 
+services by adopting prevailing international standard(s) as well as those prescribed by 
+SBP from time to time. 
+III. EMIs are required to comply with the relevant Section(s) of PS&EFT Act, 2007 relating 
+to Secrecy and Privacy of Information.  
+IV. EMIs shall get their systems audited from SBP’s approved Panel of Auditors  before 
+commencement of their pilot operations and thereafter on annual basis.  
+V. All security breaches should immediately be reported to relevant stakeholders including 
+PSP&OD, SBP and detail ed report shall be submitted within fifteen days  as per 
+Annexure “F”.  
+22. AML/CFT REQUIREMENTS 
+I. EMI shall deploy the automated transaction monitoring system to proactively monitor 
+the transactions for avoiding the ML/TF risks. 
+II. EMI shall adopt risk based approach to mitigate the ML/TF  activities. In this regard, 
+EMI shall comply with all the AML/CFT Laws, Guidelines, regulations issued by SBP 
+or any other authority from time to time. 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 24 of 52 
+III. EMI shall identify and assess the ML/ TF risks that may arise in relation to the 
+development of new products and new business practices, including new delivery 
+mechanisms and the use of new or developing technologies for both new and pre -
+existing products. EMI shall conduct risk assessments prior to the launch or use of new 
+products, practices and technologies; and take appropriate measures to manage and 
+mitigate the risks. 
+23. RISK MANAGEMENT MECHANISM  
+I. EMI must have overall risk management including enterprise risk management policies 
+and procedures duly approved by the Board. Where applicable, EMI shall ensure 
+compliance with SBP’s Enterprise  Technology Governance & Risk Management 
+Framework for Financi al Institutions as issued vide BPRD Circular No. 05 of 2017 
+dated May 30, 2017 and as amended from time to time. 
+II. Senior management of the EMI shall ensure the implementation of the aforementioned 
+framework at Para 23.I above and Board of Directors shall re view the implementation 
+status as per the frequency defined by the EMI itself. 
+III. EMI must have approved policies and procedures for information, cyber and overall 
+systems security as well as necessary internal controls in place. Further, they must take 
+proactive measures to detect and prevent fraudulent transactions and unwanted 
+intrusions. 
+IV. EMI must have BCP and DRP in line with international best practice. BCP and DRP 
+drills must be conducted half -yearly in first two years of commencement of pilot 
+operations and quarterly thereafter and results of the drills be recorded in a formal 
+report.  
+24. OVERSIGHT & SUPERVISION OF EMIS 
+I. REPORTING REQUIREMENTS FOR EMIS 
+a) EMI shall submit the annual audit ed financial statements to SBP within three months 
+of the financial year-end. 
+b) EMIs shall submit Capital Returns to SBP on quarterly basis.    
+c) EMIs shall calculate the ongoing capital after three months from the commencement of 
+pilot operations. For calculating on -going capital, average daily outstanding e-money 
+over the preceding three months shall be taken into account.  
+d) EMI shall submit the following information as per the frequency set by SBP from time 
+to time: 
+i. The number of e-money payment instruments issued;  
+ii. The volume and value of e-money transactions; 
+iii. Balances maintained in Trust Accounts;  
+iv. Intimation about opening of trust accounts;  
+v. Incidents of fraud, theft and robbery including at its agents; 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 25 of 52 
+vi. Service interruptions and information security and cyber incidences/breaches as 
+per Annexure F on monthly basis. However, EMI are advised to report any major 
+information security and cyber incidences/breaches within 48 hours to PSP&OD.  
+e) Moreover, EMIs are also advised to instruct their trustee for submitting Trust Account 
+information with SBP as and when required.  
+f) The SBP may at any time request for any other information from EMI, any of its agents 
+and its associated bank. 
+II.  RECORD RETENTION 
+a) EMIs shall maintain all necessary records  for at least 10 years or as required by the  
+relevant laws. However, for records of call center data and call recordings shall be 
+retained for a period of one year. Further, these records may be required to maintain in 
+a secure manner.  
+b) EMIs shall keep all records obtained through CDD measures, business correspondence, 
+and results of any analysis undertaken, following the termination of the business 
+relationship as required by the relevant laws.  
+c) EMIs shall ensure that transaction records should be sufficient to permit reconstruction 
+of individual transactions so as to provide, if necessary, evidence for prosecution of 
+criminal activity. 
+d) EMI shall retain those  records for longer period of time where 
+transactions/customers/accounts involve litigation or it is required by court or other 
+competent authority. 
+III. POWER TO CONDUCT ONSITE INSPECTION OF EMIS 
+a) SBP itself or through its assigned auditor may conduct regular and special on- site 
+inspections of EMIs. For the same, SBP or any of its assigned auditor, shall be provided 
+full, timely and unrestricted access to systems (including those outsourced or hosted 
+with third parties), documents, reports, records and officials of EMIs.  
+b) In case EMI does not comply with any of the provisions of these Regulations, SBP may 
+take any appropriate action under PS&EFT Act 2007, which may include invoking 
+penal or any other regulatory action.  
+25. EXIT PLAN 
+I. The EMIs shall submit their exit plan at the  time of applying for an In -Principle 
+approval which may include but not limited to the following: 
+a) The exit plan may cover a minimum time horizon of the business plan addressing 
+different stress scenarios as well as EMI’s likely responses. 
+b) The envisaged exit plan may include product portfolio exit, liquidation of the EMI 
+or sale/transfer of shares to a third party. All such options shall be explored with 
+adequate risk assessments.  
+c) The overall exit time estimates shall also be indicated in the plan. 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 26 of 52 
+d) The exit plan shall also provide for adequate protection of customers and relevant 
+stakeholders as well as responsible and effective communications with the 
+concerned stakeholders. 
+e) The exit plan shall remain dynamic to reflect current circumstances and EMIs shall 
+review and update the same regularly.  
+f) The EMIs shall establish alerts or thresholds, which may lead to an evaluation and 
+decision of whether to put in place various contingency measures or to resort to 
+invoking the exit strategy itself.  
+g) During the exit period, the EMI shall ensure full discharge of all its connected 
+obligations and responsibilities to customers, SBP and other stakeholders. 
+h) The EMI should also submit the exit strategy for the outsourcing arrangements 
+including the technology outsourcing 
+ 
+II. The EMIs shall ensure to allocate sufficient funds within Pakistan for execution of their 
+exit plans.  
+ 
+III. The EMIs, currently at any stage of SBP licensing shall within two months of issuance 
+of these Regulations, shall submit their exit plan to PSP&OD, SBP in light of the 
+aforementioned Para 25 (I & II).  
+******** 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 27 of 52 
+Annexure A 
+List of Documents to be provided by EMIs at different stages of Licensing  
+The EMIs shall submit to SBP the following documents depending on the stage of approval 
+process. However, keeping in view type of business model, information technology and 
+security platform, ownership structure etc. the SBP may ask for additional information from 
+the applicant EMIs as and when required. 
+Licensing Stages Details of Documents 
+Initiation Stage 
+Address of the EMI’s Head office and Registered office  
+The name(s) and contact detail(s) of the person(s) in-charge of dealing 
+with the EMI application. 
+Certified true copy of:  
+a) Certificate of Incorporation with SECP 
+b) Memorandum of Association (MoA) 
+c) Articles of Association (AoA) 
+Business Plan as per the format attached at Annexure G. 
+Introduction to the Company including shareholder details 
+Details of registration and related documents (i.e. Article and 
+memorandum) of parent/holding company , Associated Companies, 
+Subsidiaries and other related parties. 
+List of sponsor shareholders, Directors and CEO. An up-to-date 
+curriculum vitae and copy of CNICs/passports of Directors and CEO. 
+In-Principle 
+Approval 
+Address of the EMI’s Head office and Registered office  
+The name(s) and contact detail(s) of the person(s) in- charge of dealing 
+with the EMI application. 
+Certified true copy of:  
+a) Certificate of Incorporation with SECP 
+b) Memorandum of Association (MoA) 
+c) Articles of Association (AoA) 
+Evidence of payment of non -refundable application processing fee i.e. 
+Rupees Two Hundred Thousand (PKR. 200,000/-) deposited in SBP BSC 
+Karachi Office. 
+Business Plan as per the format attached at Annexure G. 
+Description of the measures to be taken to safeguard the customers’ funds 
+in line with Regulations for EMIs. Also provide copy of the draft trust 
+agreement with trustee(s). The trust agreement at minimum should cover 
+the following: 
+• Funds safeguarding ar rangements as defined in Para 16 of the 
+Regulations for EMIs 
+• Investment policy/arrangements as permitted in the Regulations 
+• Terms and conditions of the trust account(s) including ownership of 
+trust funds 
+• Roles, responsibilities and liabilities of trustee and EMI 
+• Procedure for reconciliation of e-money and funds in trust account 
+• Settlement procedure, where applicable etc.  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 28 of 52 
+Details of the internal control mechanisms established to comply with 
+AML/CFT Regulations and Guidelines issued by SBP from time to time. 
+Details about outsourcing arrangements by EMI and copy of draft 
+agreements, where applicable. 
+List of sponsor shareholders, FPT in the format as given in Annexure – 
+D, D- 1, D -3 and D -5. An up- to-date curriculum vitae and copy of 
+CNICs/passports of all sponsor shareholders. 
+FPT of Directors, CEOs and K ey Executives in the format as given in 
+Annexure – D-1, D-2, D-3 and D-5. An up-to-date curriculum vitae and 
+copy of CNICs/passports of Directors and CEO.  
+Details of registration and related documents (i.e. Article and 
+memorandum) of parent/holding company , Associated Companies, 
+Subsidiaries and other related parties. 
+Audited financial statements of the company for the last three (3) years, 
+where applicable. 
+Technology Roadmap with detailed infrastructure implementation plan  
+Approval for Pilot 
+Operations 
+Compliance status of the conditions mentioned in the In -Principle 
+Approval Letter. 
+Proof of Security Deposit in the manner as prescribed in P ara 11 of the 
+Regulations for EMIs. 
+Proof of fulfilment of initial capital requirement in line with Regulations 
+for EMIs:  
+(i) An audited financial statement certifying the amount of capital of the 
+EMI. (ii) Duly attested Form A, 3A and 29 issued by SCP reflecting the 
+share capital of the EMI 
+Final Trust Agreement with trustee(s). 
+Policy on the Agent Network Management (ANM) duly approved by its 
+Board, in case EMI intends to engage agents for providing payment 
+services. 
+Board approved Risk Management Framework that should contain 
+mapping of the risks identified by the EMI including the type of risks and 
+the procedures the applicant will put in place to assess and prevent such 
+risks in relation to e-money businesses and payment services. 
+Board approved Dispute Resolution Mechanism . It shall also include a 
+description of the procedures to monitor, handle and follow up on security 
+incidents and fraud-related customer complaints. 
+Board approved Information Security Policy that shall include a detailed 
+risk assessment of the e -money businesses, the security of the e -money 
+and payment processes, description of IT systems and security of these 
+systems etc. 
+Business continuity arrangements that shall include the details about how 
+the applicant will deal with significant continuity events and disruptions, 
+such as the failure of key systems, the loss of key data, the inaccessibility 
+of the premises etc. and the frequency with which the applicant intends to 
+test the business continuity and disaster recovery plans. 
+Final Approval 
+Compliance status of the conditions mentioned in pilot operation’s 
+approval letter. 
+External Auditor’s Report on results of the pilot operations conducted by 
+EMI with stakeholders including the gaps identified and corrective 
+measures taken by the applicants.  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 29 of 52 
+ 
+  
+Proof of fulfilment of initial capital requirement - An audited financial 
+statement certifying the amount of capital of the EMI. 
+Clearing and settlement arrangements by EMI. 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 30 of 52 
+Annexure B 
+Application Format for Initiation Phase 
+The Director  
+Payment Systems Policy & Oversight Department  
+State Bank of Pakistan  
+Main Building  
+I.I. Chundrigar Road 
+Karachi  
+ 
+Dear Sir,  
+ < Covering letter on the company’s original letter head introducing the company, its program 
+of operations setting out in particular the type of business for which the license is required> 
+ 
+List of Documents/information to be attached with application: 
+a. Certified true copy of:  
+1. Certificate of Incorporation with SECP,  
+2. MOA  
+3. AOA  
+b. Business feasibility/plan as per the format attached at Annexure- G  
+c. List of sponsor shareholders, Directors and CEO along with submission of following 
+information:  
+1. In case of Individuals 
+i. An up-to-date curriculum vitae,  
+ii. Duly verified copy of CNICs/passports,  
+iii. 3 recent passport size photos (not older than 3 months) 
+iv. Certified copies of income tax and wealth tax statements filed during the last 
+three years 
+v. In cases where sponsors or sponsor directors are residents of countries where 
+filing of wealth statement is not a requirement, two certificates of latest personal 
+net worth and general reputation issued by a reputable chartered account/ 
+international bank(s); or Any other latest authenticated/ verifiable source of net 
+worth (such as, bank statement(s) or bank guarantee etc.)  
+2. In case of Legal Entity 
+i. Last three years audited financial statements, where applicable.  
+ii. In case audited financials are not availabl e or insufficient, latest authenticated/ 
+verifiable net-worth of the sponsor duly confirmed by a reputable Chartered 
+Accountancy firm and two certificates of general reputation issued by 
+international banks of repute; or  
+iii. Any other latest authenticated/ ve rifiable source of net worth (such as bank 
+statement(s) or bank guarantee etc.)  
+d. Details of list of Associated Companies, Subsidiaries and other related parties.  
+e. SBP may request the applicant for any further information it requires for the purposes 
+of considering the application. 
+f. Address of the EMI’s Head office and Registered office. 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 31 of 52 
+g. The name(s) and contact detail(s) of the person(s) in- charge of dealing with the EMI 
+application. 
+ 
+ 
+Yours faithfully, 
+ 
+          (                      ) 
+    President / Chief Executive Officer  
+ 
+Company Seal 
+  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 32 of 52 
+Annexure C 
+Application Format for In-Principle Stage 
+The Director  
+Payment Systems Policy & Oversight Department  
+State Bank of Pakistan  
+Main Building  
+I.I. Chundrigar Road 
+Karachi  
+ 
+Dear Sir,  
+ < Covering letter on the company’s original letter head introducing the company, its program 
+of operations setting out in particular the type of business for which the license is required> 
+ 
+List of Documents/information to be attached with application: 
+a. Certified true copy of:  
+1. Certificate of Incorporation with SECP,  
+2. MOA  
+3. AOA  
+b. Copy of receipt of PKR Two Hundred Thousand (Rs. 200,000/-) deposited in SBP BSC 
+Karachi Office as Non-refundable Application Processing Fee.  
+c. Business feasibility/plan as per the format attached at Annexure- G  
+d. Description of the measures to be taken to safeguard the customers’ funds in line with 
+these regulations. Also provide the copy of the trust agreement with trustee (s). The 
+trust agreement at minimum should cover the following: 
+1. Funds safeguarding arrangements as defined in Para 16 of the Regulations for EMIs 
+2. Investment policy/plan/arrangements for trust account as permitted in the 
+Regulations 
+3. Terms and conditions of the trust account(s) including ownership of trust funds 
+4. Roles, responsibilities and liabilities of trustee and EMI 
+5. Procedure for reconciliation of e- money and funds in trust account Settlement 
+procedure, where applicable etc. 
+6. Signed by at least two signatories each from EMI and trust bank. 
+e. Details of the internal control mechanisms established to comply with AML/CFT 
+Regulations and Guidelines issued by SBP from time to time. 
+f. Details about the use of agents and outsourcing arrangements, if any. 
+g. List of sponsor shareholders, FPT in the format as given in Annexure – D, D-1, D-3 
+and D-5.  
+h. Submission of following information of all sponsor shareholders, Directors and CEO:  
+1. In case of Individuals 
+i. An up-to-date curriculum vitae,  
+ii. Duly verified copy  of CNICs/passports,  
+iii. 3 recent passport size photos (not older than 3 months) 
+iv. Certified copies of income tax and wealth tax statements filed during the last 
+three years 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 33 of 52 
+v. In cases where sponsors or sponsor directors are residents of countries where 
+filing of wealth statement is not a requirement, two certificates of latest personal 
+net worth and general reputation issued by a reputable chartered account/ 
+international bank(s); or Any other latest authenticated/ verifiable source of net 
+worth (such as, bank statement(s) or bank guarantee etc.)  
+2. In case of Legal Entity 
+i. Last three years audited financial statements, where applicable.  
+ii. In case audited financials are not available or insufficient, latest authenticated/ 
+verifiable net-worth of the sponsor duly confirmed by a reputable Chartered 
+Accountancy firm and two certificates of general reputation issued by 
+international banks of repute; or  
+iii. Any other latest authenticated/ verifiable source of net worth (such as bank 
+statement(s) or bank guarantee etc.)
+  
+i. FPT of Directors, CEOs and Key Executives in the format as given in Annexure – D-
+1, D-2, D-3 and D-5.  
+j. Additional FPT requirements for foreign nationals shall be communicated to applicant 
+EMI on case to case basis.  
+k. Details of list of Associated Companies, Subsidiaries and other related parties.  
+l. SBP may request the applicant for any further information it requires for the purposes 
+of considering the application. 
+m. Address of the EMI’s Head office and Registered office. 
+n. The name(s) and contact detail(s) of the person(s) in- charge of dealing with the EMI  
+application. 
+ 
+Yours faithfully, 
+ 
+          (                      )  
+    President / Chief Executive Officer  
+Company Seal 
+  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 34 of 52 
+Annexure D 
+Performa – Fitness and Proprietary of Sponsor Shareholders  
+ 
+1. Full Name: 
+2. Father’s Name: 
+3. Mother’s Name: 
+4. Spouse’s Name: 
+5. Date of Birth: 6. Place of Birth 
+7. Nationality (ies): 8. NTN: 
+9. CNIC: 
+10. Passport Number: 
+11. Recent Residential Address in Full: 
+ 
+12. Permanent Residential Address in Full: 
+ 
+13. Residential Telephone Number (s): 14. Mobile Number: 
+ 
+15. Email Address: 
+16. If you have changed your name, state previous name and reasons for change: 
+ 
+ 
+17. Academic Education  
+Qualification Name and Address of Degree 
+Awarding Institution 
+Date of Completion 
+   
+18. Professional Education 
+Qualification Name and Address of 
+Institution/Professional Body 
+Date of Completion 
+   
+19. Training (s), if any: 
+ 
+20. Existing Employment:  
+21. Present Designation: 22. Present Department: 
+23. Official Address: 
+ 
+ 
+ 
+ 
+24. Telephone Number (s): 25. Email: 
+ 
+26. Please provide complete and true particulars of all business(es), including proprietary 
+concern/partnership firms, companies in which you have been associated as a proprietor, 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 35 of 52 
+partner or a director thereof during the last ten years and the accounts maintai ned by 
+them: 
+Name of the Proprietary 
+Concern/Partnership 
+Firm/Company 
+Name of Bank and/or NBFIs 
+together with Name of 
+Branches 
+Account Numbers 
+   
+   
+   
+27. Position held during the last ten years (along with name and address of 
+company/institution/body where appointment held, nature of the 
+company/institution/body and dates of appointment) 
+Position of shares held in EMI Number of shares held as of  
+As a Sponsor Shareholder 
+Own name 
+In the name of the company 
+In the name of family member 
+ 
+Other than Sponsor Shareholder 
+Own name 
+In the name of the company 
+In the name of family member 
+ 
+ 
+ 
+ 
+(Signature of concerned official) 
+******** 
+ 
+ 
+  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 36 of 52 
+Annexure D-1 
+Questionnaire for Assessing Fit and Proper Test 
+Please answer the following questions by entering a tick ( ) in the appropriate box. If the 
+answer of any of these questions is YES and need explanation, then use a separate sheet with 
+proper reference to the question. 
+S. No Description Yes No 
+1.  
+Have you ever been convicted/involved in any fraud/forgery, financial 
+crime etc., in Pakistan or elsewhere, are subject to any pending 
+proceedings leading to any conviction? 
+  
+2.  Are you a dual national? If yes, please specify nationality other than 
+Pakistani.  
+ 
+  
+3.  Have you ever been associated with any illegal activity concerning 
+banking business, deposit taking, financial dealing and other business? 
+  
+4.  
+Have you ever been subject to any adverse findings or any settlement 
+in civil/criminal proceedings particularly with regard to investments, 
+financial/business, misconduct, fraud, formation or management of a 
+corporate body etc. by SBP, other regulators, professional bodies or 
+government bodies/agencies? 
+  
+5.  
+Have you ever contravened any of the requirements and standards of 
+regulatory system or the equivalent standards or requirements of other 
+regulatory authorities? 
+  
+6.  
+Have you ever been involved with a company or firm or other 
+organization that has been refused registration/license to carry out 
+trade, business etc.? 
+  
+7.  
+Have you ever been involved with a company/firm whose 
+registration/license has been revoked or cancelled or which has gone 
+into liquidation or other similar proceedings? 
+  
+8.  
+Have you ever been debarred for being Chief Executive, Chairman, 
+Director or Sponsor Shareholder of a company, especi ally financial 
+institutions? 
+  
+9.  Have you ever been dismissed/ asked to resign/resigned in Pakistan or 
+elsewhere in order to avoid legal or disciplinary action? 
+  
+10.  Have you ever resigned from a professional or regulatory body in 
+Pakistan or elsewhere in order to avoid legal or disciplinary action? 
+  
+11.  Have you ever been disqualified/ removed by regulators/Government 
+bodies/ agencies? 
+  
+12.  
+Have you ever been in default of payment of dues owed to any 
+financial institution in individual capacity or as proprietary concern or 
+any partnership firm or in any private unlisted/listed company? 
+  
+13.  
+Have you ever been in default of taxes in individual capacity or as 
+proprietary concern or any partnership firm or in any private 
+listed/unlisted company? 
+  
+14.  
+Have you ever been associated as director and/or chief executive with 
+the corporate bodies whose corporate and tax record, including custom 
+duties, central excise and sales tax has been unsatisfactory? 
+  
+15.  Have you entered into any agreement with any other pers on (natural 
+or legal) which will influence the way in which you exercise your 
+  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 37 of 52 
+voting rights or the way in which you otherwise behave in your 
+relationship with the authorized entity? 
+16.  Are you a director on the Board of Directors of any other Financial 
+Institution(s) or EMI/PSO/PSP? 
+  
+17.  
+Are you a Chairman, Chief Executive, Chief Financial Officer, Chief 
+Internal Auditor, Research Analyst or Trader (by whatever 
+name/designation called) of an Exchange Company (firm or sole 
+proprietorship), member of a Stock Exchange, Corporate Brokerage 
+House? 
+  
+18.  Are you owning/controlling any Exchange Company or Corporate 
+Entity? 
+  
+19.  
+Have you been or are you working as consultant or adviser of 
+EMI/PSO/PSP or any related business in which you intend to become 
+a director? 
+  
+20.  Are you employee of an EMI/PSO/PSP?   
+21.  Are you employee of a company/entity/organization where sponsor 
+shareholders of EMI have substantial interest? 
+  
+22.  Are you a member/office bearer of any political party or member of 
+Senate/National/Provincial Assembly/Local Body? 
+  
+23.  
+Are you directly or indirectly associated with designated/proscribed 
+entities and/or persons under United Nations Security Council 
+Resolution or Anti-Terrorism Act 1997?  
+  
+24.  If independent director, have you enclosed declaration in this behalf?    
+25.  Any other information that is relevant for the purpose of SBP and needs to be 
+mentioned? 
+ 
+Signature: ------------------ 
+Name: ---------------------- 
+Position: -------------------- 
+Date: ------------------------ 
+ 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 38 of 52 
+Annexure D-2 
+Performa – Fitness and Proprietary of Key Executives/Directors/CEOs 
+1. Position and grade held by the Executive: 
+ 
+2. Date of assumption of current position (dd /mm/ yyyy): 
+Full Name: 
+Father’s Name: 
+Date of Birth Place of Birth (City and Country): 
+ 
+Nationality: NTN: 
+CNIC Number: Email Address: 
+Telephone Number (s): Mobile Number (s): 
+ 
+Academic Qualification: 
+Qualification Name and Address of Degree 
+Awarding Institution 
+Date of Completion 
+   
+   
+Professional Qualification 
+Qualification Name and Address of 
+Institution/Professional Body 
+Date of Completion 
+   
+   
+   
+Training (s), if any: 
+ 
+Previous Employment (s)- date wise:  
+Designation: Department: 
+Official address: 
+Telephone Number (s): 
+Has he/she ever been convicted of any offence?      Yes □ No □ 
+If yes, mention the nature of offence and penalty imposed: 
+ 
+ 
+Has he/she ever been censured or penalized by any financial regulator (local or foreign)? 
+Yes □                  No □ 
+If yes, reasons for adverse findings and amount of penalty imposed: 
+ 
+Has he/she ever been dismissed from employment?       Yes □  No □ 
+If yes, name of the employer and reasons for dismissal: 
+ 
+  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 39 of 52 
+Annexure D-3 
+State Bank of Pakistan 
+Payment Systems Policy & Oversight Department 
+ 
+Affidavit 
+(On Non-Judicial Stamp Paper) 
+ 
+I (the deponent), ________________ son/daughter/wife of _______________________ adult, 
+resident of 
+_______________________________________________________________________  
+and holding CNIC/Passport No. ______________________________ do hereby state on 
+oath/solemn affirmation as under:  
+ 
+a. that the deponent hereby confirms that the statement made and the information supplied in 
+the attached questionnaire at Annexure D -1 and Annexure D -2 and the answers thereof are 
+correct and that there are no other facts that are relevant for “Fit and Proper Test”  
+ 
+b. that the deponent undertakes that the State Bank of Pakistan may seek additional information 
+from any third party as it deems necessary in view of assessing “Fit and Proper Test”  
+ 
+c. that the deponent undertakes to bring to the attention of the State Bank of Pakistan any matter 
+which may potentially affect my status as being someone fit and proper as and when it crops 
+up; and  
+ 
+d. that whatever is stated above is correct to the best of my knowledge and belief and nothing 
+has been concealed there from.  
+ 
+DEPONENT  
+ 
+The Deponent is identified by me  
+     Signature________________  
+           
+       ADVOCATE (Name and Seal)  
+ 
+ 
+Stated on oath/solemnly affirmed before me on this ______ day of _____________ at 
+______________ by the Deponent above named who is identified to me by 
+________________, Advocate, who is known to me personally.  
+ 
+ 
+ 
+Signature_______________________________  
+OATH COMMISSIONER FOR TAKING AFFIDAVIT  
+(Name and Seal) 
+   
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 40 of 52 
+Annexure D-4 
+Assessment of Fitness and Propriety 
+The fitness & propriety of Sponsor Shareholders(s), Director(s), CEO and Key Executives will 
+be assessed on the following broad elements:  
+I. Integrity, Honesty and Reputation 
+Sponsor Shareholders(s) of EMIs and any person applying to be appointed as Director, 
+CEO and Key Executives should fulfill the following criteria:  
+a) Has not been convicted, involved in any fraud and/or forgery, financial crime etc., 
+in Pakistan or elsewhere, or is not being subject to any pending proceedings that 
+may lead to such a conviction;  
+b) Has not been subject to any adverse findings or any settlement in civil and, or 
+criminal proceedings particularly with regard to investments, financial matters, 
+business, misconduct, fraud, formation or management of a corporate body etc. by 
+SBP, government bodies or agencies; 
+c) Has not contravened any of the requirements and standards of SBP or the equivalent 
+standards, requirements of other regulatory authorities (outside Pakistan as well), 
+professional bodies or government bodies or agencies;  
+d) Has not been involved with (management or conduct of the affairs of) a company, 
+firm or any other organization that has been refused registration and, or license to 
+carry out trade, business etc.;  
+e) Has not been involved with (management or conduct of the affair s of) a company, 
+firm whose registration and, or license has been revoked or cancelled or gone into 
+liquidation or other similar proceedings due to mismanagement of affairs, financial 
+misconduct or malpractices;  
+f) Has not been debarred for being Chief Executive, Chairman, Director, Sponsor 
+Shareholder or Key Executive of a company, firm or in similar capacity.  
+II. Track Record  
+a) The Director/CEO/Key Executives must have an impeccable track record in the 
+companies served either in the capacity of an employee or Director/Chief Executive 
+or as Chairman;  
+b) The Director/CEO/Key Executives have not been dismissed from employment or 
+have not been removed or forced to resign by any regulator or government body or 
+court order, in the capacity of employee, director, chairman or key executive of the 
+company/firm or any other position of trust.  
+ 
+  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 41 of 52 
+III. Solvency & Financial Integrity  
+a) Has not been associated with any illegal activity concerning banking business, 
+deposit taking, financial dealing and other business;  
+b) Has not been in default of payment of dues owed to any financial institution and/ or 
+default in payment of any taxes in individual capacity or as proprietary concern or 
+any partnership firm or in any private unlisted, listed company;  
+c) Has not been associated as director and/or chief executive with the corporate bodies 
+who have defaulted in payment of Government duties/taxes etc.;  
+d) The Sponsor Shareholder(s) has/have sufficient means to discharge his/her financial 
+obligations, if any.  
+IV. Qualification & Experience This para shall apply separately for Directors, CEO and 
+other Key Executives of EMIs as under:  
+a) BOD  
+i. Must have management or business experience preferably pertaining to 
+payment and settlements systems of at least three (3) years at senior level in an 
+active capacity;  
+ii. Minimum qualification for a person to be appointed as Director on the Board of 
+Directors is graduation.  
+b) CEO 
+i. Must be having at least five (5) years of experience at senior level. Preference 
+must be given to a person having the said experience in payment and settlement 
+systems;  
+ii. Must possess expertise and skill set to undertake responsibilities of the position 
+effectively and prudently;  
+iii. Should have minimum qualification of graduation or equivalent, preferably 
+relevant experience in inform ation technology, banking, finance, economics, 
+business administration, commerce or relevant fields.  
+V. Conflict of Interest  
+a) The CEO will not be the Chairman of the Board of Directors of the same EMI. 
+b) The Directors on the Board should avoid conflict of interest in their activities with, 
+and commitments to, other organizations;  
+c) Directors and CEO should not be a Director/CEO of any other EMI/PSO/PSP. 
+d) EMIs shall not have as a director, President/CEO or ke y executive who is holding 
+any public office (by whatever designation) or office of any political party, or is a 
+member of Senate, National Assembly, Provincial Assembly or Local bodies. 
+VI. Others  
+a) Not more than 50% directors of the same family are permitted to be on the Board 
+of an EMI;  
+b) No member of Senate, National/ Provincial Assembly, Local bodies shall be 
+appointed/ recommended for appointment as Member of Board of Directors and/or 
+Chief Executive Officer/Key Executive of any EMI. 
+********  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 42 of 52 
+Annexure D-5  
+DECLARATION BY THE PROPOSING EMI 
+(To be signed either by the President/Chief Executive Officer, Head of Human  
+Resources or the Company Secretary of the incorporated EMI)  
+ 
+After in-depth self-assessment of Mr./Ms.______________________ for the proposed 
+position _______________,I, _______________________ on behalf of (name of proposing 
+("the proposing EMI") declare that: 
+  
+a) The EMI has satisfied itself that citizenship of the proposed appointee has been verified 
+from National Database and Registration Authority and has been submitted to State Bank 
+of Pakistan along with the FPT documents.  
+OR 
+ 
+ 
+ 
+□  
+ 
+In case the proposed appointee is a foreign national, the EMI has satisfied itself that the 
+citizenship of the proposed appointee has been verified from the concerned embassy and 
+has been submitted to State Bank of Pakistan along with FPT documents.  
+□  
+ 
+b)  
+ 
+ 
+The EMI confirms that the name of proposed appointee is not in the list(s) of 
+designated/proscribed individuals and entities under United Nations Security Council 
+Resolution or Anti-Terrorism Act 1997.  
+ 
+ □  
+ 
+c)  
+ 
+ 
+The EMI confirms that the proposed appointee is not directly or indirectly associated with 
+designated/proscribed entities and/or persons under United Nations Security Council 
+Resolution or Anti-Terrorism Act 1997 and other applicable laws, rules and regulations.  
+ 
+□  
+ 
+ 
+ 
+ Dated  this day of                             
+Name:                                                                                                     Signature: 
+Position/Designation:  
+For and on behalf of (name of EMI): 
+ 
+ 
+ 
+  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 43 of 52 
+Annexure E  
+Capital Resources 
+I. Initial capital shall mean the following, namely: 
+a) Paid-up share capital, including balance in share premium account  
+b) Reserves established out of distributable profit 
+c) Credit balance in the Profit & Loss account 
+d) Any other item as may be prescribed by SBP from time to time 
+II. Ongoing Capital (own funds) shall include the items mentioned above plus the following: 
+a) Non-redeemable preference shares and subordinated debt 
+b) Revaluation reserve arising on listed shares, government securities, and land / 
+building valued by evaluators on the Pakistan Banks Association (PBA) approved 
+panel, and supported by auditor certificate.  
+III. Following items shall be deducted from the sum of items listed in para I and II above: 
+a) Own shares held by the EMI 
+b) Lending to, and investment in debt or equity securities of, subsidiaries, associated 
+companies, undertaking and as defined in the Companies Act, 2017 and as amended 
+from time to time 
+c) Debit balance in profit and loss account 
+d) Deficit on revaluation of assets 
+e) Intangible assets excluding such software, as may be approved by SBP, and which 
+are solely and exclusively  being used by EMI for carrying out its principal 
+operations   
+Provided that not less than 50% of the initial capital must be subscribed and paid up in cash. 
+ 
+Provided further that any share capital issued and paid up in form of consideration other 
+than cash, such consideration must be in the following form and valued in accordance with 
+methodology prescribed here under: 
+ 
+i. Debt and equity securities: only listed equity securities are eligible and shall be 
+valued for this purpose based on the value derived by sixty (60) trading days 
+averaging of daily weighted average rate published in the Pakistan Stock Market 
+quotation.  
+ii. Government Securities of any description, shall be valued at a PKRV rate (Reuters) 
+of a preceding quarter. 
+iii. Land/Property on cost or based on valuation carried by the independent evaluators 
+listed on the panel of evaluators maintained by PBA, and supported by auditor 
+certificate.  
+ 
+******** 
+ 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 44 of 52 
+Annexure F 
+ 
+Incident Details of Information Security Breaches  
+(Suspected and/or Compromised) on Monthly Basis 
+Sr. 
+No. 
+Source of 
+Discovery of 
+Breach 
+Nature of 
+Incident 
+Reasons for 
+Incidents 
+Occurred 
+Value of 
+Maximum 
+Exposure 
+Remarks, if 
+any 
+      
+      
+ 
+******** 
+  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 45 of 52 
+Annexure G 
+Structure of Business Plan 
+Business Plan of EMIs shall at least cover the following components: 
+1. Strategic Plan 
+• Mission, vision and objectives of the EMI 
+• Market analysis: 
+o Market overview, total size, and growth potential  
+o Market trends and market segments  
+o Positioning (what needs of the target segments will be met)  
+• Projected market share for the next 5 years 
+• Success factors (e.g., agent network, product design, shareholder s’ commitment, 
+partnerships, technology and infrastructure)  
+• Analysis of strengths, weaknesses, opportunities and threats (SWOT analysis) 
+2. Operational Plan 
+• Step by step description of the e -money businesses and payment services to be 
+offered by EMIs – the description shall include flow diagrams of payment type, 
+payment transmission method, clearing and settlement mechanisms etc. 
+• Draft contracts including Non -Disclosure Agreement (NDA) with all parties 
+involved in e-money and payment services etc. including copy of agreement with 
+e-money users 
+• Details about the use of agents that shall include the terms of engagement, agents’ 
+selection policy, their monitoring procedures and IT systems/infrastructure that will 
+be used by EMI’s agents to perform their activities etc. 
+• Implementation roadmap (timelines) 
+• Marketing plan 
+• Details of ancillary services (if any) 
+• Description of outsourcing arrangements (if any) 
+• Governance, organizational structure and staffing (existing as well as for the next 
+three years) 
+• Systems, controls, and risk management  
+• Comprehensive Complaint Resolution Mechanism (with defined turnaround time, 
+rights, obligations and responsibilities of all concerned parties) 
+3. Financial Projections 
+• Initial capital, investment and capital injection plan, source of  funds (Specify how 
+the funding will be arranged) 
+• Funding Plan to comply with the regulatory capital requirements. 
+• Amounts proposed to be subscribed by each sponsor. 
+• Personal net worth of each sponsor, not being lesser than the amount to be subscribed 
+by them personally. 
+• Basic assumptions (e.g. inflation rate, cost of funds, GDP growth etc.)  
+• Forecasted revenues, capital expenditures, operating expenses, profit/loss 
+• Key financial performance indicators like ROE: Return on Equity is net income as 
+% of equity, ROA: Return on Assets is net income as % of assets, CAPEX ratio: 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 46 of 52 
+Capital expenditure (CAPEX) as % of gross revenue, OPEX ratio: Operating 
+expenses (OPEX) as % of gross revenue. 
+• Projected financial statements. 
+ 
+***** 
+ 
+  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 47 of 52 
+Annexure H 
+Format of undertaking to be submitted by the Sponsors of EMI Applicant 
+(To be stamped as an Undertaking in accordance with the Stamp Law in force) 
+The Director 
+Payment Systems Policy & Oversight 
+Department 
+State Bank of Pakistan 
+Main Building 
+I.I Chundrigar Road  
+Karachi 
+ 
+Dear Sir,  
+We____________________________, incorporated/constituted under the 
+___________________________   and having Registered Office at 
+_______________________ (hereinafter referred to as “EMI applicant”) hereby execute this 
+Undertaking in favor of the State Bank of Pakistan (hereinafter referred to as the “the Bank”).  
+Whereas the EMI is engaged in e- money business as defined in the Regulations for EMIs as  
+amended from time to time,  and whereas the EMI has made an application in writing to the 
+Bank for grant of EMI license. 
+And whereas the EMI has made an application in writing to the Bank for EMI license and 
+whereas the Bank has accepted EMI application provided the EMI shall execute an undertaking 
+in its favour to be bound by the Regulations for EMIs as amended from time to time and also 
+by such circulars, orders, notifications, instructions, press releases etc. as may be issued by the 
+Bank in this behalf from time to time.  
+In consideration of the Bank having agreed to grant In- Principle Approval, the applicant EMI 
+unconditionally and irrevocably undertakes and agrees as follows:   
+• EMI agrees to maintain the Capital requirements as per the requirements prescribed 
+in the Regulations for EMIs as amended from time to time and any other 
+instructions on the subject from time to time. 
+• EMI shall maintain at all times, at least ten percent (10%) of the required capital or 
+any other amount prescribed by SBP from time to time . Five percent (5%) of the 
+security deposit will be kept in a non- remunerative current account with the SBP 
+Banking Service Corporation and five percent (5%) in the form of Government 
+securities to be kept under lien at SBP BSC. 
+• The EMI agrees to reinvest the securities after maturity of the particular security in 
+a timely manner. 
+• SBP shall have authority to debit the current account and SGLA  as and when 
+needed.  
+• The Pilot Operations would last for minimum 60 days and maximum 180 days and 
+shall consist of limited scale live operations as prescribed by the Bank. EMI agrees 
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department          Page 48 of 52 
+to demonstrate the scope of activities/transactions conducted during the Pilot 
+Operations.  
+• EMI agrees to finalize the Trust agreement for safeguarding customers’ funds as 
+required under para 16 of the Regulations. The final agreement shall be submitted 
+to the Bank before initiation of Pilot Operations. 
+• EMI undertakes to furnish such information/data as the Bank may desire in respect 
+of its transactions and overall business operations during the Pilot run.  
+• EMI shall not be allowed to invest 75% of the last three months’ daily average 
+outstanding e-money balance during Pilot Operations in government securities.  
+• EMI agrees that any change in the governance structure shall be submitted to SBP 
+in line with the Regulations of EMIs. 
+• EMI shall abide by and comply with the Regulations for EMIs as amended from 
+time to time and also such circulars, orders,  notifications, press releases, 
+instructions etc. as may be issued by the Bank in this behalf (hereinafter collectively 
+referred to as “The Regulations”).  
+• The Bank shall have the right at all times to inspect and supervise all computer 
+systems including s oftware, telecommunication network and other equipment’s 
+both at the Primary Site and the Disaster Recovery Site. The EMI agrees to set right 
+deficiencies pointed out by the Bank forthwith and take into consideration 
+suggestions of the Bank.  
+• The EMI agree s that the liabilities, responsibilities / obligations, if any, arising 
+during its Operations shall rest solely on the EMI applicant.   
+• The EMI agrees that the Bank reserves the right to revoke license/approval for I n-
+Principle, Pilot Operations and commer cial operations at its discretion for any 
+reason whatsoever.   
+• SBP reserves the right to suspend/revoke the Approval at any stage, if the applicant 
+EMI fails to comply with the conditions of SBP Approval(s) in a timely manner. 
+• License to commence commercial operations shall be granted subject to satisfactory 
+completion of pilot operations and fulfilment of all SBP’s requirements.  
+• Our signatory/ies, as under, have the requisite power of attorney / authority (copy 
+enclosed), issued by the relevant and compet ent authority in our institution to 
+execute such agreements binding our institution thereto. 
+ 
+Yours faithfully   
+(                         )  
+Authorized Official   
+      Company Seal 
+Two Witness (Name, CNIC and 
+signature): 
+Date:  
+Place:   
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 49 of 52 
+Annexure I 
+SOPs for Electronic Money Institutions (EMIs) for Account Opening and its 
+Maintenance with SBP BSC 
+ 
+1. Accounting Opening Procedure 
+1.1 EMIs, after receiving In -Principle approval, will request SBP BSC Karachi Office 
+electronically at KHI.DAU@sbp.org.pk and mtb.ko@sbp.org.pk under copy to 
+PSP&OD at psdpolicy@sbp.org.pk for opening of Accounts (Current and SGLA) for 
+maintaining Security Deposit as required under Regulations for EMIs. 
+1.2 SBP BSC Karachi Office will provide account opening forms to EMIs along with the 
+list of required documents via email in a timely manner. 
+1.3 EMIs will fill the account opening forms for Current Account and SGLA and submit 
+the same to SBP BSC Karachi Office along-with the following documents attested by 
+company secretary: 
+a. Notarized CNIC copy of CEO/Acting CEO of EMI;  
+b. Account maintenance certificate; 
+c. Certified true copy of Certificate of Incorporation; 
+d. Copy of the Memorandum and Articles of Association duly certified by 
+Chairman/ Secretary / BOD; 
+e. Certified true copy of Certificate of SECP that Company is entitled to 
+commence business (In case of private limited company, this document is not 
+required); 
+f. Certified true copy Form-29; 
+g. Certified copy of PSP&OD’s In-Principle approval to operate as EMI; 
+h. Duly attested three specimen signature cards of the authorized officer(s) of EMI 
+on Bank’s specimen signature cards for any correspondence with the Bank; 
+i. Undertaking in Form BKG 121; 
+j. List of authorized signatories duly approved by their Board; 
+k. Indemnity form (for SGLA only); 
+l. Power of attorney for operation of SGLAs; 
+m. Any other document required by SBP BSC. 
+1.4 SBP BSC Karachi Office, after ensuring that required documents (as ment ioned 
+above) have been submitted by EMIs, signatures have been verified, will open SGLA 
+and Current Account and inform respective EMIs through email under 
+intimation/copy to PSP&OD. However, in case of SGLA, SBP BSC Karachi Office 
+shall take approval befor e account opening from Domestic Market & Monetary 
+Management Department (DMMD) as per existing process. 
+1.5 All debit transactions in SGLAs and current accounts shall only be allowed upon 
+PSP&OD’s written advice. However, payment of coupon/mark-up/profit accrued for 
+investment in Government Securities will be directly credited in respective /EMI’s 
+bank account furnished during the account opening process.  
+  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 50 of 52 
+2. Account Maintenance 
+2.1. Current Account 
+2.1.1 EMIs will send the Cheque/Pay Order/Demand Draft (five percent of required   
+capital or as prescribed by PS P&OD SBP) to Chief Manager Karachi Office 
+drawn in favor of their account maintained at SBP titled “SBP Banking Services 
+Corporation, Karachi Office”. 
+2.1.2 EMIs will ensure that the Cheque/Pay Order/Demand Draft amount is five percent 
+of the initial capital as per Clause 10 (III) of the Regulations for EMIs or any other 
+amount as allowed by SBP in their In-Principle/pilot operations’ approval letter. 
+2.1.3 SBP BSC Karachi Office, after realization of payment instrument, will inform the 
+concerned EMI through email under intimation/copy to PSP&OD.  
+2.1.4 EMIs shall provide proof of maintaining security deposit in their current account 
+with SBP BSC Karachi Office in the manner as defined in the Regulations for 
+EMIs to PSP&OD.  
+ 
+2.2. SGLA Account 
+2.2.1 EMIs through their bank will invest five percent of the required capital as per 
+Clause 10 (III) of the Regulations for EMIs or any other amount as allowed by 
+SBP in their In -Principle/pilot operations’ approval letter in Government 
+Securities.  
+2.2.2 After execution of the requisite entries in SGLA maintained with SBP BSC 
+regarding investment in Government Securities, SBP BSC will inform respective 
+EMI through e-mail under intimation /copy to PSP&OD. 
+2.2.3 EMIs after investment will provide necessary investment details to PS P&OD, in 
+writing on their letter head through email. 
+2.2.4 PSP&OD, at its end, will confirm that the applicant EMI has invested the required 
+amount in Government securities. 
+2.2.5 Upon maturity of the investment in Government Securities, EMIs through their 
+bank shall reinvest the security deposit in Government Securities to meet Security 
+deposit requirement at all times as mentioned in the Regulations for EMIs under 
+intimation to PSP&OD.  
+ 
+2.3. Reinvestment Procedure: 
+2.3.1 EMIs will finalize an investment deal through their respective bank(s) and send 
+the request along with details of the new investment deal  to SBP BSC through 
+email under intimation/copy to PS P&OD, to make the requisite entries, well 
+before the maturity of their existing investment. 
+2.3.2 EMIs and relevant b anks being buyers and sellers of securities shall both send 
+request letters mentioning settlement date to SBP BSC not later than 1:30 pm for 
+deal execution. 
+2.3.3 EMIs shall issue settlement request to SBP BSC for reinvestment on maturity date 
+of their investment. 
+2.3.4 SBP BSC will execute the entries on maturity date of investment so that 
+the requirement of maintaining security deposit at all times under Regulations for 
+EMIs shall be fulfilled.  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 51 of 52 
+2.3.5 Once the entries are executed, SBP BSC shall inform respective EMI throu gh 
+email under intimation/copy to PSP&OD at psdpolicy@sbp.org.pk. 
+2.3.6 SBP will take strict penal action under the PS&EFT Act and Regulations for EMIs 
+in case of failure of an EMI to timely reinvest in government securities or in case 
+of violation of the Regulations for EMIs. 
+ 
+3. Restrictions on Accounts 
+3.1 SGLA and current accounts should be opened in the specific categor y of 
+“Electronic Money Institutions” keeping in view the request received from EMIs. 
+3.2 Cheque Books shall not be issued against these accounts. 
+3.2 As these accounts are being opened on the instructions of PSP&OD therefore any 
+debit to these accounts shall be subject to PSP&OD’s prior approval. 
+ 
+*****  
+Regulations for Electronic Money Institutions 
+State Bank of Pakistan             Payment Systems Policy & Oversight Department           Page 52 of 52 
+Annexure J 
+Indicative List of Documents to Assess the Source of Income for EMI customers 
+ 
+Self-employed/ Non-Salaried / 
+Unemployed Persons 
+Employed/ Salaried Persons 
+Source of Income/ Funds* (Any one of the 
+following documents 
+should suffice) 
+Source of Income/ Funds* (Any one of the 
+following documents should suffice) 
+• Receipt of Payment against the Work, OR 
+• Account Statement, OR  
+• Particulars of Income/ Funds Providers (e.g. 
+Family Members/ Guardian/ Stipends/ 
+Social Benefits etc.), OR 
+• Tax Statement/ Return/ Certificate, OR 
+• Any other Document evidencing Source of 
+Income 
+• Latest Salary Slip, OR 
+• Salary Certificate, OR 
+• Payment Slips/ Record, OR 
+• Account Statement, OR 
+• Tax Statement/ Return/ Certificate, OR 
+• For Retired Persons, an evidence of Terminal 
+Benefits/ Pension Book etc., OR 
+• Any other Document evidencing Source of 
+Income 
+As an alternate to above, customer can provide the following as source of income/ funds: 
+• Inheritance, OR 
+• Agriculture income, OR 
+• Investment in securities, bonds, shares, etc., OR 
+• Investment in property, OR 
+• Rental Income, OR 
+• Interest income 
+ 
+ 
+******** 
+ 

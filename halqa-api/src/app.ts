@@ -4,9 +4,10 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { ZodError } from 'zod';
+import { limits } from './lib/rate-limits';
+import { AppError, ERRORS, errorBody, withErrorCode, type ErrorCode } from './lib/errors';
 import authRoutes from './routes/auth';
 import committeeRoutes from './routes/committees';
-import schemeRoutes from './routes/schemes';
 import paymentRoutes from './routes/payments';
 import notificationRoutes from './routes/notifications';
 import profileRoutes from './routes/profile';
@@ -14,7 +15,6 @@ import exchangeRoutes from './routes/exchange';
 import riskRoutes from './routes/risk';
 import protectionRoutes from './routes/protection';
 import partnerRoutes from './routes/partner';
-import vaultRoutes from './routes/vault';
 import agreementRoutes from './routes/agreements';
 import rewardRoutes from './routes/rewards';
 import exitRoutes from './routes/exits';
@@ -50,7 +50,12 @@ app.use(express.json({ limit: '1mb' }));
 app.use(rateLimit({ windowMs: 15 * 60_000, limit: 1500, standardHeaders: 'draft-7' })); // sized for three consecutive integration runs (~250 requests each) with headroom
 app.use((_req, res, next) => {
   const original = res.json.bind(res);
-  res.json = (body: unknown) => original(jsonSafe(body));
+  // Every failure, wherever it is written, leaves carrying a shared code and a
+  // sentence in both languages (lib/errors.ts). Routes that answer inline with
+  // res.status(409).json({ error: '...' }) keep their own sentence, which is
+  // often more specific, and gain the code and the Urdu beside it. Without this
+  // the shared list would only cover failures that THROW.
+  res.json = (body: unknown) => original(jsonSafe(withErrorCode(res.statusCode, body)));
   next();
 });
 // Structured request log: one JSON line per request (health excluded), so
@@ -126,28 +131,56 @@ h1{margin:14px 0 2px;font-size:26px}.sub{margin:0 0 20px;color:#8a815f}.grid{dis
   }
   res.status(result.valid ? 200 : 422).json(result);
 });
-app.use('/api/auth', rateLimit({ windowMs: 15 * 60_000, limit: process.env.NODE_ENV === 'production' ? 30 : process.env.SECURITY_RELAXED === 'true' ? 10_000 : 200 }), authRoutes); // strict in production; dev headroom for suites; effectively off in relaxed demo mode
-app.use('/api/committees', committeeRoutes);
-app.use('/api/schemes', schemeRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/profile', profileRoutes);
-app.use('/api/exchange', exchangeRoutes);
-app.use('/api/risk', riskRoutes);
-app.use('/api/protection', protectionRoutes);
-app.use('/api/partner', partnerRoutes);
-app.use('/api/vault', vaultRoutes);
-app.use('/api/agreements', agreementRoutes);
-app.use('/api/rewards', rewardRoutes);
-app.use('/api/exits', exitRoutes);
-app.use('/api/support', supportRoutes);
-app.use('/api/account', accountRoutes);
-app.use('/api/chat', chatRoutes);
-app.use((_req, res) => res.status(404).json({ error: 'Route not found' }));
+// Per route limits replace the single global ceiling, which was no limit at all
+// on the routes that matter: one address could try 1,500 PINs inside it. Signing
+// in, one time codes and anything that moves money are tightest (lib/rate-limits).
+app.use('/api/auth', limits.signIn(), authRoutes);
+app.use('/api/committees', limits.write(), committeeRoutes);
+app.use('/api/payments', limits.financial(), paymentRoutes);
+app.use('/api/notifications', limits.read(), notificationRoutes);
+app.use('/api/profile', limits.write(), profileRoutes);
+app.use('/api/exchange', limits.financial(), exchangeRoutes);
+app.use('/api/risk', limits.read(), riskRoutes);
+app.use('/api/protection', limits.write(), protectionRoutes);
+app.use('/api/partner', limits.read(), partnerRoutes);
+// The vault (/api/vault) and the investment scheme catalogue (/api/schemes) are
+// unmounted: Halqa holds no member money and invests none of it, and savings
+// moved to the partner bank's own short term product (D12, 28 September 2026).
+// The route files stay on disk as history, unreachable, until the bank's
+// savings integration replaces them.
+app.use('/api/agreements', limits.write(), agreementRoutes);
+app.use('/api/rewards', limits.write(), rewardRoutes);
+app.use('/api/exits', limits.financial(), exitRoutes);
+app.use('/api/support', limits.write(), supportRoutes);
+app.use('/api/account', limits.write(), accountRoutes);
+app.use('/api/chat', limits.write(), chatRoutes);
+app.use((_req, res) => res.status(404).json(errorBody('NOT_FOUND')));
+// Every failure leaves through here, so every failure carries a shared code and
+// a sentence the member can act on, in both languages (lib/errors.ts). A route
+// that throws an AppError keeps its code; anything else is mapped, and an
+// unmapped internal fault never leaks its message to the member.
 app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  if (error instanceof ZodError) return res.status(400).json({ error: 'Invalid request', details: error.flatten() });
-  const e = error as { message?: string; status?: number; code?: string };
-  if (e.code === 'P2002') return res.status(409).json({ error: 'A unique value already exists' });
+  if (error instanceof ZodError) return res.status(400).json(errorBody('VALIDATION_FAILED', error.flatten()));
+  if (error instanceof AppError) return res.status(error.status).json(errorBody(error.code, error.detail));
+  const e = error as { message?: string; status?: number; code?: string; name?: string };
+  if (e.code === 'P2002') return res.status(409).json(errorBody('ALREADY_EXISTS'));
+  if (e.code === 'P2025') return res.status(404).json(errorBody('NOT_FOUND'));
+  // A token the client sent that will not even parse, or has expired, is the
+  // client's problem and not a fault here. Before 2026-10-06 these reached the
+  // bottom of this handler and left as a 500, which told a caller to retry
+  // something that can only ever fail, and logged a stack trace for every
+  // expired session. jsonwebtoken reports both by name.
+  if (e.name === 'JsonWebTokenError' || e.name === 'TokenExpiredError' || e.name === 'NotBeforeError') {
+    return res.status(401).json(errorBody('SIGN_IN_REQUIRED'));
+  }
+  // Routes that still throw a plain object with a status and their own sentence
+  // keep that sentence, and are given the nearest shared code beside it.
+  if (e.status) {
+    const code: ErrorCode = e.status === 401 ? 'SIGN_IN_REQUIRED' : e.status === 403 ? 'NOT_ALLOWED'
+      : e.status === 404 ? 'NOT_FOUND' : e.status === 409 ? 'CONFLICT' : e.status === 429 ? 'TOO_MANY_REQUESTS'
+      : e.status === 400 ? 'VALIDATION_FAILED' : 'SERVICE_ERROR';
+    return res.status(e.status).json({ ...errorBody(code), error: e.message || ERRORS[code].en });
+  }
   console.error(error);
-  return res.status(e.status || 500).json({ error: e.status ? e.message : 'Internal server error' });
+  return res.status(500).json(errorBody('SERVICE_ERROR'));
 });

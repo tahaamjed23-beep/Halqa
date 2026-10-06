@@ -110,7 +110,7 @@ export default function ActivityPage({ user, back, onDispute }:
 
       <div className="w-search">
         <Search />
-        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search receipts" />
+        <input aria-label="Search your activity" value={q} onChange={e => setQ(e.target.value)} placeholder="Search receipts" />
       </div>
 
       <Segment value={filter} onChange={setFilter} options={[

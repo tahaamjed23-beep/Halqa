@@ -148,7 +148,7 @@ export default function TerminalPage({ back }: { back?: () => void }) {
                   action={<b className="term-risk">{maxRisk}/10 · {band(maxRisk)}</b>}>
               <div className="term-slider">
                 <Filter />
-                <input type="range" min="1" max="10" step="1" value={maxRisk}
+                <input aria-label="Highest risk score to include" type="range" min="1" max="10" step="1" value={maxRisk}
                        onChange={e => setMaxRisk(+e.target.value)} />
               </div>
               <div className="term-filters">
@@ -222,11 +222,11 @@ function Controls({ principal, setPrincipal, allocation, setAllocation, months, 
   return (
     <div className="term-controls">
       <Field label="Circle pool, rupees">
-        <input inputMode="numeric" value={principal}
+        <input aria-label="Amount to model" inputMode="numeric" value={principal}
                onChange={e => setPrincipal(Number(e.target.value.replace(/\D/g, '')) || 0)} />
       </Field>
       <Field label="Share of the pool, per cent">
-        <input inputMode="numeric" value={allocation}
+        <input aria-label="Share allocated" inputMode="numeric" value={allocation}
                onChange={e => setAllocation(Math.max(0, Math.min(100, Number(e.target.value.replace(/\D/g, '')) || 0)))} />
       </Field>
       <Field label="Held for">

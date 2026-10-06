@@ -82,22 +82,13 @@ export function RafaBot3D({ size = 46, talking = false, mood ='idle' as RafaMood
  );
 }
 
-// Reaction bubble shown near the FAB after an action fires.
-const ACTION_COPY: Partial<Record<HalqaAction, string>> = {
- CREATE_CIRCLE:'Circle created.',
- PAY_INSTALLMENT:'Instalment recorded.',
- VAULT_DEPOSIT:'Saved to your vault.',
- VAULT_SWEEP:'Vault emptied to your account.',
- PAYOUT:'Payout released.',
- CONSENT:'Confirmed.',
- JOIN:'Joined.',
-};
+// The reaction bubble that floated beside the mascot is gone with it. An
+// outcome is confirmed on the screen the member is looking at, not by a
+// speech bubble somewhere else.
 
 const ACTION_MOOD: Record<HalqaAction, RafaMood> = {
  CREATE_CIRCLE:'celebrate',
  PAY_INSTALLMENT:'nod',
- VAULT_DEPOSIT:'coin',
- VAULT_SWEEP:'coin',
  PAYOUT:'celebrate',
  CONSENT:'nod',
  JOIN:'wave',
@@ -119,15 +110,18 @@ const TOUR: Partial<Record<Page, { title: string; body: string; cta?: { label: s
 
 export default function RafaBot({ page, setPage }: { page: Page; setPage: (page: Page) => void }) {
  const [open, setOpen] = useState(false);
- const [hint, setHint] = useState(() =>!localStorage.getItem(RAFA_SEEN_KEY));
+ // Opened from the fixed entry point in the page header. Nothing floats over
+ // the content waiting to be noticed.
+ useEffect(() => {
+   const handler = () => { setOpen(true); localStorage.setItem(RAFA_SEEN_KEY, '1'); };
+   window.addEventListener('halqa:open-assistant', handler);
+   return () => window.removeEventListener('halqa:open-assistant', handler);
+ }, []);
  const [tour, setTour] = useState(false);
  const [messages, setMessages] = useState<Msg[]>([{ from:'rafa', text:"Assalam-o-alaikum! I'm Rafa, your Halqa guide Ask me anything, or tap'Show me around' and I'll walk you through the app as you go." }]);
  const [input, setInput] = useState('');
  const [talking, setTalking] = useState(false);
  const [mood, setMood] = useState<RafaMood>('idle');
- const [reaction, setReaction] = useState<string | null>(null);
- const [stunt, setStunt] = useState<string | null>(null);
- const [pos, setPos] = useState({ x: 0, y: 0 });
  const moodTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
  const end = useRef<HTMLDivElement | null>(null);
 
@@ -143,38 +137,19 @@ export default function RafaBot({ page, setPage }: { page: Page; setPage: (page:
  const handler = (e: Event) => {
  const { type } = (e as CustomEvent<{ type: HalqaAction }>).detail;
  const nextMood = ACTION_MOOD[type]??'nod';
- const copy = ACTION_COPY[type]?? null;
  if (moodTimer.current) clearTimeout(moodTimer.current);
  setMood(nextMood);
- setReaction(copy);
- moodTimer.current = setTimeout(() => {
- setMood('idle');
- setReaction(null);
- }, 1800);
+ moodTimer.current = setTimeout(() => setMood('idle'), 1800);
  };
  window.addEventListener('halqa:action', handler);
  return () => window.removeEventListener('halqa:action', handler);
  }, []);
 
- // Every ~3 minutes Rafa gets bored and does a random quirky stunt, a dance,
- // kick, shake, 3D spin, hop or roll, and wanders to a new spot on screen for
- // a moment before floating back. Skipped while the chat is open.
- useEffect(() => {
- const STUNTS = ['dance','kick','shake','spin','hop','roll'];
- const timer = setInterval(() => {
- if (open) return;
- const s = STUNTS[Math.floor(Math.random() * STUNTS.length)];
- const x = -Math.round(Math.random() * Math.min(260, window.innerWidth * 0.32)); // wander leftward (anchored bottom-right)
- const y = -Math.round(Math.random() * 170); // and a little up
- setStunt(s); setPos({ x, y });
- setTimeout(() => { setStunt(null); setPos({ x: 0, y: 0 }); }, 2800);
- }, 180000);
- return () => clearInterval(timer);
- }, [open]);
+ // The wandering stunt loop is gone with the floating mascot. A character that
+ // moves itself across the screen every three minutes cannot be laid out
+ // around, so nothing on any page could be guaranteed to stay visible.
 
  useEffect(() => { end.current?.scrollIntoView({ behavior:'smooth' }); }, [messages, tour, open]);
- const dismissHint = () => { setHint(false); localStorage.setItem(RAFA_SEEN_KEY,'1'); };
- const openBot = () => { setOpen(true); dismissHint(); };
 
  const say = (text: string, go?: Page) => {
  setTalking(true);
@@ -209,16 +184,13 @@ export default function RafaBot({ page, setPage }: { page: Page; setPage: (page:
  const tip = TOUR[page];
  return (
  <>
- {hint &&!open && <button className="rafa-hint" onClick={openBot}>Hi! I'm Rafa, tap me if you need help </button>}
-
- {/* Reaction bubble, shown outside the chat panel so it's visible even when closed */}
- {reaction && <div className="rafa-reaction" aria-live="polite">{reaction}</div>}
-
- <button className="rafa-fab" style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }} title="Ask Rafa" onClick={() => (open? setOpen(false) : openBot())}>
- <span className={`rafa-stage ${stunt? `stunt-${stunt}` :''}`}>
- <RafaBot3D size={58} talking={talking} mood={mood} />
- </span>
- </button>
+ {/* The assistant used to be a floating animated character parked over the
+     content. It covered the affordability section on the credit screen, the
+     Rewards row on the account screen, the committee card on home and the
+     primary button on committees, on every page, for every member. It now
+     opens from a fixed entry point in the page header and draws nothing over
+     the screen until it is asked for. The character itself survives inside
+     the panel, where it has somewhere to be. */}
  {open && (
  <section className="rafa-panel" role="dialog" aria-label="Rafa the Halqa guide">
  <header className="rafa-panel-head">
@@ -252,7 +224,7 @@ export default function RafaBot({ page, setPage }: { page: Page; setPage: (page:
  )}
 
  <footer className="rafa-input">
- <input value={input} maxLength={200} placeholder="Ask Rafa a question…" onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key ==='Enter') ask(input); }} />
+ <input aria-label="Ask Rafa a question…" value={input} maxLength={200} placeholder="Ask Rafa a question…" onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key ==='Enter') ask(input); }} />
  <button className="rafa-send" onClick={() => ask(input)} aria-label="Send"><Send size={16} /></button>
  </footer>
  </section>

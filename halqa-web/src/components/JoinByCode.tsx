@@ -61,7 +61,7 @@ export function JoinByCode({ initialCode, onJoined }:
       <div className="panel-head"><div><h2>Join a committee</h2><p>Ask the host for the code.</p></div></div>
 
       <div className="join-entry">
-        <input
+        <input aria-label="Invite code"
           className="field join-code-input"
           value={code}
           onChange={e => { setCode(clean(e.target.value)); setPreview(null); setError(''); }}
@@ -71,7 +71,6 @@ export function JoinByCode({ initialCode, onJoined }:
           autoCapitalize="characters"
           autoComplete="off"
           spellCheck={false}
-          aria-label="Invite code"
         />
         <button className="secondary join-paste" onClick={() => void paste()}>Paste</button>
       </div>

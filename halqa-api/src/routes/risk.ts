@@ -1,16 +1,18 @@
 import { Router } from 'express';
+import { idParam } from '../lib/params';
+import { safeRouter } from '../lib/safe-router';
 import { Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { prisma } from '../db';
 import { requireAuth } from '../lib/auth';
 import { assertHost, assertMember } from '../lib/guards';
 import { audit } from '../lib/audit';
-import { assessRisk, CONFLICT_DECISIONS, policyHash, RISK_MODEL_VERSION, STRATEGY_CATALOG, stressProjection } from '../lib/risk-engine';
+import { assessRisk, policyHash, RISK_MODEL_VERSION, stressProjection } from '../lib/risk-engine';
 import { paisaInput } from '../lib/money';
-import { buildProfitPlan } from '../lib/profit-engine';
-import { activePartner } from '../lib/partner-catalog';
 
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 router.use(requireAuth);
 
 export function normalizedWeights(utilities: number[]): number[] {
@@ -35,23 +37,10 @@ export function normalizedWeights(utilities: number[]): number[] {
   return weights;
 }
 
-router.get('/catalog', async (_req, res, next) => {
-  try {
-    const partner = await activePartner(prisma);
-    res.json({ modelVersion: RISK_MODEL_VERSION, strategies: STRATEGY_CATALOG, conflicts: CONFLICT_DECISIONS, partner: partner ? { name: partner.name, shortCode: partner.shortCode, sandbox: partner.sandbox } : null });
-  } catch (error) { next(error); }
-});
-
-router.post('/portfolio/optimize',async(req,res,next)=>{try{
-  const input=z.object({principalPaisa:paisaInput.refine(value=>value>0n,'Principal must be positive'),horizonDays:z.number().int().min(30).max(3650),riskTolerance:z.number().int().min(1).max(8),shariahOnly:z.boolean().default(false),maxSchemes:z.number().int().min(1).max(3).default(3),minimumLiquidityBufferDays:z.number().int().min(0).max(90).default(7)}).parse(req.body);
-  const candidates=await prisma.scheme.findMany({where:{isActive:true,riskScore:{lte:input.riskTolerance},liquidityDays:{lte:Math.max(1,input.horizonDays-input.minimumLiquidityBufferDays)},...(input.shariahOnly?{shariahCompliant:true}:{})}});
-  const ranked=candidates.map(scheme=>{const liquidityPenalty=Math.max(0,scheme.liquidityDays/input.horizonDays)*2;const utility=Math.max(.01,scheme.indicativeRatePct-scheme.riskScore*.85-liquidityPenalty-scheme.volatilityBps/2500);return{scheme,utility}}).sort((a,b)=>b.utility-a.utility).slice(0,input.maxSchemes);
-  if(!ranked.length)return res.status(409).json({error:'No active scheme satisfies this risk and liquidity mandate'});
-  const weights=normalizedWeights(ranked.map(item=>item.utility));let allocatedPrincipal=0n;
-  const allocations=ranked.map((item,index)=>{const target=weights[index];const principal=index===ranked.length-1?input.principalPaisa-allocatedPrincipal:input.principalPaisa*BigInt(target)/10_000n;allocatedPrincipal+=principal;return{schemeId:item.scheme.id,name:item.scheme.name,weightBps:target,riskScore:item.scheme.riskScore,indicativeRatePct:item.scheme.indicativeRatePct,liquidityDays:item.scheme.liquidityDays,regulatoryStatus:item.scheme.regulatoryStatus,principalPaisa:principal.toString()}});
-  const weightedRate=allocations.reduce((sum,item)=>sum+item.indicativeRatePct*item.weightBps/10_000,0);const weightedRisk=allocations.reduce((sum,item)=>sum+item.riskScore*item.weightBps/10_000,0);
-  res.json({modelVersion:RISK_MODEL_VERSION,input:{...input,principalPaisa:input.principalPaisa.toString()},allocations,weightedRatePct:weightedRate,weightedRiskScore:Math.round(weightedRisk*10)/10,projection:stressProjection(input.principalPaisa,weightedRate,input.horizonDays,Math.round(weightedRisk)),disclaimer:'Constraint-based scenario, not investment advice or guaranteed execution.'});
-}catch(error){next(error)}});
+// REMOVED 5 October 2026: the investment catalogue (/catalog) and the portfolio
+// optimiser (/portfolio/optimize) went with the schemes. Halqa invests no
+// member money, so there is no portfolio to optimise and no catalogue to show.
+// normalizedWeights above is kept: it is pure arithmetic with its own tests.
 
 async function buildAssessment(committeeId: string) {
   const committee = await prisma.committee.findUnique({
@@ -97,6 +86,7 @@ async function buildAssessment(committeeId: string) {
 
 router.get('/committee/:id', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     await assertMember(req.params.id, req.auth!.userId);
     const { committee, result } = await buildAssessment(req.params.id);
     const consent = await prisma.riskConsent.findFirst({ where: { committeeId: committee.id, userId: req.auth!.userId }, orderBy: { createdAt: 'desc' } });
@@ -106,6 +96,7 @@ router.get('/committee/:id', async (req, res, next) => {
 
 router.post('/committee/:id/refresh', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     await assertHost(req.params.id, req.auth!.userId);
     const { committee, result } = await buildAssessment(req.params.id);
     const assessment = await prisma.$transaction(async tx => {
@@ -126,6 +117,7 @@ router.post('/committee/:id/refresh', async (req, res, next) => {
 
 router.get('/committee/:id/projection', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     await assertMember(req.params.id, req.auth!.userId);
     const query = z.object({ days: z.coerce.number().int().min(1).max(3650).optional() }).parse(req.query);
     const { committee, result } = await buildAssessment(req.params.id);
@@ -135,40 +127,13 @@ router.get('/committee/:id/projection', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-router.get('/committee/:id/profit-plan', async (req, res, next) => {
-  try {
-    await assertMember(req.params.id, req.auth!.userId);
-    const { committee, result } = await buildAssessment(req.params.id);
-    const raw = (committee.riskPolicyJson && typeof committee.riskPolicyJson === 'object' ? committee.riskPolicyJson : {}) as Record<string, unknown>;
-    const number = (key: string, fallback: number) => typeof raw[key] === 'number' ? raw[key] as number : fallback;
-    const boolean = (key: string, fallback = false) => typeof raw[key] === 'boolean' ? raw[key] as boolean : fallback;
-    const payout = committee.contributionPaisa * BigInt(Math.max(1, committee.memberCap));
-    const targetDefault = payout / 10n;
-    res.json(buildProfitPlan({
-      memberCount: Math.max(1, committee.members.length || committee.memberCap),
-      contributionPaisa: committee.contributionPaisa,
-      periodDays: committee.periodDays,
-      allocationBps: Math.round(committee.reinvestRatio * 10_000),
-      annualRatePct: committee.scheme?.indicativeRatePct ?? 0,
-      expectedLossBps: result.expectedLossBps,
-      liquidityReserveBps: committee.liquidityReserveBps,
-      insuranceReserveBps: committee.insuranceReserveBps,
-      policy: {
-        targetMemberProfitPaisa: BigInt(String(raw.targetMemberProfitPaisa ?? targetDefault)),
-        platformProfitFeeBps: number('platformProfitFeeBps', 500),
-        taxWithholdingBps: number('taxWithholdingBps', 0),
-        earlyCollectionYieldBps: number('earlyCollectionYieldBps', 0),
-        partnerRewardBps: number('partnerRewardBps', 0),
-        partnerRewardsFunded: boolean('partnerRewardsFunded'),
-        loyaltySubsidyPaisa: BigInt(String(raw.loyaltySubsidyPaisa ?? 0)),
-        loyaltySubsidyFunded: boolean('loyaltySubsidyFunded'),
-      },
-    }));
-  } catch (error) { next(error); }
-});
+// REMOVED 5 October 2026: /committee/:id/profit-plan. No profit is planned from
+// member money. Any return on balances is the bank's, shared with Halqa and
+// paid to members as an end of circle reward (D4, D5).
 
 router.patch('/committee/:id/policy', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     const committee = await assertHost(req.params.id, req.auth!.userId);
     if (committee.status !== 'FORMING') return res.status(409).json({ error: 'Risk policy locks when the committee starts' });
     const policy = z.object({
@@ -208,29 +173,36 @@ router.patch('/committee/:id/policy', async (req, res, next) => {
     if (policy.targetRiskScore > modeRiskCap) return res.status(400).json({ error: `${committee.mode} committees permit a maximum risk mandate of ${modeRiskCap}/10` });
     // JSON columns cannot store bigint — serialize paisa fields to strings.
     const policyJson = { ...policy, targetMemberProfitPaisa: policy.targetMemberProfitPaisa.toString(), loyaltySubsidyPaisa: policy.loyaltySubsidyPaisa.toString() };
-    const updated = await prisma.committee.update({ where: { id: committee.id }, data: {
-      riskTolerance: policy.targetRiskScore, payoutBufferBps: policy.payoutBufferBps, liquidityReserveBps: policy.liquidityReserveBps,
-      latePenaltyBps: policy.latePenaltyBps, riskPolicyJson: policyJson, memberConsentRequired: true,
-      insuranceReserveBps: policy.insuranceReserveBps,
-    } });
-    await audit(prisma, req.auth!.userId, 'RISK_POLICY_UPDATED', 'Committee', committee.id, policyJson);
+    const updated = await prisma.$transaction(async tx => {
+      const updated = await tx.committee.update({ where: { id: committee.id }, data: {
+        riskTolerance: policy.targetRiskScore, payoutBufferBps: policy.payoutBufferBps, liquidityReserveBps: policy.liquidityReserveBps,
+        latePenaltyBps: policy.latePenaltyBps, riskPolicyJson: policyJson, memberConsentRequired: true,
+        insuranceReserveBps: policy.insuranceReserveBps,
+      } });
+      await audit(tx, req.auth!.userId, 'RISK_POLICY_UPDATED', 'Committee', committee.id, policyJson);
+      return updated;
+    });
     res.json(updated);
   } catch (error) { next(error); }
 });
 
 router.post('/committee/:id/consent', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     await assertMember(req.params.id, req.auth!.userId);
     const committee = await prisma.committee.findUniqueOrThrow({ where: { id: req.params.id } });
     const { accepted } = z.object({ accepted: z.literal(true) }).parse(req.body);
     const policy = committee.riskPolicyJson ?? { reinvestRatio: committee.reinvestRatio, mode: committee.mode, schemeId: committee.schemeId };
     const hash = policyHash(policy);
-    const row = await prisma.riskConsent.upsert({
-      where: { committeeId_userId_policyHash: { committeeId: committee.id, userId: req.auth!.userId, policyHash: hash } },
-      update: { status: accepted ? 'ACCEPTED' : 'PENDING', acceptedAt: accepted ? new Date() : null },
-      create: { committeeId: committee.id, userId: req.auth!.userId, modelVersion: RISK_MODEL_VERSION, riskScore: committee.riskScore, policyHash: hash, status: 'ACCEPTED', acceptedAt: new Date() },
+    const row = await prisma.$transaction(async tx => {
+      const row = await tx.riskConsent.upsert({
+        where: { committeeId_userId_policyHash: { committeeId: committee.id, userId: req.auth!.userId, policyHash: hash } },
+        update: { status: accepted ? 'ACCEPTED' : 'PENDING', acceptedAt: accepted ? new Date() : null },
+        create: { committeeId: committee.id, userId: req.auth!.userId, modelVersion: RISK_MODEL_VERSION, riskScore: committee.riskScore, policyHash: hash, status: 'ACCEPTED', acceptedAt: new Date() },
+      });
+      await audit(tx, req.auth!.userId, 'RISK_POLICY_ACCEPTED', 'Committee', committee.id, { policyHash: hash, modelVersion: RISK_MODEL_VERSION });
+      return row;
     });
-    await audit(prisma, req.auth!.userId, 'RISK_POLICY_ACCEPTED', 'Committee', committee.id, { policyHash: hash, modelVersion: RISK_MODEL_VERSION });
     res.status(201).json(row);
   } catch (error) { next(error); }
 });

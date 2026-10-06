@@ -1,4 +1,4 @@
-import { Lock, Unlock } from 'lucide-react';
+import { CalendarClock, Check, Lock, TrendingUp, Users } from 'lucide-react';
 import { money, ordinal } from '../lib/format';
 
 // ---------------------------------------------------------------------------
@@ -13,6 +13,13 @@ import { money, ordinal } from '../lib/format';
 // separately:
 //   the tenure quarantine, which every new member sits in whatever their score
 //   the score band, which decides how early you may go once you are out of it
+//
+// Rebuilt 23 September 2026. It was a grid of twelve small numbered squares,
+// a paragraph, and two identical bordered boxes with a coloured dot: every
+// element the same weight, nothing to land on, no answer visible without
+// reading. It now leads with the answer as a single large figure, draws the
+// order as a strip the member can actually read their position off, and states
+// each gate as a row with an icon that says at a glance whether it is passed.
 // ---------------------------------------------------------------------------
 
 const CUTOFFS = { decent: 550, good: 650, excellent: 750 };
@@ -40,60 +47,93 @@ export function SeatEligibility({ creditScore, cleanCircles, members, contributi
   const allowed = inQuarantine ? byBand.filter(k => k > members - 3) : byBand;
   const earliest = allowed.length ? Math.min(...allowed) : members;
   const c = Number(contributionPaisa) || 0;
+  const owedAfter = c * (members - earliest);
+  const tenurePassed = !inQuarantine;
+  const scoreOpen = band === 'EXCELLENT' || band === 'GOOD';
 
   return (
-    <section className="panel">
-      <div className="panel-head">
-        <div><h2>Turns you can take</h2><p>And what would open the earlier ones.</p></div>
-        {inQuarantine ? <Lock /> : <Unlock />}
+    <section className="seat">
+      {/* The answer, before the explanation. A member opens this screen to find
+          out how early they can go, so that is the largest thing on it. */}
+      <div className="seat-hero">
+        <span className="seat-hero-lab">The earliest turn open to you</span>
+        <strong className="seat-hero-fig">{ordinal(earliest)}</strong>
+        <span className="seat-hero-of">of {members}</span>
+        <p className="seat-hero-note">
+          {owedAfter > 0
+            ? <>Take it and you would still owe <b>{money(owedAfter)}</b> to the circle afterwards.</>
+            : <>Nothing would remain owing to the circle afterwards.</>}
+        </p>
       </div>
 
-      <div className="seat-map" role="img" aria-label="Turns available to you">
+      {/* The order, drawn as the run of turns it is. Open turns carry the brand
+          fill, the earliest one is marked, and the rest are plainly shut rather
+          than a slightly paler version of the same square. */}
+      <div className="seat-strip" role="img"
+           aria-label={`Turns ${allowed.join(', ')} of ${members} are open to you`}>
         {Array.from({ length: members }, (_, i) => {
           const k = i + 1;
           const open = allowed.includes(k);
           return (
-            <span key={k} className={`seat-dot${open ? ' open' : ''}${k === earliest ? ' first' : ''}`} title={
-              open ? `${ordinal(k)} turn: you can take this` : `${ordinal(k)} turn: not open to you yet`
-            }>{k}</span>
+            // No title: the strip above is one image with one description, so
+            // a reader is already told which turns are open and never reaches
+            // the pips. The browser's own tooltip could be neither dismissed
+            // nor held open, which is what WCAG 1.4.13 asks for, and it was
+            // repeating what the strip's own label already says.
+            <span key={k}
+              className={`seat-pip${open ? ' open' : ''}${k === earliest ? ' first' : ''}`}>
+              {k}
+            </span>
           );
         })}
       </div>
-
-      <p className="seat-line">
-        You can take the <b>{ordinal(earliest)}</b> turn or later. At the {ordinal(earliest)} you
-        would still owe <b>{money(c * (members - earliest))}</b> after collecting.
+      <p className="seat-key">
+        <span><i className="on" />Open to you</span>
+        <span><i />Not yet</span>
       </p>
 
+      {/* The two gates, each as one row that answers itself in its icon. */}
       <div className="seat-gates">
-        <div className={inQuarantine ? 'seat-gate' : 'seat-gate ok'}>
-          <i />
-          <div>
-            <b>{inQuarantine ? 'You are new here' : 'Past the new-member limit'}</b>
+        <div className={`seat-gate${tenurePassed ? ' pass' : ''}`}>
+          <span className="seat-gate-ic">{tenurePassed ? <Check /> : <Users />}</span>
+          <span className="seat-gate-txt">
+            <b>{tenurePassed ? 'Past the new member limit' : 'You are new here'}</b>
             <span>
-              {inQuarantine
-                ? `Every new member takes one of the last three turns, whatever their score. ${REQUIRED_CLEAN - cleanCircles} more clean committee${REQUIRED_CLEAN - cleanCircles === 1 ? '' : 's'} opens the rest.`
-                : 'You have completed enough committees cleanly, so your score decides now.'}
+              {tenurePassed
+                ? 'Two circles completed cleanly, so your score decides from here.'
+                : `Every new member takes one of the last three turns, whatever their score. ${REQUIRED_CLEAN - cleanCircles} more clean committee${REQUIRED_CLEAN - cleanCircles === 1 ? '' : 's'} opens the rest.`}
             </span>
-          </div>
+          </span>
+          {!tenurePassed && <span className="seat-gate-tag">{cleanCircles} of {REQUIRED_CLEAN}</span>}
         </div>
-        <div className={band === 'REBUILDING' ? 'seat-gate' : 'seat-gate ok'}>
-          <i />
-          <div>
-            <b>Your score is {creditScore}</b>
+
+        <div className={`seat-gate${scoreOpen ? ' pass' : ''}`}>
+          <span className="seat-gate-ic">{scoreOpen ? <Check /> : <TrendingUp />}</span>
+          <span className="seat-gate-txt">
+            <b>Your credit score</b>
             <span>
-              {band === 'EXCELLENT' || band === 'GOOD' ? 'Any turn is open to you.'
-                : band === 'DECENT' ? `At ${CUTOFFS.good} you could take any turn. For now, the second half.`
-                : `At ${CUTOFFS.decent} you move to the second half of the order.`}
+              {scoreOpen ? 'High enough for any turn in this circle.'
+                : band === 'DECENT' ? `Reach ${CUTOFFS.good} and any turn opens. For now, the second half.`
+                : `Reach ${CUTOFFS.decent} and you move to the second half of the order.`}
             </span>
-          </div>
+          </span>
+          <span className="seat-gate-tag num">{creditScore}</span>
+        </div>
+
+        <div className="seat-gate pass">
+          <span className="seat-gate-ic"><CalendarClock /></span>
+          <span className="seat-gate-txt">
+            <b>Order is fixed once the circle starts</b>
+            <span>Nothing reorders you afterwards. A swap needs the other member and the host to agree.</span>
+          </span>
         </div>
       </div>
 
-      <p className="seat-fine">
-        An early turn is money now and payments later, so it is gated. A late turn is savings, so
-        it is always open.
-      </p>
+      {!scoreOpen && (
+        <p className="seat-foot">
+          <Lock /> Turns 1 to {earliest - 1} are closed to you in this circle.
+        </p>
+      )}
     </section>
   );
 }

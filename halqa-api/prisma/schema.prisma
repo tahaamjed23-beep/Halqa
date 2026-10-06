@@ -204,10 +204,13 @@ model User {
   homeLat Float?
   homeLng Float?
   homeLocationAt DateTime?
-  // Tenure quarantine: new members may only take the LAST turns of any circle,
-  // regardless of score, until they complete `committeesCompletedClean` >= 2
-  // circles cleanly AND are manually verified (earlyTurnVerifiedAt set). Then
-  // early turns unlock. Turn position is the collateral in the no-deposit model.
+  // Clean committees completed. Under the seat matrix of 5 October 2026 ONE of
+  // these opens every seat to a member whose bureau record cannot speak for
+  // them; it does not excuse a low score resting on a real record. Turn
+  // position is the collateral in the no-deposit model, so this is the field
+  // that moves a member up it. The blanket quarantine on new members, and the
+  // manual verification that went with it, were both withdrawn on that date;
+  // earlyTurnVerifiedAt is kept only so existing rows still read.
   committeesCompletedClean Int @default(0)
   earlyTurnVerifiedAt DateTime?
   // Verification discounts on Halqa's service charges (take the largest that
@@ -237,7 +240,8 @@ model User {
   vaultGoalName String?
   supportTickets SupportTicket[]
   referredById String?
-  referredBy User? @relation("Referrals", fields:[referredById], references:[id])
+  // who brought a member in is a reference, and the member outlives it
+  referredBy User? @relation("Referrals", fields:[referredById], references:[id], onDelete:SetNull)
   referrals User[] @relation("Referrals")
   paymentStreak Int @default(0)
   // Longest clean run ever achieved. paymentStreak resets on a miss; this does
@@ -293,13 +297,16 @@ model User {
   recoveryCases RecoveryCase[]
   committeeWaitlists CommitteeWaitlist[]
   agreementSignatures AgreementSignature[]
+  // who one member brought in
+  @@index([referredById])
+  idempotencyRecords IdempotencyRecord[]
 }
 
 model Committee {
   id String @id @default(cuid())
   name String
   hostId String
-  host User @relation("Host", fields:[hostId], references:[id])
+  host User @relation("Host", fields:[hostId], references:[id], onDelete:Restrict)
   status CommitteeStatus @default(FORMING)
   mode CommitteeMode @default(ROTATING)
   memberCap Int
@@ -308,7 +315,7 @@ model Committee {
   periodDays Int
   reinvestRatio Float @default(0)
   schemeId String?
-  scheme Scheme? @relation(fields:[schemeId], references:[id])
+  scheme Scheme? @relation(fields:[schemeId], references:[id], onDelete:SetNull)
   distributionMode DistributionMode @default(SHARE)
   allowTurnCashout Boolean @default(false)
   allowTurnSale Boolean @default(true)
@@ -350,7 +357,7 @@ model Committee {
   expectedPaymentLeadDays Int @default(0)
   custodyMode CustodyMode @default(RECORDED)
   partnerId String?
-  partner PartnerBank? @relation(fields:[partnerId], references:[id])
+  partner PartnerBank? @relation(fields:[partnerId], references:[id], onDelete:SetNull)
   payoutGuaranteed Boolean @default(false)
   slotFeeBps Int @default(0)
   tier CommitteeTier @default(CLASSIC)
@@ -362,9 +369,9 @@ model Committee {
   goalTargetPaisa BigInt?
   cleanStreak Int @default(0)
   floatSchemeId String?
-  floatScheme Scheme? @relation("FloatScheme", fields:[floatSchemeId], references:[id])
+  floatScheme Scheme? @relation("FloatScheme", fields:[floatSchemeId], references:[id], onDelete:SetNull)
   depositSchemeId String?
-  depositScheme Scheme? @relation("DepositScheme", fields:[depositSchemeId], references:[id])
+  depositScheme Scheme? @relation("DepositScheme", fields:[depositSchemeId], references:[id], onDelete:SetNull)
   statementBatches StatementBatch[]
   members CommitteeMember[]
   rounds Round[]
@@ -392,6 +399,10 @@ model Committee {
   exposureScore Float @default(0)
   exposureBand String @default("SELF_FUNDING")
   exposureAt DateTime?
+  // the circles one member hosts
+  @@index([hostId,status])
+  // discovery: open circles, newest first
+  @@index([status,listedPublicly,createdAt])
 }
 
 model CommitteeWaitlist {
@@ -401,7 +412,7 @@ model CommitteeWaitlist {
   userId String
   user User @relation(fields:[userId], references:[id], onDelete:Cascade)
   preferredPosition Int?
-  status String @default("WAITING")
+  status WaitlistStatus @default(WAITING)
   createdAt DateTime @default(now())
   @@unique([committeeId,userId])
   @@index([committeeId,status])
@@ -412,7 +423,7 @@ model CommitteeMember {
   committeeId String
   committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
   userId String
-  user User @relation(fields:[userId], references:[id])
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
   turnPosition Int
   hasReceived Boolean @default(false)
   status MemberStatus @default(ACTIVE)
@@ -432,6 +443,10 @@ model CommitteeMember {
   payoutHoldbacks PayoutHoldback[]
   @@unique([committeeId,userId])
   @@unique([committeeId,turnPosition])
+  // the circles one member is in, which the dashboard asks on every load
+  @@index([userId,status])
+  // the active roster of one circle, in turn order
+  @@index([committeeId,status,turnPosition])
 }
 
 model Round {
@@ -440,7 +455,8 @@ model Round {
   committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
   roundNumber Int
   recipientId String
-  recipient User @relation("Recipient", fields:[recipientId], references:[id])
+  // the member a round is owed to cannot be removed while it stands
+  recipient User @relation("Recipient", fields:[recipientId], references:[id], onDelete:Restrict)
   status RoundStatus @default(PENDING)
   dueDate DateTime
   payoutDate DateTime
@@ -454,6 +470,12 @@ model Round {
   payoutHoldback PayoutHoldback?
   recoveryCases RecoveryCase[]
   @@unique([committeeId,roundNumber])
+  // the rounds of one circle in order
+  @@index([committeeId,roundNumber])
+  // the round that is collecting
+  @@index([committeeId,status])
+  // what one member has been paid
+  @@index([recipientId,payoutDate])
 }
 
 model Payment {
@@ -461,7 +483,7 @@ model Payment {
   roundId String
   round Round @relation(fields:[roundId], references:[id], onDelete:Cascade)
   payerId String
-  payer User @relation(fields:[payerId], references:[id])
+  payer User @relation(fields:[payerId], references:[id], onDelete:Restrict)
   amountPaisa BigInt
   dueDate DateTime
   status PaymentStatus @default(PENDING)
@@ -473,14 +495,22 @@ model Payment {
   reminderLevel Int @default(0)
   recoveryCase RecoveryCase?
   @@unique([roundId,payerId])
+  // one member's payments, newest first, on four different screens
+  @@index([payerId,dueDate])
+  // what one member owes
+  @@index([payerId,status])
+  // who has paid in one round
+  @@index([roundId,status])
+  // the collection run: everything due, oldest first
+  @@index([status,dueDate])
 }
 
 model LedgerEntry {
   id String @id @default(cuid())
   committeeId String?
-  committee Committee? @relation(fields:[committeeId], references:[id])
+  committee Committee? @relation(fields:[committeeId], references:[id], onDelete:Restrict)
   actorId String?
-  actor User? @relation("LedgerActor", fields:[actorId], references:[id])
+  actor User? @relation("LedgerActor", fields:[actorId], references:[id], onDelete:SetNull)
   debit String
   credit String
   amountPaisa BigInt
@@ -489,12 +519,17 @@ model LedgerEntry {
   refId String
   idempotencyKey String @unique
   createdAt DateTime @default(now())
+  // one circle's ledger in order, which is what must balance
+  @@index([committeeId,createdAt])
+  // every entry about one record
+  @@index([refType,refId])
 }
 
 model SecurityDeposit {
   id String @id @default(cuid())
   membershipId String
-  membership CommitteeMember @relation(fields:[membershipId], references:[id])
+  // a deposit belongs to the membership that placed it
+  membership CommitteeMember @relation(fields:[membershipId], references:[id], onDelete:Cascade)
   amountPaisa BigInt
   status DepositStatus @default(PENDING)
   txnRef String?
@@ -502,6 +537,8 @@ model SecurityDeposit {
   createdAt DateTime @default(now())
   releasedAt DateTime?
   accruedYieldPaisa BigInt @default(0)
+  // what one member has placed
+  @@index([membershipId,status])
 }
 
 model ProtectionCommitment {
@@ -509,13 +546,15 @@ model ProtectionCommitment {
   membershipId String @unique
   membership CommitteeMember @relation(fields:[membershipId], references:[id], onDelete:Cascade)
   guarantorUserId String?
-  guarantor User? @relation("Guarantor", fields:[guarantorUserId], references:[id])
+  guarantor User? @relation("Guarantor", fields:[guarantorUserId], references:[id], onDelete:Restrict)
   promissoryRef String?
   autoDebitRef String?
   acceptedTermsAt DateTime?
   verifiedByHostAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  // everything one guarantor stands behind
+  @@index([guarantorUserId])
 }
 
 model PayoutHoldback {
@@ -532,6 +571,10 @@ model PayoutHoldback {
   status HoldbackStatus @default(HELD)
   createdAt DateTime @default(now())
   releasedAt DateTime?
+  // what is held back in one circle
+  @@index([committeeId,status])
+  // what is held back from one member
+  @@index([membershipId,status])
 }
 
 model RecoveryCase {
@@ -550,6 +593,8 @@ model RecoveryCase {
   openedAt DateTime @default(now())
   resolvedAt DateTime?
   @@index([userId,status])
+  // the open cases in one circle
+  @@index([committeeId,status])
 }
 
 model Scheme {
@@ -576,6 +621,8 @@ model Scheme {
   floatCommittees Committee[] @relation("FloatScheme")
   depositCommittees Committee[] @relation("DepositScheme")
   investments Investment[]
+  // the schemes on offer, by risk
+  @@index([isActive,riskScore])
 }
 
 model RiskAssessment {
@@ -611,39 +658,49 @@ model RiskConsent {
   acceptedAt DateTime?
   createdAt DateTime @default(now())
   @@unique([committeeId,userId,policyHash])
+  // the consents in one circle
+  @@index([committeeId,status])
 }
 
 model Investment {
   id String @id @default(cuid())
   committeeId String
-  committee Committee @relation(fields:[committeeId], references:[id])
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
   roundId String?
-  round Round? @relation(fields:[roundId], references:[id])
+  round Round? @relation(fields:[roundId], references:[id], onDelete:Cascade)
   schemeId String
-  scheme Scheme @relation(fields:[schemeId], references:[id])
+  scheme Scheme @relation(fields:[schemeId], references:[id], onDelete:Restrict)
   principalPaisa BigInt
   ratePctAtDeploy Float
   status InvestmentStatus @default(ACTIVE)
   deployedAt DateTime @default(now())
   liquidatedAt DateTime?
   realizedProfitPaisa BigInt?
+  // what one round has placed
+  @@index([roundId,status])
 }
 
 model ExchangeListing {
   id String @id @default(cuid())
   committeeId String
-  committee Committee @relation(fields:[committeeId], references:[id])
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
   sellerId String
-  seller User @relation("Seller", fields:[sellerId], references:[id])
+  seller User @relation("Seller", fields:[sellerId], references:[id], onDelete:Restrict)
   position Int
   payoutPaisa BigInt
   premiumPaisa BigInt @default(0)
   buyerId String?
-  buyer User? @relation("Buyer", fields:[buyerId], references:[id])
+  buyer User? @relation("Buyer", fields:[buyerId], references:[id], onDelete:SetNull)
   status ListingStatus @default(OPEN)
   listedAt DateTime @default(now())
   acceptedAt DateTime?
   bids ExchangeBid[]
+  // the open market, newest first
+  @@index([status,listedAt])
+  // the listings inside one circle
+  @@index([committeeId,status])
+  // one member's own listings
+  @@index([sellerId,status])
 }
 
 model ExchangeBid {
@@ -651,25 +708,31 @@ model ExchangeBid {
   listingId String
   listing ExchangeListing @relation(fields:[listingId], references:[id], onDelete:Cascade)
   bidderId String
-  bidder User @relation(fields:[bidderId], references:[id])
+  bidder User @relation(fields:[bidderId], references:[id], onDelete:Cascade)
   premiumPaisa BigInt
   status ListingStatus @default(OPEN)
   createdAt DateTime @default(now())
+  // the open bids on one listing, highest first
+  @@index([listingId,status,premiumPaisa])
+  // one member's own bids
+  @@index([bidderId,status])
 }
 
 model CreditEvent {
   id String @id @default(cuid())
   userId String
-  user User @relation(fields:[userId], references:[id])
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
   committeeId String?
-  committee Committee? @relation(fields:[committeeId], references:[id])
+  committee Committee? @relation(fields:[committeeId], references:[id], onDelete:SetNull)
   roundId String?
-  round Round? @relation(fields:[roundId], references:[id])
+  round Round? @relation(fields:[roundId], references:[id], onDelete:SetNull)
   checkpoint String
   delta Int
   reason String
   scoredAt DateTime @default(now())
   @@unique([userId,roundId,checkpoint])
+  // one member's score history, newest first
+  @@index([userId,scoredAt])
 }
 
 model ChatMessage {
@@ -677,16 +740,18 @@ model ChatMessage {
   committeeId String
   committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
   senderId String
-  sender User @relation(fields:[senderId], references:[id])
+  sender User @relation(fields:[senderId], references:[id], onDelete:Cascade)
   body String
   pinned Boolean @default(false)
   sentAt DateTime @default(now())
+  // one circle's messages in order, which is the only way they are ever read
+  @@index([committeeId,sentAt])
 }
 
 model ChatRead {
   id String @id @default(cuid())
   userId String
-  user User @relation(fields:[userId], references:[id])
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
   committeeId String
   committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
   lastReadAt DateTime
@@ -701,6 +766,10 @@ model Notification {
   message String
   isRead Boolean @default(false)
   createdAt DateTime @default(now())
+  // one member's notices, newest first
+  @@index([userId,createdAt])
+  // the unread count, which the tab bar asks for on every screen
+  @@index([userId,isRead])
 }
 
 model KycRecord {
@@ -720,13 +789,16 @@ model KycRecord {
 model ScheduleChangeRequest {
   id String @id @default(cuid())
   committeeId String
-  committee Committee @relation(fields:[committeeId], references:[id])
+  // a request about a circle has no meaning without it
+  committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
   requestedById String
-  requestedBy User @relation("Requester", fields:[requestedById], references:[id])
+  // the request is the member's own
+  requestedBy User @relation("Requester", fields:[requestedById], references:[id], onDelete:Cascade)
   payloadJson Json
   status ChangeStatus @default(PENDING)
   reviewedById String?
-  reviewedBy User? @relation("Reviewer", fields:[reviewedById], references:[id])
+  // who reviewed it is recorded; the request outlives them
+  reviewedBy User? @relation("Reviewer", fields:[reviewedById], references:[id], onDelete:SetNull)
   reviewedAt DateTime?
 }
 
@@ -738,6 +810,12 @@ model AuditLog {
   entityId String
   payloadJson Json
   at DateTime @default(now())
+  // the history of one record, newest first, which is what a dispute asks for
+  @@index([entityType,entityId,at])
+  // everything one member did, newest first
+  @@index([actorId,at])
+  // every instance of one action, for a report
+  @@index([action,at])
 }
 
 model PartnerBank {
@@ -757,7 +835,8 @@ model PartnerBank {
 model StatementBatch {
   id String @id @default(cuid())
   partnerId String
-  partner PartnerBank @relation(fields:[partnerId], references:[id])
+  // a bank with statements imported is not removable
+  partner PartnerBank @relation(fields:[partnerId], references:[id], onDelete:Restrict)
   committeeId String
   committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
   importedById String
@@ -790,6 +869,8 @@ model RefreshToken {
   expiresAt DateTime
   createdAt DateTime @default(now())
   @@index([familyId])
+  // the live sessions of one member, which the devices screen lists
+  @@index([userId,revokedAt,expiresAt])
 }
 
 // E-signed legal instruments (ETO 2002). Two document types today:
@@ -830,7 +911,7 @@ model AgreementSignature {
 model PaymentAttempt {
   id String @id @default(cuid())
   userId String
-  user User @relation(fields:[userId], references:[id])
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
   paymentId String?
   rail String
   calendarDay Int
@@ -847,7 +928,8 @@ model PaymentAttempt {
 model SalarySignal {
   id String @id @default(cuid())
   userId String
-  user User @relation(fields:[userId], references:[id])
+  // a salary signal is the member's own
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
   dayOfMonth Int
   amountBand String   // coarse band only, e.g. "25-50k" — never the amount
   sourceClass String  // BANK | WALLET
@@ -862,15 +944,17 @@ model SalarySignal {
 model PayslipUpload {
   id String @id @default(cuid())
   userId String
-  user User @relation(fields:[userId], references:[id])
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
   image Bytes
   mime String
   sha256 String
   sizeBytes Int
-  status String @default("PENDING") // PENDING | ACCEPTED | REJECTED
+  status PayslipStatus @default(PENDING)
   uploadedAt DateTime @default(now())
   reviewedAt DateTime?
   @@index([userId])
+  // one member's uploads, newest first
+  @@index([userId,uploadedAt])
 }
 
 model SecurityEvent {
@@ -941,7 +1025,7 @@ model ExitRequest {
   committee Committee @relation(fields:[committeeId], references:[id], onDelete:Cascade)
   memberId String
   userId String
-  user User @relation("ExitRequester", fields:[userId], references:[id])
+  user User @relation("ExitRequester", fields:[userId], references:[id], onDelete:Cascade)
   rung ExitRung
   status ExitStatus @default(OPEN)
   reason String?
@@ -966,6 +1050,10 @@ model ExitRequest {
   votes ExitVote[]
   debts RestitutionDebt[]
   @@index([committeeId, status])
+  // the exits in one circle, newest first
+  @@index([committeeId,createdAt])
+  // one member's own exits
+  @@index([userId,status])
 }
 
 model ExitVote {
@@ -973,7 +1061,7 @@ model ExitVote {
   requestId String
   request ExitRequest @relation(fields:[requestId], references:[id], onDelete:Cascade)
   userId String
-  user User @relation(fields:[userId], references:[id])
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
   approve Boolean
   createdAt DateTime @default(now())
   @@unique([requestId, userId])
@@ -991,6 +1079,8 @@ model RestitutionDebt {
   settledAt DateTime?
   createdAt DateTime @default(now())
   @@index([requestId])
+  // what one member still owes
+  @@index([debtorUserId,settledAt])
 }
 
 // ---------------------------------------------------------------------------
@@ -1015,7 +1105,7 @@ model SupportTicket {
   subject String
   body String
   // OPEN, ANSWERED, RESOLVED, CLOSED
-  status String @default("OPEN")
+  status TicketStatus @default(OPEN)
   // Set when the ticket disputes one recorded payment.
   paymentId String?
   committeeId String?
@@ -1024,6 +1114,8 @@ model SupportTicket {
   updatedAt DateTime @updatedAt
   @@index([userId])
   @@index([status])
+  // one member's cases, newest first
+  @@index([userId,createdAt])
 }
 
 model SupportMessage {
@@ -1035,4 +1127,54 @@ model SupportMessage {
   body String
   createdAt DateTime @default(now())
   @@index([ticketId])
+}
+
+// A waitlist entry is waiting, has been offered a seat, has taken one, or has gone away.
+enum WaitlistStatus {
+  WAITING
+  OFFERED
+  JOINED
+  WITHDRAWN
+}
+
+// The three values the comment beside this column already listed, now enforced.
+enum PayslipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+// A case is open, has been answered, or the member has closed it.
+enum TicketStatus {
+  OPEN
+  ANSWERED
+  CLOSED
+}
+
+// A request that has already been carried out, with the answer it gave.
+//
+// The ledger refuses a duplicate POSTING, with a unique key, so money has
+// never been at risk of being moved twice. What was missing is the layer above
+// it: a retried request hit that unique constraint and came back 409, so a
+// client that lost the first response and retried was told its payment had
+// failed when it had gone through. The member then pays again by hand.
+//
+// This stores what the first attempt answered, so the retry gets the same
+// answer rather than a different one.
+model IdempotencyRecord {
+  id String @id @default(cuid())
+  // The key the client sent, scoped to the member so one member cannot
+  // replay or block another member's request by guessing a key.
+  key String
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  // The route it was sent to, so the same key on a different action is a
+  // different request rather than a silent replay of the wrong one.
+  route String
+  statusCode Int
+  responseJson Json
+  createdAt DateTime @default(now())
+  @@unique([userId,route,key])
+  // the sweep that removes records past their window
+  @@index([createdAt])
 }

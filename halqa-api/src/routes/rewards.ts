@@ -1,3 +1,5 @@
+import { safeRouter } from '../lib/safe-router';
+import { readPage } from '../lib/page';
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../db';
@@ -12,7 +14,9 @@ import {
 // positions. The two never cross (lib/rewards.ts), and nothing here is ever
 // redeemable for cash — a cash-redeemable balance would be a stored-value
 // instrument, which is regulated activity.
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 router.use(requireAuth);
 
 router.get('/', async (req, res, next) => {
@@ -21,11 +25,16 @@ router.get('/', async (req, res, next) => {
       where: { id: req.auth!.userId },
       select: { rewardPoints: true, paymentStreak: true, longestStreak: true, scoreGainedThisCycle: true },
     });
+    // The history is a list inside an envelope, so the bound is reported in
+    // the header the same way and the envelope is unchanged for every client.
+    const { take, cursorArgs } = readPage(req.query);
     const events = await prisma.rewardEvent.findMany({
       where: { userId: req.auth!.userId },
-      orderBy: { createdAt: 'desc' },
-      take: 50,
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],   // id breaks ties, so a cursor is sound
+      take, ...cursorArgs,
     });
+    res.setHeader('X-Next-Cursor', events.length === take ? events[events.length - 1]!.id : '');
+    res.setHeader('X-Page-Limit', String(take));
     res.json({
       ...summarise(user.rewardPoints, user.paymentStreak, user.longestStreak),
       scoreGainedThisCycle: user.scoreGainedThisCycle,

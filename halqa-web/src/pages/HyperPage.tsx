@@ -1,210 +1,235 @@
-import { useMemo, useState } from 'react';
-import { CalendarDays, Check, Flame, Gavel, Lock, ShieldAlert, Wallet } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { CalendarCheck, HandCoins, ShieldCheck, Users } from 'lucide-react';
 import type { User } from '../types';
-import { money } from '../lib/format';
+import { api } from '../api';
+import { dateShort, rupees } from '../lib/format';
+import { HYPER_OPTIONS, payersPerCollector, type HyperOption } from '../lib/fees';
+import { BottomBar, Sheet } from '../components/wallet';
 import {
-  AmountEntry, Blank, BottomBar, Card, Facts, FlowHeader,
-  Notice, Row, RowGroup, Segment, Sheet, Steps,
-} from '../components/wallet';
+  Checks, Choice, Done, Figures, HeroCard, HowSteps, Line, PageTop, Panel, Section, SplitBar,
+} from '../components/page';
 
 // ---------------------------------------------------------------------------
-// HYPER: 30 days, Rs 500 a day, seven members collecting each day, so 210 in
-// the circle. What a member pays in over the cycle is exactly what they
-// collect, which is what makes it a committee and not a scheme.
+// HYPER
 //
-// Members buy their collection day at a 24-hour opening auction. An early day
-// is a real advance of cash, so it costs something; the last days are worth
-// nothing and clear at nil.
+// A daily committee on a roster of members who do not know one another. Two
+// fixed configurations and nothing else: the member picks one, then picks the
+// day they collect. There is no auction and no bid, because a price agreed
+// between members for an early day makes one of them a lender.
 //
-// THE MARKUP CEILING is the part that matters. The premium is Halqa's markup,
-// and it is what covers a default on a roster of strangers. It stops at Rs 380
-// on day one, the dearest day in the cycle, and falls to a few rupees by the
-// last week. Mirrors halqa-api/src/lib/hyper.ts, which enforces it.
+// Each daily payment splits three ways where it is taken: the contribution
+// goes straight to the member the payer is assigned to that day, the takaful
+// contribution goes to the participants' risk fund at the operator, and the fee
+// goes to Halqa. No party holds a pool. The fee is flat for every day on the
+// roster; a member who collects late is compensated by Halqa in points and fee
+// waivers, never by another member. Source: Hyper Committee, revision 4.
 // ---------------------------------------------------------------------------
 
-const DAYS = 30;
-const DAILY_PAISA = 50_000;             // Rs 500
-const POT_PAISA = DAILY_PAISA * DAYS;   // Rs 15,000: what you pay in is what you collect
-const SEATS_PER_DAY = 7;
-const ROSTER = SEATS_PER_DAY * DAYS;    // 210
 const MIN_SCORE = 650;
 const MIN_CLEAN = 2;
-const MIN_VAULT_PAISA = 1_500_000;
-const MAX_APR_BPS = 6600;
-const MAX_DAY_ONE_PAISA = 38_000;       // Rs 380
+/** The next circle of each kind opens this many days from today. */
+const OPENS_IN = 6;
 
-const advance = (day: number) => Math.max(0, POT_PAISA - DAILY_PAISA * day);
-const outstanding = (day: number) => Math.max(0, DAYS - day);
-
-/** The hard ceiling the server enforces on a bid for this day. */
-function maxBid(day: number) {
-  const a = advance(day), o = outstanding(day);
-  if (a <= 0 || o <= 0) return 0;
-  return Math.floor((MAX_APR_BPS * a * o) / (2 * 365 * 10_000));
+/** The date a collection day falls on. The 26-day circle does not run on Sundays. */
+function dateOf(o: HyperOption, day: number, start: Date) {
+  const d = new Date(start);
+  for (let n = 0; ; d.setDate(d.getDate() + 1)) {
+    if (o.id === 'H26' && d.getDay() === 0) continue;
+    if (++n === day) return new Date(d);
+  }
 }
 
-export default function HyperPage({ user, back }: { user: User; back: () => void }) {
-  const [tab, setTab] = useState<'how' | 'days'>('days');
+/** Seats already taken on a day. Early days fill first, because they are worth the most to a member. */
+const taken = (o: HyperOption, day: number) =>
+  Math.max(0, Math.min(o.collectingDaily, Math.round(o.collectingDaily * (1 - (day - 1) / (o.days * 0.7)))));
+
+/** Totals over the cycle, as published in the document, not rebuilt from rounded daily figures. */
+const CYCLE: Record<HyperOption['id'], { takaful: number; fee: number }> = {
+  H50: { takaful: 3750, fee: 3750 },
+  H26: { takaful: 2166.67, fee: 2166.67 },
+};
+
+export default function HyperPage({ user, back, onVerify }: { user: User; back: () => void; onVerify?: () => void }) {
+  const [id, setId] = useState<HyperOption['id']>('H50');
+  const [salaryLinked, setSalaryLinked] = useState<boolean>(Boolean(user.salaryAccountLinked));
+  const [picking, setPicking] = useState(false);
   const [day, setDay] = useState<number | null>(null);
-  const [bid, setBid] = useState('');
-  const [placed, setPlaced] = useState<{ day: number; amount: number } | null>(null);
+  const [confirming, setConfirming] = useState(false);
+  const [consent, setConsent] = useState(false);
+  const [joined, setJoined] = useState<{ day: number; ref: string } | null>(null);
 
-  // The standing book. Early days fill first because they are worth the most.
-  const book = useMemo(() => Array.from({ length: DAYS }, (_, i) => {
-    const d = i + 1;
-    const held = d <= 3 ? SEATS_PER_DAY : d <= 8 ? Math.floor(SEATS_PER_DAY / 2) : 0;
-    const cap = maxBid(d);
-    return { d, held, top: Math.round((cap * 2) / 3), cap, full: held >= SEATS_PER_DAY };
-  }), []);
+  useEffect(() => {
+    void api<{ linked?: boolean }>('/profile/salary-status')
+      .then(s => { if (s && typeof s === 'object' && 'linked' in s) setSalaryLinked(Boolean(s.linked)) })
+      .catch(() => {});
+  }, []);
 
-  const hasVault = false; // vault balance is not on the user record yet
+  const o = HYPER_OPTIONS.find(x => x.id === id)!;
+  const start = useMemo(() => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + OPENS_IN); return d }, []);
+
+  // The largest discount that applies, and only on the fee: cover and contribution are never discounted.
+  const pct = user.chequeSecuredAt ? 80 : user.incomeVerifiedAt ? 50 : 0;
+  const fee = Math.round(o.fee * (100 - pct)) / 100;
+  const daily = o.contribution + o.takaful + fee;
+  const feeCycle = Math.round(CYCLE[o.id].fee * (100 - pct)) / 100;
+  const paidIn = o.pot + CYCLE[o.id].takaful + feeCycle;
+  const perCollector = payersPerCollector(o);
+
+  const dailyIncome = Boolean(user.dailyIncomeVerifiedAt)
+    || ['BUSINESS_OWNER', 'SELF_EMPLOYED'].includes(user.occupationType || '');
   const gates = [
-    { ok: user.creditScore >= MIN_SCORE, label: 'Credit score ' + MIN_SCORE + ' or above', have: 'You are at ' + user.creditScore },
-    { ok: (user.committeesCompletedClean || 0) >= MIN_CLEAN, label: MIN_CLEAN + ' committees finished clean', have: 'You have ' + (user.committeesCompletedClean || 0) },
-    { ok: Boolean(user.incomeVerifiedAt), label: 'Salary slip on file', have: user.incomeVerifiedAt ? 'Verified' : 'Not uploaded' },
-    { ok: Boolean(user.incomeVerifiedAt) || hasVault, label: 'Daily earnings, or a vault balance', have: 'Vault minimum ' + money(MIN_VAULT_PAISA) },
-    { ok: Boolean(user.hasVerifiedRaast), label: 'Verified Raast credential', have: user.hasVerifiedRaast ? 'On file' : 'Not linked' },
-  ];
-  const failing = gates.filter(g => !g.ok);
-  const eligible = failing.length === 0;
+    { ok: salaryLinked, label: 'Salary account linked', have: salaryLinked ? 'Linked' : 'Link your account' },
+    { ok: user.creditScore >= MIN_SCORE, label: 'Credit score ' + MIN_SCORE + ' or more', have: 'Yours is ' + user.creditScore },
+    { ok: (user.committeesCompletedClean || 0) >= MIN_CLEAN, label: 'Two circles finished clean', have: 'You have ' + (user.committeesCompletedClean || 0) },
+    { ok: user.kycLevel >= 2, label: 'Identity fully verified', have: user.kycLevel >= 2 ? 'Verified' : 'Finish verifying' },
+    { ok: dailyIncome, label: 'Daily income shown', have: dailyIncome ? 'Shown' : 'Show your income' },
+    { ok: !user.defaultFlag, label: 'No missed payment open', have: user.defaultFlag ? 'Settle it first' : 'None open' },
+  ].map(g => ({ ...g, onFix: g.ok ? undefined : onVerify }));
+  const left = gates.filter(g => !g.ok).length;
 
-  const chosen = book.find(x => x.d === day) || null;
-  const bidP = Math.round(Number(bid || 0) * 100);
-  const over = Boolean(chosen && bidP > chosen.cap);
-  const low = Boolean(chosen && bidP <= chosen.top);
-  const gone = book.filter(x => x.full).length;
+  const days = Array.from({ length: o.days }, (_, i) => {
+    const d = i + 1;
+    const free = o.collectingDaily - taken(o, d);
+    return { d, free, date: dateOf(o, d, start) };
+  });
+  const chosen = days.find(x => x.d === day) || null;
 
-  if (placed) {
+  const pickOption = (next: HyperOption['id']) => { setId(next); setDay(null) };
+
+  if (joined && chosen) {
     return (
-      <div className="w-screen">
-        <FlowHeader title="HYPER" onClose={back} />
-        <div className="w-screen-body">
-          <Blank
-            icon={<Check />}
-            title={'Bid placed for day ' + placed.day}
-            sub={money(placed.amount) + ' on top of the ' + money(POT_PAISA) + ' you collect. You will hear within 24 hours whether you won the day.'}
-          />
-          <Card>
-            <Facts items={[
-              ['Your bid', money(placed.amount)],
-              ['You collect', money(POT_PAISA)],
-              ['On day', String(placed.day)],
-            ]} />
-          </Card>
-        </div>
+      <div className="w-screen pg">
+        <PageTop title="HYPER" onBack={back} flat />
+        <Done title={'Day ' + joined.day + ' is yours'}
+              sub={'You collect ' + rupees(o.pot) + ' on ' + dateShort(chosen.date.toISOString()) + '.'} />
+        <Section>
+          <Panel>
+            <Line k="Circle" v={o.cycle} />
+            <Line k="First payment" v={dateShort(start.toISOString())} />
+            <Line k="You pay each day" v={rupees(daily)} />
+            <Line k="Collected by" v="Auto-pay, salary account" />
+            <Line k="Reference" v={joined.ref} strong />
+          </Panel>
+        </Section>
         <BottomBar><button className="primary full" onClick={back}>Done</button></BottomBar>
       </div>
     );
   }
 
   return (
-    <div className="w-screen">
-      <FlowHeader title="HYPER" onBack={back} />
+    <div className="w-screen pg">
+      <PageTop title="HYPER" onBack={back} />
 
-      {/* The pot, stated once, with the three numbers that define the product. */}
-      <div className="hyper-band">
-        <div className="hyper-band-top"><Flame /><span>30 days · {SEATS_PER_DAY} collect a day · {ROSTER} members</span></div>
-        <b>{money(POT_PAISA)}</b>
-        <small>Rs 500 a day for 30 days. You collect the pot once, on your day.</small>
-      </div>
+      <HeroCard label="You collect once" icon={<HandCoins />} amount={rupees(o.pot)}
+                sub={'On the day you choose, paid to you by ' + perCollector + ' members'}>
+        <Figures items={[
+          ['You pay a day', rupees(daily)],
+          ['For', o.days + ' days'],
+          ['Members', String(o.members)],
+        ]} />
+      </HeroCard>
 
-      <Segment value={tab} onChange={setTab} options={[
-        { id: 'days', label: 'Pick a day' },
-        { id: 'how', label: 'How it works' },
-      ]} />
+      <Section title="Choose a circle">
+        <Choice value={id} onChange={pickOption} options={HYPER_OPTIONS.map(x => ({
+          id: x.id, title: x.cycle, figure: rupees(x.pot), sub: rupees(x.daily) + ' a day',
+        }))} />
+      </Section>
 
-      {tab === 'how' ? (
-        <>
-          <Card title="What you pay, what you get">
-            <Facts items={[
-              ['Every day', money(DAILY_PAISA)],
-              ['Over 30 days', money(DAILY_PAISA * DAYS)],
-              ['You collect', money(POT_PAISA)],
-            ]} />
-            <Notice kind="ok" icon={<Check />}>
-              What you pay in is exactly what you collect. The only thing that changes is when.
-            </Notice>
-          </Card>
+      <Section title="How a day works">
+        <Panel>
+          <HowSteps steps={[
+            { icon: <CalendarCheck />, text: 'You pay ' + rupees(daily) + ' each morning' },
+            { icon: <Users />, text: rupees(o.contribution) + ' goes straight to one member collecting' },
+            { icon: <HandCoins />, text: 'On your day, ' + perCollector + ' members pay you' },
+          ]} />
+        </Panel>
+      </Section>
 
-          <Card title="The markup, and what caps it">
-            <p className="w-body">
-              An early day hands you the pot while you still owe most of it, so it costs a
-              premium. That premium is Halqa's markup, and it is what covers a default on a
-              roster of people who do not know each other.
-            </p>
-            <Notice kind="warn" icon={<Lock />}>
-              Capped at {money(MAX_DAY_ONE_PAISA)} on day one, then falling. Above it is refused.
-            </Notice>
-          </Card>
+      <Section title="Where your money goes">
+        <Panel>
+          <SplitBar parts={[
+            { label: "To that day's collector", value: rupees(o.contribution), share: o.contribution, tone: 1 },
+            { label: 'Takaful cover', value: rupees(o.takaful), share: o.takaful, tone: 2 },
+            { label: pct ? "Halqa's fee, " + pct + '% off' : "Halqa's fee", value: rupees(fee), share: fee, tone: 3 },
+          ]} />
+          <Line k={'You pay over ' + o.days + ' days'} v={rupees(paidIn)} strong />
+          <Line k="Comes back to you" v={rupees(o.pot)} />
+          <Line k="Takaful cover" v={rupees(CYCLE[o.id].takaful)} />
+          <Line k="Halqa's fee" v={rupees(feeCycle)} />
+        </Panel>
+      </Section>
 
-          <Card title="Read this before you join">
-            <p className="w-body">
-              In an ordinary committee you know the others, and that is what makes people pay.
-              Here you do not. So HYPER is the most tightly gated product on Halqa, and it
-              collects from you automatically every single day.
-            </p>
-          </Card>
-        </>
-      ) : (
-        <>
-          {/* Gates first: there is no point browsing days you cannot bid on. */}
-          <RowGroup title={eligible ? 'You can join' : failing.length + ' left before you can join'}>
-            {gates.map(g => (
-              <Row key={g.label} chevron={false}
-                   icon={g.ok ? <Check /> : <Lock />}
-                   title={g.label} sub={g.have}
-                   value={g.ok ? 'Done' : 'Needed'} tone={g.ok ? 'ok' : 'warn'} />
+      <Section title="Before you join" action={<span className="pg-sec-meta">{left ? left + ' to go' : 'All clear'}</span>}>
+        <Checks items={gates} />
+      </Section>
+
+      <Section>
+        <Panel className="pg-cover">
+          <ShieldCheck />
+          <p>If a member stops paying after collecting, the takaful operator pays the members left short, in their own names.</p>
+        </Panel>
+      </Section>
+
+      <div className="pg-foot-space" />
+      <BottomBar>
+        <button className="primary full" disabled={left > 0} onClick={() => setPicking(true)}>
+          {left ? left + (left === 1 ? ' check' : ' checks') + ' before you can join' : 'Choose your day'}
+        </button>
+      </BottomBar>
+
+      {picking && (
+        <Sheet title="Choose your day" onClose={() => setPicking(false)}>
+          <div className="pg-days-key">
+            <span>{o.collectingDaily} collect each day</span>
+            <span>Opens {dateShort(start.toISOString())}</span>
+          </div>
+          <div className="pg-days">
+            {days.map(x => (
+              <button key={x.d} className={'pg-day' + (day === x.d ? ' on' : '')} disabled={x.free === 0}
+                      aria-label={'Day ' + x.d + ', ' + (x.free ? x.free + ' seats left' : 'full')}
+                      onClick={() => setDay(x.d)}>
+                <b>{x.d}</b>
+                <small>{x.free ? x.free + ' left' : 'Full'}</small>
+              </button>
             ))}
-          </RowGroup>
-
-          {!eligible && (
-            <div className="w-inset">
-              <Notice kind="bad" icon={<ShieldAlert />}>
-                Clear everything above first.
-              </Notice>
-            </div>
-          )}
-
-          <RowGroup title="Open days">
-            {book.filter(x => !x.full).slice(0, 12).map(x => (
-              <Row key={x.d}
-                   icon={<CalendarDays />}
-                   title={'Day ' + x.d}
-                   sub={(SEATS_PER_DAY - x.held) + ' of ' + SEATS_PER_DAY + ' left · you still owe ' + money(DAILY_PAISA * outstanding(x.d)) + ' after'}
-                   value={x.top ? money(x.top) : 'Free'}
-                   valueSub={x.cap ? 'cap ' + money(x.cap) : 'no markup'}
-                   onClick={eligible ? () => { setDay(x.d); setBid(String(Math.ceil((x.top + 100) / 100))); } : undefined} />
-            ))}
-          </RowGroup>
-          <p className="w-foot">
-            {gone > 0 ? 'Days 1 to ' + gone + ' are taken. ' : ''}
-            Later days cost less because by then you have paid most of the pot in yourself.
-          </p>
-        </>
+          </div>
+          <p className="pg-note pg-sheet-note">A later day earns points and fee waivers from Halqa.</p>
+          <BottomBar>
+            <button className="primary full" disabled={!chosen}
+                    onClick={() => { setPicking(false); setConfirming(true) }}>
+              {chosen ? 'Continue with day ' + chosen.d : 'Pick a day'}
+            </button>
+          </BottomBar>
+        </Sheet>
       )}
 
-      {chosen && (
-        <Sheet title={'Bid for day ' + chosen.d} onClose={() => setDay(null)}>
-          <Steps step={2} of={2} />
-          <AmountEntry value={bid} onChange={setBid} max={Math.floor(chosen.cap / 100)}
-                       hint={'Standing bid ' + money(chosen.top) + ' · ceiling ' + money(chosen.cap)} />
-          <div className="w-inset">
-            {over && <Notice kind="bad" icon={<Lock />}>Above the ceiling for day {chosen.d}. The server refuses this bid.</Notice>}
-            {!over && low && <Notice kind="warn" icon={<Gavel />}>This does not beat the standing bid of {money(chosen.top)}.</Notice>}
-            <Facts cols={3} items={[
-              ['You collect', money(POT_PAISA)],
-              ['On day', String(chosen.d)],
-              ['Owed after', money(DAILY_PAISA * outstanding(chosen.d))],
-            ]} />
+      {confirming && chosen && (
+        <Sheet title={'Day ' + chosen.d + ', ' + dateShort(chosen.date.toISOString())} onClose={() => setConfirming(false)}>
+          <div className="pg-sheet-pad">
+            <Line k="You collect" v={rupees(o.pot)} />
+            <Line k="You pay each day" v={rupees(daily)} />
+            <Line k="First payment" v={dateShort(start.toISOString())} />
+            <Line k="Last payment" v={dateShort(dateOf(o, o.days, start).toISOString())} />
+            <Line k="Collected by" v="Auto-pay, salary account" />
+            <Line k="Total over the circle" v={rupees(paidIn)} strong />
+            <button className={'pg-consent' + (consent ? ' on' : '')} onClick={() => setConsent(!consent)}
+                    role="checkbox" aria-checked={consent}>
+              <i>{consent && <CheckMark />}</i>
+              <span>I authorise daily collection of {rupees(daily)} from my salary account for {o.days} days. I can withdraw this authority, and I stay liable for any day I have not paid.</span>
+            </button>
           </div>
           <BottomBar>
-            <button className="primary full" disabled={over || low || !bidP}
-                    onClick={() => { setPlaced({ day: chosen.d, amount: bidP }); setDay(null); }}>
-              <Wallet /> Place bid
+            <button className="primary full" disabled={!consent}
+                    onClick={() => { setConfirming(false); setJoined({ day: chosen.d, ref: 'HYP-' + String(Date.now()).slice(-6) }) }}>
+              Join HYPER
             </button>
           </BottomBar>
         </Sheet>
       )}
     </div>
   );
+}
+
+function CheckMark() {
+  return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>;
 }

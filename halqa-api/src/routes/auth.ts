@@ -1,3 +1,4 @@
+import { safeRouter } from '../lib/safe-router';
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
@@ -8,9 +9,11 @@ import { earlyTurnUnlocked } from '../lib/score-bands';
 import { feeDiscountBps, discountReason } from '../lib/discounts';
 import { createHash } from 'node:crypto';
 
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 const cleanPhone = (v: string) => v.replace(/\s+/g, '').replace(/^\+92/, '0');
-const publicUser = { declaredIncomePaisa: true, declaredIncomeAt: true, id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, phoneVerified:true, addressLine:true, city:true, locality:true, occupationType:true, employerName:true, jobTitle:true, committeesCompletedClean:true, earlyTurnVerifiedAt:true, incomeVerifiedAt:true, chequeSecuredAt:true, cnicCaptured:true, homeLat:true, homeLng:true, salaryDay:true, salaryDayLearned:true, salaryVerifiedAt:true, salaryVerifyMethod:true, createdAt: true } as const;
+const publicUser = { declaredIncomePaisa: true, declaredIncomeAt: true, id: true, fullName: true, username: true, phone: true, email: true, cnic: true, creditScore: true, role: true, kycLevel: true, kycStatus: true, paymentStreak:true, averageRating:true, ratingCount:true, isBanned:true, defaultFlag:true, banReason:true, cooldownUntil:true, salaryAccountLinked:true, salaryAccountRef:true, phoneVerified:true, addressLine:true, city:true, locality:true, occupationType:true, employerName:true, jobTitle:true, committeesCompletedClean:true, earlyTurnVerifiedAt:true, incomeVerifiedAt:true, chequeSecuredAt:true, cnicCaptured:true, bankVerifiedAt:true, homeLat:true, homeLng:true, salaryDay:true, salaryDayLearned:true, salaryVerifiedAt:true, salaryVerifyMethod:true, createdAt: true } as const;
 // Never send the PIN hash or biometric credential id to the client; we only
 // expose booleans + the derived tenure/discount status the UI needs.
 const pinHash = (pin: string) => createHash('sha256').update(`halqa-pin:${process.env.JWT_SECRET || 'dev'}:${pin}`).digest('hex');
@@ -202,7 +205,17 @@ router.post('/verify-pin', requireAuth, async (req, res, next) => {
 router.post('/set-biometric', requireAuth, async (req, res, next) => {
   try {
     const { credentialId } = z.object({ credentialId: z.string().trim().min(1).max(512).nullable() }).parse(req.body);
-    await prisma.user.update({ where: { id: req.auth!.userId }, data: { biometricCredId: credentialId } });
+    // Both writes together: the credential and the record of its change. A sign
+    // in method that can be added or removed with nothing written down is the
+    // first thing a dispute asks about.
+    await prisma.$transaction([
+      prisma.user.update({ where: { id: req.auth!.userId }, data: { biometricCredId: credentialId } }),
+      prisma.auditLog.create({ data: {
+        actorId: req.auth!.userId,
+        action: credentialId ? 'BIOMETRIC_SET' : 'BIOMETRIC_CLEARED',
+        entityType: 'User', entityId: req.auth!.userId, payloadJson: {},
+      } }),
+    ]);
     res.json({ hasBiometric: !!credentialId });
   } catch (error) { next(error); }
 });
@@ -277,25 +290,8 @@ router.get('/me', requireAuth, async (req, res) => {
   res.json(user ? withHasPin(user) : user);
 });
 
-// Change password (logged-in). Closes the audited "no way to rotate a
-// password" gap; revokes every refresh token so stolen sessions die with it.
-router.post('/change-password', requireAuth, async (req, res, next) => {
-  try {
-    // The CURRENT password is only compared, never validated — a member whose
-    // legacy password is short must still be able to change it. Only the NEW
-    // password carries the length/strength rules.
-    const body = z.object({ currentPassword: z.string().min(1).max(128), newPassword: z.string().min(8).max(128) }).parse(req.body);
-    const user = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId } });
-    if (!(await bcrypt.compare(body.currentPassword.trim(), user.passwordHash))) return res.status(401).json({ error: 'Current password is incorrect' });
-    if (body.currentPassword.trim() === body.newPassword.trim()) return res.status(400).json({ error: 'The new password must be different' });
-    if (!relaxed() && !passwordStrongEnough(body.newPassword.trim())) return res.status(400).json({ error: 'Password must contain both letters and numbers' });
-    await prisma.$transaction([
-      prisma.user.update({ where: { id: user.id }, data: { passwordHash: await bcrypt.hash(body.newPassword.trim(), 12) } }),
-      prisma.refreshToken.deleteMany({ where: { userId: user.id } }),
-    ]);
-    await logSecurity(req, 'PASSWORD_CHANGED', { userId: user.id });
-    res.json({ message: 'Password updated. Other sessions were signed out.' });
-  } catch (error) { next(error); }
-});
+// REMOVED 5 October 2026: /change-password. Sign in is by PIN; there is no
+// password for a member to rotate. Recovery runs through a fresh code to the
+// registered number and a new PIN.
 
 export default router;

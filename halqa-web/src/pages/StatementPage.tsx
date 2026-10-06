@@ -58,7 +58,10 @@ export default function StatementPage({ back }: { back?: () => void }) {
       : new Date(now.getFullYear(), now.getMonth(), 1);
     setData(null); setError('');
     return api<Statement>('/account/statement?from=' + from.toISOString() + '&to=' + now.toISOString())
-      .then(setData)
+      // An answer without totals or lines is refused here rather than read,
+      // which is what used to take the whole screen down.
+      .then(d => d && d.totals && Array.isArray(d.lines)
+        ? setData(d) : setError('Your statement could not be read. Try again in a moment.'))
       .catch(reason => setError((reason as Error).message));
   }, [period]);
   useEffect(() => { void load() }, [load]);
@@ -111,7 +114,7 @@ export default function StatementPage({ back }: { back?: () => void }) {
               <Facts cols={3} items={[
                 ['Net', money(data.totals.netPaisa)],
                 ['Still due', money(data.totals.stillDuePaisa)],
-                ['On time', data.totals.onTimeRate === null ? '—' : data.totals.onTimeRate + '%'],
+                ['On time', data.totals.onTimeRate === null ? 'Nothing due yet' : data.totals.onTimeRate + '%'],
               ]} />
               {Number(data.totals.penaltiesPaisa) > 0 && (
                 <Notice kind="warn" icon={<Info />}>

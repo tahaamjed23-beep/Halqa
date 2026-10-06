@@ -1,3 +1,7 @@
+// audit-allow: hard-coded-colour — this screen is WITHDRAWN. The vault went
+// with the bank route (D12) and its API routes are unmounted; the file is kept
+// only as history until the bank's savings screen replaces it, so its colours
+// are not worth moving onto tokens.
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import {
@@ -6,7 +10,6 @@ import {
 } from 'lucide-react';
 import { api, key } from '../api';
 import { date, dateShort, money } from '../lib/format';
-import { emitHalqaAction } from '../lib/events';
 import {
   AmountEntry, Blank, BottomBar, Card, Chips, Facts, Field, FlowHeader,
   Notice, Row, RowGroup, Segment, Sheet, Tile, TileGrid,
@@ -262,7 +265,7 @@ export default function VaultPage() {
                     </div>
                     <span className="vault-slice-pct">{shares[d.tier] ?? 0}%</span>
                   </div>
-                  <input className="allocation-slider" type="range" min="0" max="100" step="5"
+                  <input aria-label="Share of savings" className="allocation-slider" type="range" min="0" max="100" step="5"
                          value={shares[d.tier] ?? 0}
                          onChange={e => setShares({ ...shares, [d.tier]: +e.target.value })} />
                   <p className="vault-slice-note">{TIER_WHAT[d.tier]}</p>
@@ -319,7 +322,7 @@ export default function VaultPage() {
                 </select>
               </Field>
               <Field label="Adding each month">
-                <input inputMode="numeric" value={monthly || ''} placeholder="0"
+                <input aria-label="0" inputMode="numeric" value={monthly || ''} placeholder="0"
                        onChange={e => setMonthly(Math.max(0, Number(e.target.value.replace(/\D/g, '')) || 0))} />
               </Field>
             </div>
@@ -370,7 +373,8 @@ export default function VaultPage() {
             <button className="primary full" disabled={busy || topupP < 10_000}
                     onClick={() => { setSheet(''); void call(async () => {
                       await api('/vault/deposit', { method: 'POST', body: JSON.stringify({ amountPaisa: String(topupP), idempotencyKey: key() }) });
-                      emitHalqaAction('VAULT_DEPOSIT');
+                      // No event: the vault is withdrawn and its actions left
+                      // the taxonomy with it (lib/events.ts).
                     }, money(topupP) + ' added.') }}>
               Add {money(topupP)}
             </button>
@@ -400,7 +404,6 @@ export default function VaultPage() {
                     onClick={() => { setSheet(''); void call(async () => {
                       const r = await api<{ principalPaisa: string; profitPaisa: string }>('/vault/withdraw',
                         { method: 'POST', body: JSON.stringify({ idempotencyKey: key(), amountPaisa: String(takeoutP) }) });
-                      emitHalqaAction('VAULT_SWEEP');
                       setTakeout('');
                       setDone(money(r.principalPaisa) + ' plus ' + money(r.profitPaisa) + ' profit sent to your account.');
                     }) }}>
@@ -414,12 +417,12 @@ export default function VaultPage() {
       {sheet === 'goal' && (
         <Sheet title="What are you saving for" onClose={() => setSheet('')}>
           <Field label="Call it something" hint="">
-            <input maxLength={60} placeholder="Eid, a laptop, the deposit"
+            <input aria-label="Eid, a laptop, the deposit" maxLength={60} placeholder="Eid, a laptop, the deposit"
                    value={goalName || vault.goal?.name || ''}
                    onChange={e => setGoalName(e.target.value)} />
           </Field>
           <Field label="How much, in rupees" hint="">
-            <input inputMode="numeric" placeholder="50000"
+            <input aria-label="50000" inputMode="numeric" placeholder="50000"
                    value={goalAmount || (goalTarget ? String(goalTarget / 100) : '')}
                    onChange={e => setGoalAmount(e.target.value.replace(/\D/g, ''))} />
           </Field>

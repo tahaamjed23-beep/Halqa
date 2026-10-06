@@ -1,3 +1,5 @@
+// audit-allow: hard-coded-colour — the QR code must stay black on white or a
+// camera cannot read it, so it is the one surface that never follows the theme.
 import { useMemo, useState } from 'react';
 import { Copy, Link2, MessageCircle, QrCode, Share2 } from 'lucide-react';
 import { money } from '../lib/format';
@@ -68,7 +70,7 @@ export function InviteShare({ name, code, contributionPaisa }:
         </button>
         {typeof navigator !== 'undefined' && 'share' in navigator && (
           <button className="invite-act" onClick={() => void nativeShare()}>
-            <Share2 /><span>More</span>
+            <Share2 /><span>More ways to share</span>
           </button>
         )}
       </div>

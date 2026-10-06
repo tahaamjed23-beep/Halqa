@@ -6,35 +6,49 @@
    ============================================================================ */
 
 /* ---------- flow header ---------- */
-.w-head{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;gap:8px;
-  padding:12px 14px;background:var(--surface);position:sticky;top:0;z-index:20;
-  border-bottom:1px solid var(--line-2)}
-.w-head h1{font-size:15.5px;font-weight:700;text-align:center;letter-spacing:-.01em}
-.w-head-btn{width:38px;height:38px;border-radius:var(--r-full);display:grid;place-items:center;
-  background:var(--line-2);color:var(--ink-2)}
-.w-head-btn:active{background:var(--l50);color:var(--l700)}
+/* The page header, on the pattern the Pakistani wallets share: a bare back
+   chevron on its own line, then the page title set LARGE and left aligned
+   underneath it. The title is the first thing the eye lands on, rather than a
+   15px centred caption that reads as browser chrome. No fill behind the back
+   control, no border under the bar. */
+.w-head{padding:calc(var(--s-2) + var(--safe-top)) var(--gutter) var(--s-2);background:var(--bg)}
+.w-head-bar{display:flex;align-items:center;justify-content:space-between;
+  gap:var(--s-2);min-height:44px}
+.w-head-text{padding:var(--s-1) 0 var(--s-3)}
+.w-head h1{font-size:var(--t-display);line-height:var(--t-display-lh);
+  font-weight:var(--t-display-w);text-align:left;letter-spacing:-.035em;margin:0}
+.w-head-text p{font-size:var(--t-body);color:var(--muted);margin-top:var(--s-1);line-height:1.45}
+.w-head-actions{display:flex;align-items:center;gap:var(--s-1);flex:none}
+.w-head-btn{width:40px;height:40px;border-radius:var(--r-full);display:grid;place-items:center;
+  background:none;color:var(--ink);flex:none;transition:background var(--m-fast)}
+.w-head-btn.back{margin-left:calc(var(--s-3) * -1)}
+.w-head-btn svg{width:26px;height:26px;stroke-width:2}
+.w-head-btn:active{background:var(--line-2)}
 
 /* ---------- title block ---------- */
 .w-title{padding:18px 16px 12px}
-.w-title h2{font-size:22px;font-weight:740;letter-spacing:-.025em}
+.w-title h2{font-size:22px;font-weight:700;letter-spacing:-.025em}
 .w-title p{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.5}
 
 /* ---------- segmented toggle ---------- */
 .w-seg{display:inline-flex;gap:6px;padding:4px;background:var(--line-2);
   border-radius:var(--r-full);margin:0 16px 14px}
 .w-seg button{height:36px;padding:0 18px;border-radius:var(--r-full);font-size:13px;
-  font-weight:640;color:var(--muted);white-space:nowrap}
+  font-weight:600;color:var(--muted);white-space:nowrap}
 .w-seg button.on{background:var(--surface);color:var(--l700);box-shadow:var(--sh-1)}
 
 /* ---------- fields ---------- */
 .w-field{display:block;padding:0 16px;margin-bottom:16px}
-.w-field-label{display:block;font-size:12px;font-weight:620;color:var(--muted);margin-bottom:7px}
-.w-field input,.w-field select,.w-field textarea{width:100%;height:50px;border:1.5px solid var(--line);
+.w-field-label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:7px}
+.w-field input,.w-field select,.w-field textarea{width:100%;height:50px;border:1.5px solid var(--line-control);
   border-radius:var(--r-sm);padding:0 14px;font-size:15px;background:var(--surface);color:var(--ink)}
 .w-field textarea{height:auto;padding:12px 14px;min-height:88px;line-height:1.5}
-.w-field input:focus,.w-field select:focus,.w-field textarea:focus{border-color:var(--l500);outline:none}
-.w-field-hint{display:block;font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45}
-.w-field-error{display:block;font-size:11.5px;color:var(--bad);margin-top:6px;font-weight:560}
+/* The border change alone is a colour difference, which a member who cannot
+   tell those colours apart does not see. The ring is the visible focus state. */
+.w-field input:focus-visible,.w-field select:focus-visible,.w-field textarea:focus-visible{
+  border-color:var(--l500);outline:none;box-shadow:0 0 0 3px var(--l200)}
+.w-field-hint{display:block;font-size:12px;color:var(--muted);margin-top:6px;line-height:1.45}
+.w-field-error{display:block;font-size:12px;color:var(--bad);margin-top:6px;font-weight:560}
 .w-field.bad input{border-color:var(--bad)}
 
 /* ---------- picker row ---------- */
@@ -64,10 +78,12 @@
 .w-sheet-handle{width:40px;height:4px;border-radius:2px;background:var(--line);
   margin:10px auto 4px;flex:none}
 .w-sheet-head{padding:8px 18px 12px}
-.w-sheet-head h3{font-size:19px;font-weight:720;letter-spacing:-.02em}
+.w-sheet-head h3{font-size:20px;font-weight:700;letter-spacing:-.02em}
 .w-sheet-search{display:flex;align-items:center;gap:9px;margin:0 18px 8px;padding:0 13px;
   height:44px;background:var(--line-2);border-radius:var(--r-full)}
 .w-sheet-search svg{width:17px;height:17px;color:var(--faint);flex:none}
+.w-sheet-search:focus-within{box-shadow:0 0 0 3px var(--l200)}
+.w-sheet-search:focus-within{box-shadow:0 0 0 3px var(--l200)}
 .w-sheet-search input{flex:1;min-width:0;border:none;background:none;outline:none;font-size:14px}
 .w-sheet-body{flex:1;overflow-y:auto;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
 .w-sheet-group{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
@@ -77,13 +93,13 @@
 .w-sheet-row:active{background:var(--l50)}
 .w-sheet-row-icon{display:inline-flex;flex:none}
 .w-sheet-row-text{flex:1;min-width:0}
-.w-sheet-row-text b{display:block;font-size:14.5px;font-weight:600}
-.w-sheet-row-text small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.w-sheet-row-text b{display:block;font-size:15px;font-weight:600}
+.w-sheet-row-text small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 
 /* ---------- review ---------- */
 .w-review-amount{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:16px;border-bottom:1px solid var(--line-2)}
-.w-review-amount b{font-size:27px;font-weight:740;letter-spacing:-.03em;
+.w-review-amount b{font-size:28px;font-weight:700;letter-spacing:-.03em;
   font-variant-numeric:tabular-nums}
 .w-review-row{display:flex;align-items:center;gap:12px;padding:14px 16px;
   border-bottom:1px solid var(--line-2)}
@@ -92,16 +108,16 @@
 .w-review-icon svg{width:17px;height:17px}
 .w-review-text{flex:1;min-width:0}
 .w-review-text small{display:block;font-size:11px;color:var(--muted);margin-bottom:2px}
-.w-review-text b{display:block;font-size:14px;font-weight:640;white-space:nowrap;overflow:hidden;
+.w-review-text b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
-.w-review-edit{font-size:12.5px;font-weight:660;color:var(--l700);flex:none;padding:0 4px}
+.w-review-edit{font-size:13px;font-weight:600;color:var(--l700);flex:none;padding:0 4px}
 .w-totals{padding:14px 16px}
 .w-totals>div{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:13px;
   color:var(--muted)}
-.w-totals b{color:var(--ink);font-weight:640;font-variant-numeric:tabular-nums}
+.w-totals b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 .w-total{border-top:1.5px solid var(--line);margin-top:6px;padding-top:11px!important;
   font-size:15px!important;color:var(--ink)!important;font-weight:700}
-.w-total b{font-size:17px;font-weight:740}
+.w-total b{font-size:17px;font-weight:700}
 
 /* ---------- PIN ---------- */
 .w-pin{display:flex;flex-direction:column;align-items:center;gap:26px;padding:20px 16px}
@@ -118,14 +134,14 @@
 
 /* ---------- home tiles ---------- */
 .w-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.w-tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+.w-tile{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:9px;padding:16px 8px;background:var(--surface);border-radius:var(--r);box-shadow:var(--sh-1);
   border:1px solid var(--line-2);min-height:96px}
 .w-tile:active{background:var(--l50);border-color:var(--l200)}
 .w-tile-icon{width:34px;height:34px;display:grid;place-items:center;color:var(--l700)}
 .w-tile-icon svg{width:23px;height:23px;stroke-width:1.8}
-.w-tile-label{font-size:11.5px;font-weight:600;text-align:center;line-height:1.3;color:var(--ink-2)}
-.w-tile-badge{position:absolute;top:6px;right:6px;font-size:8.5px;font-weight:700;
+.w-tile-label{font-size:12px;font-weight:600;text-align:center;line-height:1.3;color:var(--ink-2)}
+.w-tile-badge{position:absolute;top:var(--s-2);right:var(--s-2);font-size:var(--t-micro);font-weight:700;
   letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:var(--r-full);
   font-style:normal}
 .w-tile-badge.new{background:var(--l50);color:var(--l700)}
@@ -135,7 +151,7 @@
 .w-group{margin:16px 0}
 .w-group-head{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:0 2px 10px}
-.w-group-head h3{font-size:14.5px;font-weight:700;letter-spacing:-.01em}
+.w-group-head h3{font-size:15px;font-weight:700;letter-spacing:-.01em}
 .w-group-body{display:block}
 
 /* ---------- compact listings: three or four visible at once ---------- */
@@ -143,19 +159,19 @@
 .listing-card{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);
   padding:12px;box-shadow:var(--sh-1)}
 .lst-head{display:flex;align-items:center;gap:11px;margin-bottom:9px}
-.lst-turn{font-size:17px;font-weight:740;letter-spacing:-.02em;flex:none;
+.lst-turn{font-size:17px;font-weight:700;letter-spacing:-.02em;flex:none;
   font-variant-numeric:tabular-nums}
-.lst-turn em{font-size:11.5px;font-weight:600;color:var(--muted);font-style:normal}
+.lst-turn em{font-size:12px;font-weight:600;color:var(--muted);font-style:normal}
 .lst-id{flex:1;min-width:0}
-.lst-id b{display:block;font-size:13.5px;font-weight:660;white-space:nowrap;overflow:hidden;
+.lst-id b{display:block;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
 .lst-id span{display:block;font-size:11px;color:var(--muted);margin-top:1px}
-.lst-premium{font-size:14px;font-weight:720;color:var(--ok);flex:none;
+.lst-premium{font-size:14px;font-weight:700;color:var(--ok);flex:none;
   font-variant-numeric:tabular-nums}
 .lst-strip{display:flex;gap:8px}
 .lst-strip>div{flex:1;background:var(--line-2);border-radius:var(--r-sm);padding:8px 9px;min-width:0}
 .lst-strip span{display:block;font-size:10px;color:var(--muted);margin-bottom:1px}
-.lst-strip b{display:block;font-size:12.5px;font-weight:680;font-variant-numeric:tabular-nums;
+.lst-strip b{display:block;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ---------- flow screen ---------- */
@@ -171,7 +187,7 @@
 .w-card.flush{padding:0;overflow:hidden}
 .w-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:11px}
 .w-card.flush .w-card-head{margin:0;padding:14px 14px 10px}
-.w-card-head h3{font-size:14.5px;font-weight:700;letter-spacing:-.01em}
+.w-card-head h3{font-size:15px;font-weight:700;letter-spacing:-.01em}
 
 /* ---------- list row ---------- */
 .w-row{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;text-align:left;
@@ -182,12 +198,12 @@ button.w-row:active{background:var(--l50)}
   display:grid;place-items:center;flex:none}
 .w-row-icon svg{width:18px;height:18px}
 .w-row-text{flex:1;min-width:0}
-.w-row-text b{display:block;font-size:14px;font-weight:620;letter-spacing:-.005em;
+.w-row-text b{display:block;font-size:14px;font-weight:600;letter-spacing:-.005em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.w-row-text small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+.w-row-text small{display:block;font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
 .w-row-val{flex:none;text-align:right}
 .w-row-val b{display:block;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
-.w-row-val small{display:block;font-size:10.5px;color:var(--muted);margin-top:1px}
+.w-row-val small{display:block;font-size:11px;color:var(--muted);margin-top:1px}
 .w-row-val.ok b{color:var(--ok)}
 .w-row-val.warn b{color:var(--warn)}
 .w-row-val.bad b{color:var(--bad)}
@@ -204,14 +220,14 @@ button.w-row:active{background:var(--l50)}
 .w-facts.c2{grid-template-columns:1fr 1fr}
 .w-facts.c3{grid-template-columns:repeat(3,1fr)}
 .w-facts>div{background:var(--line-2);border-radius:var(--r-sm);padding:9px 10px;min-width:0}
-.w-facts span{display:block;font-size:10.5px;color:var(--muted);margin-bottom:2px;
+.w-facts span{display:block;font-size:11px;color:var(--muted);margin-bottom:2px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.w-facts b{display:block;font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums;
+.w-facts b{display:block;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ---------- notice ---------- */
 .w-notice{display:flex;gap:10px;padding:11px 12px;border-radius:var(--r-sm);margin:10px 0}
-.w-notice p{font-size:12.5px;line-height:1.5}
+.w-notice p{font-size:13px;line-height:1.5}
 .w-notice>span{flex:none;display:inline-flex}
 .w-notice>span svg{width:17px;height:17px}
 .w-notice.info{background:var(--info-bg);color:#1B4E93}
@@ -222,31 +238,32 @@ button.w-row:active{background:var(--l50)}
 /* ---------- amount entry ---------- */
 .w-amount{padding:22px 16px 6px;text-align:center}
 .w-amount-row{display:flex;align-items:baseline;justify-content:center;gap:7px}
-.w-amount-row span{font-size:20px;font-weight:640;color:var(--muted)}
+.w-amount-row span{font-size:20px;font-weight:600;color:var(--muted)}
+.w-amount-row:focus-within{box-shadow:0 0 0 3px var(--l200);border-radius:var(--r-sm)}
 .w-amount-row input{width:100%;max-width:250px;border:none;outline:none;background:none;
-  font-size:40px;font-weight:750;letter-spacing:-.035em;text-align:center;
+  font-size:40px;font-weight:700;letter-spacing:-.035em;text-align:center;
   font-variant-numeric:tabular-nums;color:var(--ink)}
 .w-amount-row input::placeholder{color:var(--line)}
 .w-amount small{display:block;font-size:12px;color:var(--muted);margin-top:8px}
 
 /* ---------- chips ---------- */
 .w-chips{display:flex;flex-wrap:wrap;gap:7px}
-.w-chips button{height:34px;padding:0 14px;border-radius:var(--r-full);font-size:12.5px;
-  font-weight:620;background:var(--line-2);color:var(--ink-2)}
+.w-chips button{height:34px;padding:0 14px;border-radius:var(--r-full);font-size:13px;
+  font-weight:600;background:var(--line-2);color:var(--ink-2)}
 .w-chips button.on{background:var(--l500);color:#fff}
 
 /* ---------- blank state ---------- */
 .w-blank{text-align:center;padding:34px 24px}
 .w-blank>span{display:inline-grid;place-items:center;width:52px;height:52px;border-radius:var(--r-full);
   background:var(--line-2);color:var(--faint);margin-bottom:12px}
-.w-blank b{display:block;font-size:15px;font-weight:680}
-.w-blank p{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.5}
+.w-blank b{display:block;font-size:15px;font-weight:700}
+.w-blank p{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.5}
 .w-blank>button,.w-blank>a{margin-top:14px;display:inline-block}
 
 /* ---------- shared body copy and insets ---------- */
 .w-body{font-size:13px;line-height:1.6;color:var(--ink-2)}
 .w-inset{padding:0 14px}
-.w-foot{font-size:11.5px;color:var(--muted);line-height:1.5;padding:2px 18px 16px}
+.w-foot{font-size:12px;color:var(--muted);line-height:1.5;padding:2px 18px 16px}
 
 /* ---------- HYPER band ---------- */
 .hyper-band{margin:12px 14px;padding:16px;border-radius:var(--r-lg);
@@ -254,10 +271,10 @@ button.w-row:active{background:var(--l50)}
   box-shadow:var(--sh-lime);position:relative;overflow:hidden}
 .hyper-band::after{content:"";position:absolute;right:-46px;bottom:-72px;width:190px;height:190px;
   border-radius:50%;background:rgba(255,255,255,.10)}
-.hyper-band-top{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:620;
+.hyper-band-top{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;
   opacity:.94;position:relative;z-index:1}
 .hyper-band-top svg{width:15px;height:15px}
-.hyper-band b{display:block;font-size:32px;font-weight:760;letter-spacing:-.035em;margin:7px 0 3px;
+.hyper-band b{display:block;font-size:32px;font-weight:700;letter-spacing:-.035em;margin:7px 0 3px;
   font-variant-numeric:tabular-nums;position:relative;z-index:1}
 .hyper-band small{display:block;font-size:12px;opacity:.9;line-height:1.45;position:relative;z-index:1}
 
@@ -266,20 +283,20 @@ button.w-row:active{background:var(--l50)}
 .mkt-row:last-child{border-bottom:none;padding-bottom:0}
 .mkt-row .w-row{border-bottom:none;padding-bottom:6px}
 .mkt-turn{width:36px;height:36px;border-radius:11px;background:var(--l50);color:var(--l700);
-  display:grid;place-items:center;font-size:14px;font-weight:740;font-variant-numeric:tabular-nums}
+  display:grid;place-items:center;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
 .mkt-strip{display:flex;gap:7px;padding:0 14px 8px}
 .mkt-strip>div{flex:1;background:var(--line-2);border-radius:var(--r-sm);padding:7px 9px;min-width:0}
 .mkt-strip span{display:block;font-size:10px;color:var(--muted)}
-.mkt-strip b{display:block;font-size:12.5px;font-weight:680;font-variant-numeric:tabular-nums;
+.mkt-strip b{display:block;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mkt-stop{display:flex;align-items:flex-start;gap:7px;margin:0 14px;padding:8px 10px;
-  background:var(--warn-bg);color:#7A4B00;border-radius:var(--r-sm);font-size:11.5px;line-height:1.45}
+  background:var(--warn-bg);color:#7A4B00;border-radius:var(--r-sm);font-size:12px;line-height:1.45}
 .mkt-stop svg{width:14px;height:14px;flex:none;margin-top:1px}
 .mkt-bid{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 14px 0;
   padding:9px 11px;background:var(--l50);border-radius:var(--r-sm)}
-.mkt-bid b{display:block;font-size:14px;font-weight:720;color:var(--l700);
+.mkt-bid b{display:block;font-size:14px;font-weight:700;color:var(--l700);
   font-variant-numeric:tabular-nums}
-.mkt-bid small{display:block;font-size:10.5px;color:var(--muted);margin-top:1px}
+.mkt-bid small{display:block;font-size:11px;color:var(--muted);margin-top:1px}
 .secondary.sm{height:32px;padding:0 14px;font-size:12px;border-radius:var(--r-full)}
 
 /* ---------- paired fields ---------- */
@@ -290,24 +307,24 @@ button.w-row:active{background:var(--l50)}
 
 /* ---------- bank dot ---------- */
 .bank-dot{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;color:#fff;
-  font-size:10px;font-weight:750;letter-spacing:.02em;font-style:normal;flex:none}
+  font-size:10px;font-weight:700;letter-spacing:.02em;font-style:normal;flex:none}
 
 /* ---------- signup helpers ---------- */
 .w-actions{display:flex;align-items:center;gap:12px;margin:4px 0 10px}
 .w-locate{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;text-align:left;
   border:1.5px dashed var(--l300);border-radius:var(--r-sm);background:var(--l50);color:var(--l700)}
 .w-locate svg{width:20px;height:20px;flex:none}
-.w-locate b{display:block;font-size:13.5px;font-weight:660;color:var(--ink)}
-.w-locate small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.w-locate b{display:block;font-size:13px;font-weight:600;color:var(--ink)}
+.w-locate small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 .w-strength{display:flex;align-items:center;gap:9px;margin:0 0 10px}
 .w-strength i{flex:1;height:4px;border-radius:2px;background:var(--line)}
 .w-strength.weak i{background:linear-gradient(90deg,var(--warn) 40%,var(--line) 40%)}
 .w-strength.ok i{background:var(--ok)}
-.w-strength span{font-size:11.5px;color:var(--muted);flex:none;max-width:60%}
+.w-strength span{font-size:12px;color:var(--muted);flex:none;max-width:60%}
 .w-check{display:flex;gap:10px;align-items:flex-start;padding:12px;background:var(--surface);
-  border:1px solid var(--line-2);border-radius:var(--r-sm);font-size:12.5px;line-height:1.55}
+  border:1px solid var(--line-2);border-radius:var(--r-sm);font-size:13px;line-height:1.55}
 .w-check input{width:19px;height:19px;flex:none;accent-color:var(--l500);margin-top:1px}
-.inline-link{color:var(--l700);font-weight:640;text-decoration:underline;text-underline-offset:2px}
+.inline-link{color:var(--l700);font-weight:600;text-decoration:underline;text-underline-offset:2px}
 
 /* The auth card hosts the wallet flow now, so it must not add its own padding
    on top of the components' own. */
@@ -316,22 +333,22 @@ button.w-row:active{background:var(--l50)}
 .auth-card .w-card,.auth-card .w-rowgroup{margin-left:14px;margin-right:14px}
 
 /* ---------- receipt additions: parties, total, transaction id ---------- */
-.rcpt-purpose{text-align:center;font-size:12.5px;color:var(--muted);margin:-6px 0 14px}
+.rcpt-purpose{text-align:center;font-size:13px;color:var(--muted);margin:-6px 0 14px}
 .rcpt-parties{display:flex;gap:10px;border-top:1px dashed var(--line);padding-top:12px}
 .rcpt-parties>div{flex:1;min-width:0}
 .rcpt-parties span{display:block;font-size:10px;color:var(--faint);text-transform:uppercase;
   letter-spacing:.06em;margin-bottom:3px}
-.rcpt-parties b{display:block;font-size:13px;font-weight:660;white-space:nowrap;overflow:hidden;
+.rcpt-parties b{display:block;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
-.rcpt-parties small{display:block;font-size:10.5px;color:var(--muted);margin-top:1px;
+.rcpt-parties small{display:block;font-size:11px;color:var(--muted);margin-top:1px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rcpt-total{border-top:1.5px solid var(--line)!important;margin-top:4px;padding-top:11px!important}
-.rcpt-total span{color:var(--ink)!important;font-weight:660}
-.rcpt-total b{font-size:16px!important;font-weight:760}
+.rcpt-total span{color:var(--ink)!important;font-weight:600}
+.rcpt-total b{font-size:17px!important;font-weight:700}
 .rcpt-tid{display:flex;align-items:center;gap:9px;width:100%;margin-top:12px;padding:10px 12px;
   background:var(--line-2);border-radius:var(--r-sm);text-align:left}
-.rcpt-tid span{font-size:10.5px;color:var(--muted);flex:none}
-.rcpt-tid b{flex:1;min-width:0;font-size:12px;font-weight:680;letter-spacing:.02em;
+.rcpt-tid span{font-size:11px;color:var(--muted);flex:none}
+.rcpt-tid b{flex:1;min-width:0;font-size:12px;font-weight:700;letter-spacing:.02em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rcpt-tid svg{width:15px;height:15px;color:var(--faint);flex:none}
 
@@ -339,6 +356,7 @@ button.w-row:active{background:var(--l50)}
 .w-search{display:flex;align-items:center;gap:9px;margin:12px 14px;padding:0 13px;height:46px;
   background:var(--surface);border:1px solid var(--line);border-radius:var(--r-full)}
 .w-search svg{width:17px;height:17px;color:var(--faint);flex:none}
+.w-search:focus-within{box-shadow:0 0 0 3px var(--l200)}
 .w-search input{flex:1;min-width:0;border:none;background:none;outline:none;font-size:14px}
 
 /* ---------- pay-from source rows ---------- */
@@ -347,10 +365,10 @@ button.w-row:active{background:var(--l50)}
   border-radius:var(--r);text-align:left;box-shadow:var(--sh-1)}
 .w-source.on{border-color:var(--l500);background:var(--l50)}
 .w-source-t{flex:1;min-width:0}
-.w-source-t b{display:block;font-size:14px;font-weight:660}
-.w-source-t small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;
+.w-source-t b{display:block;font-size:14px;font-weight:600}
+.w-source-t small{display:block;font-size:12px;color:var(--muted);margin-top:2px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.w-free{flex:none;font-size:9.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+.w-free{flex:none;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
   padding:3px 7px;border-radius:var(--r-full);background:var(--ok-bg);color:#0D6B37;font-style:normal}
 .w-source-tick{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;flex:none;
   color:var(--l600)}
@@ -362,14 +380,14 @@ button.w-row:active{background:var(--l50)}
   box-shadow:var(--sh-lime);position:relative;overflow:hidden}
 .vault-band::after{content:"";position:absolute;right:-50px;bottom:-90px;width:210px;height:210px;
   border-radius:50%;background:rgba(255,255,255,.10)}
-.vault-band>span{display:block;font-size:11.5px;opacity:.9;position:relative;z-index:1}
-.vault-band>b{display:block;font-size:32px;font-weight:760;letter-spacing:-.035em;margin:4px 0 3px;
+.vault-band>span{display:block;font-size:12px;opacity:.9;position:relative;z-index:1}
+.vault-band>b{display:block;font-size:32px;font-weight:700;letter-spacing:-.035em;margin:4px 0 3px;
   font-variant-numeric:tabular-nums;position:relative;z-index:1}
-.vault-band>small{display:block;font-size:11.5px;opacity:.88;position:relative;z-index:1}
+.vault-band>small{display:block;font-size:12px;opacity:.88;position:relative;z-index:1}
 .vault-band-acts{display:flex;gap:9px;margin-top:15px;position:relative;z-index:1}
 .vault-band-acts button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
   height:42px;border-radius:var(--r-full);background:rgba(255,255,255,.2);color:#fff;
-  font-size:13px;font-weight:640}
+  font-size:13px;font-weight:600}
 .vault-band-acts button:active{background:rgba(255,255,255,.34)}
 .vault-band-acts button:disabled{opacity:.45}
 .vault-band-acts svg{width:16px;height:16px}
@@ -377,16 +395,16 @@ button.w-row:active{background:var(--l50)}
 .vault-slice{padding:12px 0;border-bottom:1px solid var(--line-2)}
 .vault-slice:last-of-type{border-bottom:none}
 .vault-slice-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.vault-slice-head b{display:block;font-size:14px;font-weight:680}
+.vault-slice-head b{display:block;font-size:14px;font-weight:700}
 .vault-slice-head small{display:block;font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
-.vault-slice-pct{font-size:17px;font-weight:740;color:var(--l700);font-variant-numeric:tabular-nums;
+.vault-slice-pct{font-size:17px;font-weight:700;color:var(--l700);font-variant-numeric:tabular-nums;
   flex:none}
-.vault-slice-note{font-size:11.5px;color:var(--muted);margin-top:7px;line-height:1.45}
+.vault-slice-note{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.45}
 .allocation-slider{width:100%;margin-top:9px;accent-color:var(--l500)}
 
 .vault-risk{display:flex;align-items:center;gap:12px;padding:9px 0}
 .vault-risk>div{flex:1;min-width:0}
-.vault-risk b{display:block;font-size:13px;font-weight:660}
+.vault-risk b{display:block;font-size:13px;font-weight:600}
 .vault-risk small{display:block;font-size:11px;color:var(--muted);margin-top:1px}
 .vault-risk>i{width:92px;height:7px;border-radius:4px;background:var(--line);overflow:hidden;flex:none}
 .vault-risk>i em{display:block;height:100%;background:var(--l500)}
@@ -395,42 +413,45 @@ button.w-row:active{background:var(--l50)}
 .w-pair-plain .w-field{padding:0;margin-bottom:12px}
 
 /* ---------- profile band ---------- */
-.prof-band{display:flex;align-items:center;gap:14px;margin:0;padding:20px 16px 18px;
+.prof-band{display:flex;align-items:center;gap:14px;margin:0;
+  padding:calc(var(--s-5) + var(--safe-top)) var(--gutter) var(--s-6);
+  min-height:calc(74px + var(--s-5) * 2);border-radius:0 0 var(--r-2xl) var(--r-2xl);
   background:var(--hdr);color:#fff;position:relative;overflow:hidden}
-.prof-band::after{content:"";position:absolute;right:-50px;top:-70px;width:200px;height:200px;
-  border-radius:50%;background:rgba(255,255,255,.10)}
+.prof-band::after{content:"";position:absolute;inset:-40% -30% auto auto;width:70%;aspect-ratio:1;
+  border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 68%);
+  pointer-events:none}
 .prof-avatar{width:56px;height:56px;border-radius:var(--r-full);flex:none;display:grid;
-  place-items:center;font-size:22px;font-weight:740;background:rgba(255,255,255,.22);
+  place-items:center;font-size:22px;font-weight:700;background:rgba(255,255,255,.22);
   border:1.5px solid rgba(255,255,255,.45);position:relative;z-index:1}
 .prof-id{flex:1;min-width:0;position:relative;z-index:1}
-.prof-id b{display:block;font-size:18px;font-weight:720;letter-spacing:-.02em;
+.prof-id b{display:block;font-size:17px;font-weight:700;letter-spacing:-.02em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .prof-id span{display:block;font-size:12px;opacity:.9;margin-top:2px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.prof-link{margin-top:8px;font-size:11.5px;font-weight:640;color:#fff;padding:5px 11px;
+.prof-link{margin-top:8px;font-size:12px;font-weight:600;color:#fff;padding:5px 11px;
   border-radius:var(--r-full);background:rgba(255,255,255,.2)}
 .prof-band .score-ring{position:relative;z-index:1;flex:none}
 
 .prof-recovery{padding:11px 0;border-top:1px solid var(--line-2)}
-.prof-recovery b{display:block;font-size:13.5px;font-weight:660}
-.prof-recovery small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.prof-recovery b{display:block;font-size:13px;font-weight:600}
+.prof-recovery small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 .prof-recovery input{width:100%;height:44px;margin:9px 0;border:1.5px solid var(--line);
   border-radius:var(--r-sm);padding:0 12px;font-size:14px}
 
 /* ---------- discover ---------- */
 .disc-head{display:flex;align-items:center;gap:11px;margin-bottom:11px}
 .disc-badge{width:38px;height:38px;border-radius:12px;flex:none;display:grid;place-items:center;
-  background:var(--l50);color:var(--l700);font-size:13px;font-weight:740;letter-spacing:.02em}
+  background:var(--l50);color:var(--l700);font-size:13px;font-weight:700;letter-spacing:.02em}
 .disc-id{flex:1;min-width:0}
-.disc-id b{display:block;font-size:14.5px;font-weight:680;white-space:nowrap;overflow:hidden;
+.disc-id b{display:block;font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
-.disc-id span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;
+.disc-id span{display:block;font-size:12px;color:var(--muted);margin-top:2px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .disc-pub{display:inline-flex;align-items:center;gap:4px;flex:none;font-style:normal;font-size:10px;
-  font-weight:660;padding:4px 8px;border-radius:var(--r-full);background:var(--line-2);
+  font-weight:600;padding:4px 8px;border-radius:var(--r-full);background:var(--line-2);
   color:var(--muted)}
 .disc-pub svg{width:11px;height:11px}
-.disc-clean{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ok);
+.disc-clean{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ok);
   margin:9px 0 2px;font-weight:600}
 .disc-clean svg{width:14px;height:14px}
 .w-card>button.primary.full{margin-top:11px}
@@ -443,7 +464,7 @@ button.w-row:active{background:var(--l50)}
 .w-shares i{width:42px;height:42px;border-radius:var(--r-full);display:grid;place-items:center;
   color:#fff;font-style:normal}
 .w-shares i svg{width:20px;height:20px}
-.w-shares span{font-size:10.5px;font-weight:600;color:var(--ink-2);text-align:center}
+.w-shares span{font-size:11px;font-weight:600;color:var(--ink-2);text-align:center}
 .sh-wa{background:linear-gradient(135deg,#1FAF38,#60D669)}
 .sh-co{background:linear-gradient(135deg,var(--l700),var(--l500))}
 .sh-sm{background:linear-gradient(135deg,#1E7BE5,#5AA9F5)}
@@ -454,7 +475,7 @@ button.w-row:active{background:var(--l50)}
   font-size:20px!important;height:56px!important}
 
 /* ---------- schemes terminal ---------- */
-.term-risk{font-size:12.5px;font-weight:700;color:var(--l700);font-variant-numeric:tabular-nums}
+.term-risk{font-size:13px;font-weight:700;color:var(--l700);font-variant-numeric:tabular-nums}
 .term-slider{display:flex;align-items:center;gap:11px;margin-bottom:12px}
 .term-slider svg{width:17px;height:17px;color:var(--faint);flex:none}
 .term-slider input{flex:1;accent-color:var(--l500)}
@@ -464,22 +485,25 @@ button.w-row:active{background:var(--l50)}
 .term-controls .w-field:last-child{grid-column:1/-1}
 .term-source{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;
   padding-top:10px;border-top:1px solid var(--line-2);font-size:11px;color:var(--muted)}
-.term-source a{display:inline-flex;align-items:center;gap:5px;color:var(--l700);font-weight:620}
+.term-source a{display:inline-flex;align-items:center;gap:5px;color:var(--l700);font-weight:600}
 .term-source a svg{width:12px;height:12px}
 
 /* ---------- credit report ---------- */
-.cred-band{display:flex;align-items:center;gap:16px;padding:18px 16px;background:var(--hdr);
-  color:#fff;position:relative;overflow:hidden}
-.cred-band::after{content:"";position:absolute;right:-46px;top:-64px;width:190px;height:190px;
-  border-radius:50%;background:rgba(255,255,255,.10)}
+.cred-band{display:flex;align-items:center;gap:16px;background:var(--hdr);
+  color:#fff;position:relative;overflow:hidden;
+  padding:var(--s-5) var(--gutter) var(--s-6);min-height:calc(74px + var(--s-5) * 2);
+  border-radius:0 0 var(--r-2xl) var(--r-2xl)}
+.cred-band::after{content:"";position:absolute;inset:-40% -30% auto auto;width:70%;aspect-ratio:1;
+  border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 68%);
+  pointer-events:none}
 .cred-band>div{flex:1;min-width:0;position:relative;z-index:1}
-.cred-band b{display:block;font-size:19px;font-weight:740;letter-spacing:-.02em}
+.cred-band b{display:block;font-size:20px;font-weight:700;letter-spacing:-.02em}
 .cred-band span{display:block;font-size:12px;opacity:.92;margin-top:4px;line-height:1.5}
 .cred-band .score-ring{flex:none;position:relative;z-index:1}
 .cred-dots{display:flex;flex-wrap:wrap;gap:7px}
 .cred-dots i{width:20px;height:20px;border-radius:6px;display:block}
 .cred-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
-.cred-legend span{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--muted)}
+.cred-legend span{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
 .cred-legend i{width:9px;height:9px;border-radius:3px}
 .cred-trend{display:flex;align-items:flex-end;gap:5px;height:92px}
 .cred-trend>div{flex:1;height:100%;display:flex;align-items:flex-end}
@@ -487,14 +511,14 @@ button.w-row:active{background:var(--l50)}
 
 /* ---------- about ---------- */
 .about-band{padding:22px 18px 20px;background:var(--l50);text-align:center}
-.about-band h2{font-size:21px;font-weight:740;letter-spacing:-.025em;margin-top:12px;line-height:1.3}
+.about-band h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin-top:12px;line-height:1.3}
 .about-band p{font-size:13px;color:var(--ink-2);line-height:1.65;margin-top:10px;text-align:left}
 
 /* ---------- account row actions ---------- */
 .acct-acts{display:flex;gap:8px;padding:0 14px 11px;border-bottom:1px solid var(--line-2)}
 .acct-acts:last-child{border-bottom:none}
 .acct-acts button{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;
-  border-radius:var(--r-full);background:var(--line-2);font-size:11.5px;font-weight:620;
+  border-radius:var(--r-full);background:var(--line-2);font-size:12px;font-weight:600;
   color:var(--ink-2)}
 .acct-acts button svg{width:13px;height:13px}
 .acct-acts button.danger{color:var(--bad);background:var(--bad-bg)}
@@ -505,17 +529,17 @@ button.w-row:active{background:var(--l50)}
 /* ---------- streak band ---------- */
 .streak-band{margin:12px 14px;padding:17px;border-radius:var(--r-lg);color:#fff;
   background:linear-gradient(150deg,#B4560E 0%,#E08A00 55%,#F2A83C 100%);
-  box-shadow:0 10px 30px rgba(180,86,14,.26);position:relative;overflow:hidden}
+  box-shadow:0 2px 8px rgba(180,86,14,.26);position:relative;overflow:hidden}
 .streak-band::after{content:"";position:absolute;right:-48px;bottom:-84px;width:200px;height:200px;
   border-radius:50%;background:rgba(255,255,255,.11)}
-.streak-band-top{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:620;
+.streak-band-top{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;
   opacity:.95;position:relative;z-index:1}
 .streak-band-top svg{width:15px;height:15px}
-.streak-band>b{display:block;font-size:40px;font-weight:770;letter-spacing:-.04em;margin:2px 0;
+.streak-band>b{display:block;font-size:40px;font-weight:700;letter-spacing:-.04em;margin:2px 0;
   font-variant-numeric:tabular-nums;position:relative;z-index:1;line-height:1.05}
-.streak-band>small{display:block;font-size:11.5px;opacity:.92;position:relative;z-index:1}
+.streak-band>small{display:block;font-size:12px;opacity:.92;position:relative;z-index:1}
 .streak-track{margin-top:14px;position:relative;z-index:1}
-.streak-track>div{display:flex;justify-content:space-between;font-size:10.5px;opacity:.92;
+.streak-track>div{display:flex;justify-content:space-between;font-size:11px;opacity:.92;
   margin-bottom:6px}
 .streak-track>i{display:block;height:6px;border-radius:3px;background:rgba(255,255,255,.28);
   overflow:hidden}
@@ -526,8 +550,8 @@ button.w-row:active{background:var(--l50)}
 .partner{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);
   padding:14px;text-align:center;box-shadow:var(--sh-1)}
 .partner-logo{width:44px;height:44px;border-radius:14px;margin:0 auto 9px;display:grid;
-  place-items:center;color:#fff;font-size:13px;font-weight:750;letter-spacing:.02em}
-.partner strong{display:block;font-size:13.5px;font-weight:680}
+  place-items:center;color:#fff;font-size:13px;font-weight:700;letter-spacing:.02em}
+.partner strong{display:block;font-size:13px;font-weight:700}
 .partner span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
 .partner button{width:100%;margin-top:10px;height:34px;font-size:12px}
 
@@ -544,7 +568,7 @@ button.w-row:active{background:var(--l50)}
 .vault-goal em{display:block;height:100%;background:#fff;border-radius:4px;transition:width .4s}
 .vault-goal-cta{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:8px 14px;
   border-radius:var(--r-full);background:rgba(255,255,255,.2);color:#fff;font-size:12px;
-  font-weight:620;position:relative;z-index:1}
+  font-weight:600;position:relative;z-index:1}
 .vault-goal-cta svg{width:15px;height:15px}
 .vault-goal-cta:active{background:rgba(255,255,255,.32)}
 .w-card>button.primary.full{margin-top:12px}
@@ -583,10 +607,10 @@ html,body{overflow-x:clip;max-width:100%}
   box-shadow:var(--sh-lime);position:relative;overflow:hidden}
 .cm-band::after{content:"";position:absolute;right:-46px;bottom:-78px;width:190px;height:190px;
   border-radius:50%;background:rgba(255,255,255,.10)}
-.cm-band-top{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:620;opacity:.94;
+.cm-band-top{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;opacity:.94;
   position:relative;z-index:1}
 .cm-band-top svg{width:15px;height:15px}
-.cm-band>b{display:block;font-size:30px;font-weight:760;letter-spacing:-.035em;margin:6px 0 3px;
+.cm-band>b{display:block;font-size:28px;font-weight:700;letter-spacing:-.035em;margin:6px 0 3px;
   font-variant-numeric:tabular-nums;position:relative;z-index:1}
 .cm-band>small{display:block;font-size:12px;opacity:.92;position:relative;z-index:1}
 .cm-band-facts{display:flex;gap:8px;margin-top:14px;position:relative;z-index:1}
@@ -594,7 +618,7 @@ html,body{overflow-x:clip;max-width:100%}
   padding:8px 9px}
 .cm-band-facts span{display:block;font-size:10px;opacity:.86;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
-.cm-band-facts b{display:block;font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums;
+.cm-band-facts b{display:block;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
 
 
@@ -605,7 +629,7 @@ html,body{overflow-x:clip;max-width:100%}
    shell it stops above the bar; on a full-screen flow with no bar, such as
    signup, it sits on the floor.
    ============================================================================ */
-:root{--nav-h:74px}
+:root{--nav-h:var(--tabbar-h)}   /* one height for the bar and for everything that clears it */
 .w-bottom{position:sticky;bottom:0;z-index:30}
 .content .w-bottom{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom))}
 .content .w-screen{min-height:calc(100dvh - var(--nav-h))}
@@ -644,15 +668,15 @@ html,body{overflow-x:clip;max-width:100%}
   border-top:1px solid var(--line-2)!important;padding:10px 0!important;
   color:var(--ink-2)!important;font-size:12px!important;line-height:1.5!important}
 .market-rules b,.onboard-note b,.halqa-fill-box b,.commitment-ok b,.assembly b{
-  font-size:12.5px;font-weight:660;color:var(--ink)}
+  font-size:13px;font-weight:600;color:var(--ink)}
 .market-rules p,.onboard-note span,.commitment-ok p,.assembly p{
-  font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:2px}
+  font-size:12px;color:var(--muted);line-height:1.5;margin-top:2px}
 .market-rules>svg,.commitment-ok>svg,.assembly>svg{width:17px;height:17px;color:var(--l600);
   flex:none;margin-top:1px}
 .warning-box{background:none;border:none;border-top:1px solid var(--line-2);border-radius:0;
   padding:10px 0;font-size:12px;color:var(--ink-2);line-height:1.5}
 .error-box{background:var(--bad-bg);color:#8A2820;border-radius:var(--r-sm);padding:10px 12px;
-  font-size:12.5px;margin:8px 0}
+  font-size:13px;margin:8px 0}
 
 /* The payout block. It was a filled green card with three lines of prose and a
    floating "#1"; it is a row like every other headline figure. */
@@ -661,12 +685,12 @@ html,body{overflow-x:clip;max-width:100%}
   box-shadow:var(--sh-1)}
 .your-payout>div{flex:1;min-width:0}
 .your-payout span{display:block;font-size:11px;color:var(--muted)}
-.your-payout b{display:block;font-size:21px;font-weight:750;letter-spacing:-.03em;
+.your-payout b{display:block;font-size:20px;font-weight:700;letter-spacing:-.03em;
   font-variant-numeric:tabular-nums;margin:2px 0 1px}
 .your-payout small{display:block;font-size:11px;color:var(--muted)}
 .your-payout i{flex:none;width:34px;height:34px;border-radius:11px;background:var(--l50);
   color:var(--l700);display:grid;place-items:center;font-style:normal;font-size:13px;
-  font-weight:740}
+  font-weight:700}
 
 /* ============================================================================
    RAFA
@@ -677,7 +701,6 @@ html,body{overflow-x:clip;max-width:100%}
 .rafa-fab{bottom:calc(var(--nav-h) + 74px)!important}
 @media(min-width:900px){
   .rafa-fab{left:calc(50% + 158px)!important;right:auto!important}
-  .rafa-hint{left:auto!important;right:auto!important}
 }
 
 /* ============================================================================
@@ -688,11 +711,11 @@ html,body{overflow-x:clip;max-width:100%}
    are back, and the committees below simply start a little lower.
    ============================================================================ */
 .w-tiles{grid-template-columns:repeat(3,1fr);gap:11px}
-.w-tile{min-height:104px;padding:18px 8px;gap:11px;border-radius:var(--r)}
+.w-tile{min-height:104px;padding:var(--s-6) var(--s-2) var(--s-4);gap:11px;border-radius:var(--r)}
 .w-tile-icon{width:34px;height:34px}
 .w-tile-icon svg{width:24px;height:24px;stroke-width:1.7}
 .w-tile-label{font-size:12px;line-height:1.3;font-weight:600}
-.w-tile-badge{top:7px;right:7px;font-size:8.5px;padding:2px 6px}
+.w-tile-badge{top:var(--s-2);right:var(--s-2);font-size:var(--t-micro);padding:2px 6px}
 
 /* ============================================================================
    RISK AND PROTECTION
@@ -701,7 +724,7 @@ html,body{overflow-x:clip;max-width:100%}
    ============================================================================ */
 .risk-factor,.policy-row,.deposit-board>div{display:flex;align-items:center;gap:11px;
   padding:9px 0;border-top:1px solid var(--line-2)}
-.risk-factor b,.policy-row b{font-size:12.5px;font-weight:640;flex:1;min-width:0}
+.risk-factor b,.policy-row b{font-size:13px;font-weight:600;flex:1;min-width:0}
 .risk-factor span,.policy-row span{font-size:11px;color:var(--muted)}
 .status,.chip{white-space:nowrap}
 
@@ -714,9 +737,12 @@ html,body{overflow-x:clip;max-width:100%}
    holds its contrast on a dark ground; ivory and ink swap roles.
    ============================================================================ */
 :root[data-theme="dark"]{
-  --l50:#16240C; --l100:#1E3212; --l200:#2C4A1B; --l300:#4A7F2D;
+  --l50:#16240C; --l100:#1E3212; --l200:#2C4A1B; --l300:#477A2B;
   --l400:#6FB543; --l500:#8ADC42; --l600:#A2E765; --l700:#BEEF92; --l900:#E3F8CA;
   --ink:#EDF3E6; --ink-2:#C8D3BE; --muted:#8E9C85; --faint:#6B7864;
+  /* The ramp is inverted above, so the ink that sits on it flips with it:
+     --l700 is the deepest green in light and nearly the lightest here. */
+  --on-soft:#F2F6EE; --on-deep:#0C1408;
   --line:#2A3324; --line-2:#212A1C; --bg:#0E140A; --surface:#161E11;
   --ok:#4ED17E; --warn:#F0A93A; --bad:#F0705F; --info:#5FA3F0;
   --ok-bg:#12291B; --warn-bg:#2C2110; --bad-bg:#2E1714; --info-bg:#111F2E;
@@ -750,18 +776,18 @@ html,body{overflow-x:clip;max-width:100%}
 
 /* A member initial where a photo is not loaded, sized to the row icon. */
 .prot-initial{width:36px;height:36px;border-radius:11px;background:var(--l50);color:var(--l700);
-  display:grid;place-items:center;font-size:14px;font-weight:720}
+  display:grid;place-items:center;font-size:14px;font-weight:700}
 
 /* ---------- risk ---------- */
 .risk-confirm{display:flex;gap:8px}
 .risk-confirm input{flex:1;min-width:0;height:40px;border:1.5px solid var(--line);
   border-radius:var(--r-sm);padding:0 11px;font-size:13px;background:var(--surface)}
-.risk-confirm button{flex:none;height:40px;padding:0 15px;font-size:12.5px}
-.risk-badge{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;
+.risk-confirm button{flex:none;height:40px;padding:0 15px;font-size:13px}
+.risk-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;
   letter-spacing:.03em;padding:4px 9px 4px 4px;border-radius:var(--r-full);
   background:var(--line-2);color:var(--ink-2)}
 .risk-badge i{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;
-  font-style:normal;font-size:11px;font-weight:750;background:var(--surface);color:var(--ink)}
+  font-style:normal;font-size:11px;font-weight:700;background:var(--surface);color:var(--ink)}
 .risk-badge.risk-low{background:var(--ok-bg);color:#0D6B37}
 .risk-badge.risk-medium{background:var(--warn-bg);color:#7A4B00}
 .risk-badge.risk-high,.risk-badge.risk-extreme{background:var(--bad-bg);color:#9B2B21}
@@ -820,7 +846,7 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 
 /* ---------- create circle: the summary sentence needs the whole row ---------- */
 .projection-summary{flex-wrap:wrap}
-.projection-summary p{flex:1 0 100%;width:100%;min-width:0;font-size:12.5px;line-height:1.6;
+.projection-summary p{flex:1 0 100%;width:100%;min-width:0;font-size:13px;line-height:1.6;
   margin-top:10px;color:var(--muted)}
 .create-blocked{font-size:12px;color:var(--warn);text-align:center;padding:8px 16px 2px;line-height:1.5}
 
@@ -829,8 +855,8 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 .cm-badge .pfp,.disc-badge .pfp{width:100%;height:100%;object-fit:cover;display:block}
 
 /* A way out of the processing overlay, once it has clearly stalled. */
-.proc-out{margin-top:16px;padding:10px 16px;border-radius:var(--r-full);font-size:12.5px;
-  font-weight:620;background:rgba(255,255,255,.16);color:#fff}
+.proc-out{margin-top:16px;padding:10px 16px;border-radius:var(--r-full);font-size:13px;
+  font-weight:600;background:rgba(255,255,255,.16);color:#fff}
 
 /* ============================================================================
    NOTICES, QUIETLY
@@ -844,7 +870,7 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
   border-left:3px solid var(--line);
   background:var(--line-2);
   padding:10px 12px;
-  font-size:12.5px;
+  font-size:13px;
   line-height:1.5;
   margin:10px 0;
   color:var(--ink-2);
@@ -856,14 +882,14 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 .market-rules{border-left-color:var(--l500)}
 .w-notice>span svg{width:15px;height:15px;color:var(--muted)}
 .w-notice.bad>span svg{color:var(--bad)}
-.w-notice p{font-size:12.5px}
+.w-notice p{font-size:13px}
 
 /* ---------- the payout figure, as a row rather than a slab ---------- */
 .your-payout{background:none;border:none;border-top:1px solid var(--line-2);
   border-bottom:1px solid var(--line-2);border-radius:0;padding:13px 2px;
   display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0}
-.your-payout b{font-size:20px;font-weight:740;letter-spacing:-.03em;color:var(--ink)}
-.your-payout span{font-size:11.5px;color:var(--muted)}
+.your-payout b{font-size:20px;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
+.your-payout span{font-size:12px;color:var(--muted)}
 .your-payout small{font-size:11px;color:var(--muted)}
 .your-payout i{font-style:normal;font-size:13px;font-weight:700;color:var(--l700);
   background:var(--l50);border-radius:var(--r-full);padding:5px 11px;flex:none}
@@ -892,7 +918,7 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 .w-tile-icon svg{width:22px;height:22px;stroke-width:1.8}
 .w-tile-label{font-size:11px;font-weight:560;color:var(--ink-2);line-height:1.25;
   letter-spacing:-.01em}
-.w-tile-badge{top:2px;right:6px;font-size:8px;padding:2px 5px}
+.w-tile-badge{top:var(--s-2);right:var(--s-2);font-size:var(--t-micro);padding:2px 5px}
 
 /* The panel supplies its own margin, so the group around it adds none. */
 .w-group:has(.w-tiles) .w-group-body{margin:0}
@@ -908,8 +934,8 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 .cmt-photo-cta{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;text-align:left;
   border:1.5px dashed var(--l300);border-radius:var(--r-sm);background:var(--l50);color:var(--l700)}
 .cmt-photo-cta svg{width:20px;height:20px;flex:none}
-.cmt-photo-cta b{display:block;font-size:13.5px;font-weight:660;color:var(--ink)}
-.cmt-photo-cta small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.cmt-photo-cta b{display:block;font-size:13px;font-weight:600;color:var(--ink)}
+.cmt-photo-cta small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 
 /* ---------- the committee screen, inside the frame ---------- */
 /* It used to render outside the shell and set its own 520px column. Inside the
@@ -923,28 +949,28 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 /* SHOUTING SNAKE CASE reads as a system message, not as a fact about your
    circle. The words are already written properly; the stylesheet was the one
    doing the shouting. */
-.circle-status{text-transform:none;letter-spacing:.01em;font-size:11px;font-weight:660}
+.circle-status{text-transform:none;letter-spacing:.01em;font-size:11px;font-weight:600}
 .w-rowgroup h4,.w-sheet-group{letter-spacing:.05em}
 
 /* ---------- eyebrows stop shouting ---------- */
 /* LOCKED ORDER, CIRCLE, ROUND. A word in caps above a heading is a magazine
    device, not a wallet one, and there were three of them on one screen. */
-.eyebrow{text-transform:none;letter-spacing:.01em;font-size:11.5px;font-weight:620;color:var(--muted)}
+.eyebrow{text-transform:none;letter-spacing:.01em;font-size:12px;font-weight:600;color:var(--muted)}
 .auth-copy .eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:10px}
 
 /* ---------- section labels stop shouting ---------- */
 /* WHAT THE VAULT DOES ON ITS OWN. EVERYTHING THAT HAS MOVED. A whole sentence
    in capitals above a list is louder than the list. Sentence case, muted, and
    the list stays the thing you read. */
-.w-rowgroup h4{text-transform:none;letter-spacing:.01em;font-size:12px;font-weight:640;
+.w-rowgroup h4{text-transform:none;letter-spacing:.01em;font-size:12px;font-weight:600;
   color:var(--muted)}
-.w-sheet-group{text-transform:none;letter-spacing:.01em;font-size:12px;font-weight:640}
+.w-sheet-group{text-transform:none;letter-spacing:.01em;font-size:12px;font-weight:600}
 .w-card-head h3{letter-spacing:-.01em}
 
 /* The last two labels still in capitals: the risk band on a scheme, and the
    rate stamp beside it. */
 .risk-badge{text-transform:none;letter-spacing:.01em}
-.rate-stamp{text-transform:none;letter-spacing:.01em;font-size:10.5px;font-weight:620}
+.rate-stamp{text-transform:none;letter-spacing:.01em;font-size:11px;font-weight:600}
 
 /* ============================================================================
    HELP, STATEMENT, LIMITS, DEVICES
@@ -952,9 +978,9 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
    one did not.
    ============================================================================ */
 .sup-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.sup-head b{display:block;font-size:14.5px;font-weight:680;line-height:1.35}
-.sup-head small{display:block;font-size:11.5px;color:var(--muted);margin-top:3px}
-.sup-status{flex:none;font-style:normal;font-size:10.5px;font-weight:680;padding:4px 9px;
+.sup-head b{display:block;font-size:15px;font-weight:700;line-height:1.35}
+.sup-head small{display:block;font-size:12px;color:var(--muted);margin-top:3px}
+.sup-status{flex:none;font-style:normal;font-size:11px;font-weight:700;padding:4px 9px;
   border-radius:var(--r-full);background:var(--line-2);color:var(--muted)}
 .sup-status.s-open{background:var(--warn-bg);color:#7A4B00}
 .sup-status.s-answered{background:var(--info-bg);color:#1B4E93}
@@ -965,13 +991,13 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
   border:1px solid var(--line-2);align-self:flex-start}
 .sup-msg.mine{align-self:flex-end;background:var(--l50);border-color:var(--l200)}
 .sup-msg p{font-size:13px;line-height:1.55;white-space:pre-wrap}
-.sup-msg small{display:block;font-size:10.5px;color:var(--muted);margin-top:6px}
+.sup-msg small{display:block;font-size:11px;color:var(--muted);margin-top:6px}
 
 /* A textarea has to sit in the field frame like every other control. */
 .w-field textarea{width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);
-  padding:11px 13px;font-size:14.5px;line-height:1.5;background:var(--surface);color:var(--ink);
+  padding:11px 13px;font-size:15px;line-height:1.5;background:var(--surface);color:var(--ink);
   resize:vertical;min-height:84px;font-family:inherit}
-.w-field textarea:focus{border-color:var(--l500);outline:none}
+.w-field textarea:focus-visible{border-color:var(--l500);outline:none;box-shadow:0 0 0 3px var(--l200)}
 
 /* ---------- the level band ---------- */
 .lim-band{margin:12px 14px;padding:16px;border-radius:var(--r-lg);color:#fff;
@@ -979,16 +1005,16 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
   box-shadow:var(--sh-lime);position:relative;overflow:hidden}
 .lim-band::after{content:"";position:absolute;right:-46px;bottom:-78px;width:190px;height:190px;
   border-radius:50%;background:rgba(255,255,255,.10)}
-.lim-band-top{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:620;opacity:.94;
+.lim-band-top{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;opacity:.94;
   position:relative;z-index:1}
 .lim-band-top svg{width:15px;height:15px}
-.lim-band>b{display:block;font-size:24px;font-weight:750;letter-spacing:-.03em;margin:6px 0 3px;
+.lim-band>b{display:block;font-size:24px;font-weight:700;letter-spacing:-.03em;margin:6px 0 3px;
   position:relative;z-index:1}
 .lim-band>small{display:block;font-size:12px;opacity:.92;position:relative;z-index:1}
 
 /* The way to say a receipt is wrong, on the receipt itself. */
 .rcpt-dispute{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;
-  margin-top:14px;height:40px;border-radius:var(--r-full);font-size:12.5px;font-weight:620;
+  margin-top:14px;height:40px;border-radius:var(--r-full);font-size:13px;font-weight:600;
   background:rgba(255,255,255,.14);color:#fff}
 .rcpt-dispute svg{width:15px;height:15px}
 
@@ -1007,10 +1033,10 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 .pay-who{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
 .pay-who i{width:32px;height:32px;border-radius:50%;flex:none;display:grid;place-items:center;
   background:var(--l50);color:var(--l700);font-style:normal;font-size:13px;font-weight:700}
-.pay-who b{font-size:13.5px;font-weight:620;white-space:nowrap;overflow:hidden;
+.pay-who b{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis;min-width:0}
-.pay-amt{flex:none;font-size:13.5px;font-weight:680;font-variant-numeric:tabular-nums}
-.pay-state{flex:none;font-size:10.5px;font-weight:660;padding:3px 9px;border-radius:var(--r-full);
+.pay-amt{flex:none;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.pay-state{flex:none;font-size:11px;font-weight:600;padding:3px 9px;border-radius:var(--r-full);
   background:var(--line-2);color:var(--muted);min-width:52px;text-align:center}
 .pay-state.s-paid{background:var(--ok-bg);color:#0D6B37}
 .pay-state.s-late{background:var(--warn-bg);color:#7A4B00}
@@ -1030,14 +1056,196 @@ body:has(.rcpt-wrap) .rafa-fab{display:none}
 .chat-msg{max-width:82%;padding:9px 12px;border-radius:var(--r);background:var(--line-2);
   align-self:flex-start}
 .chat-msg.mine{align-self:flex-end;background:var(--l50)}
-.chat-msg p{font-size:13.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
-.chat-who{display:block;font-size:10.5px;font-weight:660;color:var(--l700);margin-bottom:3px}
+.chat-msg p{font-size:13px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.chat-who{display:block;font-size:11px;font-weight:600;color:var(--l700);margin-bottom:3px}
 .chat-at{display:block;font-size:10px;color:var(--muted);margin-top:4px;text-align:right}
-.chat-empty{font-size:12.5px;color:var(--muted);text-align:center;padding:22px 10px}
+.chat-empty{font-size:13px;color:var(--muted);text-align:center;padding:22px 10px}
 .chat-send{display:flex;gap:8px;align-items:center;padding-top:10px;
   border-top:1px solid var(--line-2)}
 .chat-send input{flex:1;min-width:0;height:44px;border:1.5px solid var(--line);
   border-radius:var(--r-full);padding:0 15px;font-size:14px;background:var(--surface)}
+.chat-send:focus-within{box-shadow:0 0 0 3px var(--l200)}
 .chat-send input:focus{border-color:var(--l500);outline:none}
 .chat-send button{width:44px;height:44px;min-height:44px;border-radius:50%;padding:0;flex:none;
   display:grid;place-items:center}
+
+/* ============================================================================
+   RAFA, OUT OF THE WAY FOR GOOD
+   Moving it above the bottom bar was not enough: it still landed on whatever
+   button a screen put at its own foot. A floating helper is worth nothing if it
+   covers the thing you came to press.
+
+   So it stops floating over the content and rides at the end of it instead: the
+   page reserves the space, and Rafa sits in it. Nothing can be underneath it
+   because nothing is.
+   ============================================================================ */
+.rafa-fab{
+  left:50%; right:auto;
+  transform:translateX(calc(min(50vw, 230px) - 72px));
+  bottom:calc(104px + env(safe-area-inset-bottom));
+  opacity:.92;
+}
+.rafa-fab:hover,.rafa-fab:active{opacity:1}
+
+/* Every scrolling screen leaves a lane for it at the foot, so the last row or
+   button of a page is never underneath. */
+.w-screen-body,.content>.enter,.committee-content{padding-bottom:84px}
+.w-bottom{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+
+/* While a sheet, a receipt or the processing overlay is up, Rafa is not part of
+   the conversation. */
+body:has(.w-sheet-wrap) .rafa-fab,
+body:has(.rcpt-wrap) .rafa-fab,
+body:has(.modal-backdrop) .rafa-fab,
+body:has(.proc) .rafa-fab,
+body:has(.pin-screen) .rafa-fab{display:none}
+
+/* The hint bubble follows the same rule and never covers a control. */
+.rafa-hint,.rafa-reaction{
+  bottom:calc(166px + env(safe-area-inset-bottom));
+  max-width:min(70vw, 260px);
+}
+body:has(.w-bottom) .rafa-hint,
+body:has(.w-bottom) .rafa-reaction{display:none}
+
+/* ---------- SCHEDULE HERO ----------
+   The one number the screen exists to answer, above the list that proves it. */
+.w-hero{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);
+  box-shadow:var(--sh-1);margin:12px 14px 2px;padding:15px 16px;
+  display:flex;flex-direction:column;gap:3px}
+.w-hero>span{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--faint)}
+.w-hero>strong{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.15}
+.w-hero>small{font-size:13px;color:var(--muted)}
+
+/* ---------- ACTUALLY ROUND ----------
+   --r-full became a real corner, so the handful of elements that are meant to
+   be circles or bars say so themselves rather than borrowing the token. */
+.avatar,.hdr-btn,.bal-eye,.fab,.back,.onboard-back,.member-avatar,.icon-button,
+.turn-index,.gc-avatar,.w-head-btn,.w-blank>span,.prof-avatar,.w-shares i,
+.track,.track i,.onboard-dots i,.pass-meter i,.sw,.sw i,.your-payout i,
+.streak-track,.streak-track em,.vault-goal,.vault-goal em{
+  border-radius:var(--r-round)}
+
+/* ---------- PRESS ----------
+   One press behaviour for every button, and it is the one a phone's own
+   controls use: the fill darkens. Nothing scales, nothing lifts. */
+.primary:active,.secondary:active,.ghost:active,
+.w-seg button:active,.seg button:active,.w-chips button:active{
+  filter:brightness(.94)}
+.primary,.secondary,.ghost{transition:filter .12s ease,background .12s ease}
+.primary:disabled,.secondary:disabled{filter:none}
+
+/* ---------- LIST ICONS ----------
+   Every row carried a 36px mint-tinted tile behind its glyph, so a screen of
+   twenty rows was a wall of identical green squares. Wallets keep the chip for
+   the home grid and let list rows be text-first, with the glyph as a quiet
+   marker. Tone still fills it, because a late payment should catch the eye. */
+.w-row-icon{width:28px;height:28px;background:none;color:var(--muted);border-radius:8px}
+.w-row-icon svg{width:20px;height:20px;stroke-width:1.7}
+.w-row-icon.ok{color:var(--ok)}
+.w-row-icon.warn{color:var(--warn)}
+.w-row-icon.bad{color:var(--bad)}
+
+/* A nested control reads as nested when the outer corner is the larger one. */
+.w-seg{border-radius:11px}
+.w-seg button{border-radius:7px}
+
+/* ---------- ELEVATION ----------
+   Shadow now means one thing: this sits above the page and can be dismissed.
+   Everything resting ON the page is separated by its border and the difference
+   between --surface and --bg, which is how a grouped list has always worked. */
+.fab{box-shadow:0 3px 10px rgba(12,20,8,.18)}
+.w-sheet,.country-menu,.rafa-hint,.rafa-reaction,.modal-card,.w-bottom{
+  box-shadow:0 -1px 16px rgba(12,20,8,.10)}
+.w-sheet,.country-menu,.modal-card{box-shadow:0 4px 24px rgba(12,20,8,.14)}
+
+/* One stroke weight for every glyph in the app. They were drawn at 1.7, 1.8,
+   2 and 2.4, which reads as inconsistent at 20px even when nobody can name why. */
+svg{stroke-width:1.75}
+.w-tile-icon svg,.qa-ic svg{stroke-width:1.7}
+
+/* Money is compared down a column far more often than it is read in a
+   sentence, so every figure in the app is tabular. */
+.w-row-val b,.w-hero>strong,.w-amount,.w-total b,.w-totals b,.metric strong,
+.mini strong,.stat b,.bal-amount,.rcpt-amt,.w-review-amount{
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+
+/* ---------- THE ICON GRID ----------
+   Twelve pale-mint rounded squares, one behind every glyph, is the single most
+   template-looking thing on the home screen: the eye reads a wall of identical
+   shapes before it reads a single word. The panel already groups them, so the
+   chip was doing no work. Glyph only, in the brand green, and the label — the
+   part a member actually reads — carries the weight instead. */
+.w-tile-icon{width:auto;height:34px;background:none;border-radius:0;color:var(--l600)}
+.w-tile-icon svg{width:25px;height:25px;stroke-width:1.6}
+.w-tile-label{font-size:12px;font-weight:550;color:var(--ink-2)}
+.w-tile:active{background:var(--l50)}
+
+/* Rafa sits in the corner of the frame, not over the page. The bubble is
+   right-aligned to the same edge so it can never leave it. */
+.rafa-hint,.rafa-reaction{
+  left:50%!important; right:auto!important;
+  transform:translateX(calc(min(50vw, 230px) - 100% - 16px));
+  bottom:calc(168px + env(safe-area-inset-bottom))!important;
+  max-width:min(62vw, 210px);
+}
+
+/* Two columns should not stretch to fill three columns' worth of width. */
+.bal-split.two>div:last-child{flex:none;text-align:right}
+
+/* Rafa sits just above the tab bar, where a help button sits in every app,
+   instead of floating in the middle of the page. */
+.rafa-fab{bottom:calc(88px + env(safe-area-inset-bottom))!important}
+.rafa-hint,.rafa-reaction{bottom:calc(150px + env(safe-area-inset-bottom))!important}
+
+/* The ring's inner disc is always --surface, but the number inherited its
+   colour from whatever sat behind the ring. On the profile banner and the
+   credit band that meant white on white: the member's score was invisible. */
+.score-ring strong{color:var(--ink)}
+.score-ring span{color:var(--muted)}
+
+/* ---------- SCORE LINE ----------
+   Endpoints carry the numbers, so the line only has to carry the shape. */
+.cred-spark{display:block;width:100%;height:76px;margin:2px 0 10px;overflow:visible}
+.cred-spark-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;
+  padding-top:10px;border-top:1px solid var(--line-2)}
+.cred-spark-foot>span{display:flex;flex-direction:column;gap:2px;font-size:15px;font-weight:600;
+  color:var(--muted);font-variant-numeric:tabular-nums}
+.cred-spark-foot>span:last-child{text-align:right}
+.cred-spark-foot b{font-size:20px;font-weight:700;color:var(--ink)}
+.cred-spark-foot small{font-size:11px;font-weight:500;color:var(--faint);letter-spacing:.01em}
+.cred-spark-foot .up{color:var(--ok)}
+.cred-spark-foot .down{color:var(--bad)}
+
+/* The segmented track ran the full width while its buttons hugged the left,
+   leaving two thirds of it as empty grey. Segments share the track. */
+.w-seg{display:flex}
+.w-seg button{flex:1;padding:0 10px}
+
+/* When a screen has its own action bar, Rafa steps above it rather than
+   sitting on the button. The greeting stands down entirely: a screen with a
+   primary action does not need an introduction on top of it. */
+body:has(.w-bottom) .rafa-fab{bottom:calc(152px + env(safe-area-inset-bottom))!important}
+body:has(.w-bottom) .rafa-hint,
+body:has(.w-bottom) .rafa-reaction{display:none!important}
+
+/* ---------- COMMITTEE CARD ----------
+   The instalment moved onto the title line, so it needs the alignment that
+   makes a column of amounts scannable: right edge, tabular, interval beneath. */
+.cm-amt{flex:none;text-align:right;display:flex;flex-direction:column;gap:1px;align-items:flex-end}
+.cm-amt b{font-size:15px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+.cm-amt small{font-size:11px;color:var(--faint);white-space:nowrap}
+.cm-t p{white-space:normal}
+
+/* Skeleton rows: the shape of what is coming, at the weight of paper. */
+.w-row-skel .w-row-icon{background:var(--line-2);border-radius:7px;width:22px;height:22px}
+.w-row-skel .w-row-text{display:flex;flex-direction:column;gap:7px;padding:3px 0}
+.w-row-skel i{display:block;height:9px;border-radius:4px;background:var(--line-2)}
+.w-row-skel i:last-child{height:8px;opacity:.6}
+@media(prefers-reduced-motion:no-preference){
+  .w-row-skel i{animation:skel 1.4s ease-in-out infinite}
+  @keyframes skel{0%,100%{opacity:1}50%{opacity:.45}}
+  .w-row-skel i:last-child{animation-delay:.15s}
+}

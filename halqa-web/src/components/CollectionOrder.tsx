@@ -74,7 +74,7 @@ export function CollectionOrder() {
     <div className="panel-head"><div>
       <span className="eyebrow">Collection</span>
       <h2>Which account pays first</h2>
-      <p>Halqa tries these in order on the morning your contribution is due and stops at the first one that clears. You know which account has money in it on which day; we don't.</p>
+      <p>Tried in this order on the due date, stopping at the first that clears.</p>
     </div></div>
 
     <div className="list">

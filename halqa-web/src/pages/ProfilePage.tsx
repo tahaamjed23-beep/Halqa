@@ -57,11 +57,11 @@ function BankKycPanel({ user }: { user: User }) {
         and bank-custody circles.
       </p>
       <Field label="CNIC">
-        <input className="mono" inputMode="numeric" maxLength={13} value={cnic}
+        <input aria-label="CNIC, thirteen digits" className="mono" inputMode="numeric" maxLength={13} value={cnic}
                onChange={e => setCnic(e.target.value.replace(/\D/g, ''))} placeholder="3520212345671" />
       </Field>
       <Field label="IBAN" hint="Your own PK account">
-        <input className="mono" value={iban} onChange={e => setIban(e.target.value.toUpperCase())}
+        <input aria-label="IBAN" className="mono" value={iban} onChange={e => setIban(e.target.value.toUpperCase())}
                placeholder="PK36SONE0000123456789012" />
       </Field>
       {error && <Notice kind="bad" icon={<Info />}>{error}</Notice>}
@@ -108,16 +108,22 @@ function AutoCollection({ user, go }: { user: User; go?: (page: Page) => void })
 
   const mine = (c: AutoCircle) => c.members?.find(m => m.userId === user.id);
   const joined = circles.filter(mine);
-  const rails = Array.from(new Set(joined.map(c => mine(c)?.autoDebitRail || 'Raast')));
+  const auto = joined.filter(c => mine(c)?.autoDebitEnabled);
+  const railWord = (r?: string | null) => ({ RAAST: 'Raast', BANK: 'bank transfer',
+    CARD: 'card', EASYPAISA: 'Easypaisa', JAZZCASH: 'JazzCash' }[r || ''] || 'Raast');
+  const rails = Array.from(new Set(auto.map(c => railWord(mine(c)?.autoDebitRail))));
 
   return (
     <RowGroup title="Collection">
       <Row chevron={false} icon={<Lock />} title="Auto collection"
-           sub={joined.length
-             ? joined.length + ' committee' + (joined.length === 1 ? '' : 's') + ', collected over '
+           sub={auto.length
+             ? auto.length + ' of ' + joined.length + ' committees, over '
                + rails.join(' and ') + ' on each due date'
-             : 'On from your first committee'}
-           value={joined.length ? 'On' : 'Ready'} tone={joined.length ? 'ok' : undefined} />
+             : joined.length
+               ? 'Not switched on. You pay each instalment yourself.'
+               : 'Set it inside a committee once you join one'}
+           value={auto.length ? 'On' : joined.length ? 'Off' : 'Ready'}
+           tone={auto.length ? 'ok' : joined.length ? 'warn' : undefined} />
       <Row icon={<CreditCard />} title="Where it pulls from"
            sub="Accounts, payday, order"
            onClick={go ? () => go('cards') : undefined} />
@@ -186,7 +192,7 @@ export default function ProfilePage({ user, openCredit, go, onLogout }:
                   <b>{item.committee.name}, turn {item.round.roundNumber}</b>
                   <small>Outstanding {money(item.outstandingPaisa)} · penalties {money(item.penaltyPaisa)}</small>
                 </div>
-                <input value={refs[item.id] || ''} placeholder="Transfer reference"
+                <input aria-label="Transfer reference" value={refs[item.id] || ''} placeholder="Transfer reference"
                        onChange={e => setRefs({ ...refs, [item.id]: e.target.value })} />
                 <button className="secondary" disabled={busy === item.id || (refs[item.id]?.trim().length || 0) < 4}
                         onClick={() => resolve(item.id)}>

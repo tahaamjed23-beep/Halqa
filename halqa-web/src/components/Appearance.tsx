@@ -134,7 +134,7 @@ export function AppearancePanel({ onChange }: { onChange?: (a: Appearance) => vo
       </label>
       <div style={{ flex: 1, minWidth: 0 }}>
         <label className="field-wrap"><span>Display name</span>
-          <input className="field" defaultValue={a.displayName ?? ''} placeholder="What members call you"
+          <input aria-label="What members call you" className="field" defaultValue={a.displayName ?? ''} placeholder="What members call you"
             onBlur={e => { const v = e.target.value.trim(); if (v !== (a.displayName ?? '')) save({ displayName: v || null }); }} />
           <small>Two to forty characters. Leave it empty to use your registered name.</small>
         </label>
@@ -148,7 +148,7 @@ export function AppearancePanel({ onChange }: { onChange?: (a: Appearance) => vo
           aria-pressed={a.accentColor === opt.id} aria-label={opt.label} title={opt.label}
           onClick={() => save({ accentColor: opt.id })}>
           <i style={{ background: opt.swatch }} />
-          {a.accentColor === opt.id && <Check size={13} style={{ position: 'absolute', color: '#fff' }} />}
+          {a.accentColor === opt.id && <Check size={13} style={{ position: 'absolute', color: 'var(--on-accent)' }} />}
         </button>)}
       </div>
       <small>Changes the whole app, not just this screen.</small>
@@ -174,7 +174,7 @@ export function AppearancePanel({ onChange }: { onChange?: (a: Appearance) => vo
     <label className="field-wrap"><span><Type size={13} /> Text size · {a.textScale}%</span>
       <input type="range" min={90} max={140} step={10} value={a.textScale}
         onChange={e => save({ textScale: Number(e.target.value) })} />
-      <small>Larger text helps older members, who are a real share of every committee.</small>
+      <small>Larger text everywhere in the app.</small>
     </label>
 
     <label className="field-wrap" style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
@@ -199,7 +199,7 @@ export function AppearancePanel({ onChange }: { onChange?: (a: Appearance) => vo
             value={notify.quietTo ?? 8}
             onChange={e => save({ notifyPrefs: { ...notify, quietTo: Number(e.target.value) } })} />
         </div>
-        <small>A reminder at two in the morning is not a reminder, it is a reason to switch them off.</small>
+        <small>Reminders are held until the morning.</small>
       </label>
     </div>
 

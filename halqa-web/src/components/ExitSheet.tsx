@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDismissable } from '../lib/dismissable';
 import { AlertTriangle, Check, DoorOpen, Mic, Users, UserPlus, X } from 'lucide-react';
 import { api, money } from '../api';
 
@@ -69,8 +70,13 @@ export function ExitSheet({ committeeId, onClose, onDone }: {
     } finally { setBusy(false); }
   }
 
-  return <div className="sheet-wrap" role="dialog" aria-label="Leave this circle">
-    <div className="sheet-bg" onClick={onClose} />
+  const layer = useDismissable(true, onClose);
+  return <div className="sheet-wrap" role="dialog" aria-modal="true" aria-label="Leave this circle" ref={layer} tabIndex={-1}>
+    {/* The backdrop is a convenience, not the way out: Escape closes the sheet
+        and so does the Close button, both of which work from a keyboard. It is
+        hidden from screen readers because tapping a backdrop is not an action
+        a reader should offer. */}
+    <div className="sheet-bg" onClick={onClose} aria-hidden="true" />
     <div className="sheet">
       <div className="sheet-head">
         <div><span className="eyebrow">Leaving</span><h2>Step out of this circle</h2></div>
@@ -120,7 +126,7 @@ export function ExitSheet({ committeeId, onClose, onDone }: {
                 <textarea className="field" rows={3} maxLength={500} value={reason}
                   onChange={e => setReason(e.target.value)}
                   placeholder={chosen === 'HARDSHIP' ? 'A short explanation. You can also record this by calling the helpline.' : ''} />
-                {chosen === 'HARDSHIP' && <small>You can call the helpline and say this instead of typing it. A recorded reason counts exactly the same.</small>}
+                {chosen === 'HARDSHIP' && <small>You can call the helpline and say this instead.</small>}
               </label>
               <button className="primary" disabled={busy} onClick={() => void submit()}>
                 {busy ? 'Submitting…' : `Confirm · ${opt.quotes.find(q => q.rung === chosen)?.label}`}

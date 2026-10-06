@@ -111,8 +111,6 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
 
   return (
     <div className="w-screen">
-      <JoinByCode initialCode={joinCode} onJoined={id => { onJoinHandled?.(); openCommittee(id) }} />
-
       <FlowHeader title="Committees" />
       <Segment value={tab} onChange={setTab} options={[
         { id: 'mine', label: 'Mine' },
@@ -121,6 +119,10 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
 
       <div className="w-screen-body">
         {error && <div className="w-inset"><Notice kind="bad" icon={<Info />}>{error}</Notice></div>}
+        {tab === 'mine' && joinCode && (
+          <JoinByCode initialCode={joinCode}
+                      onJoined={id => { onJoinHandled?.(); openCommittee(id) }} />
+        )}
 
         {tab === 'mine' ? (
           <>
@@ -147,7 +149,7 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
           <>
             <div className="w-search">
               <Search />
-              <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search circles" />
+              <input aria-label="Search your circles" value={q} onChange={e => setQ(e.target.value)} placeholder="Search circles" />
             </div>
 
             <RowGroup>
@@ -186,7 +188,7 @@ export default function CirclesPage({ user, openCommittee, create, joinCode, onJ
       {codeSheet && (
         <Sheet title="Join with a code" onClose={() => { setCodeSheet(false); setError('') }}>
           <Field label="Invite code" hint="">
-            <input className="mono w-code" value={code} maxLength={8} placeholder="ABCD12"
+            <input aria-label="ABCD12" className="mono w-code" value={code} maxLength={8} placeholder="ABCD12"
                    onChange={e => setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))} />
           </Field>
           {error && <div className="w-inset"><Notice kind="bad" icon={<Info />}>{error}</Notice></div>}
@@ -230,7 +232,7 @@ function DiscoverRow({ r, busy, join }: { r: Discover; busy: boolean; join: () =
           : initials}</span>
         <div className="disc-id">
           <b>{r.name}</b>
-          <span>{r.host?.fullName || 'Host'} · credit score {r.host?.creditScore ?? '—'}</span>
+          <span>{r.host?.fullName || 'Host'} · credit score {r.host?.creditScore ?? 'not yet scored'}</span>
         </div>
         <em className="disc-pub"><Globe />{r.riskBand === 'LOW' ? 'Low risk' : r.riskBand === 'MEDIUM' ? 'Medium' : 'Higher risk'}</em>
       </div>

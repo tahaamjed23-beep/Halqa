@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Builds HALQA-MASTER-DECK-2026-08-09.pptx  --  the complete position deck.
+Builds HALQA-MASTER-DECK-2026-09-23.pptx  --  the complete position deck.
 
 Google Slides import: drive.google.com > New > File upload > right-click the file
 > Open with > Google Slides. Everything below is native shapes, tables and text,
@@ -24,18 +24,18 @@ from pptx.oxml.ns import qn, nsdecls
 from pptx.oxml import parse_xml
 
 # ----------------------------------------------------------------- palette ---
-PINE_DEEP = RGBColor(0x07, 0x16, 0x0F)
-PINE      = RGBColor(0x12, 0x3D, 0x30)
-PINE_MID  = RGBColor(0x1B, 0x51, 0x40)
-GOLD      = RGBColor(0xD9, 0xA9, 0x3C)
-GOLD_BR   = RGBColor(0xF0, 0xC3, 0x56)
-IVORY     = RGBColor(0xF6, 0xF1, 0xE4)
-INK       = RGBColor(0x0E, 0x15, 0x12)
-GREY      = RGBColor(0x4C, 0x57, 0x4F)
-GREY_LT   = RGBColor(0x9A, 0xA3, 0x9C)
+PINE_DEEP = RGBColor(0x11, 0x24, 0x06)
+PINE      = RGBColor(0x22, 0x45, 0x0C)
+PINE_MID  = RGBColor(0x35, 0x69, 0x14)
+GOLD      = RGBColor(0x6D, 0xC7, 0x2A)
+GOLD_BR   = RGBColor(0x8A, 0xDC, 0x42)
+IVORY     = RGBColor(0xF3, 0xFC, 0xE7)
+INK       = RGBColor(0x0C, 0x14, 0x08)
+GREY      = RGBColor(0x6F, 0x7B, 0x68)
+GREY_LT   = RGBColor(0x9A, 0xA6, 0x94)
 WHITE     = RGBColor(0xFF, 0xFF, 0xFF)
-TINT      = RGBColor(0xF3, 0xF6, 0xF4)
-RED       = RGBColor(0x8C, 0x2F, 0x24)
+TINT      = RGBColor(0xF5, 0xF7, 0xF2)
+RED       = RGBColor(0xC0, 0x3A, 0x2E)
 
 DISPLAY = 'Georgia'
 BODY    = 'Arial'
@@ -297,7 +297,7 @@ def slide(section=None, title=None, sub=None, dark=False, chrome=True):
             c = GOLD if i == 10 else (GOLD if dark else PINE)
             line(sl, xt, yb - Inches(0.07), xt, yb, color=c, lw=0.75)
         tb(sl, M, yb + Inches(0.05), Inches(4), Inches(0.2),
-           'HALQA   ·   COMPLETE POSITION   ·   9 AUGUST 2026',
+           'HALQA   ·   COMPLETE POSITION   ·   23 SEPTEMBER 2026',
            size=7.6, color=GOLD if dark else GREY, tracking=0.8)
         tb(sl, W - M - Inches(1.0), yb + Inches(0.05), Inches(1.0), Inches(0.2),
            str(_page['n']), size=7.6, color=GOLD if dark else GREY, align=PP_ALIGN.RIGHT)
@@ -332,12 +332,11 @@ line(sl, Inches(4.4), Inches(3.22), Inches(6.4), Inches(3.22), color=GOLD, lw=2.
 tb(sl, Inches(4.4), Inches(3.45), Inches(8.2), Inches(0.6),
    'The complete position', size=23, color=IVORY, font=DISPLAY)
 tb(sl, Inches(4.4), Inches(4.05), Inches(8.0), Inches(1.4),
-   'Apni committee, apnay log. Hisaab humara.\n'
-   'Your committee. Your people. We keep the record \u2014 and we never hold your money.',
+   'A rotating committee, run on a published record, over a licensed payment rail.',
    size=12.6, color=RGBColor(0xC8, 0xD4, 0xCC), gap=5, spacing=1.15)
 line(sl, Inches(4.4), Inches(5.02), Inches(12.0), Inches(5.02), color=PINE_MID, lw=0.75)
 tb(sl, Inches(4.4), Inches(5.18), Inches(8), Inches(0.6),
-   '9 August 2026   ·   Prepared for the chairman   ·   Internal and counterparty use',
+   '23 September 2026   ·   Prepared for the chairman   ·   Internal and counterparty use',
    size=10.4, color=GREY_LT)
 tb(sl, M, H - Inches(0.62), Inches(9), Inches(0.3),
    'Every claim in this deck carries a provenance mark and a stage tag. The next page explains both.',
@@ -376,7 +375,7 @@ sl = slide('Contents', 'What is in this deck')
 rows = [
     ('01', 'The instrument and the market', 'What a committee is, who runs one, and the arithmetic that governs the risk'),
     ('02', 'The architecture', 'No custody, and why that is a legal position rather than a slogan'),
-    ('03', 'The economics', 'Members pay nothing. Where the money actually comes from'),
+    ('03', 'The economics', 'One payment split three ways, and where the revenue actually comes from'),
     ('04', 'The product as built', 'Everything shipped and running in production today'),
     ('05', 'What is specified next', 'The discipline layer, and the features awaiting a ruling'),
     ('06', 'The evidence', 'Twenty-five attempts in nine markets, reduced to six questions'),
@@ -673,76 +672,189 @@ for i, (t, d) in enumerate(roles):
 
 # ============================================================== SECTION 03 ===
 divider('03', 'The economics',
-        ['Members pay nothing, permanently. That is a lesson paid for by someone else\u2019s failure.',
-         'The revenue comes from lateness, liquidity, matching and merchants.',
-         'Rail cost decides whether free-for-members is arithmetic or a wish.'])
+        ['Every payment splits three ways at the moment it is taken: contribution, cover and fee.',
+         'The contribution reaches the pot whole, the cover sits in a licensed risk fund, and the fee is flat.',
+         'Rail cost is the binding constraint: a percentage rail against a flat fee breaks as the instalment grows.'])
 
 # ------------------------------------------------- revenue ------------------
-sl = slide('03 · The economics', 'Members pay Rs 0. Permanently.',
-           'This is not a launch promotion. It is the lesson from Shahid Kazi\u2019s failed \u201cRazq\u201d, '
-           'which could not scale because fees were too high, and from Oraan\u2019s struggle to scale a '
-           'fee-charging committee.')
-exhibit(sl, M, Inches(1.94), CW, 10, 'Revenue lines, with stage tags')
+sl = slide('03 \u00b7 The economics', 'One payment, three destinations, none of them a deposit',
+           'Every rupee a member pays resolves into three amounts at the moment it is taken. '
+           'They are separately ledgered, separately reconciled and never commingled.')
+exhibit(sl, M, Inches(1.94), CW, 10, 'The split, on the daily product')
 table(sl, M, Inches(2.18), CW,
-      [['Line', 'Mechanism', 'Stage'],
-       ['Progressive late fees', '2% / 5% / 10% by lateness tier', 'FUNCTIONAL'],
-       ['Marketplace share', '10% of an accepted turn premium, premium capped at 50% of payout', 'FUNCTIONAL'],
-       ['Halqa-fill fee', 'Charged for matching a standby member into a vacant seat', 'FUNCTIONAL'],
-       ['Goal Direct-Pay commission', 'Merchant pays 1\u20133% when a goal circle\u2019s pot buys their product',
-        'GATE-2 / partnership'],
-       ['Aggregate market insights', 'Anonymised informal-savings trends sold to banks, FMCG, policymakers. Never individual profiles.', 'Later'],
-       ['White-label to licensed FIs', 'MFBs and NBFCs licence the engine and carry the regulatory burden', 'Later']],
-      [0.24, 0.58, 0.18], fs=10.0, rh=Inches(0.40))
-rect(sl, M, Inches(5.16), Inches(0.05), Inches(1.0), fill=GOLD)
-tb(sl, M + Inches(0.25), Inches(5.18), Inches(5.6), Inches(1.0),
-   'Shariah note\n\nOn Shariah-labelled circles late fees route to the circle\u2019s own pool, not to Halqa. '
-   'A fixed penalty retained as income is impermissible. Elsewhere they are platform revenue.',
+      [['Part', 'Where it goes', 'Who owns it there', 'Option 1', 'Option 2'],
+       ['Contribution', 'The collecting member, over the licensed rail',
+        'The collecting member', 'Rs 300', 'Rs 333.33'],
+       ['Takaful contribution', 'Participants risk fund at a licensed operator',
+        'The participants, collectively', 'Rs 75', 'Rs 83.33'],
+       ['Service fee', 'Halqa\u2019s own revenue account',
+        'Halqa', 'Rs 75', 'Rs 83.33'],
+       ['Daily total', 'One debit, resolved at source', '', 'Rs 450', 'Rs 500']],
+      [0.18, 0.34, 0.24, 0.12, 0.12], fs=10.2, rh=Inches(0.38))
+rect(sl, M, Inches(4.20), Inches(0.05), Inches(1.0), fill=GOLD)
+tb(sl, M + Inches(0.25), Inches(4.22), Inches(5.6), Inches(1.2),
+   'Why the fee is lawful\n\nThe Explanation to section 84 of the Companies Act excludes '
+   '\u201can advance against sale of goods or provision of services in the ordinary course of '
+   'business\u201d from the meaning of a deposit. A fee charged in advance for a service is revenue.',
    size=10.8, color=INK, spacing=1.2, gap=2)
-tb(sl, M + Inches(6.4), Inches(5.16), Inches(5.6), Inches(0.3), 'The scale arithmetic',
+tb(sl, M + Inches(6.4), Inches(4.20), Inches(5.6), Inches(0.3), 'Why the fee is flat',
    size=13, color=PINE, font=DISPLAY)
-tb(sl, M + Inches(6.4), Inches(5.52), Inches(5.65), Inches(1.2),
-   'Stage-one take rate  0.27\u20130.65% of flow\n'
-   'At 10% penetration (Rs 400bn)  Rs 1.1\u20132.6bn a year\n'
-   'Goal Direct-Pay  0.15\u20130.45% of flow  \u2192  Rs 0.6\u20131.8bn',
-   size=10.6, color=INK, font='Consolas', gap=3, spacing=1.2)
-flag(sl, M + Inches(6.4), Inches(6.62), Inches(5.65),
-     'modelled. Merchant commission roughly matches the entire member-facing fee stack while costing '
-     'members nothing and touching no regulated activity.')
+tb(sl, M + Inches(6.4), Inches(4.56), Inches(5.65), Inches(1.2),
+   'A fee graded by collection day is priced on the advance and reads as interest. '
+   'It is therefore identical for every seat on the roster. Members holding later seats are '
+   'compensated by Halqa in points and fee waivers, never by another member.',
+   size=10.8, color=INK, spacing=1.2)
+statstrip(sl, M, Inches(5.72), CW, [
+    ('Rs 1,500,000', 'fee revenue, one cycle'),
+    ('Rs 225,000', 'agency commission'),
+    ('Rs 135,000', 'rail at 1.5 per cent'),
+    ('Rs 252,000', 'operating cost'),
+    ('Rs 1,338,000', 'net per cycle'),
+])
+flag(sl, M, Inches(6.80), CW,
+     'Option 1. No member is compensated by another member, so no lender and no borrower exists, '
+     'and the peer to peer chapter has nothing to attach to.')
+
+# ------------------------------------------------- takaful ------------------
+sl = slide('03 \u00b7 The economics', 'Cover is written by a licensed operator, never by Halqa',
+           'Section 5(1) of the Insurance Ordinance admits only a public company, so a private '
+           'limited company cannot be registered as an insurer at all. The cover is therefore bought, '
+           'not built.')
+exhibit(sl, M, Inches(1.94), Inches(6.9), 11, 'How the risk fund behaves across one cycle')
+table(sl, M, Inches(2.18), Inches(6.9),
+      [['Scenario', 'Defaults after collecting', 'Claims paid', 'Back to each member'],
+       ['Normal, 5 per cent', '20 of 400', 'Rs 150,000', 'Rs 2,437'],
+       ['Severe, 30 per cent', '120 of 400', 'Rs 900,000', 'Rs 562'],
+       ['Catastrophic, 50 per cent', '200 of 400', 'Rs 1,500,000', 'nil, operator covers the deficit']],
+      [0.30, 0.24, 0.20, 0.26], fs=10.0, rh=Inches(0.38))
+rect(sl, M, Inches(3.96), Inches(6.9), Inches(1.10), fill=TINT, line=PINE, lw=0.75)
+tb(sl, M + Inches(0.18), Inches(4.12), Inches(6.55), Inches(0.9),
+   'The fund built over one cycle is Rs 1,500,000, from Rs 75 a day across 400 members. '
+   'A deficit is met by an interest free advance from the operator\u2019s own shareholder fund, '
+   'recovered from later surpluses. Members are paid even in the catastrophic case, and not out of '
+   'Halqa\u2019s pocket.', size=11.2, color=INK, spacing=1.2)
+rect(sl, M + Inches(7.3), Inches(2.18), Inches(4.75), Inches(1.46), fill=PINE)
+tb(sl, M + Inches(7.55), Inches(2.40), Inches(4.25), Inches(1.1),
+   'Halqa\u2019s role\n\nRegistered corporate insurance agent. It distributes, it earns commission, '
+   'and it never underwrites, never holds the fund and never decides a claim.',
+   size=11.4, color=IVORY, spacing=1.22, gap=3)
+tb(sl, M + Inches(7.3), Inches(3.88), Inches(4.75), Inches(0.3), 'What this requires',
+   size=13, color=PINE, font=DISPLAY)
+bullets(sl, M + Inches(7.3), Inches(4.24), Inches(4.75), [
+    'Corporate insurance agent registration with the Commission',
+    'A distribution agreement with the operator',
+    'No capital requirement attaches to either',
+    'Candidates: Pak-Qatar Family Takaful, Salaam Takaful',
+], size=10.8)
+flag(sl, M, Inches(5.24), CW,
+     'cover is sized at a 50 per cent post collection default rate. Recorded committee fraud runs at '
+     'about 12 per cent, so the fund is built for an event roughly four times worse than any on record.')
+
+# ------------------------------------------------- hyper --------------------
+sl = slide('03 \u00b7 The daily product', 'Hyper \u2014 two configurations, both balanced at source',
+           'A daily cadence product for members with daily income. Every figure below is forced by two '
+           'identities that are asserted in code and cannot be overridden at creation.')
+rect(sl, M, Inches(1.94), CW, Inches(0.62), fill=TINT, line=PINE, lw=0.75)
+tb(sl, M + Inches(0.20), Inches(2.06), CW - Inches(0.4), Inches(0.42),
+   'pot = contribution \u00d7 days        roster = members collecting each day \u00d7 days',
+   size=12.6, color=PINE, font='Consolas', spacing=1.1)
+exhibit(sl, M, Inches(2.74), CW, 12, 'The two configurations')
+table(sl, M, Inches(2.98), CW,
+      [['', 'Roster', 'Cycle', 'Collecting daily', 'Paid daily', 'Pot', 'Paid in', 'Cycle value'],
+       ['Option 1', '400', '50 days', '8', 'Rs 450', 'Rs 15,000', 'Rs 22,500', 'Rs 6,000,000'],
+       ['Option 2', '390', '26 active days', '15', 'Rs 500', 'Rs 8,666.67', 'Rs 13,000', 'Rs 3,380,000']],
+      [0.11, 0.10, 0.15, 0.14, 0.11, 0.13, 0.12, 0.14], fs=10.0, rh=Inches(0.36))
+tb(sl, M, Inches(4.28), Inches(6.6), Inches(0.3), 'What a seat is worth on the day it collects',
+   size=13, color=PINE, font=DISPLAY)
+hbars(sl, M, Inches(4.62), Inches(6.6), Inches(1.60), [
+    ('Day 1', 14700, 'Rs 14,700', PINE),
+    ('Day 25', 7500, 'Rs 7,500', PINE_MID),
+    ('Day 50', 0, 'nil', GOLD),
+], maxv=16000, label_w=Inches(1.5), val_w=Inches(1.4))
+tb(sl, M + Inches(7.1), Inches(4.28), Inches(4.95), Inches(0.3), 'Why this shape matters',
+   size=13, color=PINE, font=DISPLAY)
+bullets(sl, M + Inches(7.1), Inches(4.62), Inches(4.95), [
+    'Forward liability falls in a straight line to nil',
+    'It averages half a pot across a uniform spread of days',
+    'Half a pot is the planning figure for every default after collection',
+    'The seat fee does not follow this curve, because grading would read as interest',
+], size=10.8)
+flag(sl, M, Inches(6.40), CW,
+     'Option 2 uses 390 rather than 400 because 400 does not divide into 26 days. At 390 the roster '
+     'gives exactly 15 collecting each day and reproduces the pot to the paisa.')
+
+# ------------------------------------------------- threshold ----------------
+sl = slide('03 \u00b7 The daily product', 'The collapse threshold, and the bands before it',
+           'The point at which a circle would pay out more than it takes in, derived rather than '
+           'asserted, and instrumented so a host sees it coming.')
+exhibit(sl, M, Inches(1.94), Inches(6.9), 13, 'Four results')
+bullets(sl, M, Inches(2.22), Inches(6.9), [
+    'Arrears before collection recover themselves. They net from the member\u2019s own pot on their day, so they are a timing gap and not a loss.',
+    'The only true loss is default after collection. There is no pot left to net against.',
+    'Expected loss on a cycle is the roster \u00d7 the default rate \u00d7 half a pot. As a share of cycle value that is half the default rate.',
+    'The circle cannot complete once unrecovered exposure exceeds the cover limit.',
+], size=11.2, gap=9)
+tb(sl, M + Inches(7.3), Inches(1.94), Inches(4.75), Inches(0.3), 'The stress index',
+   size=13, color=PINE, font=DISPLAY)
+table(sl, M + Inches(7.3), Inches(2.28), Inches(4.75),
+      [['Axis', 'Weight'],
+       ['Exposure against cover plus one pot', '45%'],
+       ['Defaults against cover, in pots', '20%'],
+       ['Share of roster previously late', '15%'],
+       ['Age of arrears, in grace periods', '10%'],
+       ['Day reached out of the cycle', '10%']],
+      [0.72, 0.28], fs=10.0, rh=Inches(0.31))
+exhibit(sl, M, Inches(4.28), CW, 14, 'Worked path of a circle under stress, cover at 8 pots')
+table(sl, M, Inches(4.52), CW,
+      [['Day', 'Defaults after collecting', 'Unrecovered exposure', 'Index', 'Band', 'Action'],
+       ['12', '1', 'Rs 14,100', '11.8', 'Green', 'Normal operation, case tracked'],
+       ['20', '3', 'Rs 37,800', '28.6', 'Green', 'Host notified, operator put on notice'],
+       ['30', '6', 'Rs 64,800', '49.5', 'Amber', 'New joins blocked, next pots pre netted'],
+       ['38', '9', 'Rs 81,000', '64.0', 'Amber', 'Claim prepared, roster informed'],
+       ['45', '13', 'Rs 93,600', '72.1', 'Red', 'Payouts held, restitution arithmetic published']],
+      [0.07, 0.20, 0.20, 0.09, 0.10, 0.34], fs=9.8, rh=Inches(0.32))
+flag(sl, M, Inches(6.62), CW,
+     'the whole daily margin is exactly the cover required for a 100 per cent default rate. '
+     'That is not a coincidence; it falls out of the structure, and it is the ceiling on the charge.')
 
 # ------------------------------------------------- rails -------------------
-sl = slide('03 · The economics', 'Rail cost is the constraint that decides the business',
-           'Members pay nothing, so every rupee of rail cost is unrecovered. Raast at approximately '
-           'zero is the only arithmetic under which free-for-members survives.')
-exhibit(sl, M, Inches(1.90), Inches(6.6), 11, 'Cost to move one Rs 20,000 installment')
-hbars(sl, M, Inches(2.18), Inches(6.6), Inches(1.75), [
-    ('Card, 3.3% + Rs 33', 693, 'Rs 693', PINE),
-    ('Wallet, 1.5\u20133%', 600, 'Rs 300\u2013600', PINE_MID),
-    ('Raast or intra-wallet', 8, '\u2248 Rs 0', GOLD),
-], maxv=760, label_w=Inches(2.5), val_w=Inches(1.4))
-rect(sl, M, Inches(4.10), Inches(6.6), Inches(0.98), fill=TINT, line=PINE, lw=0.75)
-tb(sl, M + Inches(0.18), Inches(4.26), Inches(6.3), Inches(0.8),
-   'A 12-member circle running one full cycle on card rails burns Rs 52,272 in fees, with no member '
-   'revenue to absorb it. Card is therefore not offered on standard circles.',
-   size=11.4, color=INK, spacing=1.2)
-rect(sl, M + Inches(7.1), Inches(2.18), Inches(4.95), Inches(1.32), fill=PINE)
-tb(sl, M + Inches(7.35), Inches(2.40), Inches(4.45), Inches(1.0),
-   'The chairman\u2019s ceiling\n\nOn a Rs 20,000 installment a member never pays more than Rs 300 to '
-   'make a payment. Full stop.', size=11.6, color=IVORY, spacing=1.22, gap=3)
-tb(sl, M + Inches(7.1), Inches(3.74), Inches(4.95), Inches(0.3), 'What the gates cost',
+sl = slide('03 \u00b7 The economics', 'The collection ladder, and why the rail decides the tier',
+           'Three tiers, chosen by cost rather than preference. A percentage rail against a flat fee '
+           'is the binding constraint on the whole model.')
+exhibit(sl, M, Inches(1.90), Inches(6.9), 15, 'The ladder')
+table(sl, M, Inches(2.16), Inches(6.9),
+      [['Tier', 'Mechanism', 'Member action', 'Cost', 'Used on'],
+       ['1', 'Raast Request to Pay', 'One tap to approve', '\u2248 nil', 'Every monthly circle'],
+       ['2', 'Aggregator token mandate', 'None, silent debit', '1.5%', 'Hyper only'],
+       ['3', 'Manual initiation', 'Member initiates', '\u2248 nil', 'Fallback']],
+      [0.08, 0.30, 0.22, 0.12, 0.28], fs=10.0, rh=Inches(0.34))
+rect(sl, M, Inches(3.72), Inches(6.9), Inches(1.06), fill=TINT, line=PINE, lw=0.75)
+tb(sl, M + Inches(0.18), Inches(3.88), Inches(6.55), Inches(0.86),
+   'Raast Request to Pay is not auto-pull. It sends a request the member approves in their own '
+   'banking application. It removes the remembering problem without the cost, which is why it is the '
+   'default rather than the exception.', size=11.2, color=INK, spacing=1.2)
+tb(sl, M + Inches(7.3), Inches(1.90), Inches(4.75), Inches(0.3),
+   'Rail at 1.5 per cent, against a flat fee', size=13, color=PINE, font=DISPLAY)
+table(sl, M + Inches(7.3), Inches(2.24), Inches(4.75),
+      [['Instalment', 'Rail', 'Fee', 'Share'],
+       ['Rs 450, hyper', 'Rs 6.75', 'Rs 75', '9%'],
+       ['Rs 2,500', 'Rs 37.50', 'Rs 100', '38%'],
+       ['Rs 5,000', 'Rs 75', 'Rs 150', '50%'],
+       ['Rs 20,000', 'Rs 300', 'Rs 500', '60%']],
+      [0.34, 0.22, 0.20, 0.24], fs=10.0, rh=Inches(0.31))
+tb(sl, M + Inches(7.3), Inches(4.06), Inches(4.75), Inches(0.72),
+   'The ratio worsens as the instalment grows, because the fee is flat and the rail is a percentage. '
+   'Card at 3.3 per cent plus Rs 33 would take 64 per cent of hyper fee revenue and is never offered.',
+   size=10.8, color=INK, spacing=1.2)
+tb(sl, M, Inches(5.00), CW, Inches(0.3), 'The mandate is lawful, and it carries duties',
    size=13, color=PINE, font=DISPLAY)
-table(sl, M + Inches(7.1), Inches(4.10), Inches(4.95),
-      [['Gate', 'Cost', 'Time'],
-       ['Gate 1 \u2014 become a company', 'Rs 20\u201330k', '2 weeks'],
-       ['Gate 2 \u2014 turn on real money', 'Rs 80\u2013180k', '4\u20138 weeks']],
-      [0.50, 0.28, 0.22], fs=10.0, rh=Inches(0.33))
-flag(sl, M, Inches(5.26), Inches(11.6),
-     'verified against published aggregator pricing and SECP/FBR fee schedules. Raast P2P is free; '
-     'P2M is government-subsidised at 0.5% capped at Rs 100.')
-tally_rule(sl, M, Inches(5.72), CW, ticks=11, gold_at=11)
-tb(sl, M, Inches(5.96), Inches(11.6), Inches(0.8),
-   'The whole reason the plan says Raast first is that no other rail lets a free product exist. '
-   'This is not a preference between payment methods \u2014 it is the difference between a business and '
-   'a subsidy with a runway.', size=12.4, color=INK, spacing=1.22)
+table(sl, M, Inches(5.34), CW,
+      [['Clause', 'Requirement'],
+       ['PS&EFT s.35(1)', 'A preauthorised transfer may be authorised \u201cin writing, or in any other accepted form\u201d, so an in-application mandate is valid'],
+       ['PS&EFT s.35(2)', 'A working stop must exist. Cancelling the mandate returns the member to manual and does not end the commitment to the circle'],
+       ['PS&EFT s.30, s.31(1)', 'Disclosures at contracting, and 21 days notice before any material change'],
+       ['PS&EFT s.36(2), s.41', 'An alleged error investigated and reported in writing within 10 business days, with the burden of proving authorisation on us']],
+      [0.20, 0.80], fs=9.8, rh=Inches(0.34))
 
 # ============================================================== SECTION 04 ===
 divider('04', 'The product as built',
@@ -1565,7 +1677,7 @@ divider('08', 'State and plan',
 
 # ------------------------------------------------- state --------------------
 sl = slide('08 · Where this honestly is', 'The state of the company, without dressing',
-           'As of 9 August 2026.')
+           'As of 23 September 2026.')
 exhibit(sl, M, Inches(1.70), Inches(7.4), 32, 'Current state')
 table(sl, M, Inches(1.94), Inches(7.4),
       [['Dimension', 'State'],
@@ -1743,18 +1855,16 @@ rect(sl, 0, 0, W, Inches(0.16), fill=GOLD)
 register_mark(sl, Inches(11.05), Inches(3.55), Inches(2.1), ring=PINE_MID, mark=GOLD)
 tb(sl, M + Inches(0.4), Inches(2.05), Inches(9.2), Inches(2.4),
    'Every serious competitor in this market makes money by holding money.\n\n'
-   'Halqa makes money by recording it.\n\n'
+   'Halqa makes money by charging a stated fee for a service.\n\n'
    'That is not a feature difference \u2014 it is a different business, with a different regulator, a '
    'different cost structure, and a different failure mode.',
    size=21, color=IVORY, font=DISPLAY, spacing=1.28, gap=6)
 line(sl, M + Inches(0.4), Inches(4.85), Inches(7.2), Inches(4.85), color=GOLD, lw=2.4)
-tb(sl, M + Inches(0.4), Inches(5.10), Inches(9.0), Inches(0.9),
-   'Apni committee, apnay log. Hisaab humara.', size=15, color=GOLD_BR, font=DISPLAY)
 tb(sl, M + Inches(0.4), Inches(5.52), Inches(9.0), Inches(0.9),
-   'Halqa \u00b7 9 August 2026 \u00b7 Live in production since 20 July 2026 \u00b7 No real money has moved yet',
+   'Halqa \u00b7 23 September 2026 \u00b7 Live in production since 20 July 2026 \u00b7 No real money has moved yet',
    size=10.6, color=GREY_LT)
 
-out = r'D:\HALQA SIGMA APP\docs\HALQA-MASTER-DECK-2026-08-09.pptx'
+out = r'D:\HALQA SIGMA APP\docs\HALQA-MASTER-DECK-2026-09-23.pptx'
 prs.save(out)
 print('slides:', len(prs.slides.__iter__.__self__._sldIdLst))
 print('saved:', out)

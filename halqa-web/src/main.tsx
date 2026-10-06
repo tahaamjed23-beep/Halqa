@@ -1,5 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+// The token set is the single source of truth for colour, spacing, type,
+// radius, elevation and motion. It loads first so everything after it consumes
+// the same names instead of inventing its own values.
+import './tokens.css'
 import './index.css'
 // Rules for screens that were shipped with class names but no stylesheet.
 // Loaded after index.css so it can complete, never override, the base system.
@@ -11,8 +15,13 @@ import './styles-structure.css'
 import './styles-sections.css'
 // Engine surfaces and the rebuilt HYPER product.
 import './styles-engines.css'
-// The wallet layout set: JazzCash structure, Halqa palette. Loaded last.
+// The wallet layout set: JazzCash structure, Halqa palette.
 import './styles-wallet.css'
+// The design system components. Loaded last so a primitive always wins over
+// the correction sheets that were written before it existed.
+import './system.css'
+// the page kit that destination screens are built from, drawn to match Home
+import './page.css'
 import App from './App.tsx'
 import { bootAppearance } from './components/Appearance'
 import ErrorBoundary from './components/ErrorBoundary.tsx'

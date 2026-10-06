@@ -1,9 +1,17 @@
+import { safeRouter } from '../lib/safe-router';
+import { readPage } from '../lib/page';
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../db';
 import { requireAuth } from '../lib/auth';
 import { audit } from '../lib/audit';
-import { earlyTurnUnlocked, band } from '../lib/score-bands';
+import { earlyTurnUnlocked, band, seatTier, seatReason, standingOf, REQUIRED_CLEAN_CIRCLES,
+  type SeatTier } from '../lib/score-bands';
+
+// What each block of seats is called on screen.
+const SEAT_LABEL: Record<SeatTier, string> = {
+  ANY: 'Any turn', MIDDLE: 'The later half of a circle', LAST: 'The last turns only',
+};
 import { CAPS } from '../lib/affordability';
 
 // ---------------------------------------------------------------------------
@@ -20,7 +28,9 @@ import { CAPS } from '../lib/affordability';
 //   already does this silently; nobody could see what it was doing.
 // ---------------------------------------------------------------------------
 
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 router.use(requireAuth);
 
 // ---- statement -------------------------------------------------------------
@@ -37,17 +47,21 @@ router.get('/statement', async (req, res, next) => {
     const start = from ? new Date(from) : new Date(now.getFullYear(), now.getMonth(), 1);
     const end = to ? new Date(to) : now;
 
+    const statementPage = readPage(req.query);
     const [payments, rounds, user] = await Promise.all([
       prisma.payment.findMany({
         where: { payerId: req.auth!.userId, OR: [{ paidAt: { gte: start, lte: end } }, { paidAt: null, round: { dueDate: { gte: start, lte: end } } }] },
         include: { round: { select: { roundNumber: true, dueDate: true, committee: { select: { id: true, name: true } } } } },
-        orderBy: [{ paidAt: 'desc' }],
-        take: 300,
+        orderBy: [{ paidAt: 'desc' }, { id: 'desc' }],   // id breaks ties, so a cursor is sound
+        // Was a flat 300 with no cursor, so a member with a longer history
+        // could not reach the older rows of their own statement.
+        take: statementPage.take, ...statementPage.cursorArgs,
       }),
       prisma.round.findMany({
         where: { recipientId: req.auth!.userId, payoutDate: { gte: start, lte: end } },
         select: { id: true, roundNumber: true, payoutPaisa: true, payoutDate: true, status: true, committee: { select: { id: true, name: true } } },
-        orderBy: { payoutDate: 'desc' },
+        orderBy: [{ payoutDate: 'desc' }, { id: 'desc' }],
+        take: statementPage.take,   // was unbounded
       }),
       prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { fullName: true, username: true, phone: true } }),
     ]);
@@ -126,6 +140,9 @@ router.get('/limits', async (req, res, next) => {
     ]);
 
     const verified = !!user.earlyTurnVerifiedAt;
+    // One standing, read through the engine, so this screen and the join route
+    // answer "which turns may I take" with the same rule and the same sentence.
+    const standing = standingOf(user);
     const income = user.declaredIncomePaisa ?? 0n;
     // The affordability engine's own ceiling, so the number a member reads here
     // is the number that refuses them at the door.
@@ -160,20 +177,22 @@ router.get('/limits', async (req, res, next) => {
         },
         {
           key: 'turns',
+          // The seat matrix of 5 October 2026. The sentence is seatReason's, so
+          // this card and the refusal the join route gives cannot disagree.
           label: 'Turns you may take',
-          value: earlyTurnUnlocked({
-            creditScore: user.creditScore,
-            committeesCompletedClean: user.committeesCompletedClean,
-            earlyTurnVerifiedAt: user.earlyTurnVerifiedAt,
-          }) ? 'Any turn' : 'The last three only',
-          note: 'Two clean circles and a check from us opens the rest',
+          value: SEAT_LABEL[seatTier(standing)],
+          note: seatReason(standing),
         },
       ],
       raise: [
         { key: 'cnic', done: !!user.cnic, label: 'Put your CNIC on file', gain: 'Unlocks hosting' },
         { key: 'income', done: !!user.incomeVerifiedAt, label: 'Verify your income', gain: 'Six committees instead of one, and 80% off the fee' },
         { key: 'cheque', done: !!user.chequeSecuredAt, label: 'Leave a guarantee cheque', gain: 'Takes the fee to almost nothing' },
-        { key: 'clean', done: user.committeesCompletedClean >= 2, label: 'Finish two circles cleanly', gain: 'Opens every turn position' },
+        { key: 'clean', done: user.committeesCompletedClean >= REQUIRED_CLEAN_CIRCLES,
+          label: `Finish ${REQUIRED_CLEAN_CIRCLES === 1 ? 'one circle' : `${REQUIRED_CLEAN_CIRCLES} circles`} cleanly`,
+          gain: 'Opens every turn position' },
+        { key: 'security', done: false, label: 'Pledge security that covers the pot',
+          gain: 'Opens every turn position without a credit check' },
       ],
       band: band(user.creditScore),
     });
@@ -247,14 +266,20 @@ router.post('/devices/sign-out-others', async (req, res, next) => {
       where: { userId: req.auth!.userId, revokedAt: null, expiresAt: { gt: new Date() } },
       orderBy: { createdAt: 'desc' }, select: { familyId: true },
     });
-    const { count } = await prisma.refreshToken.updateMany({
-      where: {
-        userId: req.auth!.userId, revokedAt: null,
-        ...(keep ? { familyId: { not: keep.familyId } } : {}),
-      },
-      data: { revokedAt: new Date() },
+    // Both writes together: revoking the other sessions and recording that it
+    // happened. A member who signs every other device out and later disputes it
+    // needs the entry to exist, and it only exists if the revoke committed.
+    const { count } = await prisma.$transaction(async tx => {
+      const result = await tx.refreshToken.updateMany({
+        where: {
+          userId: req.auth!.userId, revokedAt: null,
+          ...(keep ? { familyId: { not: keep.familyId } } : {}),
+        },
+        data: { revokedAt: new Date() },
+      });
+      await audit(tx, req.auth!.userId, 'SESSIONS_REVOKED', 'User', req.auth!.userId, { count: result.count });
+      return result;
     });
-    await audit(prisma, req.auth!.userId, 'SESSIONS_REVOKED', 'User', req.auth!.userId, { count });
     res.json({ signedOut: count });
   } catch (error) { next(error); }
 });

@@ -8,15 +8,34 @@
 // being quoted one number and charged another, and how the published policy
 // drifts away from the code. Nothing outside this file may invent a fee.
 //
-// THE HEADLINE: Rs 50 per installment. Flat. It does not scale with the size
-// of the committee, because a fee that grows with the pot is the thing that
-// killed Razq, and because a member on a Rs 3,000 committee cannot subsidise
-// one on a Rs 50,000 committee.
+// THE HEADLINE: Rs 85 per instalment. Flat. It does not scale with the size of
+// the committee, because a fee that grows with the pot is the thing that killed
+// Razq, and because a member on a Rs 3,000 committee cannot subsidise one on a
+// Rs 50,000 committee. It is the running cost of collecting one payment, at
+// most Rs 35, plus Rs 50 (chairman, 30 September 2026). It was Rs 50, which did
+// not cover the cost of collecting.
+//
+// The PAYMENT PARTNER'S fee of 1.5 per cent is not Halqa's and is not in this
+// file's totals: it is charged by the partner on wallet and card payments only,
+// and a debit under the bank's mandate carries none (5 October 2026).
+//
+// TAKAFUL OR INSURANCE is named to the member and never priced here. The
+// operator sets it, the bank chooses the operator, and it is no part of Halqa's
+// fee or Halqa's income.
 // ============================================================================
 
 export const FEES = {
-  /** The one member-facing charge. Rs 50 per installment recorded. */
-  PER_INSTALLMENT_PAISA: 5_000n,
+  /** The one member-facing charge. Rs 85 per instalment. */
+  PER_INSTALLMENT_PAISA: 8_500n,
+
+  /** The running cost of collecting one payment. The ceiling, not the average. */
+  RUNNING_COST_PAISA: 3_500n,
+
+  /** The payment partner's fee, on wallet and card payments only. */
+  PSP_FEE_BPS: 150n,                    // 1.5%
+
+  /** Halqa's fee on a Hyper day, the same on both designs. */
+  HYPER_DAILY_PAISA: 1_500n,            // Rs 15
 
   /**
    * Halqa's cut of a marketplace premium, in basis points. Charged on the
@@ -24,8 +43,8 @@ export const FEES = {
    */
   MARKETPLACE_CUT_BPS: 1_000n,          // 10%
 
-  /** A premium may never exceed half the payout being sold. */
-  MARKETPLACE_PREMIUM_CAP_BPS: 5_000n,  // 50%
+  /** The price of a turn may never exceed the pot (29 September 2026). */
+  MARKETPLACE_PREMIUM_CAP_BPS: 10_000n, // 100%
 
   /**
    * Circles Halqa fills itself carry a higher management fee, because Halqa is
@@ -43,6 +62,25 @@ export const FEES = {
   /** Rehabilitation fee on a recovery case, on the outstanding amount. */
   REHABILITATION_BPS: 1_000n,           // 10%
 } as const;
+
+/**
+ * The two Hyper designs, which are fixed and never a free choice of numbers.
+ * Each daily payment splits three ways: the contribution to the member
+ * collecting that day, the operator's part to the operator, and Rs 15 to Halqa.
+ *
+ * Design 2 divides Rs 8,666.67 across 26 days, which does not land on a whole
+ * paisa, so the contribution shown is rounded and the identities below hold to
+ * within that rounding rather than exactly.
+ *
+ * This is the authority. The application keeps its own copy for display in
+ * halqa-web/src/lib/fees.ts; nothing yet checks the two against each other,
+ * because the two packages do not share a build. Until they do, change this one
+ * first and carry it across by hand.
+ */
+export const HYPER_DESIGNS = [
+  { id: 'H50', days: 50, members: 400, collectingDaily: 8, dailyRupees: 450, contributionRupees: 300, operatorRupees: 135, potRupees: 15_000 },
+  { id: 'H26', days: 26, members: 390, collectingDaily: 15, dailyRupees: 500, contributionRupees: 333.33, operatorRupees: 151.67, potRupees: 8_666.67 },
+] as const;
 
 export type FeeLine = {
   code: string;
@@ -159,14 +197,18 @@ export const rehabilitationFeePaisa = (outstandingPaisa: bigint) =>
 /** The whole book, for the member-facing fee schedule screen. */
 export function feeSchedule() {
   return [
-    { code: 'INSTALLMENT', label: 'Each installment', value: 'Rs 50',
-      note: 'Flat. It does not grow with the committee.' },
+    { code: 'INSTALLMENT', label: 'Each instalment', value: 'Rs 85',
+      note: 'Flat. The same for every seat, and it does not grow with the committee.' },
+    { code: 'PSP', label: 'Paying by wallet or card', value: '1.5%',
+      note: "The payment partner's fee, not Halqa's. Paying from a bank account carries none." },
+    { code: 'TAKAFUL', label: 'Takaful or insurance', value: 'Set by the operator',
+      note: 'On circles between strangers and on Hyper. The operator sets it; it is no part of Halqa\'s fee.' },
+    { code: 'HYPER', label: 'Each Hyper day', value: 'Rs 15',
+      note: 'Flat, on both designs and on every day.' },
     { code: 'JOIN', label: 'Joining a committee', value: 'Free', note: '' },
     { code: 'CREATE', label: 'Starting a committee', value: 'Free', note: '' },
     { code: 'PAYOUT', label: 'Collecting your pot', value: 'Free',
       note: 'Halqa never takes a share of the pot.' },
-    { code: 'RAIL', label: 'Moving the money', value: 'Free',
-      note: 'Payments run over Raast, which does not charge for person-to-person transfers.' },
     { code: 'EXIT_WINDOW', label: 'Leaving in the first 24 hours', value: 'Free',
       note: 'Nothing is owed before a committee starts.' },
     { code: 'EXIT_SUBSTITUTE', label: 'Leaving with a replacement', value: 'Free',
@@ -175,8 +217,8 @@ export function feeSchedule() {
       note: '70% of it goes to the members who stay, 30% to Halqa.' },
     { code: 'EXIT_HARDSHIP', label: 'Leaving on hardship', value: 'Waived',
       note: 'Reviewed case by case.' },
-    { code: 'MARKETPLACE', label: 'Selling your turn', value: '10% of the premium',
-      note: 'Charged on the premium only, never on the pot. The premium is capped at half the payout.' },
+    { code: 'MARKETPLACE', label: 'Selling your turn', value: '10% of the price',
+      note: 'Charged on the price agreed between the two members, never on the pot. The price is capped at the pot.' },
     { code: 'DISCOUNT', label: 'Verified income', value: 'Up to 80% off',
       note: 'Verification lowers what Halqa charges you. It is never required to join.' },
   ];

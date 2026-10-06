@@ -139,7 +139,7 @@ export default function AssetPage({ back, openCommittee }:
 
           <Card title="Name the circle">
             <Field label="Circle name" hint="Leave it blank to use the item">
-              <input value={name} maxLength={60} placeholder={asset.name + ' circle'}
+              <input aria-label="Name this circle" value={name} maxLength={60} placeholder={asset.name + ' circle'}
                      onChange={e => setName(e.target.value)} />
             </Field>
           </Card>

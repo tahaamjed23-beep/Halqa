@@ -1,0 +1,160 @@
+EMAIL TO PAYMENT PARTNER
+24 September 2026. Draft, not sent
+Send to: NayaPay and SadaPay first, as electronic money institutions, confirmed against the
+State Bank register. PayFast and Safepay second, for collection of Halqa's own fee only.
+
+Subject: Payment initiation, recurring mandates and member to member settlement
+
+
+Dear [Name],
+
+I am building a digital committee platform and am at the point of selecting a
+payment partner. Before we discuss commercials I need to establish whether the
+settlement model we require is supported, because it is unusual and it decides
+the choice.
+
+WHAT THE PLATFORM DOES
+
+Members of a committee each contribute a fixed amount on a fixed schedule. On
+each cycle one member, or on the daily product a small group of members,
+collects that cycle's contributions, each paid to them directly by a payer.
+The platform records the arrangement and initiates collection. It does not
+hold member funds at any point, and no amount passes through an account of
+its own.
+
+The decisive consequence is that a collection taken from member A has to settle
+to member B, who is the recipient for that cycle. The platform is the initiator
+of the transaction but is never the beneficiary of it. Separately, and on the
+same debit, a service fee settles to the platform's own account and a third
+component settles to a licensed takaful operator's account.
+
+QUESTIONS
+
+Settlement
+
+  1. Can a collection initiated by us settle to a third party account, that is
+     the receiving member, rather than to our merchant account? If so, is that
+     configured per transaction or per mandate?
+
+  2. Can a single debit from one payer be split at settlement across three
+     destinations: a member account, our merchant account, and a third party
+     corporate account? If not, what is the closest supported arrangement?
+
+  3. If split settlement is not supported, can the three parts be taken as
+     separate transfers in one flow, each settling directly to its own
+     destination? An onward payment from our account is not an option for us.
+
+Electronic money services
+
+  E1. Will you provide payment initiation and payment aggregation to us under
+      para 7.I(f) of the Regulations for Electronic Money Institutions 2023,
+      through your interface under para 7.I(h)?
+
+  E2. When would you make the thirty day notice to the State Bank that para
+      7.I(h) requires before serving a third party service provider?
+
+Recurring mandates
+
+  4. Do you offer a recurring token or mandate API that permits a scheduled
+     debit without the payer taking an action each time?
+
+  5. Which rails does that mandate cover: wallet, bank account direct debit,
+     card, or all three?
+
+  6. Is the token held by you, with the merchant storing only an opaque
+     reference? We do not wish to store any payment credential.
+
+  7. Can a per mandate amount cap and a per period frequency cap be set, so a
+     mandate cannot be used beyond its intended instalment?
+
+  8. What is the mandate cancellation flow, how quickly does a cancellation take
+     effect, and can the payer cancel directly with you as well as through us?
+
+  9. What return codes are provided on a failed debit, and do they distinguish
+     insufficient funds from a revoked mandate, a closed account and a technical
+     failure?
+
+ 10. What is your retry policy on a failed debit, and can we control the number
+     and spacing of retries rather than inheriting a default?
+
+ 10A. Can one mandate name a primary account and a secondary account, with the
+     secondary debited once only when the primary fails for lack of funds, or
+     does each account need a mandate of its own?
+
+ 10B. With the payer's consent, can you provide the transaction history of an
+     account held with you, so that the payer's income can be verified without
+     a downloaded statement?
+
+Raast
+
+ 11. Do you support Raast Request to Pay for our own fee, where we are the payee,
+     and what is the cost per request?
+
+ 12. Do you support Raast recurring or Raast direct debit mandates, and if so on
+     what terms?
+
+ 13. What is the settlement time on a payment you initiate over Raast from one
+     member's account to another's?
+
+Pricing
+
+ 14. What is the merchant discount rate on: Raast, wallet collections, wallet
+     recurring collections, and card recurring collections?
+
+ 15. Is the merchant discount rate borne by the merchant or can it be passed to
+     the payer, and is that configurable per transaction type?
+
+ 16. Is there a fixed component per transaction in addition to the percentage?
+
+ 17. What pricing applies at a volume of roughly 20,000 collections per 50 day
+     cycle per committee, scaling to several hundred thousand collections a
+     month?
+
+ 18. Is there a separate charge for the credit to the collecting member's
+     account?
+
+Operations and integration
+
+ 19. Are webhooks signed, and which signing scheme is used?
+
+ 20. What is the idempotency model on your collection endpoint?
+
+ 21. What reconciliation file or API is provided, at what frequency, and does it
+     include the mandate reference on each line?
+
+ 22. Do you provide a full sandbox covering mandates, failed debits and
+     disbursements?
+
+ 23. What is the account title inquiry capability, so we can verify that a bank
+     or wallet account belongs to the member before it anchors collection?
+
+Onboarding
+
+ 24. What documentation is required to contract with you, and does a newly
+     incorporated private limited company with a tax number qualify?
+
+ 25. What is the typical time from application to live credentials?
+
+ 26. Are there volume or value limits during an initial period?
+
+ 27. Do you require any licence or registration from us beyond incorporation and
+     tax registration, given that we hold no member funds?
+
+CONTEXT ON TIMING
+
+We expect to incorporate shortly and would like to move to a live rail soon
+afterwards. The platform is built and the payment layer is already abstracted
+behind a provider interface, so integration is a matter of implementing one
+adapter rather than restructuring the application.
+
+I am happy to share the settlement model in more detail, including how the three
+way split is recorded, under an appropriate agreement.
+
+I would be grateful for a written response to the questions on settlement and on
+recurring mandates in particular, since those two determine whether the model
+can run on your rails at all.
+
+With thanks,
+
+Taha Amjed
+Halqa

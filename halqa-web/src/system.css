@@ -1,0 +1,309 @@
+/* ============================================================================
+   HALQA — DESIGN SYSTEM COMPONENTS
+   The rules for components/system.tsx. Every value is a token; there are no
+   literals below this line except where a colour must be mixed.
+   ========================================================================== */
+
+.ds-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* -------------------------------------------------------------------- card */
+/* No outline. The wallets this is built next to separate surfaces with fill
+   and whitespace, never with a 1px grey rectangle around everything, which is
+   what made every screen read as a form. */
+.ds-card{background:var(--surface);border:0;border-radius:var(--r-xl);
+  box-shadow:var(--e-1);padding:var(--s-5);text-align:left;width:100%;display:block}
+.ds-card.flush{padding:0;overflow:hidden}
+.ds-card+.ds-card{margin-top:var(--s-3)}
+button.ds-card{transition:transform var(--m-fast) var(--m-ease),box-shadow var(--m-base)}
+button.ds-card:active{transform:scale(.988);box-shadow:var(--e-2)}
+.mt{margin-top:var(--s-3)}
+
+/* ---------------------------------------------------------------- list row */
+.ds-list{background:var(--surface);border:0;border-radius:var(--r-xl);
+  box-shadow:var(--e-1);overflow:hidden}
+.ds-row{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-3) var(--s-4);
+  width:100%;text-align:left;background:none;border:0;min-height:60px;
+  transition:background var(--m-fast)}
+/* A divider only where two rows would otherwise run together, inset past the
+   icon so the list reads as a column rather than a table. */
+.ds-row+.ds-row{box-shadow:inset 0 1px 0 var(--line-2)}
+.ds-row.dense{min-height:48px;padding-top:var(--s-2);padding-bottom:var(--s-2)}
+.ds-row:last-child{border-bottom:none}
+button.ds-row:active{background:var(--l50)}
+.ds-row-ic{width:44px;height:44px;border-radius:var(--r-full);display:grid;place-items:center;
+  flex:none;background:var(--l50);color:var(--l700)}
+.ds-row-ic svg{width:20px;height:20px}
+.ds-row-ic.tone-ok{background:var(--ok-bg);color:var(--ok)}
+.ds-row-ic.tone-warn{background:var(--warn-bg);color:var(--warn)}
+.ds-row-ic.tone-bad{background:var(--bad-bg);color:var(--bad)}
+.ds-row-ic.tone-info{background:var(--info-bg);color:var(--info)}
+.ds-row-ic.tone-brand{background:var(--l500);color:#fff}
+.ds-row-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ds-row-title{font-size:16px;font-weight:600;line-height:1.35;color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ds-row-sub{font-size:var(--t-caption);color:var(--muted);line-height:1.35;
+  overflow:hidden;text-overflow:ellipsis}
+.ds-row-trail{flex:none;display:flex;align-items:center;gap:var(--s-2);
+  font-size:var(--t-label);font-weight:600;color:var(--ink-2)}
+.ds-row-chev{flex:none;width:18px;height:18px;color:var(--faint)}
+
+/* ------------------------------------------------------------------ button */
+.ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);
+  border-radius:var(--r-control);font-weight:700;letter-spacing:-.01em;border:1px solid transparent;
+  transition:background var(--m-fast),border-color var(--m-fast),transform var(--m-fast) var(--m-ease);
+  white-space:nowrap;cursor:pointer}
+.ds-btn:active:not(:disabled){transform:scale(.97)}
+.ds-btn:disabled{opacity:.48;cursor:not-allowed}
+.ds-btn.full{width:100%}
+.ds-btn svg{width:18px;height:18px;flex:none}
+.ds-btn.s-sm{height:38px;padding:0 var(--s-4);font-size:var(--t-label)}
+.ds-btn.s-md{height:46px;padding:0 var(--s-5);font-size:var(--t-body)}
+.ds-btn.s-lg{height:54px;padding:0 var(--s-6);font-size:var(--t-body)}
+.ds-btn.v-primary{background:var(--l600);color:#fff}
+.ds-btn.v-primary:active:not(:disabled){background:var(--l700)}
+.ds-btn.v-secondary{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.ds-btn.v-secondary:active:not(:disabled){background:var(--l50);border-color:var(--l300)}
+.ds-btn.v-tertiary{background:none;color:var(--l700);padding-left:var(--s-2);padding-right:var(--s-2)}
+.ds-btn.v-tertiary:active:not(:disabled){background:var(--l50)}
+.ds-btn.v-destructive{background:var(--bad);color:#fff}
+.ds-btn.v-destructive:active:not(:disabled){filter:brightness(.92)}
+.ds-btn-pair{display:flex;gap:var(--s-3)}
+.ds-btn-pair .ds-btn{flex:1}
+
+.ds-spinner{display:inline-block;border:2px solid currentColor;border-right-color:transparent;
+  border-radius:50%;animation:ds-spin .7s linear infinite;flex:none}
+@keyframes ds-spin{to{transform:rotate(360deg)}}
+
+/* -------------------------------------------------------------- form field */
+.ds-field{display:block;margin-bottom:var(--s-4)}
+.ds-field-label{display:block;font-size:var(--t-label);font-weight:600;color:var(--ink-2);
+  margin-bottom:var(--s-2)}
+.ds-req{color:var(--bad);margin-left:2px}
+.ds-field-control input,.ds-field-control select,.ds-field-control textarea{
+  width:100%;height:48px;padding:0 var(--s-3);border-radius:var(--r);border:1px solid var(--line);
+  background:var(--surface);color:var(--ink);font-size:var(--t-body);
+  transition:border-color var(--m-fast),box-shadow var(--m-fast)}
+.ds-field-control textarea{height:auto;min-height:96px;padding:var(--s-3);line-height:1.5}
+.ds-field-control input:focus,.ds-field-control select:focus,.ds-field-control textarea:focus{
+  outline:none;border-color:var(--l500);box-shadow:0 0 0 3px var(--l100)}
+.ds-field-control input::placeholder,.ds-field-control textarea::placeholder{color:var(--faint)}
+.ds-field.has-error .ds-field-control input,
+.ds-field.has-error .ds-field-control select,
+.ds-field.has-error .ds-field-control textarea{border-color:var(--bad)}
+.ds-field.has-error .ds-field-control input:focus{box-shadow:0 0 0 3px var(--bad-bg)}
+.ds-field.is-disabled{opacity:.55;pointer-events:none}
+.ds-field-msg{margin-top:var(--s-2);font-size:var(--t-caption);color:var(--muted)}
+.ds-field-msg.error{color:var(--bad);font-weight:600}
+
+/* ------------------------------------------------------------------- badge */
+.ds-badge{display:inline-flex;align-items:center;gap:4px;border-radius:var(--r-tag);
+  font-weight:700;letter-spacing:.01em;white-space:nowrap;border:1px solid transparent}
+.ds-badge.s-sm{font-size:var(--t-micro);padding:2px var(--s-2)}
+.ds-badge.s-md{font-size:var(--t-caption);padding:3px var(--s-3)}
+.ds-badge.tone-brand{background:var(--l100);color:var(--l700);border-color:var(--l200)}
+.ds-badge.tone-ok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok-line)}
+.ds-badge.tone-warn{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-line)}
+.ds-badge.tone-bad{background:var(--bad-bg);color:var(--bad);border-color:var(--bad-line)}
+.ds-badge.tone-info{background:var(--info-bg);color:var(--info);border-color:var(--info-line)}
+.ds-badge.tone-neutral{background:var(--line-2);color:var(--ink-2);border-color:var(--line)}
+
+/* ---------------------------------------------------------------- skeleton */
+.ds-skel{display:block;background:linear-gradient(90deg,var(--line-2) 25%,var(--line) 37%,var(--line-2) 63%);
+  background-size:400% 100%;animation:ds-shimmer 1.3s ease-in-out infinite}
+@keyframes ds-shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
+.ds-skel-stack{display:flex;flex-direction:column;gap:var(--s-2);flex:1;min-width:0}
+.ds-skel-card .ds-skel-stack{margin-top:var(--s-3)}
+@media (prefers-reduced-motion: reduce){.ds-skel{animation:none;background:var(--line-2)}}
+
+/* ------------------------------------------------------------ empty state */
+.ds-empty{display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:var(--s-8) var(--s-5);gap:var(--s-2)}
+.ds-empty-art{width:76px;height:76px;border-radius:var(--r-2xl);background:var(--l50);
+  color:var(--l600);display:grid;place-items:center;margin-bottom:var(--s-2)}
+.ds-empty-art svg{width:32px;height:32px;stroke-width:1.6}
+.ds-empty-title{font-size:var(--t-heading);font-weight:700;color:var(--ink)}
+.ds-empty-body{font-size:var(--t-body);color:var(--muted);max-width:30ch;line-height:1.5}
+.ds-empty-action{margin-top:var(--s-3)}
+
+/* ------------------------------------------------------------ error state */
+.ds-error{display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:var(--s-6) var(--s-5);gap:var(--s-2);background:var(--surface);
+  border:1px solid var(--bad-line);border-radius:var(--r-lg);margin:var(--s-3) var(--gutter)}
+.ds-error-ic{width:44px;height:44px;border-radius:var(--r-full);background:var(--bad-bg);
+  color:var(--bad);display:grid;place-items:center;margin-bottom:var(--s-1)}
+.ds-error-title{font-size:var(--t-heading);font-weight:700}
+.ds-error-body{font-size:var(--t-body);color:var(--muted);max-width:34ch;line-height:1.5;
+  margin-bottom:var(--s-2)}
+
+/* ----------------------------------------------------------- sheet + modal */
+.ds-scrim{position:fixed;inset:0;z-index:120;background:var(--overlay);
+  display:flex;align-items:flex-end;justify-content:center;
+  animation:ds-fade var(--m-base) var(--m-ease)}
+.ds-scrim.center{align-items:center;padding:var(--s-5)}
+@keyframes ds-fade{from{opacity:0}to{opacity:1}}
+.ds-sheet{background:var(--surface);width:100%;max-width:520px;
+  border-radius:var(--r-2xl) var(--r-2xl) 0 0;box-shadow:var(--e-3);
+  padding-bottom:var(--safe-bottom);max-height:88dvh;display:flex;flex-direction:column;
+  animation:ds-rise var(--m-slow) var(--m-ease)}
+@keyframes ds-rise{from{transform:translateY(16px)}to{transform:none}}
+.ds-sheet-grip{display:block;width:38px;height:4px;border-radius:var(--r-round);
+  background:var(--line);margin:var(--s-3) auto var(--s-1)}
+.ds-modal{background:var(--surface);width:100%;border-radius:var(--r-xl);box-shadow:var(--e-3);
+  max-height:84dvh;display:flex;flex-direction:column;animation:ds-pop var(--m-base) var(--m-ease)}
+.ds-modal.s-sm{max-width:360px}
+.ds-modal.s-md{max-width:460px}
+@keyframes ds-pop{from{transform:scale(.96);opacity:.6}to{transform:none;opacity:1}}
+.ds-sheet-head{display:flex;align-items:center;gap:var(--s-3);
+  padding:var(--s-4) var(--s-4) var(--s-3)}
+.ds-sheet-title{flex:1;font-size:var(--t-heading);font-weight:700;letter-spacing:-.02em}
+.ds-sheet-body{padding:0 var(--s-4) var(--s-4);overflow-y:auto;flex:1}
+.ds-sheet-foot{padding:var(--s-3) var(--s-4) var(--s-4);border-top:1px solid var(--line-2)}
+.ds-confirm-body{font-size:var(--t-body);color:var(--ink-2);line-height:1.5}
+
+/* --------------------------------------------------------------- icon btn */
+.ds-icon-btn{width:40px;height:40px;border-radius:var(--r-full);display:grid;place-items:center;
+  color:var(--ink-2);background:none;border:0;flex:none;position:relative;
+  transition:background var(--m-fast)}
+.ds-icon-btn:active{background:var(--line-2)}
+.ds-icon-btn svg{width:22px;height:22px}
+.ds-icon-btn.back{margin-left:calc(var(--s-2) * -1)}
+.ds-icon-badge{position:absolute;top:6px;right:6px;min-width:8px;height:8px;padding:0 3px;
+  border-radius:var(--r-round);background:var(--bad);color:#fff;font-size:9px;font-weight:800;
+  line-height:8px;border:1.5px solid var(--surface);display:grid;place-items:center}
+
+/* -------------------------------------------------------------- page head */
+.ds-head{background:var(--bg);padding-top:var(--safe-top)}
+.ds-head.sticky{position:sticky;top:0;z-index:30;
+  transition:background var(--m-base),box-shadow var(--m-base),border-color var(--m-base);
+  border-bottom:1px solid transparent}
+.ds-head.sticky.shrunk{background:color-mix(in srgb,var(--surface) 94%,transparent);
+  backdrop-filter:blur(14px);border-bottom-color:var(--line-2)}
+.ds-head-bar{display:flex;align-items:center;gap:var(--s-3);
+  padding:var(--s-3) var(--gutter) var(--s-3);min-height:56px}
+.ds-head-text{flex:1;min-width:0}
+.ds-head-title{font-size:var(--t-title);line-height:var(--t-title-lh);font-weight:var(--t-title-w);
+  letter-spacing:-.025em;margin:0;transition:font-size var(--m-base) var(--m-ease)}
+.ds-head.shrunk .ds-head-title{font-size:var(--t-heading)}
+.ds-head-sub{font-size:var(--t-caption);color:var(--muted);margin-top:2px}
+.ds-head.shrunk .ds-head-sub{display:none}
+.ds-head-actions{display:flex;align-items:center;gap:var(--s-1);flex:none}
+
+.ds-sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-3);
+  margin:var(--s-8) var(--gutter) var(--s-3)}
+.ds-sec-head h2{font-size:var(--t-heading);font-weight:var(--t-heading-w);letter-spacing:-.02em;margin:0}
+
+/* ---------------------------------------------------------- page motion */
+/* Depth, not a hard swap: a screen arrives from slightly below and fades in.
+   Honoured against prefers-reduced-motion by the token override. */
+.ds-page-enter{animation:ds-page var(--m-slow) var(--m-ease)}
+@keyframes ds-page{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* A thin progress line while a lazy screen is being fetched, instead of the
+   whole frame being replaced by a spinner. */
+.ds-route-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:200;overflow:hidden;
+  background:var(--l100)}
+.ds-route-bar i{display:block;height:100%;width:40%;background:var(--l500);
+  animation:ds-route 1s var(--m-ease) infinite}
+@keyframes ds-route{0%{transform:translateX(-100%)}100%{transform:translateX(320%)}}
+
+/* ============================================================================
+   A27 — a badge sits inside the bounds of the thing it labels
+   The NEW and POPULAR badges were absolutely positioned at the top edge of
+   their tile, over the row above it and, once pulled inside, over the tile's
+   own icon. A tile that carries a badge now reserves the room for it, so the
+   badge never lands on anything.
+   ========================================================================== */
+.w-tile:has(.w-tile-badge){padding-top:calc(var(--s-6) + var(--s-2))}
+.w-tile-badge{z-index:1}
+.qa-item{position:relative}
+.qa-item:has(.qa-badge){padding-top:var(--s-5)}
+
+/* ============================================================================
+   SEAT ELIGIBILITY — "Turns you can take"
+   The pattern this screen was rebuilt on, and the one the rest of the inner
+   screens follow: one large answer, then the evidence, then the gates as rows
+   that resolve themselves in an icon. No wall of equal-weight boxes.
+   ========================================================================== */
+.seat{padding:0 var(--gutter) var(--s-6)}
+
+.seat-hero{background:var(--l50);border-radius:var(--r-2xl);
+  padding:var(--s-6) var(--s-5) var(--s-5);margin-bottom:var(--s-5)}
+.seat-hero-lab{display:block;font-size:var(--t-label);font-weight:600;color:var(--l700);
+  letter-spacing:.01em}
+.seat-hero-fig{display:inline-block;font-size:52px;line-height:1;font-weight:800;
+  letter-spacing:-.04em;color:var(--ink);margin-top:var(--s-2)}
+.seat-hero-of{font-size:var(--t-heading);font-weight:600;color:var(--muted);margin-left:var(--s-2)}
+.seat-hero-note{font-size:var(--t-body);color:var(--ink-2);line-height:1.5;margin-top:var(--s-3)}
+.seat-hero-note b{font-weight:700}
+
+.seat-strip{display:flex;gap:6px;overflow-x:auto;padding:var(--s-1) 0;
+  scrollbar-width:none;-ms-overflow-style:none}
+.seat-strip::-webkit-scrollbar{display:none}
+.seat-pip{flex:none;min-width:38px;height:44px;border-radius:var(--r);display:grid;
+  place-items:center;font-size:var(--t-label);font-weight:700;font-variant-numeric:tabular-nums;
+  background:var(--line-2);color:var(--faint)}
+.seat-pip.open{background:var(--l200);color:var(--l900)}
+.seat-pip.first{background:var(--l600);color:#fff;box-shadow:0 0 0 3px var(--l100)}
+
+.seat-key{display:flex;gap:var(--s-4);margin:var(--s-3) 0 var(--s-6)}
+.seat-key span{display:inline-flex;align-items:center;gap:6px;font-size:var(--t-caption);
+  color:var(--muted)}
+.seat-key i{width:12px;height:12px;border-radius:4px;background:var(--line-2);display:block}
+.seat-key i.on{background:var(--l600)}
+
+.seat-gates{display:flex;flex-direction:column;gap:var(--s-2)}
+.seat-gate{display:flex;align-items:flex-start;gap:var(--s-3);
+  background:var(--surface);border-radius:var(--r-xl);padding:var(--s-4);box-shadow:var(--e-1)}
+.seat-gate-ic{width:40px;height:40px;border-radius:var(--r-full);flex:none;display:grid;
+  place-items:center;background:var(--warn-bg);color:var(--warn)}
+.seat-gate.pass .seat-gate-ic{background:var(--l100);color:var(--l700)}
+.seat-gate-ic svg{width:20px;height:20px}
+.seat-gate-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.seat-gate-txt b{font-size:15px;font-weight:700;line-height:1.35;letter-spacing:-.01em}
+.seat-gate-txt>span{font-size:var(--t-caption);color:var(--muted);line-height:1.5}
+.seat-gate-tag{flex:none;font-size:var(--t-caption);font-weight:700;color:var(--muted);
+  background:var(--line-2);border-radius:var(--r-tag);padding:3px var(--s-2)}
+.seat-gate-tag.num{font-variant-numeric:tabular-nums;background:var(--l100);color:var(--l700)}
+
+.seat-foot{display:flex;align-items:center;gap:var(--s-2);margin-top:var(--s-4);
+  font-size:var(--t-caption);color:var(--muted)}
+.seat-foot svg{width:15px;height:15px;flex:none}
+
+
+/* ============================================================================
+   NO PILLS, ANYWHERE — the standing design rule, applied to every capsule that
+   the older stylesheets drew. Rounded capsules were the shape the chairman
+   named as the tell of a generated interface. Controls take squared-off
+   corners; progress bars take square ends, the way a ledger rules a line.
+   Circles (avatars, round icon buttons, dots) are not pills and stay round.
+   ========================================================================== */
+/* buttons and fields */
+.btn,.primary,button.primary,.ghost,button.ghost,.secondary,.secondary.sm,
+.rcpt-acts button,.rcpt-dispute,.vault-band-acts button,.acct-acts button,.slim-action,
+.w-search,.w-sheet-search,.chat-send input,.proc-out{border-radius:var(--r-control)}
+/* chips, badges, tags, filters and segmented controls */
+.chip,.pricing-chip,.mode-chip,.goal-chip,.factor-pill,.pts-pill,.pillbar button,
+.seg,.seg button,.tabs-row,.tabs-row button,.segmented,.segmented button,.w-seg,.w-seg button,
+.w-chips button,.w-tile-badge,.w-free,.host-chip,.circle-status,.secure-chip,.pref-chip,
+.acct-badge,.scope,.engine-tags span,.chip-halal,.risk-badge,.discount-badge,.host-card-flag,
+.rafa-chips button,.vault-tier .rafa-conv,.vault-tier .rafa-halal,.gc-tally span,
+.prof-link,.disc-pub,.vault-goal-cta,.sup-status,.pay-state,.wizard-step,
+.terminal-filter button,.scheme-cat button,.scheme-sort button,.scheme-bands button{
+  border-radius:var(--r-tag)}
+/* progress bars, tracks and step dots: square ends */
+.track,.track i,.collection>div:last-child,.onboard-dots i,.pass-meter i,
+.streak-track,.streak-track em,.vault-goal,.vault-goal em,.your-payout i,
+.w-progress,.w-progress i,.ds-skel{border-radius:var(--r-bar)}
+/* the toggle switch: a rounded-square track and knob instead of a capsule */
+.sw{border-radius:var(--r-sm)}
+.sw i{border-radius:var(--r-tag)}
+
+/* ------------------------------------------------------------- skip link --
+   Off screen until it has focus, and unmissable once it does. A keyboard
+   member should not have to tab through the navigation on every screen to
+   reach the screen (WCAG 2.4.1). */
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;
+  padding:10px 16px;border-radius:0 0 var(--r-sm) 0;
+  background:var(--l700);color:var(--on-deep);font-weight:700;text-decoration:none}
+.skip-link:focus,.skip-link:focus-visible{left:0;outline:3px solid var(--l400);outline-offset:2px}

@@ -1,3 +1,6 @@
+import { safeRouter } from '../lib/safe-router';
+import { idParam, twoIdParams, inviteCodeParam } from '../lib/params';
+import { readPage, sendPage, MAX_CIRCLE_MEMBERS } from '../lib/page';
 import { Router, type NextFunction, type Request, type Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { z } from 'zod';
@@ -10,7 +13,7 @@ import { assessForwardLiability, type SecurityPolicy } from '../lib/forward-liab
 import { MUTUAL_PG_VERSION, freshUndertaking, hashText, mutualPgText } from '../lib/agreements';
 import { linkedOpenDefault } from '../lib/family-links';
 import { CONFIRMATION_WINDOW_HOURS, windowState, withdrawalOutcome } from '../lib/exit-ladder';
-import { band, allowedPositions, eligiblePositions, earlyTurnUnlocked, startOrder } from '../lib/score-bands';
+import { band, allowedPositions, eligiblePositions, earlyTurnUnlocked, seatReason, seatsOpenOnJoin, standingOf, startOrder } from '../lib/score-bands';
 import { assessRisk, policyHash } from '../lib/risk-engine';
 import { allocateCyclePool } from '../lib/distribution';
 import { reputationFor } from '../lib/reputation';
@@ -18,7 +21,9 @@ import { activePartner, guaranteeFundAccount, guaranteeFundBalance, slotFeeBpsFo
 import { ensureSponsorUser, settleSponsorPayments } from '../lib/gap-fund';
 import { DEPOSIT_SCHEME_SLUG, EARLY_BIRD_DAYS, FLOAT_MUDARIB_FEE_PCT, FLOAT_SCHEME_SLUG, earlyBirdFactor, patienceWeightTenths, pickPrizeIndex, qualifiesEarlyBird, roundFloatProfit } from '../lib/sukoon';
 
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 router.use(requireAuth);
 const protectionPolicy = (value: unknown) => (value && typeof value === 'object' ? value : {}) as Record<string, unknown>;
 
@@ -81,18 +86,23 @@ router.get('/', async (req, res) => {
   // ?scope=mine to skip the public-forming branch entirely — a much smaller
   // query and payload on a busy platform. Discovery has its own endpoint.
   const mineOnly = req.query.scope === 'mine';
+  // Unbounded until 2026-10-06, and each row carries every member and the
+  // current round's payments, so the cost per row is far from small.
+  const { take, cursorArgs } = readPage(req.query);
   const rows = await prisma.committee.findMany({
     where: { OR: [{ hostId: req.auth!.userId }, { members: { some: { userId: req.auth!.userId, status: 'ACTIVE' } } }, ...(mineOnly ? [] : [{ status: 'FORMING' as const, listedPublicly: true }])] },
-    include: { host: { select: { id: true, fullName: true, creditScore: true } }, scheme: true, members: { where: { status: 'ACTIVE' }, select: { userId: true, turnPosition: true, hasReceived: true } }, rounds: { where: { status: { in: ['COLLECTING', 'INVESTED'] } }, include: { payments: true }, take: 1 } },
-    orderBy: { createdAt: 'desc' },
+    include: { host: { select: { id: true, fullName: true, creditScore: true } }, scheme: true, members: { where: { status: 'ACTIVE' }, select: { id: true, userId: true, turnPosition: true, hasReceived: true, autoDebitEnabled: true, autoDebitRail: true, user: { select: { id: true, fullName: true, username: true, avatarUrl: true, creditScore: true } } } }, rounds: { where: { status: { in: ['COLLECTING', 'INVESTED'] } }, include: { payments: true }, take: 1 } },
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],   // id breaks ties, so a cursor is sound
+    take, ...cursorArgs,
   });
-  res.json(rows);
+  sendPage(res, rows, take);
 });
 
 // Public discovery is intentionally separate from the member dashboard. It
 // returns only circles the viewer has not joined, with every currently
 // available position and an honest projected payout timeline.
 router.get('/discover', async (req, res) => {
+  const { take, cursorArgs } = readPage(req.query);
   const rows = await prisma.committee.findMany({
     where: {
       listedPublicly: true,
@@ -108,11 +118,14 @@ router.get('/discover', async (req, res) => {
       recoveryCases: { select: { userId: true, status: true } },
       waitlist: { where: { userId: req.auth!.userId, status: 'WAITING' }, select: { id: true } },
     },
-    orderBy: [{ status: 'asc' }, { createdAt: 'desc' }],
-    take: 18, // FORMING sorts first, so the newest open circles always surface; caps payload + query cost
+    orderBy: [{ status: 'asc' }, { createdAt: 'desc' }, { id: 'desc' }],
+    // FORMING sorts first, so the newest open circles always surface. The 18
+    // was a hard cap with no cursor: a member could not scroll past the first
+    // eighteen circles on the platform, however many were open to them.
+    take, ...cursorArgs,
   });
   const day = 86_400_000;
-  // The viewer's TENURE + band decide which seats they may claim — Discover only
+  // The seat matrix of 5 October 2026 decides which seats the viewer may claim — Discover only
   // shows circles where they actually have an eligible free seat (no dead ends).
   // A new member sees only the late seats until they graduate (score-bands.ts).
   const viewer = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId }, select: { creditScore: true, committeesCompletedClean: true, earlyTurnVerifiedAt: true } });
@@ -148,13 +161,21 @@ router.get('/discover', async (req, res) => {
   });
   // Hide OPEN circles the viewer can't actually sit in; keep WAIT_NEXT_CYCLE
   // ones (they book seats on the next cycle, not now) so the pipeline is visible.
-  res.json(mapped.filter(c => c.availability !== 'OPEN' || c.eligiblePositions.length > 0));
+  //
+  // The cursor is taken from the rows the DATABASE returned, not from the ones
+  // left after this filter: filtering here is the reason a page can come back
+  // shorter than it was asked for, and taking the cursor from the filtered set
+  // would skip every circle the viewer could not sit in and lose the ones after
+  // them too.
+  sendPage(res, mapped.filter(c => c.availability !== 'OPEN' || c.eligiblePositions.length > 0), take,
+    rows.length === take ? rows[rows.length - 1]!.id : null);
 });
 
 // Pre-join trust surface: resolve an invite code to the circle's terms and the
 // host's verifiable reliability record WITHOUT joining. No membership required.
 router.get('/preview/:inviteCode', async (req, res, next) => {
   try {
+    inviteCodeParam.parse(req.params);
     const committee = await prisma.committee.findUnique({ where: { inviteCode: req.params.inviteCode.trim().toUpperCase() }, include: { scheme: true, members: { where: { status: 'ACTIVE' }, select: { id: true } } } });
     if (!committee) return res.status(404).json({ error: 'Invite code not found' });
     const host = await reputationFor(committee.hostId);
@@ -171,6 +192,7 @@ router.get('/preview/:inviteCode', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
+    idParam.parse(req.params);   // check the id before any query runs
     await assertMember(req.params.id, req.auth!.userId);
     const committee = await prisma.committee.findUnique({ where: { id: req.params.id }, include: includeDetail });
     if (!committee) return res.status(404).json({ error: 'Committee not found' });
@@ -352,6 +374,7 @@ router.post('/join', async (req, res, next) => {
 });
 router.post('/:id/join-public', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     const committee = await prisma.committee.findUnique({ where: { id: req.params.id }, select: { listedPublicly: true, joinPolicy: true } });
     if (!committee || !committee.listedPublicly || committee.joinPolicy === 'INVITE_ONLY') return res.status(403).json({ error: 'This circle is invite-only' });
     return joinCommittee(req.params.id, req, res, next);
@@ -371,8 +394,10 @@ router.post('/:id/waitlist', async (req, res, next) => {
       create: { committeeId: committee.id, userId: req.auth!.userId, preferredPosition: input.preferredPosition ?? null },
       update: { status: 'WAITING', preferredPosition: input.preferredPosition ?? null },
     });
-    await prisma.notification.create({ data: { userId: committee.hostId, type: 'CYCLE_WAITLIST', message: `A member joined the waitlist for ${committee.name}${input.preferredPosition ? `, preferring turn ${input.preferredPosition}` : ''}.` } });
-    await audit(prisma, req.auth!.userId, 'CYCLE_WAITLIST_JOINED', 'Committee', committee.id, { preferredPosition: input.preferredPosition ?? null });
+    await prisma.$transaction(async tx => {
+      await tx.notification.create({ data: { userId: committee.hostId, type: 'CYCLE_WAITLIST', message: `A member joined the waitlist for ${committee.name}${input.preferredPosition ? `, preferring turn ${input.preferredPosition}` : ''}.` } });
+      await audit(tx, req.auth!.userId, 'CYCLE_WAITLIST_JOINED', 'Committee', committee.id, { preferredPosition: input.preferredPosition ?? null });
+    });
     res.status(201).json(row);
   } catch (error) { next(error); }
 });
@@ -383,7 +408,7 @@ async function joinCommittee(committeeId: string, req: Request, res: Response, n
     if (!(await freshUndertaking(prisma, userId))) return res.status(428).json(UNDERTAKING_428);
     // Optional slot pick. Score no longer REORDERS anyone; it only limits which
     // free positions a joiner may claim (score-bands.ts). The member picks from
-    // their band-eligible free slots; omitting it takes the earliest eligible.
+    // the free seats their eligibility opens; omitting it takes the earliest.
     const { position: requestedPosition } = z.object({ position: z.number().int().min(1).max(150).optional() }).parse(req.body ?? {});
     const joiningUser=await prisma.user.findUniqueOrThrow({where:{id:userId}});
     if(joiningUser.isBanned)return res.status(403).json({error:'Restricted accounts cannot join committees'});
@@ -394,27 +419,34 @@ async function joinCommittee(committeeId: string, req: Request, res: Response, n
     const linkedDefault=await linkedOpenDefault(prisma,userId);
     if(linkedDefault)return res.status(403).json({error:`Joining is paused under the linked-account policy: an account linked to yours (${linkedDefault.fullName}) has an unresolved default. It clears when their recovery completes.`});
     // Newcomer first-circle installment cap removed (chairman-directed): a
-    // member's exposure is governed by the reliability-score gate, graduated
-    // collateral and band-based slot eligibility, not a fixed installment ceiling.
+    // member's exposure is governed by the seat matrix, the affordability tests
+    // and graduated collateral, not by a fixed installment ceiling.
     const committee = await prisma.committee.findUnique({ where: { id: committeeId }, include: { members: { where: { status: 'ACTIVE' } } } });
     if (!committee) return res.status(404).json({ error: 'Committee not found' });
     if (committee.status !== 'FORMING') return res.status(409).json({ error: 'Committee has already started' });
     if (committee.members.length >= committee.memberCap) return res.status(409).json({ error: 'Committee is full' });
     const existing = committee.members.some(m => m.userId === userId);
     if (existing) return res.status(409).json({ error: 'Already a member' });
-    // Slot eligibility. On PUBLIC (stranger-joinable) circles the tenure
-    // quarantine applies: a new member — whatever their score — may only take a
-    // LATE turn until they finish 2 clean circles and are verified (score-bands
-    // .ts). INVITE-ONLY circles bypass it: the host is vouching (the social
-    // collateral Akif Saeed flagged), and positions there are host-assigned.
+    // Seat eligibility. On PUBLIC (stranger-joinable) circles the seat matrix of
+    // 5 October 2026 applies: which seats are open depends on whether the pot is
+    // recoverable from this member — by bureau record, by a clean committee, or
+    // by security pledged (score-bands.ts). The old blanket quarantine on new
+    // members is gone. INVITE-ONLY circles bypass the matrix: the host is
+    // vouching (the social collateral the mentor flagged), and positions there
+    // are host-assigned.
     const occupiedNow = new Set(committee.members.map(m => m.turnPosition));
     const allPositions = Array.from({ length: committee.memberCap }, (_, i) => i + 1);
-    const allowedForJoiner = committee.listedPublicly ? eligiblePositions(committee.memberCap, joiningUser) : allPositions;
+    const joinerStanding = standingOf(joiningUser, Number(committee.contributionPaisa) * committee.memberCap);
+    const allowedForJoiner = seatsOpenOnJoin(committee.listedPublicly, committee.memberCap, joinerStanding);
     const eligibleFree = allowedForJoiner.filter(p => !occupiedNow.has(p));
-    const quarantined = committee.listedPublicly && !earlyTurnUnlocked(joiningUser);
-    if (!eligibleFree.length) return res.status(409).json({ error: quarantined ? 'New members can only take the last turns of a circle until they complete two circles cleanly. No late turn is free here — try another circle.' : 'No turn position is available to you in this circle. Try another — Discover only shows ones you can join.' });
+    // The sentence the member reads is seatReason's: it names which block of
+    // seats is open and the two ways to open the rest. It is written once, in
+    // the engine, so a screen and the API can never disagree about the rule.
+    const limited = committee.listedPublicly && !earlyTurnUnlocked(joinerStanding);
+    const why = limited ? ` ${seatReason(joinerStanding)}` : '';
+    if (!eligibleFree.length) return res.status(409).json({ error: limited ? `No seat open to you is free in this circle — try another.${why}` : 'No turn position is available to you in this circle. Try another — Discover only shows ones you can join.' });
     if (requestedPosition !== undefined && !eligibleFree.includes(requestedPosition)) {
-      return res.status(409).json({ error: quarantined ? `Turn ${requestedPosition} is reserved for established members. As a new member you can take: ${eligibleFree.join(', ')}.` : `Turn ${requestedPosition} is not available to you. You can take: ${eligibleFree.join(', ')}.` });
+      return res.status(409).json({ error: `Turn ${requestedPosition} is not available to you. You can take: ${eligibleFree.join(', ')}.${why}` });
     }
     const chosenPosition = requestedPosition ?? eligibleFree[0];
     const membership = await prisma.$transaction(async tx => {
@@ -516,15 +548,17 @@ router.post('/:id/start', async (req, res, next) => {
         where: { id: committee.id },
         data: { status: 'CONFIRMING', confirmingSince: openedAt },
       });
-      await prisma.notification.createMany({
-        data: members.map(m => ({
-          userId: m.userId,
-          type: 'CONFIRMATION_WINDOW_OPEN',
-          message: `${committee.name} starts in ${CONFIRMATION_WINDOW_HOURS} hours. Leaving now costs nothing.`,
-        })),
+      await prisma.$transaction(async tx => {
+        await tx.notification.createMany({
+          data: members.map(m => ({
+            userId: m.userId,
+            type: 'CONFIRMATION_WINDOW_OPEN',
+            message: `${committee.name} starts in ${CONFIRMATION_WINDOW_HOURS} hours. Leaving now costs nothing.`,
+          })),
+        });
+        await audit(tx, req.auth!.userId, 'CONFIRMATION_WINDOW_OPENED', 'Committee', committee.id,
+          { members: members.length, closesAt: new Date(openedAt.getTime() + CONFIRMATION_WINDOW_HOURS * 3_600_000) });
       });
-      await audit(prisma, req.auth!.userId, 'CONFIRMATION_WINDOW_OPENED', 'Committee', committee.id,
-        { members: members.length, closesAt: new Date(openedAt.getTime() + CONFIRMATION_WINDOW_HOURS * 3_600_000) });
       return res.json({
         status: 'CONFIRMING',
         closesAt: new Date(openedAt.getTime() + CONFIRMATION_WINDOW_HOURS * 3_600_000),
@@ -603,123 +637,49 @@ router.post('/:id/start', async (req, res, next) => {
 
 router.get('/:id/payment-matrix', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     await assertHost(req.params.id, req.auth!.userId);
-    const rounds = await prisma.round.findMany({ where: { committeeId: req.params.id }, include: { recipient: { select: { fullName: true } }, payments: { include: { payer: { select: { id: true, fullName: true, creditScore: true } } } } }, orderBy: { roundNumber: 'asc' } });
+    // Bounded by the circle, not by a page: a matrix is the whole grid or it
+    // is useless, and the grid is rounds x members. memberCap is capped at 150
+    // at creation, so the worst case is 150 rounds, and the take says so
+    // rather than leaving it to be inferred.
+    const rounds = await prisma.round.findMany({
+      where: { committeeId: req.params.id },
+      include: { recipient: { select: { fullName: true } }, payments: { include: { payer: { select: { id: true, fullName: true, creditScore: true } } } } },
+      orderBy: { roundNumber: 'asc' },
+      take: MAX_CIRCLE_MEMBERS,
+    });
     res.json(rounds);
   } catch (error) { next(error); }
 });
 
-router.get('/:id/deposits', async (req, res, next) => {
-  try {
-    await assertMember(req.params.id, req.auth!.userId);
-    const deposits = await prisma.securityDeposit.findMany({ where: { membership: { committeeId: req.params.id } }, include: { membership: { include: { user: { select: { id: true, fullName: true, username: true } } } } }, orderBy: { amountPaisa: 'desc' } });
-    res.json(deposits);
-  } catch (error) { next(error); }
-});
-
-router.post('/:id/deposits/:depositId/confirm', async (req, res, next) => {
-  try {
-    await assertHost(req.params.id, req.auth!.userId);
-    const { txnRef } = z.object({ txnRef: z.string().trim().min(4).max(100) }).parse(req.body);
-    const deposit = await prisma.securityDeposit.findFirst({ where: { id: req.params.depositId, membership: { committeeId: req.params.id } } });
-    if (!deposit) return res.status(404).json({ error: 'Security deposit not found' });
-    if (deposit.status !== 'PENDING') return res.status(409).json({ error: 'Security deposit has already been resolved' });
-    const claimed = await prisma.securityDeposit.updateMany({ where: { id: deposit.id, status: 'PENDING' }, data: { status: 'HELD', txnRef, confirmedAt: new Date() } });
-    if (claimed.count !== 1) return res.status(409).json({ error: 'Security deposit has already been resolved' });
-    const updated = await prisma.securityDeposit.findUniqueOrThrow({ where: { id: deposit.id } });
-    await ledger(prisma, { committeeId: req.params.id, actorId: req.auth!.userId, debit: `user:${deposit.membershipId}:external`, credit: `committee:${req.params.id}:deposit_reserve`, amountPaisa: deposit.amountPaisa, reason: 'SECURITY_DEPOSIT_RECORDED_STAGE_1', refType: 'SecurityDeposit', refId: deposit.id, idempotencyKey: `deposit:${deposit.id}:confirmed` });
-    await audit(prisma, req.auth!.userId, 'SECURITY_DEPOSIT_RECORDED', 'SecurityDeposit', deposit.id, { txnRef, stage: 'RECORD_ONLY' });
-    res.json(updated);
-  } catch (error) { next(error); }
-});
+// REMOVED 5 October 2026: /:id/deposits and /:id/deposits/:depositId/confirm.
+// No deposit is held from a member. Where security is needed it is the member's
+// own money, frozen by the partner bank in the member's own account and earning
+// the bank's profit for them throughout (section AQ3 of the work register).
 
 router.post('/:id/nudge/:userId', async (req, res, next) => {
   try {
+    twoIdParams('id', 'userId').parse(req.params);   // both ids checked before any query
     const committee = await assertHost(req.params.id, req.auth!.userId);
     await assertMember(req.params.id, req.params.userId);
-    const notice = await prisma.notification.create({ data: { userId: req.params.userId, type: 'PAYMENT_NUDGE', message: `Reminder from ${committee.name}: please record your current contribution.` } });
-    await audit(prisma, req.auth!.userId, 'PAYMENT_NUDGE_SENT', 'Committee', committee.id, { targetUserId: req.params.userId });
+    const notice = await prisma.$transaction(async tx => {
+      const notice = await tx.notification.create({ data: { userId: req.params.userId, type: 'PAYMENT_NUDGE', message: `Reminder from ${committee.name}: please record your current contribution.` } });
+      await audit(tx, req.auth!.userId, 'PAYMENT_NUDGE_SENT', 'Committee', committee.id, { targetUserId: req.params.userId });
+      return notice;
+    });
     res.status(201).json(notice);
   } catch (error) { next(error); }
 });
 
-router.post('/:id/default-cover/:paymentId', async (req, res, next) => {
-  try {
-    const committee = await assertHost(req.params.id, req.auth!.userId);
-    const payment = await prisma.payment.findFirst({ where: { id: req.params.paymentId, round: { committeeId: committee.id }, status: 'MISSED' } });
-    if (!payment) return res.status(404).json({ error: 'Missed payment not found' });
-    const membership = await prisma.committeeMember.findUniqueOrThrow({ where: { committeeId_userId: { committeeId: committee.id, userId: payment.payerId } }, include: { securityDeposits: true, payoutHoldbacks: true } });
-    const deposits = membership.securityDeposits.filter(item => item.status === 'FORFEITED').reduce((sum, item) => sum + item.amountPaisa, 0n);
-    const holdbacks = membership.payoutHoldbacks.filter(item => item.status === 'FORFEITED').reduce((sum, item) => sum + item.amountPaisa, 0n);
-    if (deposits + holdbacks < payment.amountPaisa) return res.status(409).json({ error: 'Recorded collateral is insufficient to cover this missed contribution' });
-    await prisma.$transaction(async tx => {
-      await tx.payment.update({ where: { id: payment.id }, data: { status: 'PAID', paidVia: 'DEFAULT_COLLATERAL', txnRef: `COVER-${payment.id}`, paidAt: new Date() } });
-      await audit(tx, req.auth!.userId, 'DEFAULT_CONTRIBUTION_COVERED', 'Payment', payment.id, { depositsPaisa: deposits.toString(), holdbacksPaisa: holdbacks.toString(), amountPaisa: payment.amountPaisa.toString(), stage: 'RECORD_ONLY' });
-      await tx.notification.create({ data: { userId: payment.payerId, type: 'DEFAULT_COLLATERAL_USED', message: `${committee.name} used your recorded collateral to cover a missed contribution. Your recovery obligation remains open.` } });
-    });
-    res.json({ message: 'Missed contribution covered from recorded collateral' });
-  } catch (error) { next(error); }
-});
+// REMOVED 5 October 2026: /:id/default-cover/:paymentId. There is no Halqa
+// cover and no collateral forfeited to Halqa. A default after collection is met
+// by takaful or insurance from the operator the bank chooses, which pays the
+// members left short in their own names (29 September 2026).
 
-router.post('/:id/invest', async (req, res, next) => {
-  try {
-    const committee = await assertHost(req.params.id, req.auth!.userId);
-    const { idempotencyKey } = z.object({ idempotencyKey: z.string().min(8) }).parse(req.body);
-    const allocationCap = committee.mode === 'ROTATING' ? 0.25 : committee.mode === 'HYBRID' ? 0.75 : 1;
-    if (committee.reinvestRatio <= 0 || committee.reinvestRatio > allocationCap || !committee.schemeId) return res.status(400).json({ error: 'Committee investment configuration is invalid' });
-    const round = await prisma.round.findFirst({ where: { committeeId: committee.id, status: 'COLLECTING' }, include: { payments: true } });
-    if (!round) return res.status(409).json({ error: 'No collecting round' });
-    const unpaidCount = round.payments.filter(payment => payment.status !== 'PAID').length;
-    if (unpaidCount) return res.status(409).json({ error: `${unpaidCount} contribution(s) must be recorded before deployment` });
-    const paidTotal = round.payments.filter(p => p.status === 'PAID').reduce((sum,p) => sum + p.amountPaisa, 0n);
-    const principal = paidTotal*BigInt(Math.round(committee.reinvestRatio*10_000))/10_000n;
-    if (principal <= 0n) return res.status(409).json({ error: 'No paid pool available to deploy' });
-    const scheme = await prisma.scheme.findUniqueOrThrow({ where: { id: committee.schemeId } });
-    const schemeCap = Math.min(committee.riskTolerance, committee.mode === 'ROTATING' ? 3 : committee.mode === 'HYBRID' ? 6 : 8);
-    if (!scheme.isActive || scheme.riskScore > schemeCap) return res.status(400).json({ error: `Scheme exceeds this circle's risk limit (${schemeCap}/10)` });
-    const investment = await prisma.$transaction(async tx => {
-      const claimed = await tx.round.updateMany({ where: { id: round.id, status: 'COLLECTING' }, data: { status: 'INVESTED', reinvestPaisa: principal } });
-      if (claimed.count !== 1) throw Object.assign(new Error('Round is no longer available for deployment'), { status: 409 });
-      const row = await tx.investment.create({ data: { committeeId: committee.id, roundId: round.id, schemeId: scheme.id, principalPaisa: principal, ratePctAtDeploy: scheme.indicativeRatePct } });
-      await ledger(tx, { committeeId: committee.id, actorId: req.auth!.userId, debit: `committee:${committee.id}:escrow`, credit: `committee:${committee.id}:investment`, amountPaisa: principal, reason: 'SIMULATED_INVESTMENT_DEPLOY', refType: 'Investment', refId: row.id, idempotencyKey });
-      await audit(tx, req.auth!.userId, 'INVESTMENT_DEPLOYED', 'Investment', row.id, { principalPaisa: principal.toString(), stage: 'SIMULATED' });
-      return row;
-    });
-    res.status(201).json(investment);
-  } catch (error) { next(error); }
-});
-
-router.post('/:id/liquidate', async (req, res, next) => {
-  try {
-    const committee = await assertHost(req.params.id, req.auth!.userId);
-    const { idempotencyKey } = z.object({ idempotencyKey: z.string().min(8) }).parse(req.body);
-    const investment = await prisma.investment.findFirst({ where: { committeeId: committee.id, status: 'ACTIVE' }, include: { scheme: true, round: true } });
-    if (!investment || !investment.round) return res.status(409).json({ error: 'No active investment' });
-    const days = Math.max(1, Math.round((Date.now() - investment.deployedAt.getTime()) / 86400000));
-    const profit = projectedReturn(investment.principalPaisa, investment.ratePctAtDeploy, days);
-    const devFee = (profit * 5n) / 100n;
-    const netProfit = profit - devFee;
-    await prisma.$transaction(async tx => {
-      const claimed = await tx.investment.updateMany({ where: { id: investment.id, status: 'ACTIVE' }, data: { status: 'LIQUIDATED', liquidatedAt: new Date(), realizedProfitPaisa: profit } });
-      if (claimed.count !== 1) throw Object.assign(new Error('Investment was already liquidated'), { status: 409 });
-      // Principal + net profit returns to the committee escrow (below); it is NOT
-      // added to this round's payout. It stays pooled and is distributed to all
-      // members at cycle completion per distributionMode.
-      await tx.round.update({ where: { id: investment.roundId! }, data: { status: 'COLLECTING' } });
-      await ledger(tx, { committeeId: committee.id, actorId: req.auth!.userId, debit: `committee:${committee.id}:investment`, credit: `committee:${committee.id}:escrow`, amountPaisa: investment.principalPaisa + netProfit, reason: 'SIMULATED_INVESTMENT_LIQUIDATION', refType: 'Investment', refId: investment.id, idempotencyKey });
-      if (devFee > 0n) await ledger(tx, { committeeId: committee.id, actorId: req.auth!.userId, debit: `committee:${committee.id}:investment_profit`, credit: 'platform:fees', amountPaisa: devFee, reason: 'INVESTMENT_PROFIT_FEE_5_PERCENT', refType: 'Investment', refId: investment.id, idempotencyKey: `${idempotencyKey}:fee` });
-      await audit(tx, req.auth!.userId, 'INVESTMENT_LIQUIDATED', 'Investment', investment.id, { profitPaisa: profit.toString(), devFeePaisa: devFee.toString(), stage: 'SIMULATED' });
-    });
-    res.json({ profitPaisa: profit, devFeePaisa: devFee, netProfitPaisa: netProfit });
-  } catch (error) { next(error); }
-});
-
-router.get('/:id/investments', async (req, res, next) => {
-  try {
-    await assertMember(req.params.id, req.auth!.userId);
-    res.json(await prisma.investment.findMany({ where: { committeeId: req.params.id }, include: { scheme: true }, orderBy: { deployedAt: 'desc' } }));
-  } catch (error) { next(error); }
-});
+// REMOVED 5 October 2026: /:id/invest, /:id/liquidate and /:id/investments.
+// Halqa invests no member money. Any return on balances is the bank's, shared
+// with Halqa and paid to members as an end of circle reward (D4, D5).
 
 router.post('/:id/payout', async (req, res, next) => {
   try {
@@ -885,10 +845,13 @@ router.post('/:id/payout', async (req, res, next) => {
         await tx.committee.update({ where: { id: committee.id }, data: { currentRound: nextNumber } });
       } else {
         await tx.committee.update({ where: { id: committee.id }, data: { status: 'COMPLETED' } });
-        // Tenure progression: members who finished this circle WITHOUT a default
-        // earn one clean-completion credit toward unlocking early turns (2 needed
-        // + manual verification). Anyone with a missed payment or an open recovery
-        // case in this circle is excluded.
+        // Seat progression: a member who finished this circle WITHOUT a default
+        // earns one clean completion, and under the matrix of 5 October 2026 one
+        // is enough to open every seat to a member whose bureau record could not
+        // speak for them (score-bands.ts, REQUIRED_CLEAN_CIRCLES). It does not
+        // excuse a low score resting on a real record. Anyone with a missed
+        // payment or an open recovery case in this circle is excluded, so the
+        // standing is recomputed at the close of every circle from this count.
         const defaulterIds = new Set<string>([
           ...(await tx.payment.findMany({ where: { round: { committeeId: committee.id }, status: 'MISSED' }, select: { payerId: true } })).map(p => p.payerId),
           ...(await tx.recoveryCase.findMany({ where: { committeeId: committee.id }, select: { userId: true } })).map(r => r.userId),
@@ -1052,11 +1015,17 @@ router.post('/:id/payout', async (req, res, next) => {
 // evaluate "financing backed by receivables from participating entities".
 router.get('/:id/receivables-pack', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     const committee = await assertHost(req.params.id, req.auth!.userId);
     const [members, rounds, payments] = await Promise.all([
-      prisma.committeeMember.findMany({ where: { committeeId: committee.id, status: 'ACTIVE' }, include: { user: { select: { fullName: true, creditScore: true, kycLevel: true } }, securityDeposits: true, payoutHoldbacks: true }, orderBy: { turnPosition: 'asc' } }),
-      prisma.round.findMany({ where: { committeeId: committee.id }, orderBy: { roundNumber: 'asc' } }),
-      prisma.payment.findMany({ where: { round: { committeeId: committee.id } }, select: { payerId: true, status: true, paidAt: true, dueDate: true } }),
+      // Bounded by the circle rather than by a page: the pack is the whole
+      // circle's position or it is not a pack. memberCap is capped at 150, so
+      // members and rounds are each at most 150 and the payments between them
+      // at most 150 x 150. The takes state those bounds instead of relying on
+      // the cap being remembered.
+      prisma.committeeMember.findMany({ where: { committeeId: committee.id, status: 'ACTIVE' }, include: { user: { select: { fullName: true, creditScore: true, kycLevel: true } }, securityDeposits: true, payoutHoldbacks: true }, orderBy: { turnPosition: 'asc' }, take: MAX_CIRCLE_MEMBERS }),
+      prisma.round.findMany({ where: { committeeId: committee.id }, orderBy: { roundNumber: 'asc' }, take: MAX_CIRCLE_MEMBERS }),
+      prisma.payment.findMany({ where: { round: { committeeId: committee.id } }, select: { payerId: true, status: true, paidAt: true, dueDate: true }, take: MAX_CIRCLE_MEMBERS * MAX_CIRCLE_MEMBERS }),
     ]);
     const futureRounds = rounds.filter(r => r.status === 'PENDING' || r.status === 'COLLECTING');
     const perMember = members.map(m => {
@@ -1094,6 +1063,7 @@ router.get('/:id/receivables-pack', async (req, res, next) => {
 // delinquency scheduler (services/delinquency.ts) when a received member stops paying.
 router.post('/:id/leave', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     const membership = await assertMember(req.params.id, req.auth!.userId);
     const committee = await prisma.committee.findUniqueOrThrow({ where: { id: req.params.id } });
     if (committee.hostId === req.auth!.userId) return res.status(409).json({ error: 'The host cannot leave their own committee' });
@@ -1116,8 +1086,10 @@ router.post('/:id/listing', async (req, res, next) => {
     const { listed } = z.object({ listed: z.boolean() }).parse(req.body);
     const committee = await assertHost(req.params.id, req.auth!.userId);
     if (committee.status === 'CANCELLED') return res.status(409).json({ error: 'Cancelled circles cannot be listed' });
-    await prisma.committee.update({ where: { id: committee.id }, data: { listedPublicly: listed } });
-    await audit(prisma, req.auth!.userId, listed ? 'CIRCLE_LISTED' : 'CIRCLE_HIDDEN', 'Committee', committee.id, {});
+    await prisma.$transaction(async tx => {
+      await tx.committee.update({ where: { id: committee.id }, data: { listedPublicly: listed } });
+      await audit(tx, req.auth!.userId, listed ? 'CIRCLE_LISTED' : 'CIRCLE_HIDDEN', 'Committee', committee.id, {});
+    });
     res.json({ listedPublicly: listed });
   } catch (error) { next(error); }
 });
@@ -1155,6 +1127,7 @@ router.post('/:id/autopay', async (req, res, next) => {
 // ---------------------------------------------------------------------------
 router.post('/:id/withdraw', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     const userId = req.auth!.userId;
     const committee = await prisma.committee.findUniqueOrThrow({ where: { id: req.params.id } });
     if (committee.status !== 'CONFIRMING') {
@@ -1220,11 +1193,14 @@ router.patch('/:id/avatar', async (req, res, next) => {
       avatarUrl: z.string().max(300_000).nullable(),
     }).parse(req.body ?? {});
     const committee = await assertHost(req.params.id, req.auth!.userId);
-    const updated = await prisma.committee.update({
-      where: { id: committee.id }, data: { avatarUrl },
-      select: { id: true, avatarUrl: true },
+    const updated = await prisma.$transaction(async tx => {
+      const updated = await tx.committee.update({
+        where: { id: committee.id }, data: { avatarUrl },
+        select: { id: true, avatarUrl: true },
+      });
+      await audit(tx, req.auth!.userId, 'COMMITTEE_AVATAR_SET', 'Committee', committee.id, {});
+      return updated;
     });
-    await audit(prisma, req.auth!.userId, 'COMMITTEE_AVATAR_SET', 'Committee', committee.id, {});
     res.json(updated);
   } catch (error) { next(error); }
 });

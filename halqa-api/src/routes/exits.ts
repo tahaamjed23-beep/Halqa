@@ -1,3 +1,6 @@
+import { safeRouter } from '../lib/safe-router';
+import { ID, idParam } from '../lib/params';
+import { readPage } from '../lib/page';
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../db';
@@ -12,7 +15,9 @@ import {
 // The exit ladder. There is no cancel button; there are five rungs and an
 // arithmetic identity that makes a leaver whole without Halqa holding a pool.
 // See lib/exit-ladder.ts for the reasoning behind every number here.
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 router.use(requireAuth);
 
 // The confirmation window opens when the host locks the roster at start.
@@ -24,6 +29,7 @@ const inWindow = (committee: { status: string; scheduleLockedAt: Date | null }) 
 /** What this member may do right now, and what each option would cost them. */
 router.get('/committee/:id/options', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     const committeeId = req.params.id;
     await assertMember(committeeId, req.auth!.userId);
 
@@ -92,6 +98,7 @@ const openSchema = z.object({
 
 router.post('/committee/:id', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     const committeeId = req.params.id;
     const input = openSchema.parse(req.body);
     await assertMember(committeeId, req.auth!.userId);
@@ -191,6 +198,7 @@ const voteSchema = z.object({ approve: z.boolean() });
 
 router.post('/:requestId/vote', async (req, res, next) => {
   try {
+    z.object({ requestId: ID }).parse(req.params);
     const { approve } = voteSchema.parse(req.body);
     const request = await prisma.exitRequest.findUniqueOrThrow({
       where: { id: req.params.requestId },
@@ -242,6 +250,7 @@ router.post('/:requestId/vote', async (req, res, next) => {
 /** Settle the restitution debts at cycle close. Idempotent per debt row. */
 router.post('/:requestId/settle', async (req, res, next) => {
   try {
+    z.object({ requestId: ID }).parse(req.params);
     const request = await prisma.exitRequest.findUniqueOrThrow({
       where: { id: req.params.requestId },
       include: { debts: true, committee: true },
@@ -266,11 +275,14 @@ router.post('/:requestId/settle', async (req, res, next) => {
 
 router.get('/committee/:id', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     await assertMember(req.params.id, req.auth!.userId);
+    const { take, cursorArgs } = readPage(req.query);
     const requests = await prisma.exitRequest.findMany({
       where: { committeeId: req.params.id },
       include: { debts: true, votes: true, user: { select: { id: true, fullName: true, displayName: true, avatarUrl: true } } },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],   // id breaks ties, so a cursor is sound
+      take, ...cursorArgs,
     });
     res.json(requests.map(r => ({
       ...r,

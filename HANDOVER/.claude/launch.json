@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "halqa-web",
+      "runtimeExecutable": "D:\\HALQA SIGMA APP\\.tools\\node-v22.22.0-win-x64\\node.exe",
+      "runtimeArgs": ["D:\\HALQA SIGMA APP\\halqa-web\\node_modules\\vite\\bin\\vite.js", "serve", "D:\\HALQA SIGMA APP\\halqa-web", "--port", "4100", "--strictPort"],
+      "port": 4100,
+      "autoPort": false
+    }
+  ]
+}

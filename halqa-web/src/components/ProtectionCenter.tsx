@@ -71,12 +71,15 @@ export default function ProtectionCenter({ committeeId, user, host }:
   // different thing before and after that.
   const started = !!summary.activeRound;
 
+  // Corrected 5 October 2026. Two of these described things that no longer
+  // exist: a payout holdback, which is a deposit held from a member and was
+  // withdrawn with the rest of them, and credit-weighted turns, which were
+  // replaced by seat eligibility long ago and never reordered anybody.
   const controls: [string, boolean, string][] = [
-    ['Payout holdback', flag(summary.policy.payoutHoldbackEnabled), summary.payoutBufferBps / 100 + '% of a payout is held until the next instalments are in'],
-    ['Cover on early turns', summary.forwardLiabilityGateEnabled === true, summary.forwardLiabilityGateEnabled === true ? 'An early turn must be covered before it pays out' : 'Not on for this circle'],
+    ['Takaful or insurance', summary.forwardLiabilityGateEnabled === true, summary.forwardLiabilityGateEnabled === true ? 'A default after collection is met by the operator the bank chose, paid to the members left short' : 'Not on for this circle'],
     ['Late penalties', flag(summary.policy.progressivePenalties), 'Base ' + summary.latePenaltyBps / 100 + '%, up to 10%'],
     ['Lock on default', flag(summary.policy.featureLockOnDefault), 'Join, host and marketplace blocked'],
-    ['Credit-weighted turns', true, 'A better record gets an earlier turn'],
+    ['Seat eligibility', true, 'Which turns are open to you depends on your record. Nobody is reordered'],
     ['Reminders', flag(summary.policy.smartNudges), 'Private, before any score damage'],
     ['Rehabilitation', true, Number(summary.policy.rehabilitationCooldownMonths ?? 6) + ' month cooldown after recovery'],
   ];
@@ -109,9 +112,10 @@ export default function ProtectionCenter({ committeeId, user, host }:
         ))}
       </RowGroup>
 
-      <RowGroup title="Your cover">
-        <Row chevron={false} title="Deposit held" value={money(mine?.heldDepositPaisa || 0)} />
-        <Row chevron={false} title="Payout held back" value={money(mine?.heldPayoutPaisa || 0)} />
+      {/* Deposits held and payouts held back are withdrawn: Halqa holds no
+          member money. Where security is needed it is the member's own money,
+          frozen by the bank in their own account, and it is shown below. */}
+      <RowGroup title="Your security">
         {summary.forwardLiabilityGateEnabled && mine && (
           <>
             <Row chevron={false} title="Security your turn needs" value={money(mine.requiredSecurityPaisa || 0)} />
@@ -183,15 +187,15 @@ export default function ProtectionCenter({ committeeId, user, host }:
       {assure && (
         <Sheet title="Extra assurance" onClose={() => setAssure(false)}>
           <Field label="Guarantor username" hint="A Halqa member scoring 700 or more">
-            <input value={guarantorUsername} placeholder="Optional"
+            <input aria-label="Optional" value={guarantorUsername} placeholder="Optional"
                    onChange={e => setGuarantorUsername(e.target.value)} />
           </Field>
           <Field label="Promissory note reference">
-            <input value={promissoryRef} placeholder="Optional"
+            <input aria-label="Optional" value={promissoryRef} placeholder="Optional"
                    onChange={e => setPromissoryRef(e.target.value)} />
           </Field>
           <Field label="Auto-debit mandate reference">
-            <input value={autoDebitRef} placeholder="Optional"
+            <input aria-label="Optional" value={autoDebitRef} placeholder="Optional"
                    onChange={e => setAutoDebitRef(e.target.value)} />
           </Field>
           <BottomBar>

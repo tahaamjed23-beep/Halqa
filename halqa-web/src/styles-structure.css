@@ -10,23 +10,23 @@
 /* ---------- committee header ---------- */
 .committee-header{display:flex;align-items:center;gap:12px}
 .committee-header>div{flex:1;min-width:0}
-.committee-header>div b{display:block;font-size:16.5px;font-weight:700;letter-spacing:-.02em;
+.committee-header>div b{display:block;font-size:17px;font-weight:700;letter-spacing:-.02em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.committee-header>div span{display:block;font-size:11.5px;opacity:.88;margin-top:2px}
+.committee-header>div span{display:block;font-size:12px;opacity:.88;margin-top:2px}
 .committee-header .icon-button{background:rgba(255,255,255,.18);color:#fff}
 .committee-header .host-chip{align-self:center}
 
 /* ---------- committee hero ---------- */
 .committee-hero{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start}
 .committee-hero>div:first-child .eyebrow{display:block;margin-bottom:5px}
-.committee-hero>div:first-child strong{display:block;font-size:29px;font-weight:740;
+.committee-hero>div:first-child strong{display:block;font-size:28px;font-weight:700;
   letter-spacing:-.035em;font-variant-numeric:tabular-nums}
-.committee-hero>div:first-child p{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.45}
+.committee-hero>div:first-child p{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.45}
 .committee-hero .your-turn{background:var(--l50);border:1px solid var(--l200);
   border-radius:var(--r-sm);padding:11px 13px;text-align:center;min-width:120px}
 .committee-hero .your-turn svg{color:var(--l600);margin:0 auto 3px;display:block}
-.committee-hero .your-turn span{display:block;font-size:10.5px;color:var(--muted)}
-.committee-hero .your-turn strong{display:block;font-size:21px;font-weight:740;color:var(--l700);
+.committee-hero .your-turn span{display:block;font-size:11px;color:var(--muted)}
+.committee-hero .your-turn strong{display:block;font-size:20px;font-weight:700;color:var(--l700);
   letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 .committee-hero .your-turn small{display:block;font-size:10px;color:var(--muted);margin-top:2px;
   line-height:1.35}
@@ -37,7 +37,7 @@
 .circle-status.status-closed{background:var(--info-bg);color:#1B5AA8}
 .circle-status.status-full,.circle-status.status-private{background:var(--warn-bg);color:#7A4B00}
 .circle-status.status-done{background:var(--l50);color:var(--l700)}
-.listing-toggle{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);
+.listing-toggle{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);
   cursor:pointer;margin-left:auto}
 .listing-toggle input{width:18px;height:18px;flex:none;accent-color:var(--l500)}
 
@@ -48,10 +48,10 @@
 .group-credit>article:last-child,.history-list>article:last-child{border-bottom:none}
 .turn-timeline>article>div:nth-child(2),.member-list>article>div:nth-child(2),
 .history-list>article>div:first-child{flex:1;min-width:0}
-.turn-timeline b,.member-list b,.history-list b{display:block;font-size:13.5px;font-weight:640;
+.turn-timeline b,.member-list b,.history-list b{display:block;font-size:13px;font-weight:600;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.turn-timeline p,.member-list p{font-size:11.5px;color:var(--muted);margin-top:2px}
-.turn-timeline>article>span{font-size:9.5px;font-weight:700;letter-spacing:.05em;
+.turn-timeline p,.member-list p{font-size:12px;color:var(--muted);margin-top:2px}
+.turn-timeline>article>span{font-size:10px;font-weight:700;letter-spacing:.05em;
   color:var(--muted);flex:none}
 .turn-timeline>article.mine{background:var(--l50);border-radius:var(--r-sm);padding:11px 10px;
   border-bottom-color:transparent}
@@ -61,19 +61,19 @@
 .turn-timeline>article.late>span{color:var(--warn)}
 .member-list .avatar{width:36px;height:36px;background:var(--l50);border:none;color:var(--l700);
   font-size:13px}
-.member-list>article>strong{font-size:14px;font-weight:720;flex:none;
+.member-list>article>strong{font-size:14px;font-weight:700;flex:none;
   font-variant-numeric:tabular-nums}
 
 /* ---------- group payment history ---------- */
 .gc-avatar{width:34px;height:34px;border-radius:var(--r-full);background:var(--l50);
-  color:var(--l700);display:grid;place-items:center;font-weight:700;font-size:12.5px;flex:none}
+  color:var(--l700);display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}
 .gc-name{flex:1;min-width:0;font-size:inherit;font-weight:inherit;white-space:normal;
   overflow:visible;text-overflow:clip}
-.gc-name b{display:block;font-size:13px;font-weight:640;white-space:nowrap;overflow:hidden;
+.gc-name b{display:block;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
 .gc-name span{display:block;font-size:11px;color:var(--muted);margin-top:1px}
 .gc-tally{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;flex:none;max-width:46%}
-.gc-tally span{font-size:10px;font-weight:660;border-radius:var(--r-full);padding:3px 8px;
+.gc-tally span{font-size:10px;font-weight:600;border-radius:var(--r-full);padding:3px 8px;
   background:var(--line-2);color:var(--muted)}
 .gc-tally .ok{background:var(--ok-bg);color:#0F7A3E}
 .gc-tally .warn{background:var(--warn-bg);color:#7A4B00}
@@ -85,11 +85,11 @@
 .assembly{display:flex;align-items:center;gap:11px;background:var(--l50);
   border-radius:var(--r-sm);padding:12px 13px;margin:10px 0}
 .assembly>svg{color:var(--l600);flex:none}
-.assembly b{display:block;font-size:13.5px;font-weight:660}
-.assembly p{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.45}
+.assembly b{display:block;font-size:13px;font-weight:600}
+.assembly p{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.45}
 .market-rules{display:flex;align-items:flex-start;gap:11px}
 .market-rules>svg{color:var(--l600);flex:none;margin-top:1px}
-.market-rules b{display:block;font-weight:660;margin-bottom:3px}
+.market-rules b{display:block;font-weight:600;margin-bottom:3px}
 .market-rules p{line-height:1.5}
 .market-rules u{text-decoration-color:var(--l500)}
 
@@ -98,7 +98,7 @@
   background:var(--l50);border-radius:var(--r-sm);padding:11px 13px;margin-top:11px;
   font-family:inherit;font-size:inherit;letter-spacing:normal}
 .invite-code span{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:normal}
-.invite-code b{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;
+.invite-code b{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:17px;
   font-weight:700;letter-spacing:.14em;color:var(--l700)}
 
 /* ---------- detail-grid holds whole panels here, tiles elsewhere ---------- */
@@ -108,27 +108,27 @@
 /* ---------- credit page: score factors and event history ---------- */
 .factor-rows>div{justify-content:flex-start;align-items:center;gap:11px}
 .factor-rows>div>span{flex:1;min-width:0}
-.factor-rows b{display:block;font-size:13px;font-weight:640}
+.factor-rows b{display:block;font-size:13px;font-weight:600}
 .factor-rows small{display:block;font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
 .factor-pill{flex:none;min-width:30px;justify-content:center}
 .factor-pill.up{background:var(--ok-bg);color:#0F7A3E}
 .factor-pill.down{background:var(--bad-bg);color:#8E2A20}
 .history-list>article>div>span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
-.history-list>article>strong{flex:none;font-size:14px;font-weight:720;
+.history-list>article>strong{flex:none;font-size:14px;font-weight:700;
   font-variant-numeric:tabular-nums}
 .profit{color:var(--ok)}
 .loss{color:var(--bad)}
 
 /* ---------- chat uses article / header / footer ---------- */
 .chat-panel>header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.chat-panel>header h2{font-size:16px;font-weight:720}
-.chat-panel>header p{font-size:11.5px;color:var(--muted);margin-top:2px}
+.chat-panel>header h2{font-size:17px;font-weight:700}
+.chat-panel>header p{font-size:12px;color:var(--muted);margin-top:2px}
 .chat-panel .messages>article{display:flex;max-width:88%;align-self:flex-start;background:none;
   padding:0;border-radius:0}
 .chat-panel .messages>article.mine{align-self:flex-end;background:none;color:inherit}
 .chat-panel .messages>article>div{background:var(--line-2);border-radius:15px;padding:9px 12px}
 .chat-panel .messages>article.mine>div{background:var(--l500);color:#fff}
-.chat-panel .messages b{display:block;font-size:11.5px;font-weight:680;margin-bottom:2px}
+.chat-panel .messages b{display:block;font-size:12px;font-weight:700;margin-bottom:2px}
 .chat-panel .messages p{font-size:13px;line-height:1.45}
 .chat-panel .messages span{display:block;font-size:10px;opacity:.72;margin-top:3px;text-align:right}
 .chat-panel>footer{display:flex;gap:8px;align-items:center}

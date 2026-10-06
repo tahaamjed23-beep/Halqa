@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDismissable } from '../lib/dismissable';
 import {
   Building2, Check, CreditCard, Info, Landmark, Lock, ShieldCheck, Smartphone, Zap,
 } from 'lucide-react';
@@ -130,11 +131,15 @@ export default function AddSource({ onClose, onDone, title = 'Link an account' }
     ? PK_BANKS.filter(b => b.name.toLowerCase().includes(bankFind.trim().toLowerCase()))
     : PK_BANKS;
 
+  // Escape and the Close button are the keyboard ways out of every step of
+  // this sheet; the backdrop is a convenience and is hidden from readers.
+  const layer = useDismissable(true, onClose);
   // ---- step 3: confirm with the code --------------------------------------
   if (step === 2 && linked) {
     return (
-      <div className="w-sheet-wrap" onClick={onClose}>
-        <div className="w-sheet" onClick={e => e.stopPropagation()}>
+      <div className="w-sheet-wrap" onClick={onClose} aria-hidden="true">
+        <div className="w-sheet" role="dialog" aria-modal="true" aria-label="Link an account"
+           ref={layer} tabIndex={-1} onClick={e => e.stopPropagation()}>
           <div className="w-sheet-handle" />
           <FlowHeader title="Confirm it is yours" onClose={onClose} />
           <Steps step={3} of={3} />
@@ -145,7 +150,7 @@ export default function AddSource({ onClose, onDone, title = 'Link an account' }
                            expiry={linked.expiry} />
             </div>
             <Field label="Six digit code" hint="">
-              <input className="mono" inputMode="numeric" maxLength={6} value={code}
+              <input aria-label="Six digit code sent to you" className="mono" inputMode="numeric" maxLength={6} value={code}
                      onChange={e => setCode(e.target.value.replace(/\D/g, ''))} placeholder="000000" />
             </Field>
             {devCode && (
@@ -170,8 +175,9 @@ export default function AddSource({ onClose, onDone, title = 'Link an account' }
   // ---- step 2: review ------------------------------------------------------
   if (step === 1) {
     return (
-      <div className="w-sheet-wrap" onClick={onClose}>
-        <div className="w-sheet" onClick={e => e.stopPropagation()}>
+      <div className="w-sheet-wrap" onClick={onClose} aria-hidden="true">
+        <div className="w-sheet" role="dialog" aria-modal="true" aria-label="Link an account"
+           ref={layer} tabIndex={-1} onClick={e => e.stopPropagation()}>
           <div className="w-sheet-handle" />
           <FlowHeader title="Check this over" onBack={() => setStep(0)} onClose={onClose} />
           <Steps step={2} of={3} />
@@ -217,8 +223,9 @@ export default function AddSource({ onClose, onDone, title = 'Link an account' }
 
   // ---- step 1: the details this rail actually needs -------------------------
   return (
-    <div className="w-sheet-wrap" onClick={onClose}>
-      <div className="w-sheet" onClick={e => e.stopPropagation()}>
+    <div className="w-sheet-wrap" onClick={onClose} aria-hidden="true">
+      <div className="w-sheet" role="dialog" aria-modal="true" aria-label="Link an account"
+           ref={layer} tabIndex={-1} onClick={e => e.stopPropagation()}>
         <div className="w-sheet-handle" />
         <FlowHeader title={title} onClose={onClose} />
         <Steps step={1} of={3} />
@@ -233,40 +240,40 @@ export default function AddSource({ onClose, onDone, title = 'Link an account' }
 
           <Field label={isCard ? 'Name on the card' : 'Account holder name'}
                  hint="As registered">
-            <input value={holder} autoComplete="name" placeholder="As printed on the account"
+            <input aria-label="As printed on the account" value={holder} autoComplete="name" placeholder="As printed on the account"
                    onChange={e => setHolder(e.target.value)} />
           </Field>
 
           {isCard ? (
             <>
               <Field label="Card number" error={card && !luhn(card) ? 'Check those digits again' : undefined}>
-                <input className="mono" inputMode="numeric" autoComplete="cc-number"
+                <input aria-label="1234 5678 9012 3456" className="mono" inputMode="numeric" autoComplete="cc-number"
                        value={groupCard(card)} placeholder="1234 5678 9012 3456"
                        onChange={e => setCard(cleanCard(e.target.value))} />
               </Field>
               <div className="w-pair">
                 <Field label="Expiry" error={expiryProblem(expiry) || undefined}>
-                  <input className="mono" inputMode="numeric" autoComplete="cc-exp" placeholder="08/29"
+                  <input aria-label="08/29" className="mono" inputMode="numeric" autoComplete="cc-exp" placeholder="08/29"
                          value={expiry} onChange={e => setExpiry(groupExpiry(e.target.value))} />
                 </Field>
                 <Field label="Security code" hint="Never stored">
-                  <input className="mono" inputMode="numeric" autoComplete="cc-csc" maxLength={4}
+                  <input aria-label="123" className="mono" inputMode="numeric" autoComplete="cc-csc" maxLength={4}
                          placeholder="123" value={cvc}
                          onChange={e => setCvc(e.target.value.replace(/\D/g, ''))} />
                 </Field>
               </div>
               <Field label="Billing address">
-                <input autoComplete="street-address" placeholder="House, street, area"
+                <input aria-label="House, street, area" autoComplete="street-address" placeholder="House, street, area"
                        value={billing} onChange={e => setBilling(e.target.value)} />
               </Field>
               <Field label="City">
-                <input autoComplete="address-level2" placeholder="City"
+                <input aria-label="City" autoComplete="address-level2" placeholder="City"
                        value={city} onChange={e => setCity(e.target.value)} />
               </Field>
             </>
           ) : (
             <Field label={numberLabel} hint={numberHint} error={numberProblem || undefined}>
-              <input className="mono" inputMode={isBank ? 'text' : 'numeric'}
+              <input aria-label="Account number" className="mono" inputMode={isBank ? 'text' : 'numeric'}
                      value={isBank ? groupIban(number) : groupMobile(number)}
                      placeholder={isBank ? 'PK36 SONE 0000 1234 5678 9012' : '0300 1234567'}
                      onChange={e => setNumber(e.target.value)} />

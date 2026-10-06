@@ -61,7 +61,7 @@ export default function SupportPage({ back, disputePaymentId }:
   const [answer, setAnswer] = useState<{ q: string; a: string } | null>(null);
 
   const load = () => api<{ tickets: Ticket[] }>('/support/tickets')
-    .then(d => setTickets(d.tickets)).catch(() => {});
+    .then(d => setTickets(Array.isArray(d?.tickets) ? d.tickets : [])).catch(() => {});
   useEffect(() => { void load() }, []);
 
   const raise = async () => {
@@ -156,7 +156,7 @@ export default function SupportPage({ back, disputePaymentId }:
           <>
             <div className="w-search">
               <Search />
-              <input value={find} onChange={e => setFind(e.target.value)}
+              <input aria-label="Search help" value={find} onChange={e => setFind(e.target.value)}
                      placeholder="What do you need help with" />
             </div>
             {answers.length ? groups.map(g => (
@@ -236,7 +236,7 @@ export default function SupportPage({ back, disputePaymentId }:
             </button>
           </label>
           <Field label="In one line">
-            <input value={subject} maxLength={120} placeholder="What happened"
+            <input aria-label="What happened" value={subject} maxLength={120} placeholder="What happened"
                    onChange={e => setSubject(e.target.value)} />
           </Field>
           <Field label="Tell us properly" hint="Dates, amounts and names help.">

@@ -1,11 +1,14 @@
 import { Router } from 'express';
+import { safeRouter } from '../lib/safe-router';
 import { z } from 'zod';
 import { prisma } from '../db';
 import { requireAdmin, requireAuth } from '../lib/auth';
 import { paisaInput, projectionBand } from '../lib/money';
 import { audit } from '../lib/audit';
 
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 const schemeInput = z.object({
   name: z.string().min(2), slug: z.string().regex(/^[a-z0-9-]+$/), category: z.string().min(2),
   issuer: z.string().min(2), tenorDays: z.number().int().positive(), indicativeRatePct: z.number().min(0).max(100),
@@ -30,8 +33,11 @@ router.post('/', requireAuth, requireAdmin, async (req, res, next) => {
   try {
     const input = schemeInput.parse(req.body);
     const riskLevel = input.riskScore <= 3 ? 'low' : input.riskScore <= 6 ? 'medium' : input.riskScore <= 8 ? 'high' : 'extreme';
-    const scheme = await prisma.scheme.create({ data: { ...input, riskLevel } });
-    await audit(prisma, req.auth!.userId, 'SCHEME_CREATED', 'Scheme', scheme.id, { slug: scheme.slug });
+    const scheme = await prisma.$transaction(async tx => {
+      const scheme = await tx.scheme.create({ data: { ...input, riskLevel } });
+      await audit(tx, req.auth!.userId, 'SCHEME_CREATED', 'Scheme', scheme.id, { slug: scheme.slug });
+      return scheme;
+    });
     res.status(201).json(scheme);
   } catch (error) { next(error); }
 });
@@ -42,8 +48,11 @@ router.patch('/:id', requireAuth, requireAdmin, async (req, res, next) => {
     const current = await prisma.scheme.findUnique({ where: { id: req.params.id } });
     if (!current) return res.status(404).json({ error: 'Scheme not found' });
     const riskScore = input.riskScore ?? current.riskScore;
-    const scheme = await prisma.scheme.update({ where: { id: current.id }, data: { ...input, riskLevel: riskScore <= 3 ? 'low' : riskScore <= 6 ? 'medium' : riskScore <= 8 ? 'high' : 'extreme' } });
-    await audit(prisma, req.auth!.userId, 'SCHEME_UPDATED', 'Scheme', scheme.id, { changedFields: Object.keys(input) });
+    const scheme = await prisma.$transaction(async tx => {
+      const scheme = await tx.scheme.update({ where: { id: current.id }, data: { ...input, riskLevel: riskScore <= 3 ? 'low' : riskScore <= 6 ? 'medium' : riskScore <= 8 ? 'high' : 'extreme' } });
+      await audit(tx, req.auth!.userId, 'SCHEME_UPDATED', 'Scheme', scheme.id, { changedFields: Object.keys(input) });
+      return scheme;
+    });
     res.json(scheme);
   } catch (error) { next(error); }
 });
@@ -52,8 +61,11 @@ router.delete('/:id', requireAuth, requireAdmin, async (req, res, next) => {
   try {
     const current = await prisma.scheme.findUnique({ where: { id: req.params.id } });
     if (!current) return res.status(404).json({ error: 'Scheme not found' });
-    const scheme = await prisma.scheme.update({ where: { id: current.id }, data: { isActive: false } });
-    await audit(prisma, req.auth!.userId, 'SCHEME_DEACTIVATED', 'Scheme', scheme.id, {});
+    const scheme = await prisma.$transaction(async tx => {
+      const scheme = await tx.scheme.update({ where: { id: current.id }, data: { isActive: false } });
+      await audit(tx, req.auth!.userId, 'SCHEME_DEACTIVATED', 'Scheme', scheme.id, {});
+      return scheme;
+    });
     res.json(scheme);
   } catch (error) { next(error); }
 });

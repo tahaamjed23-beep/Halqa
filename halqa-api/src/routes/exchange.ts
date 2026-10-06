@@ -1,3 +1,6 @@
+import { safeRouter } from '../lib/safe-router';
+import { idParam, twoIdParams } from '../lib/params';
+import { readPage, sendPage } from '../lib/page';
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../db';
@@ -5,12 +8,17 @@ import { requireAuth } from '../lib/auth';
 import { assertMember } from '../lib/guards';
 import { audit, ledger } from '../lib/audit';
 import { paisaInput } from '../lib/money';
-import { band, allowedPositions, mayBuyTurns } from '../lib/score-bands';
+import { band, allowedPositions, eligiblePositions, mayBuyTurns, seatReason, standingOf } from '../lib/score-bands';
 
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 router.use(requireAuth);
 
 router.get('/', async (req, res) => {
+  // The whole platform's open market, so this is the list most likely to grow
+  // without anybody noticing. Unbounded until 2026-10-06.
+  const { take, cursorArgs } = readPage(req.query);
   const listings = await prisma.exchangeListing.findMany({
     // Show the whole platform's open turn market (not just the viewer's circles),
     // so the marketplace is populated for everyone. Bidding still requires being
@@ -30,10 +38,12 @@ router.get('/', async (req, res) => {
       },
       bids: { where: { status: 'OPEN' }, include: { bidder: { select: { id: true, fullName: true, creditScore: true } } } },
     },
-    orderBy: { listedAt: 'desc' },
-    take: 40,
+    orderBy: [{ listedAt: 'desc' }, { id: 'desc' }],   // id breaks ties, so a cursor is sound
+    // Was a fixed 40 with no cursor, so the 41st listing on the platform could
+    // not be reached by any client at all.
+    take, ...cursorArgs,
   });
-  res.json(listings.map(listing => {
+  sendPage(res, listings.map(listing => {
     const targetRound = listing.committee.rounds.find(round => round.roundNumber === listing.position);
     const remainingRounds = Math.max(0, listing.committee.rounds.length - listing.committee.currentRound + 1);
     const remainingDuesPaisa = listing.committee.contributionPaisa * BigInt(remainingRounds);
@@ -59,7 +69,7 @@ router.get('/', async (req, res) => {
       creditHealth: { averageCreditScore, defaults: defaultingMembers.size, latePayments, earlyPayments, grade: defaultingMembers.size ? 'WATCH' : averageCreditScore >= 750 && latePayments === 0 ? 'EXCELLENT' : averageCreditScore >= 700 ? 'STRONG' : averageCreditScore >= 650 ? 'FAIR' : 'WATCH' },
       engines,
     };
-  }));
+  }), take);
 });
 
 router.post('/', async (req, res, next) => {
@@ -84,14 +94,18 @@ router.post('/', async (req, res, next) => {
     if (input.premiumPaisa < 0n || input.premiumPaisa > payout / 2n) return res.status(400).json({ error: 'Premium must be between zero and 50% of the payout' });
     const existing = await prisma.exchangeListing.findFirst({ where: { committeeId: committee.id, sellerId: req.auth!.userId, status: 'OPEN' } });
     if (existing) return res.status(409).json({ error: 'You already have an open listing in this committee' });
-    const listing = await prisma.exchangeListing.create({ data: { committeeId: committee.id, sellerId: req.auth!.userId, position: membership.turnPosition, payoutPaisa: payout, premiumPaisa: input.premiumPaisa } });
-    await audit(prisma, req.auth!.userId, 'TURN_LISTED', 'ExchangeListing', listing.id, { premiumPaisa: input.premiumPaisa.toString(), position: membership.turnPosition });
+    const listing = await prisma.$transaction(async tx => {
+      const listing = await tx.exchangeListing.create({ data: { committeeId: committee.id, sellerId: req.auth!.userId, position: membership.turnPosition, payoutPaisa: payout, premiumPaisa: input.premiumPaisa } });
+      await audit(tx, req.auth!.userId, 'TURN_LISTED', 'ExchangeListing', listing.id, { premiumPaisa: input.premiumPaisa.toString(), position: membership.turnPosition });
+      return listing;
+    });
     res.status(201).json(listing);
   } catch (error) { next(error); }
 });
 
 router.post('/:id/bid', async (req, res, next) => {
   try {
+    idParam.parse(req.params);
     const input = z.object({ premiumPaisa: paisaInput }).parse(req.body);
     const listing = await prisma.exchangeListing.findUnique({ where: { id: req.params.id } });
     if (!listing || listing.status !== 'OPEN') return res.status(404).json({ error: 'Open listing not found' });
@@ -102,13 +116,17 @@ router.post('/:id/bid', async (req, res, next) => {
     if (bidderUser.isBanned || !mayBuyTurns(bidderUser.creditScore)) return res.status(403).json({ error: 'Turn buying is not available at your reliability band — build your score to unlock the marketplace' });
     const [bidderMembership,committee]=await Promise.all([
       prisma.committeeMember.findUnique({where:{committeeId_userId:{committeeId:listing.committeeId,userId:req.auth!.userId}}}),
-      prisma.committee.findUniqueOrThrow({where:{id:listing.committeeId},select:{currentRound:true,tier:true,memberCap:true}}),
+      prisma.committee.findUniqueOrThrow({where:{id:listing.committeeId},select:{currentRound:true,tier:true,memberCap:true,contributionPaisa:true}}),
     ]);
     if(!bidderMembership||bidderMembership.status!=='ACTIVE')return res.status(403).json({error:'Turn auctions are currently restricted to active members of the same committee'});
     if(bidderMembership.hasReceived||bidderMembership.turnPosition<=committee.currentRound)return res.status(409).json({error:'Only members with a future unreceived turn can bid'});
-    // Anti-default invariant: buying a turn can't drop you into a seat your band
-    // couldn't sit in at join. A Decent member can't buy into the first half.
-    if(!allowedPositions(band(bidderUser.creditScore),committee.memberCap).includes(listing.position))return res.status(409).json({error:'That turn is earlier than your reliability band allows you to hold'});
+    // Anti-default invariant: buying a turn cannot drop a member into a seat
+    // they could not have claimed at joining. Checked on the same standing the
+    // join route uses, through the same engine, so the seat matrix of 5 October
+    // 2026 cannot be walked around by trading rather than joining.
+    const potPaisa=Number(committee.contributionPaisa)*committee.memberCap;
+    const bidderStanding=standingOf(bidderUser,Number.isSafeInteger(potPaisa)?potPaisa:null);
+    if(!eligiblePositions(committee.memberCap,bidderStanding).includes(listing.position))return res.status(409).json({error:`That turn is earlier than your seat eligibility allows you to hold. ${seatReason(bidderStanding)}`});
     if(committee.tier==='SUKOON'||committee.tier==='BAZAAR'){
       // Free-swap tiers: a bid is a swap request, not an auction — no premium.
       if(input.premiumPaisa!==0n)return res.status(400).json({error:'Sukoon and Bazaar circles allow free turn swaps only — bid zero to request the swap'});
@@ -118,16 +136,22 @@ router.post('/:id/bid', async (req, res, next) => {
       if(input.premiumPaisa<=floor)return res.status(400).json({error:`Bid must exceed ${floor.toString()} paisa`});
       if(input.premiumPaisa>listing.payoutPaisa/2n)return res.status(400).json({error:'Bid cannot exceed 50% of the future payout'});
     }
-    const bid = await prisma.exchangeBid.create({
-      data: { listingId: listing.id, bidderId: req.auth!.userId, premiumPaisa: input.premiumPaisa }
+    const bid = await prisma.$transaction(async tx => {
+      const created = await tx.exchangeBid.create({
+        data: { listingId: listing.id, bidderId: req.auth!.userId, premiumPaisa: input.premiumPaisa },
+      });
+      await audit(tx, req.auth!.userId, 'TURN_BID_PLACED', 'ExchangeListing', listing.id, {
+        bidId: created.id, premiumPaisa: input.premiumPaisa.toString(), position: listing.position,
+      });
+      return created;
     });
-    
     res.status(201).json(bid);
   } catch (error) { next(error); }
 });
 
 router.post('/:id/bids/:bidId/accept', async (req, res, next) => {
   try {
+    twoIdParams('id', 'bidId').parse(req.params);
     const { idempotencyKey } = z.object({ idempotencyKey: z.string().min(8) }).parse(req.body);
     const listing = await prisma.exchangeListing.findUnique({ where: { id: req.params.id }, include: { committee: { include: { members: { where: { status: 'ACTIVE' } } } } } });
     if (!listing || listing.status !== 'OPEN') return res.status(404).json({ error: 'Open listing not found' });

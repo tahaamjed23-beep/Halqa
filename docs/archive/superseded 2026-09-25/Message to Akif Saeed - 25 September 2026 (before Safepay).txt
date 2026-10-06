@@ -1,0 +1,149 @@
+MESSAGE TO AKIF SAEED
+25 September 2026. Draft, not sent
+
+---
+
+Assalam o Alaikum Sir,
+
+Following your guidance on jurisdiction, I have revised the parts of the model
+that created regulatory exposure. I wanted to put the findings in front of you
+before I go further.
+
+THE STRUCTURAL CHANGE
+
+The earlier design had members compensating each other. A member taking an early
+turn paid a fee that was distributed to the others, and positions could be sold
+at a premium between members. That is a lender and a borrower in substance, and
+it falls within the peer to peer definition in the NBFC Regulations,
+which reads "the extension of loans by the lender to the borrower through the
+P2P Lending Platform".
+
+That is now removed. Every payment a member makes splits three ways at the moment
+it is taken, and the three parts are never commingled:
+
+  1. The contribution, which settles from the payer to the collecting member
+     through a licensed electronic money institution. Halqa never touches it.
+     The identity pot = contribution x periods still holds exactly, so paid in
+     equals collected for every member.
+
+  2. A takaful contribution, which sits in the participants' risk fund at a
+     licensed operator.
+
+  3. A service fee, flat across the whole roster, paid to Halqa.
+
+The fee is deliberately flat rather than graded by collection day. A fee that
+varies with how early a member collects is priced on the advance and reads as
+interest. A flat fee for a service does not.
+
+I am relying on the Explanation to section 84 of the Companies Act, which
+excludes "an advance against sale of goods or provision of services in the
+ordinary course of business" from the meaning of a deposit.
+
+ON COVER
+
+I had designed a cover facility funded by a fee and paying out on a member's
+default. On reading section 2(xxvii) of the Insurance Ordinance I found that is
+insurance "by whatever name called", and section 5(1) admits only a public
+company, so a private limited company cannot be registered as an insurer at all.
+
+Cover is therefore written and priced by a licensed general takaful operator,
+since default cover is Class 6 credit and suretyship business. Halqa acts as
+the operator's corporate insurance agent under a written agency agreement, as
+section 96(2) of the Ordinance requires, and earns commission. The contribution
+sits in the participants' risk fund, which belongs to the participants rather
+than to the operator, surplus returns to them at the end of the period, and a
+deficit is met by the operator from its own shareholder fund. Members are
+protected in a mass default event without Halqa's balance sheet being the
+backstop.
+
+THE COLLAPSE THRESHOLD
+
+I built a model to answer when a circle stops being able to pay what it owes.
+Four results:
+
+  Arrears before collection recover themselves. A member who misses payments
+  before their turn has those arrears netted from their own pot. It is a timing
+  gap, not a loss.
+
+  The only true loss is default after collection. Forward liability is the
+  contribution multiplied by the periods remaining. It is worst on day one and
+  nil on the last day, and averages half a pot.
+
+  Expected loss on a cycle is therefore the roster multiplied by the default
+  rate multiplied by half a pot. As a share of cycle value that is simply half
+  the default rate.
+
+  The circle cannot complete once unrecovered exposure exceeds the cover limit.
+  Before that point a five axis stress index moves the circle through green,
+  amber and red, with a defined action at each band.
+
+The cover is sized at a fifty per cent post collection default rate, more than
+eight times the highest arrears rate reported for Pakistani microfinance, which
+peaked at 6.01 per cent.
+
+ON COLLECTION
+
+Section 35(1) of the Payment Systems Act permits a preauthorised transfer to be
+authorised "either in writing, or in any other accepted form", so an in app
+mandate is valid, and section 35(2) lets the member stop it at any time. The
+duties that attach to it, in sections 30, 31 and 36, fall on the member's bank
+and on the licensed payment institution rather than on Halqa. The design
+supports each of them.
+
+The rail decides the structure. A Raast Request to Pay settles to the merchant
+that sends it, so if Halqa sent one for a contribution the contribution would
+land in Halqa's account. Halqa therefore uses a Request to Pay only for its own
+fee. Contributions move from member to member through an electronic money
+institution, which under the 2023 EMI Regulations may provide payment
+initiation and aggregation (para 7.I(f)) and may provide those services to a
+fintech through its interface (para 7.I(h)). A payment service provider cannot
+do this, because the 2014 Rules provide that it "will not act as custodian of
+consumer's money". The daily product needs no escrow: each day's payers pay
+that day's collectors directly, so no pool exists at any point.
+
+WHERE THIS LEAVES THE LICENSING QUESTION
+
+On the restructured design I do not find an activity that requires a financial
+licence. No deposits are taken, nothing is lent, no member is compensated by
+another member, no balance is issued, no payment is routed or switched by
+Halqa, no insurance is written and no credit bureau is run. Every movement of
+member money is carried by a licensed institution under its own licence: the
+electronic money institution where Halqa initiates the payment through its
+interface, or the member's own bank where the member sends it over Raast.
+What Halqa itself requires is incorporation, a tax number, sales tax
+registration in Islamabad, a company account and the institution's agreement,
+none of which carries a capital requirement.
+
+I read the sandbox as the route to a No Objection Letter where an activity needs
+authorisation and no enabling framework exists. Here the enabling framework is
+para 7.I(h) of the EMI Regulations, and the institution notifies the State Bank
+thirty days before it serves us. So my intention is to proceed under the general
+law. I would value your view on whether that reading is right, because the plan
+depends on it.
+
+FOUR THINGS I WOULD ASK
+
+  Whether the three way split at source, with the fee flat across the roster,
+  is enough to keep the arrangement outside the peer to peer chapter in
+  substance and not only in form.
+
+  Whether the State Bank would regard a fintech that arranges member to member
+  collection through a licensed EMI's interface, under para 7.I(h), as needing
+  anything of its own beyond that institution's notification.
+
+  Whether a written agency agreement with a general takaful operator is the
+  correct instrument for distributing its cover alongside a committee, given that
+  regulation 10(c) of the 2020 Regulations bars coercing a prospect to buy
+  cover, regulation 11(1)(d) requires the cost of a bundled product to be
+  shown separately, and the daily product includes cover in every payment.
+
+  Whether the Federal Government notification contemplated by section 11(1) of
+  the Credit Bureaus Act, for a furnisher that is not a credit institution, has
+  been made for any category, or whether that remains closed in practice.
+
+The Legal Position, which quotes every provision with the page on which it is
+found, and the models behind each threshold are written up, and I can send any
+of them.
+
+With thanks and respect,
+Taha Amjed

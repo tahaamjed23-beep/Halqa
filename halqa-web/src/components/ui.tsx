@@ -1,6 +1,5 @@
 import {date, until} from '../lib/format';
 import type { ReactNode } from 'react';
-import { Coins } from 'lucide-react';
 import { money } from '../api';
 
 // Turn-pricing chip, the single label used on EVERY committee surface
@@ -10,12 +9,23 @@ import { money } from '../api';
 // payload's turnPricing object or a raw earlyFeeBps off a Committee.
 export type TurnPricing={kind:'EARLY_FEE'|'FLAT';earlyFeeBps:number;pooled?:boolean};
 export const pricingOf=(earlyFeeBps?:number):TurnPricing=>earlyFeeBps&&earlyFeeBps>0?{kind:'EARLY_FEE',earlyFeeBps}:{kind:'FLAT',earlyFeeBps:0};
-export function TurnPricingChip({pricing}:{pricing:TurnPricing}){
-  if(pricing.kind!=='EARLY_FEE')return null;
-  return <span className="pricing-chip premium"><Coins size={12}/>Turn pricing · {(pricing.earlyFeeBps/100).toFixed(pricing.earlyFeeBps%100?1:0)}% early fee → late bonus</span>;
+// WITHDRAWN 5 October 2026. The early turn fee paid from one member to another
+// is gone: the fee is Rs 85 and is the same for every seat, so there is no
+// pricing to put on a chip. Kept as a component that renders nothing, so any
+// screen still calling it is harmless while the call sites are cleared.
+export function TurnPricingChip(_:{pricing:TurnPricing}){
+  return null;
 }
 
-export const scoreColor=(score:number)=>score>=750?'#22a865':score>=700?'#0a7cff':score>=650?'#e58900':'#e43d36';
+// Score colour follows the brand ramp at the top and the status convention at
+// the bottom. It used to run green, BLUE, amber, red: the blue sat on a green
+// header and read as a different product's control. Standing that is fine is
+// drawn in the brand; standing that restricts what the member may do is drawn
+// as a warning, then as a failure.
+export const scoreColor=(score:number)=>
+  score>=750?'var(--l500)':
+  score>=700?'var(--l600)':
+  score>=650?'var(--warn)':'var(--bad)';
 export const modeName={ROTATING:'Rotating payout',HYBRID:'Rotating payout',INVESTMENT:'Investment circle'} as const;
 // Engines AND credit-weighted ordering were both dropped, nobody is reordered
 // by score now; members pick a band-eligible seat (score-bands). So every
@@ -50,7 +60,10 @@ export function RegisterMark({size=26}:{size?:number}){return (
     <line x1="9" y1="50" x2="31" y2="50" stroke="var(--mark-accent,#A9E76A)" strokeWidth="9" strokeLinecap="round"/>
   </svg>)}
 export function Logo(){return <div className="brand"><div className="brand-mark"><RegisterMark size={26}/></div><div><strong>Halqa</strong><small></small></div></div>}
-export function IconButton({label,children,onClick}:{label:string;children:ReactNode;onClick?:()=>void}){return <button aria-label={label} title={label} className="icon-button" onClick={onClick}>{children}</button>}
+// No title attribute: it only repeated the aria-label, and the browser's own
+// tooltip cannot be dismissed, which is what WCAG 1.4.13 asks of anything shown
+// on hover. The name a reader announces is unchanged.
+export function IconButton({label,children,onClick}:{label:string;children:ReactNode;onClick?:()=>void}){return <button aria-label={label} className="icon-button" onClick={onClick}>{children}</button>}
 export function Metric({label,value,detail,tone='blue'}:{label:string;value:string;detail?:string;tone?:'blue'|'green'|'amber'|'ink'}){return <article className={`metric metric-${tone}`}><span>{label}</span><strong className="money">{value}</strong>{detail&&<small>{detail}</small>}</article>}
 export function Mini({label,value}:{label:string;value:string}){return <div className="mini"><span>{label}</span><strong>{value}</strong></div>}
 export function Field({label,children,hint}:{label:string;children:ReactNode;hint?:string}){return <label className="field-wrap"><span>{label}</span>{children}{hint&&<small>{hint}</small>}</label>}

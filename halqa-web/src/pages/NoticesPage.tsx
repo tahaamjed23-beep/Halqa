@@ -5,7 +5,7 @@ import {
 import { api } from '../api';
 import { date, dateTime } from '../lib/format';
 import type { Notice as NoticeRow } from '../types';
-import { Blank, FlowHeader, Row, RowGroup, Segment } from '../components/wallet';
+import { Blank, FlowHeader, Row, RowGroup, RowsLoading, Segment } from '../components/wallet';
 
 // ---------------------------------------------------------------------------
 // NOTIFICATIONS
@@ -80,7 +80,7 @@ export default function NoticesPage({ back }: { back?: () => void }) {
           </div>
         )}
 
-        {loading ? <Blank icon={<Bell />} title="Loading" />
+        {loading ? <RowsLoading />
           : days.length ? days.map(g => (
             <RowGroup key={g.label} title={g.label}>
               {g.rows.map(n => {

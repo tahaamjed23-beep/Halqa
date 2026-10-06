@@ -93,13 +93,13 @@ export default function AgreementGate({ userName }: { userName: string }) {
           <div>
             <span className="eyebrow">Renewed weekly · e-signed under ETO 2002</span>
             <h2><FileSignature size={18} style={{ verticalAlign: '-3px' }} /> Member undertaking</h2>
-            <p>Read it fully. This is the promise every Halqa member signs to every other member, creating, joining and paying stay locked until you sign.</p>
+            <p>Creating, joining and paying stay locked until you sign.</p>
           </div>
           <ShieldCheck />
         </div>
         <pre style={{ overflowY: 'auto', whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: 13, lineHeight: 1.55, background: 'rgba(255,255,255,.04)', border: '1px solid rgba(214,178,94,.25)', borderRadius: 10, padding: 14, margin: 0, flex: '1 1 140px', minHeight: 120 }}>{docText.text}</pre>
         <label className="settings-toggle" style={{ padding: '2px 0' }}>
-          <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} />
+          <input aria-label="I have read and accept the undertaking" type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} />
           <span><b>I have read the undertaking and adopt the signature below as my own act</b><small>Version {docText.version} · document hash {docText.textHash.slice(0, 12)}… · valid 7 days, then renewed here</small></span>
         </label>
         <div>
@@ -112,7 +112,7 @@ export default function AgreementGate({ userName }: { userName: string }) {
         </div>
         <div>
           <div style={{ fontSize: 12, opacity: .75, marginBottom: 4 }}>Type your full legal name as your signature (required)</div>
-          <input className="field" value={typedName} onChange={e => setTypedName(e.target.value)} placeholder={userName} autoComplete="off"
+          <input aria-label="Type your full name as your signature" className="field" value={typedName} onChange={e => setTypedName(e.target.value)} placeholder={userName} autoComplete="off"
             style={{ fontStyle: 'italic', letterSpacing: '.4px' }} />
           {typedName.length > 2 && !nameMatches && <div style={{ fontSize: 12, color: '#c96b6b', marginTop: 4 }}>Must match your account name exactly: {userName}</div>}
         </div>

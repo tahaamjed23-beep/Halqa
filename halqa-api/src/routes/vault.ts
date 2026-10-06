@@ -1,3 +1,4 @@
+import { safeRouter } from '../lib/safe-router';
 import { Router } from 'express';
 import { z } from 'zod';
 import type { Prisma, PrismaClient } from '@prisma/client';
@@ -11,7 +12,9 @@ import { FLOAT_MUDARIB_FEE_PCT, FLOAT_SCHEME_SLUG } from '../lib/sukoon';
 // recorded in a personal vault, where it accrues the Islamic money-market
 // rate until they sweep it out. Full-sweep only, so accrual is always
 // computed over the entries since the last withdrawal — no drift, no cron.
-const router = Router();
+// safeRouter, not Router: a rejected promise in any handler below reaches the
+// error handler instead of hanging the request (lib/safe-router.ts).
+const router = safeRouter();
 router.use(requireAuth);
 
 const vaultAccount = (userId: string) => `user:${userId}:vault`;
@@ -154,8 +157,11 @@ router.post('/allocation', async (req, res, next) => {
     }
     // The largest share becomes the headline tier so older surfaces stay coherent.
     const primary = entries.sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'STANDARD';
-    const user = await prisma.user.update({ where: { id: req.auth!.userId }, data: { vaultAllocation: JSON.stringify(Object.fromEntries(entries)), vaultTier: primary } });
-    await audit(prisma, req.auth!.userId, 'VAULT_ALLOCATION_SET', 'User', user.id, { allocation: Object.fromEntries(entries), primary });
+    const user = await prisma.$transaction(async tx => {
+      const user = await tx.user.update({ where: { id: req.auth!.userId }, data: { vaultAllocation: JSON.stringify(Object.fromEntries(entries)), vaultTier: primary } });
+      await audit(tx, req.auth!.userId, 'VAULT_ALLOCATION_SET', 'User', user.id, { allocation: Object.fromEntries(entries), primary });
+      return user;
+    });
     const rates = await vaultRates(prisma, user);
     res.json({ allocation: rates.allocation, tier: user.vaultTier, blendedRatePct: rates.blendedRatePct, blendedRiskScore: rates.blendedRiskScore, tierDetails: rates.tierDetails });
   } catch (error) { next(error); }
@@ -164,8 +170,11 @@ router.post('/allocation', async (req, res, next) => {
 router.post('/toggle', async (req, res, next) => {
   try {
     const { enabled } = z.object({ enabled: z.boolean() }).parse(req.body);
-    const user = await prisma.user.update({ where: { id: req.auth!.userId }, data: { vaultParkingEnabled: enabled } });
-    await audit(prisma, req.auth!.userId, 'VAULT_PARKING_TOGGLED', 'User', user.id, { enabled });
+    const user = await prisma.$transaction(async tx => {
+      const user = await tx.user.update({ where: { id: req.auth!.userId }, data: { vaultParkingEnabled: enabled } });
+      await audit(tx, req.auth!.userId, 'VAULT_PARKING_TOGGLED', 'User', user.id, { enabled });
+      return user;
+    });
     res.json({ enabled: user.vaultParkingEnabled });
   } catch (error) { next(error); }
 });
@@ -177,8 +186,11 @@ router.post('/toggle', async (req, res, next) => {
 router.post('/auto-cover', async (req, res, next) => {
   try {
     const { enabled } = z.object({ enabled: z.boolean() }).parse(req.body);
-    const user = await prisma.user.update({ where: { id: req.auth!.userId }, data: { vaultAutoCover: enabled } });
-    await audit(prisma, req.auth!.userId, 'VAULT_AUTO_COVER_TOGGLED', 'User', user.id, { enabled });
+    const user = await prisma.$transaction(async tx => {
+      const user = await tx.user.update({ where: { id: req.auth!.userId }, data: { vaultAutoCover: enabled } });
+      await audit(tx, req.auth!.userId, 'VAULT_AUTO_COVER_TOGGLED', 'User', user.id, { enabled });
+      return user;
+    });
     res.json({ autoCover: user.vaultAutoCover });
   } catch (error) { next(error); }
 });
@@ -192,8 +204,11 @@ router.post('/tier', async (req, res, next) => {
     const scheme = await tierScheme(prisma, tier);
     if (!scheme?.isActive) return res.status(409).json({ error: 'That vault tier is not available right now' });
     // Switching the single tier clears any portion sizing — one control governs at a time.
-    const user = await prisma.user.update({ where: { id: req.auth!.userId }, data: { vaultTier: tier, vaultAllocation: '' } });
-    await audit(prisma, req.auth!.userId, 'VAULT_TIER_SET', 'User', user.id, { tier });
+    const user = await prisma.$transaction(async tx => {
+      const user = await tx.user.update({ where: { id: req.auth!.userId }, data: { vaultTier: tier, vaultAllocation: '' } });
+      await audit(tx, req.auth!.userId, 'VAULT_TIER_SET', 'User', user.id, { tier });
+      return user;
+    });
     res.json({ tier: user.vaultTier, ratePct: scheme.indicativeRatePct, scheme: { name: scheme.name, shariahCompliant: scheme.shariahCompliant, rateAsOf: scheme.rateAsOf } });
   } catch (error) { next(error); }
 });
@@ -210,11 +225,14 @@ router.post('/goal', async (req, res, next) => {
     if (targetPaisa !== null && targetPaisa < 100_000n) {
       return res.status(400).json({ error: 'A savings goal starts at Rs 1,000' });
     }
-    const user = await prisma.user.update({
-      where: { id: req.auth!.userId },
-      data: { vaultGoalPaisa: targetPaisa, vaultGoalName: targetPaisa === null ? null : (name?.trim() || 'My savings goal') },
+    const user = await prisma.$transaction(async tx => {
+      const user = await tx.user.update({
+        where: { id: req.auth!.userId },
+        data: { vaultGoalPaisa: targetPaisa, vaultGoalName: targetPaisa === null ? null : (name?.trim() || 'My savings goal') },
+      });
+      await audit(tx, req.auth!.userId, 'VAULT_GOAL_SET', 'User', user.id, { targetPaisa: targetPaisa?.toString() ?? null, name: user.vaultGoalName });
+      return user;
     });
-    await audit(prisma, req.auth!.userId, 'VAULT_GOAL_SET', 'User', user.id, { targetPaisa: targetPaisa?.toString() ?? null, name: user.vaultGoalName });
     res.json({ goal: user.vaultGoalPaisa ? { targetPaisa: user.vaultGoalPaisa.toString(), name: user.vaultGoalName } : null });
   } catch (error) { next(error); }
 });

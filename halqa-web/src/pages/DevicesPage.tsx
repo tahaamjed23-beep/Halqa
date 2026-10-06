@@ -28,7 +28,10 @@ export default function DevicesPage({ back }: { back?: () => void }) {
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState('');
 
-  const load = useCallback(() => api<Devices>('/account/devices').then(setData)
+  const load = useCallback(() => api<Devices>('/account/devices')
+    .then(d => Array.isArray(d?.sessions)
+      ? setData({ sessions: d.sessions, recent: Array.isArray(d.recent) ? d.recent : [] })
+      : setError('Your devices could not be read. Try again in a moment.'))
     .catch(reason => setError((reason as Error).message)), []);
   useEffect(() => { void load() }, [load]);
 

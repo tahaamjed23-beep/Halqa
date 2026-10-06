@@ -124,7 +124,7 @@ export default function RiskConsole({ committeeId, host }: { committeeId: string
               {host && d.status === 'PENDING' && (
                 <div className="w-inset" style={{ paddingBottom: 10 }}>
                   <div className="risk-confirm">
-                    <input value={refs[d.id] || ''} placeholder="Transfer reference"
+                    <input aria-label="Transfer reference" value={refs[d.id] || ''} placeholder="Transfer reference"
                            onChange={e => setRefs({ ...refs, [d.id]: e.target.value })} />
                     <button className="secondary" disabled={busy || !refs[d.id]?.trim()}
                             onClick={() => confirmDeposit(d.id)}>Confirm</button>
@@ -166,21 +166,21 @@ export default function RiskConsole({ committeeId, host }: { committeeId: string
             </Notice>
           </div>
           <Field label={'Ceiling: ' + policy.targetRiskScore + ' out of 10'}>
-            <input className="allocation-slider" type="range" min="1"
+            <input aria-label="Risk appetite" className="allocation-slider" type="range" min="1"
                    max={risk.mode === 'ROTATING' ? 3 : risk.mode === 'HYBRID' ? 6 : 8} step="1"
                    value={policy.targetRiskScore}
                    onChange={e => setPolicy({ ...policy, targetRiskScore: +e.target.value })} />
           </Field>
           <Field label="Payout buffer, per cent">
-            <input inputMode="numeric" value={policy.payoutBufferBps / 100}
+            <input aria-label="Payout buffer, per cent" inputMode="numeric" value={policy.payoutBufferBps / 100}
                    onChange={e => setPolicy({ ...policy, payoutBufferBps: (Number(e.target.value.replace(/\D/g, '')) || 0) * 100 })} />
           </Field>
           <Field label="Liquidity reserve, per cent">
-            <input inputMode="numeric" value={policy.liquidityReserveBps / 100}
+            <input aria-label="Liquidity reserve, per cent" inputMode="numeric" value={policy.liquidityReserveBps / 100}
                    onChange={e => setPolicy({ ...policy, liquidityReserveBps: (Number(e.target.value.replace(/\D/g, '')) || 0) * 100 })} />
           </Field>
           <Field label="Late penalty, per cent">
-            <input inputMode="numeric" value={policy.latePenaltyBps / 100}
+            <input aria-label="Late charge, per cent" inputMode="numeric" value={policy.latePenaltyBps / 100}
                    onChange={e => setPolicy({ ...policy, latePenaltyBps: (Number(e.target.value.replace(/\D/g, '')) || 0) * 100 })} />
           </Field>
           <BottomBar>

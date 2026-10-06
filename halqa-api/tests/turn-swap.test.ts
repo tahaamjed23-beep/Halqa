@@ -22,22 +22,42 @@ describe('a swap is checked from both ends', () => {
     expect(r.ok).toBe(true);
   });
 
-  it('stops a new member buying their way into an early seat', () => {
-    // The tenure quarantine exists precisely to keep new members off early
-    // turns. The marketplace must not become the way around it.
+  it('stops a member buying their way into a seat the matrix closes to them', () => {
+    // The seat matrix exists precisely to keep a member whose record cannot
+    // speak for them off the early turns. The marketplace must not become the
+    // way around it, which is the whole reason this check asks the engine.
     const newbie = veteran({ userId: 'n', seat: 11, cleanCompletedCircles: 0 });
     const r = checkSwap(veteran({ seat: 2 }), newbie, ctx);
     expect(r.ok).toBe(false);
-    expect(r.reasons.join(' ')).toContain('two clean circles');
+    expect(r.reasons.join(' ')).toContain('turn 2');
   });
 
-  it('stops a seller landing themselves in a seat their band forbids', () => {
-    // The old check looked at the buyer only, so this passed.
-    const weakSeller = veteran({ userId: 's', seat: 11, band: 'REBUILDING' });
+  it('a clean committee opens the early seats through the same engine', () => {
+    // Under the matrix of 5 October 2026 one clean circle is enough, so this
+    // swap is now allowed where the old two-circle quarantine refused it.
+    const settled = veteran({ userId: 'n', seat: 11, cleanCompletedCircles: 1 });
+    expect(checkSwap(veteran({ seat: 2 }), settled, ctx).ok).toBe(true);
+  });
+
+  it('stops a seller landing themselves in a seat their record forbids', () => {
+    // The old check looked at the buyer only, so this passed. A low score on a
+    // real bureau record is the one thing clean circles do not excuse, so four
+    // completed circles do not get this seller into seat 2.
+    const weakSeller = veteran({ userId: 's', seat: 11, creditScore: 420, creditStanding: 'SCORED' });
     const strongBuyer = veteran({ userId: 'b', seat: 2 });
     const r = checkSwap(weakSeller, strongBuyer, ctx);
     expect(r.ok).toBe(false);
     expect(r.reasons.join(' ')).toContain('seller');
+  });
+
+  it('security covering the pot opens the seat without a credit record', () => {
+    // Pot is 12 x Rs 10,000 = Rs 120,000; the relaxation allows Rs 108,000.
+    const secured = veteran({ userId: 'p', seat: 11, cleanCompletedCircles: 0, creditScore: 0,
+      securityPledgedPaisa: 108_000 * 100 });
+    expect(checkSwap(veteran({ seat: 2 }), secured, ctx).ok).toBe(true);
+    const short = veteran({ userId: 'q', seat: 11, cleanCompletedCircles: 0, creditScore: 0,
+      securityPledgedPaisa: 107_000 * 100 });
+    expect(checkSwap(veteran({ seat: 2 }), short, ctx).ok).toBe(false);
   });
 
   it('refuses a seat that would push a member past four months of income', () => {
@@ -53,7 +73,8 @@ describe('a swap is checked from both ends', () => {
   });
 
   it('reports every problem at once rather than one at a time', () => {
-    const bad = veteran({ userId: 'x', seat: 12, band: 'REBUILDING', cleanCompletedCircles: 0, monthlyIncomeP: 0n });
+    const bad = veteran({ userId: 'x', seat: 12, creditScore: 420, creditStanding: 'SCORED',
+      cleanCompletedCircles: 0, monthlyIncomeP: 0n });
     expect(checkSwap(veteran({ seat: 1 }), bad, ctx).reasons.length).toBeGreaterThan(1);
   });
 });
