@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { ZodError } from 'zod';
 import { limits } from './lib/rate-limits';
+import { actorContext } from './lib/actor';
 import { AppError, ERRORS, errorBody, withErrorCode, type ErrorCode } from './lib/errors';
 import authRoutes from './routes/auth';
 import committeeRoutes from './routes/committees';
@@ -47,6 +48,9 @@ app.use(helmet({
 }));
 app.use(cors({ origin: webOrigins, credentials: true }));
 app.use(express.json({ limit: '1mb' }));
+// Who is doing this, carried with the request so the database layer can record
+// it without every handler being asked to remember (lib/actor.ts).
+app.use(actorContext);
 app.use(rateLimit({ windowMs: 15 * 60_000, limit: 1500, standardHeaders: 'draft-7' })); // sized for three consecutive integration runs (~250 requests each) with headroom
 app.use((_req, res, next) => {
   const original = res.json.bind(res);
@@ -95,7 +99,18 @@ app.get('/api/cron/delinquency', async (req, res, next) => {
     if (!secret) return res.status(404).json({ error: 'Route not found' });
     if (req.headers.authorization !== `Bearer ${secret}`) return res.status(401).json({ error: 'Unauthorized' });
     const { evaluateDelinquencies } = await import('./services/delinquency');
-    res.json(await evaluateDelinquencies());
+    const delinquency = await evaluateDelinquencies();
+    // The retention sweep runs on the same nightly pass. It is DRY by default:
+    // nothing has ever been deleted on a schedule, so the first thing anybody
+    // needs is the count of what WOULD go, checked against expectation, before
+    // a single row is removed. Set RETENTION_SWEEP=apply to make it real.
+    const { sweepExpired } = await import('./lib/retention');
+    const dryRun = process.env.RETENTION_SWEEP !== 'apply';
+    const retention = await sweepExpired(prisma, { dryRun });
+    res.json({
+      delinquency,
+      retention: { dryRun, swept: retention.filter(r => r.deleted > 0 || !r.skipped) },
+    });
   } catch (error) { next(error); }
 });
 // Public Credit Passport verification: a lender/landlord/employer holding a

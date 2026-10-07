@@ -66,7 +66,8 @@
      how dark the surface beneath is:
        --on-accent  ink, for the BRIGHT brand colours (l300 to l500)
        --on-deep    white, for the DEEP ones (l700, brand-deep) and for another
-                    company's dark brand colour */
+                    company's dark brand colour
+
      The lime ramp INVERTS in dark mode: --l700 is the deepest green in light
      and almost the lightest in dark. So the ink on it has to flip too, which is
      why --on-soft and --on-deep are redefined in the dark block and

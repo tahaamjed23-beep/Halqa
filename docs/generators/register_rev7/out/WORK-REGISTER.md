@@ -2,7 +2,7 @@
 
 Reference HQ-IN-02. 5 October 2026.
 
-10,511 items: 2,551 done, 35 partly done, 7,925 open. 81 phases.
+10,511 items: 2,618 done, 35 partly done, 7,858 open. 81 phases.
 
 ## Phases
 
@@ -10,46 +10,46 @@ Reference HQ-IN-02. 5 October 2026.
 | --: | :-- | :-- | --: | --: | :-- | :-- |
 | 1 | Ten minutes to an account; removals; models to remove |  | 58 | 100 | E (23), AQ6 (10), AF1 (9), AA2 (5), C3 (3), Y1 (3), AQ1 (2), AQ2 (2), F (1) | Build, Documents |
 | 2 | Checks on kept endpoints; new endpoints |  | 76 | 100 | AE4 (45), AE3 (17), AF2 (3), Y5 (3), AF3 (3), AE5 (2), AF1 (1), C5 (1), G (1) | Build, Documents, Controls |
-| 3 | Checks on kept models; states of existing screens |  | 86 | 100 | AF3 (63), AC1 (18), AF5 (5) | Build, Documents, Controls |
-| 4 | States of existing screens; screen states: onboarding, part 1 |  | 100 | 100 | AC2 (78), AC1 (22) | Build |
-| 5 | Screen states: onboarding and identity, part 1 |  | 100 | 100 | AC3 (67), AC2 (33) | Build |
-| 6 | Screen states: identity and accounts and payment routes, part 1 |  | 100 | 100 | AC4 (75), AC3 (25) | Build |
-| 7 | Screen states: circles |  | 100 | 100 | AC5 (90), AC4 (10) | Build |
-| 8 | Screen states: circles and money |  | 100 | 100 | AC7 (80), AC5 (20) | Build |
-| 9 | Screen states: money and key facts and complaints |  | 100 | 100 | AC7 (77), AC16 (17), AC9 (3), AC10 (3) | Build |
-| 10 | Screen states: device security |  | 96 | 100 | AC17 (58), AD1 (8), AD4 (7), AD6 (5), AD2 (4), AD3 (4), AC19 (3), AD9 (2), AD10 (2), M (2), AQ3 (1) | Build, Partners |
-| 11 | Drafts for counsel |  | 59 | 100 | AL8 (11), AB5 (6), K (5), Z1 (5), M (4), AH1 (4), AJ5 (3), AB6 (3), AB9 (3), AB14 (3), L (2), AB4 (2), AB11 (2), S2 (2), AJ4 (1), AB2 (1), AB10 (1), AH2 (1) | Build, Tests, Documents, Controls |
-| 12 | Tests: collection |  | 96 | 100 | AI7 (18), AG9 (10), AG10 (10), AI8 (8), AH3 (7), AI4 (6), AI9 (6), AI14 (6), AI16 (6), AH2 (5), AH4 (3), AH5 (2), AH9 (2), AI2 (2), AA2 (2), AH11 (1), AI3 (1), AM1 (1) | Build, Tests, Documents, Partners |
-| 13 | Ten minutes to an account; fee rules; screens |  | 67 | 100 | AQ6 (17), C1 (14), F (12), AE2 (9), C2 (8), AQ1 (3), AA2 (2), AQ2 (2) | Build, Tests, Documents |
-| 14 | Screens |  | 79 | 98 | C5 (64), C2 (8), Y5 (7) | Build, Tests |
-| 15 | Collection; missing screens |  | 84 | 100 | G (37), D (30), Y6 (7), X1 (7), Y5 (3) | Build, Documents, Partners, Controls |
-| 16 | Missing screens |  | 100 | 100 | D (100) | Build |
-| 17 | Checks on kept endpoints |  | 100 | 100 | AE3 (100) | Build |
-| 18 | New endpoints, part 1 |  | 79 | 99 | AE4 (72), AE3 (7) | Build |
-| 19 | New endpoints, part 2 |  | 78 | 100 | AE4 (78) | Build |
-| 20 | New endpoints; checks on kept models |  | 92 | 100 | AF3 (66), AE4 (22), AE5 (4) | Build, Tests |
-| 21 | New models, part 1 |  | 78 | 100 | AF4 (76), AF3 (2) | Build |
-| 22 | New models, part 2 |  | 78 | 100 | AF4 (78) | Build |
-| 23 | States of existing screens |  | 100 | 100 | AC1 (99), AF5 (1) | Build, Controls |
-| 24 | States of existing screens; screen states: onboarding, part 2 |  | 100 | 100 | AC1 (63), AC2 (37) | Build |
-| 25 | Screen states: onboarding and identity, part 2 |  | 100 | 100 | AC2 (62), AC3 (38) | Build |
-| 26 | Screen states: identity and accounts and payment routes, part 2 |  | 100 | 100 | AC4 (67), AC3 (33) | Build |
-| 27 | Screen states: accounts and payment routes |  | 100 | 100 | AC4 (90), AC5 (10) | Build |
-| 28 | Screen states: circles and host |  | 100 | 100 | AC5 (73), AC6 (27) | Build |
-| 29 | Screen states: host, part 1 |  | 100 | 100 | AC6 (99), AC7 (1) | Build |
-| 30 | Screen states: money and recovery, part 1 |  | 100 | 100 | AC7 (62), AC8 (38) | Build |
-| 31 | Screen states: recovery and leaving a circle |  | 100 | 100 | AC8 (58), AC9 (42) | Build |
-| 32 | Screen states: leaving a circle and takaful or insurance |  | 100 | 100 | AC11 (53), AC9 (47) | Build |
-| 33 | Screen states: takaful or insurance, support and settings |  | 100 | 100 | AC13 (58), AC14 (22), AC11 (20) | Build |
-| 34 | Screen states: settings and key facts and complaints |  | 100 | 100 | AC16 (49), AC14 (46), AD1 (5) | Build |
-| 35 | Fields: support and settings; security |  | 88 | 100 | M (23), AD9 (12), AD4 (9), AJ1 (9), AQ3 (8), AD3 (6), AD7 (5), AD5 (4), AQ5 (4), AD1 (3), AD10 (2), AD2 (1), AD6 (1), AQ4 (1) | Build, Tests, Documents, Partners, Controls |
-| 36 | Security review; platform |  | 74 | 100 | L (35), AJ1 (15), AB2 (6), AB1 (4), AB3 (4), AJ2 (3), AJ5 (3), AJ4 (2), AJ6 (2) | Build, Tests, Documents, Controls |
-| 37 | Partner bank; bank meeting and documents |  | 81 | 100 | Z2 (13), S3 (8), AB8 (7), AO3 (7), AB16 (5), AB3 (4), AB4 (4), AB6 (4), AB7 (4), AB9 (4), AB14 (4), AB11 (3), AB13 (3), AO1 (3), AB5 (2), AB10 (2), AB12 (2), S5 (2) | Build, Documents, Controls |
-| 38 | Answers for the bank; governance: policies; drafts for counsel |  | 100 | 100 | AO3 (38), AL8 (20), AL1 (18), AL4 (18), H (3), AL6 (2), AL5 (1) | Build, Documents, Controls |
-| 39 | Credit data |  | 82 | 100 | J (14), H (7), AI5 (7), AI6 (7), AH5 (6), AI12 (6), AH7 (5), AI13 (5), AI15 (5), AH1 (4), AH3 (4), AH9 (4), AH4 (3), AH6 (3), AH11 (1), AI19 (1) | Build, Tests, Documents |
-| 40 | Journey tests |  | 33 | 99 | AI19 (33) | Tests |
-| 41 | Security tests; testing; partner connections: push notifications |  | 76 | 100 | AG7 (30), N (24), AI21 (20), AI19 (1), AI22 (1) | Build, Tests, Documents, Partners, Controls |
-| 42 | Partner connections: liveness service; bank integration; operations |  | 83 | 91 | AG9 (20), T7 (16), R (12), AG10 (10), AM1 (10), T8 (7), AG11 (5), AK2 (2), AP1 (1) | Build, Documents, Partners, Controls |
+| 3 | Checks on kept models; states of existing screens |  | 86 | 100 | AF3 (49), AC1 (32), AF5 (5) | Build, Documents, Controls |
+| 4 | Screen states: onboarding |  | 97 | 97 | AC2 (89), AC1 (8) | Build |
+| 5 | Screen states: onboarding and identity, part 1 |  | 97 | 97 | AC3 (75), AC2 (22) | Build |
+| 6 | Screen states: identity and accounts and payment routes |  | 97 | 97 | AC4 (80), AC3 (17) | Build |
+| 7 | Screen states: circles |  | 97 | 97 | AC5 (92), AC4 (5) | Build |
+| 8 | Screen states: circles and money |  | 97 | 97 | AC7 (79), AC5 (18) | Build |
+| 9 | Screen states: money and key facts and complaints |  | 97 | 97 | AC7 (78), AC16 (13), AC9 (3), AC10 (3) | Build |
+| 10 | Screen states: device security |  | 97 | 99 | AC17 (58), AD1 (8), AD4 (7), AD6 (5), AC16 (4), AD2 (4), AD3 (4), AC19 (3), AD9 (2), AD10 (2) | Build |
+| 11 | Security; drafts for counsel |  | 57 | 100 | AL8 (11), M (6), AB5 (6), K (5), Z1 (5), AJ5 (3), AB6 (3), AB9 (3), AB14 (3), L (2), AB4 (2), AB11 (2), S2 (2), AQ3 (1), AJ4 (1), AB2 (1), AB10 (1) | Build, Documents, Partners, Controls |
+| 12 | Tests: collection |  | 96 | 100 | AI7 (18), AG9 (10), AI8 (8), AG10 (8), AH3 (7), AH2 (6), AI4 (6), AI9 (6), AI14 (6), AI16 (6), AH1 (4), AH4 (3), AH5 (2), AH9 (2), AI2 (2), AH11 (1), AI3 (1) | Tests, Documents, Partners |
+| 13 | Ten minutes to an account; fee rules; screens |  | 67 | 100 | AQ6 (17), C1 (14), F (12), AE2 (9), AA2 (4), AQ1 (3), C2 (3), AG10 (2), AQ2 (2), AM1 (1) | Build, Tests, Documents, Partners |
+| 14 | Screens |  | 83 | 100 | C5 (64), C2 (13), Y5 (6) | Build, Tests |
+| 15 | Product changes; collection; missing screens |  | 82 | 100 | G (37), D (27), Y6 (7), X1 (7), Y5 (4) | Build, Documents, Partners, Controls |
+| 16 | Missing screens |  | 97 | 97 | D (97) | Build |
+| 17 | Checks on kept endpoints |  | 97 | 99 | AE3 (88), D (6), AE4 (3) | Build |
+| 18 | New endpoints, part 1 |  | 78 | 100 | AE4 (78) | Build |
+| 19 | New endpoints, part 2 |  | 78 | 98 | AE4 (78) | Build |
+| 20 | New endpoints; checks on kept models; new models |  | 84 | 100 | AF3 (34), AF4 (33), AE4 (13), AE5 (4) | Build, Tests |
+| 21 | New models |  | 78 | 100 | AF4 (78) | Build |
+| 22 | New models; states of existing screens |  | 88 | 100 | AC1 (44), AF4 (43), AF5 (1) | Build, Controls |
+| 23 | States of existing screens |  | 97 | 97 | AC1 (97) | Build |
+| 24 | States of existing screens; screen states: onboarding, part 1 |  | 97 | 97 | AC2 (76), AC1 (21) | Build |
+| 25 | Screen states: onboarding and identity, part 2 |  | 97 | 97 | AC3 (71), AC2 (23), AC4 (3) | Build |
+| 26 | Screen states: accounts and payment routes |  | 97 | 97 | AC4 (97) | Build |
+| 27 | Screen states: accounts and payment routes and circles |  | 97 | 97 | AC4 (57), AC5 (40) | Build |
+| 28 | Screen states: circles and host |  | 97 | 97 | AC6 (54), AC5 (43) | Build |
+| 29 | Screen states: host and money |  | 97 | 97 | AC6 (72), AC7 (25) | Build |
+| 30 | Screen states: money and recovery, part 1 |  | 97 | 97 | AC8 (59), AC7 (38) | Build |
+| 31 | Screen states: recovery and leaving a circle |  | 97 | 97 | AC9 (60), AC8 (37) | Build |
+| 32 | Screen states: leaving a circle and takaful or insurance |  | 97 | 97 | AC11 (68), AC9 (29) | Build |
+| 33 | Screen states: support and settings |  | 97 | 97 | AC13 (58), AC14 (34), AC11 (5) | Build |
+| 34 | Screen states: settings and key facts and complaints |  | 97 | 97 | AC16 (49), AC14 (34), AD1 (8), AD3 (5), AD2 (1) | Build |
+| 35 | Fields: support and settings; security; security review |  | 88 | 100 | M (23), AJ1 (18), AD9 (12), AD4 (9), AQ3 (8), AD7 (5), AD5 (4), AQ5 (4), AD10 (2), AD3 (1), AD6 (1), AQ4 (1) | Build, Tests, Documents, Partners, Controls |
+| 36 | Security review; platform |  | 74 | 100 | L (35), AB3 (8), AJ1 (6), AB2 (6), AB1 (4), AB4 (4), AJ2 (3), AJ5 (3), AJ4 (2), AJ6 (2), AB5 (1) | Build, Tests, Documents, Controls |
+| 37 | Partner bank; bank meeting and documents; answers for the bank |  | 81 | 100 | AO3 (16), Z2 (13), S3 (8), AB8 (7), AB16 (5), AB6 (4), AB7 (4), AB9 (4), AB14 (4), AB11 (3), AB13 (3), AO1 (3), AB10 (2), AB12 (2), S5 (2), AB5 (1) | Build, Documents, Controls |
+| 38 | Answers for the bank; governance: policies; drafts for counsel |  | 94 | 100 | AO3 (29), AL8 (20), AL1 (18), AL4 (18), H (6), AL6 (2), AL5 (1) | Build, Documents, Controls |
+| 39 | Credit data |  | 82 | 100 | J (14), AI5 (7), AI6 (7), AH5 (6), AI12 (6), AH7 (5), AI13 (5), AI15 (5), H (4), AH1 (4), AH3 (4), AH9 (4), AI19 (4), AH4 (3), AH6 (3), AH11 (1) | Build, Tests, Documents |
+| 40 | Journey tests; security tests |  | 38 | 100 | AI19 (31), AI21 (7) | Tests |
+| 41 | Security tests; testing; partner connections: push notifications |  | 76 | 100 | AG7 (30), N (24), AI21 (13), AG9 (8), AI22 (1) | Build, Tests, Documents, Partners, Controls |
+| 42 | Partner connections: liveness service; bank integration; operations |  | 75 | 81 | T7 (16), AG9 (12), R (12), AG10 (10), AM1 (10), T8 (7), AG11 (5), AK2 (2), AP1 (1) | Build, Documents, Partners, Controls |
 | 43 | Partner connections: partner bank, part 1 | H2 | 79 | 95 | AG1 (79) | Partners |
 | 44 | Partner connections: partner bank, part 2 | H2 | 79 | 95 | AG1 (71), AE4 (8) | Build, Partners |
 | 45 | New endpoints, part 3 | H2 | 75 | 95 | AE4 (75) | Build |
@@ -65,9 +65,9 @@ Reference HQ-IN-02. 5 October 2026.
 | 55 | Screens; product changes; new endpoints |  | 90 | 100 | AE4 (43), C6 (28), Y4 (8), Y2 (4), Y7 (4), AQ1 (1), AQ6 (1), Y3 (1) | Build, Documents, Controls |
 | 56 | New endpoints, part 4 |  | 80 | 100 | AE4 (80) | Build |
 | 57 | New endpoints; new models; states of existing screens |  | 91 | 100 | AE4 (33), AC1 (32), AF4 (22), AF5 (3), AE5 (1) | Build, Documents, Controls |
-| 58 | States of existing screens; screen states: onboarding, part 3 |  | 95 | 95 | AC1 (60), AC2 (26), AC3 (9) | Build |
+| 58 | States of existing screens; screen states: onboarding, part 2 |  | 95 | 95 | AC1 (60), AC2 (26), AC3 (9) | Build |
 | 59 | Screen states: identity, accounts and payment routes and circles |  | 95 | 95 | AC5 (41), AC4 (32), AC3 (15), AC6 (7) | Build |
-| 60 | Screen states: host, part 2 |  | 95 | 95 | AC6 (95) | Build |
+| 60 | Screen states: host |  | 95 | 95 | AC6 (95) | Build |
 | 61 | Screen states: money and recovery, part 2 |  | 95 | 95 | AC7 (62), AC8 (32), AC6 (1) | Build |
 | 62 | Screen states: leaving a circle and rewards |  | 95 | 95 | AC10 (79), AC9 (12), AC11 (3), AC8 (1) | Build |
 | 63 | Screen states: savings at the bank and support |  | 95 | 95 | AC12 (66), AC13 (19), AC11 (7), AC14 (3) | Build |
@@ -193,11 +193,11 @@ The individual onboarding and identity screens are listed in section D. This par
 | 72 | Remove the demo credentials printed on the sign-in screen. The line has no environment guard, so "+92 300 1234567 · halqa123" is on the live page for anyone | AuthPage.tsx:538 | Claude | P1 | 13 | Open |
 | 73 | Welcome screen: the mark, one line, and two actions, Create account and Sign in. No slogan, no capitalised strapline, no paragraph | AuthPage | Claude | P1 | 13 | Open |
 | 74 | Remove the green marketing banner that fills 40 per cent of every sign-in and sign-up screen | AuthPage | Claude | P1 | 13 | Open |
-| 75 | Sign in with phone number and PIN, as the wallets do. No password | AuthPage | Claude | P1 | 13 | Open |
-| 76 | Cut sign-up from ten steps to five: phone, code, name, CNIC, PIN. Address, work, bank account and review move to verification after the account exists, where they open seats rather than block entry | AuthPage.tsx:48 | Claude | P1 | 13 | Open |
-| 77 | Drop the password step. The PIN is the credential on the device and a phone code recovers it | AuthPage | Claude | P1 | 13 | Open |
-| 78 | The question is the heading of each step, not "Step 1 of 10"; progress is a thin bar only | AuthPage.tsx:542 | Claude | P1 | 13 | Open |
-| 79 | Phone entry: +92 fixed, numeric keypad, digits grouped as they are typed, no flag | PhoneInput.tsx | Claude | P1 | 13 | Open |
+| 75 | Sign in with phone number and PIN, as the wallets do. No password | AuthPage | Claude | P1 | 14 | Open |
+| 76 | Cut sign-up from ten steps to five: phone, code, name, CNIC, PIN. Address, work, bank account and review move to verification after the account exists, where they open seats rather than block entry | AuthPage.tsx:48 | Claude | P1 | 14 | Open |
+| 77 | Drop the password step. The PIN is the credential on the device and a phone code recovers it | AuthPage | Claude | P1 | 14 | Open |
+| 78 | The question is the heading of each step, not "Step 1 of 10"; progress is a thin bar only | AuthPage.tsx:542 | Claude | P1 | 14 | Open |
+| 79 | Phone entry: +92 fixed, numeric keypad, digits grouped as they are typed, no flag | PhoneInput.tsx | Claude | P1 | 14 | Open |
 | 80 | Code entry: six boxes, automatic advance, paste from the SMS, resend with a visible countdown, and a change number link | AuthPage, otp step | Claude | P1 | 14 | Open |
 | 81 | PIN set and confirm on a full screen numeric keypad of its own, matching the unlock screen | AuthPage, PinLock | Claude | P1 | 14 | Open |
 | 82 | CNIC step opens the camera capture first and typing second | AuthPage, CnicCapture | Claude | P1 | 14 | Open |
@@ -388,9 +388,9 @@ The application presently carries twenty eight screens. Every item below is a sc
 | 236 | Adverse action disclosure pack | Identity | Claude | P1 | 15 | Open |
 | 237 | Linked accounts list | Accounts and rails | Claude | P1 | 15 | Open |
 | 238 | Add a bank account | Accounts and rails | Claude | P1 | 15 | Open |
-| 239 | Add a wallet account | Accounts and rails | Claude | P1 | 15 | Open |
-| 240 | Account title verification in progress | Accounts and rails | Claude | P1 | 15 | Open |
-| 241 | Account title mismatch, with the route to correct it | Accounts and rails | Claude | P1 | 15 | Open |
+| 239 | Add a wallet account | Accounts and rails | Claude | P1 | 16 | Open |
+| 240 | Account title verification in progress | Accounts and rails | Claude | P1 | 16 | Open |
+| 241 | Account title mismatch, with the route to correct it | Accounts and rails | Claude | P1 | 16 | Open |
 | 242 | Set the default collection account | Accounts and rails | Claude | P1 | 16 | Open |
 | 243 | Remove a linked account, with the consequences stated | Accounts and rails | Claude | P1 | 16 | Open |
 | 244 | Collection mandate explainer | Accounts and rails | Claude | P1 | 16 | Open |
@@ -485,12 +485,12 @@ The application presently carries twenty eight screens. Every item below is a sc
 | 333 | Notification preferences | Settings | Claude | P1 | 16 | Open |
 | 334 | Language chooser | Settings | Claude | P1 | 16 | Open |
 | 335 | Data export request | Settings | Claude | P1 | 16 | Open |
-| 336 | Account closure | Settings | Claude | P1 | 16 | Open |
-| 337 | Administrative console: circles at risk | Administration | Claude | P1 | 16 | Open |
-| 338 | Administrative console: reconciliation exceptions | Administration | Claude | P1 | 16 | Open |
-| 339 | Administrative console: identity queue | Administration | Claude | P1 | 16 | Open |
-| 340 | Administrative console: dispute queue | Administration | Claude | P1 | 16 | Open |
-| 341 | Administrative console: mandate failures | Administration | Claude | P1 | 16 | Open |
+| 336 | Account closure | Settings | Claude | P1 | 17 | Open |
+| 337 | Administrative console: circles at risk | Administration | Claude | P1 | 17 | Open |
+| 338 | Administrative console: reconciliation exceptions | Administration | Claude | P1 | 17 | Open |
+| 339 | Administrative console: identity queue | Administration | Claude | P1 | 17 | Open |
+| 340 | Administrative console: dispute queue | Administration | Claude | P1 | 17 | Open |
+| 341 | Administrative console: mandate failures | Administration | Claude | P1 | 17 | Open |
 
 ## E. Removals
 
@@ -612,9 +612,9 @@ Takaful or insurance from a licensed operator chosen by the bank is the only pro
 | 436 | Takaful or insurance fee taken as a fixed part of every payment on the circles that carry it | lib/split.ts | Claude | P1 | 38 | Open |
 | 437 | Takaful or insurance fee remitted to the operator, or for takaful to the participants risk fund, and never held by Halqa | lib/split.ts | Claude | P1 | 38 | Open |
 | 438 | Separate ledger account for the risk fund, reconciled separately | ledger | Claude | P1 | 38 | Open |
-| 439 | Takaful or insurance mandatory on every circle between strangers and on Hyper, its fee named before commitment; optional on known circles | new page | Claude | P1 | 39 | Open |
-| 440 | Takaful or insurance certificate issued to the member by the operator | new page | Claude | P1 | 39 | Open |
-| 441 | Claim submission with the payment record attached as evidence | new page | Claude | P1 | 39 | Open |
+| 439 | Takaful or insurance mandatory on every circle between strangers and on Hyper, its fee named before commitment; optional on known circles | new page | Claude | P1 | 38 | Open |
+| 440 | Takaful or insurance certificate issued to the member by the operator | new page | Claude | P1 | 38 | Open |
+| 441 | Claim submission with the payment record attached as evidence | new page | Claude | P1 | 38 | Open |
 | 442 | Claim status visible to the member and to the host | new page | Claude | P1 | 39 | Open |
 | 443 | Any commission from the operator, if the bank shares it, recorded as revenue and disclosed to the member; not counted in Halqa's income in the business model (30 September) | ledger | Claude | P1 | 39 | Open |
 | 444 | Surplus and deficit treatment documented for the member: surplus belongs to participants, deficit is met by an operator advance | content | Claude | P1 | 39 | Open |
@@ -738,14 +738,14 @@ The savings product built on a trustee and an asset manager is retired. Savings 
 
 | # | Item | Where | Owner | Pri | Phase | Status |
 | --: | :-- | :-- | :-- | :-- | :-- | :-- |
-| 538 | Correct the permissions policy header, which sets camera and geolocation to none and so breaks CNIC capture and the home location pin in production (confirmed against the live headers on 24 September) | halqa-web/vercel.json:11 | Claude | P0 | 10 | Open |
+| 538 | Correct the permissions policy header, which sets camera and geolocation to none and so breaks CNIC capture and the home location pin in production (confirmed against the live headers on 24 September) | halqa-web/vercel.json:11 | Claude | P0 | 11 | Open |
 | 539 | Review the content security policy and remove any unsafe directive | halqa-web/vercel.json | Claude | P1 | 35 | Open |
 | 540 | Confirm strict transport security across the domain | halqa-web/vercel.json | Claude | P1 | 35 | Open |
 | 541 | Confirm the cross origin policy admits only the application origins | halqa-api/src/app.ts | Claude | P1 | 35 | Open |
 | 542 | Rate limit every route, per member and per address, tighter on authentication | halqa-api/src | Claude | P1 | 35 | Open |
 | 543 | Add a bot challenge before an account is created | routes/auth.ts | Claude | P1 | 35 | Open |
 | 544 | Add signup velocity limits per device and per address | routes/auth.ts | Claude | P1 | 35 | Open |
-| 545 | Confirm every route checks membership, hosting or ownership before acting | halqa-api/src/routes | Claude | P0 | 10 | Open |
+| 545 | Confirm every route checks membership, hosting or ownership before acting | halqa-api/src/routes | Claude | P0 | 11 | Open |
 | 546 | Confirm every request is validated against a schema before reaching business logic | halqa-api/src/routes | Claude | P0 | 11 | Open |
 | 547 | Confirm internal fields never reach the client | halqa-api/src | Claude | P0 | 11 | Open |
 | 548 | Move every credential into a managed store and rotate on a schedule | infrastructure | Claude | P0 | 11 | Open |
@@ -1355,7 +1355,7 @@ Fees, Hyper, savings, assets, members abroad, the computational methods and the 
 | 973 | Rewards and points screens | new pages | Claude | P1 | 14 | Open |
 | 974 | Marketplace screens | new pages | Claude | P1 | 14 | Open |
 | 975 | Turn market screens | new pages | Claude | P1 | 14 | Open |
-| 976 | Savings screen | new page | Claude | P1 | 14 | Open |
+| 976 | Savings screen | new page | Claude | P1 | 15 | Open |
 | 977 | Asset financing screens | new pages | Claude | P3 | 79 | Open |
 | 978 | Members abroad journey | new pages | Claude | P3 | 79 | Open |
 | 979 | Credit history and reporting screens | new pages | Claude | P1 | 15 | Open |
@@ -1480,8 +1480,8 @@ Each decision is the chairman's, with its date. Items of revision 6 that they ov
 | --: | :-- | :-- | :-- | :-- | :-- | :-- |
 | 1056 | Replace the old surname with Kayani in every document, deck, script and preview data set, including the two screenshot scripts that rename the preview user | documents, shoot scripts | Claude | P0 | 1 | Open |
 | 1057 | Remove the word cover where it describes protection by Halqa from every screen, notice, help answer and preview string: ProtectionCenter, FeesPage, HyperPage, rafa-knowledge.ts, preview.ts | halqa-web | Claude | P0 | 1 | Open |
-| 1058 | Show the PSP service fee only when the member chooses a wallet or a card, and never on the bank's direct debit | PayPage.tsx, lib/fee-book.ts | Claude | P1 | 12 | Open |
-| 1059 | Send Hyper's daily reminders by free push notification rather than WhatsApp, since at Rs 15 a day a WhatsApp message on every daily payment makes Hyper lose money (30 September) | lib/notices.ts | Claude | P1 | 12 | Open |
+| 1058 | Show the PSP service fee only when the member chooses a wallet or a card, and never on the bank's direct debit | PayPage.tsx, lib/fee-book.ts | Claude | P1 | 13 | Open |
+| 1059 | Send Hyper's daily reminders by free push notification rather than WhatsApp, since at Rs 15 a day a WhatsApp message on every daily payment makes Hyper lose money (30 September) | lib/notices.ts | Claude | P1 | 13 | Open |
 | 1060 | Raqami: no points bought with money and no turn market priced in money; anything its Shariah board cannot approve is not offered through Raqami | product | Chairman | P1 | H2 | Open |
 | 1061 | Confirm with the bank whether hosting in Singapore (Vercel sin1, Supabase on AWS ap-southeast-1) is acceptable under the State Bank's cloud framework, which requires State Bank approval for a bank's material workloads on an offshore cloud, or whether an onshore provider is required | bank | Bank | P0 | H2 | Open |
 | 1062 | Update the master context and memory after every change to this register | HANDOVER | Claude | P1 | 13 | Open |
@@ -1561,10 +1561,10 @@ Enterprise Technology Governance and Risk Management Framework (BPRD Circular 05
 | 1106 | System acquisition checklist for any new supplier or library | process | Claude | P2 | 68 | Open |
 | 1107 | Information technology operations manual: jobs, schedules, monitoring, backups, restores | documentation | Claude | P2 | 68 | Open |
 | 1108 | Capacity plan for 100,000 members: database, jobs, messages, bank calls | infrastructure | Claude | P2 | 68 | Open |
-| 1109 | Patch management: dependencies updated on a schedule, urgent fixes within stated days | process | Claude | P1 | 37 | Open |
-| 1110 | Configuration management: every environment's settings recorded and reviewed | infrastructure | Claude | P1 | 37 | Open |
-| 1111 | Asset inventory: domains, accounts, keys, devices, licences, with owners | governance | Claude | P1 | 37 | Open |
-| 1112 | Logging and monitoring standard: what is logged, where, for how long, who reviews | security | Claude | P1 | 37 | Open |
+| 1109 | Patch management: dependencies updated on a schedule, urgent fixes within stated days | process | Claude | P1 | 36 | Open |
+| 1110 | Configuration management: every environment's settings recorded and reviewed | infrastructure | Claude | P1 | 36 | Open |
+| 1111 | Asset inventory: domains, accounts, keys, devices, licences, with owners | governance | Claude | P1 | 36 | Open |
+| 1112 | Logging and monitoring standard: what is logged, where, for how long, who reviews | security | Claude | P1 | 36 | Open |
 | 1113 | Independent technology audit of Halqa before the pilot, if the bank requires it | external | Auditor | P2 | H4 | Open |
 
 ### AB4. Customer Onboarding
@@ -1575,17 +1575,17 @@ Consolidated Customer Onboarding Framework (BPRD Circular 01 of 2025).
 | --: | :-- | :-- | :-- | :-- | :-- | :-- |
 | 1114 | Biometric verification by the bank as the primary method under the Consolidated Customer Onboarding Framework (BPRD Circular 01 of 2025) | bank | Bank | P0 | H2 | Open |
 | 1115 | Fallback order agreed: Verisys with the CNIC and mobile number pairing and a code, then Verisys with a debit block, then a branch | bank | Bank | P1 | H2 | Open |
-| 1116 | Each fallback step shown in Halqa's journey in plain words, with what the member must do next | app | Claude | P1 | 37 | Open |
+| 1116 | Each fallback step shown in Halqa's journey in plain words, with what the member must do next | app | Claude | P1 | 36 | Open |
 | 1117 | Route for members abroad holding a NICOP or POC, for Mashreq's accounts for non resident Pakistanis | bank | Bank | P2 | H4 | Open |
 | 1118 | Route for senior citizens and for members with disabilities, where the framework allows Verisys instead | bank | Bank | P2 | H4 | Open |
 | 1119 | Evidence pack for the bank's annual audit of digital onboarding: journey, logs, error rates | reporting | Claude | P2 | 68 | Open |
 | 1120 | No biometric template stored by Halqa | security | Claude | P0 | 11 | Open |
-| 1121 | Halqa's own liveness check used only where the bank does not share its result | lib/identity-score.ts | Claude | P1 | 37 | Open |
+| 1121 | Halqa's own liveness check used only where the bank does not share its result | lib/identity-score.ts | Claude | P1 | 36 | Open |
 | 1122 | Joining a circle blocked until the bank confirms the account is verified and active | lib/bank-accounts.ts | Claude | P0 | 11 | Open |
-| 1123 | CNIC expiry tracked: renewal requested before expiry, joining paused after it | lib/identity-score.ts | Claude | P1 | 37 | Open |
+| 1123 | CNIC expiry tracked: renewal requested before expiry, joining paused after it | lib/identity-score.ts | Claude | P1 | 36 | Open |
 | 1124 | Change of mobile number: re-pairing with the CNIC at the bank before Halqa updates its record | bank | Bank | P1 | H2 | Open |
 | 1125 | Onboarding funnel report for the bank: started, verified, failed, abandoned, by step | reporting | Claude | P2 | 68 | Open |
-| 1126 | Name match between the CNIC, the bank account title and the Halqa profile, with the 0.90 and 0.80 thresholds | lib/identity-score.ts | Claude | P1 | 37 | Open |
+| 1126 | Name match between the CNIC, the bank account title and the Halqa profile, with the 0.90 and 0.80 thresholds | lib/identity-score.ts | Claude | P1 | 36 | Open |
 
 ### AB5. Digital Channel Security
 
@@ -1598,7 +1598,7 @@ PSP&OD Circular 01 of 2024, in force from 1 January 2025.
 | 1129 | Complete log of every alert sent, kept for disputes and claims | schema.prisma | Claude | P0 | 11 | Open |
 | 1130 | Device binding: one bound device per member, bound at first sign in | routes/auth.ts | Claude | P0 | 11 | Open |
 | 1131 | Two hour cooling off after a device change: no mandate authorisation, payout change or points purchase | lib/security.ts | Claude | P0 | 11 | Open |
-| 1132 | No SMS code used to authorise a financial action where the bank uses a transaction PIN | routes/auth.ts | Claude | P1 | 37 | Open |
+| 1132 | No SMS code used to authorise a financial action where the bank uses a transaction PIN | routes/auth.ts | Claude | P1 | 36 | Open |
 | 1133 | Screen capture blocked on the PIN, CNIC, account and receipt screens in the native build | native | Claude | P1 | 37 | Open |
 | 1134 | Emulator detection before financial actions in the native build | native | Claude | P2 | 68 | Open |
 | 1135 | Fraud reports routed to the bank the same day, so the bank's liability framework (BPRD Circular 04 of 2023) is not triggered by Halqa's delay | operations | Claude | P0 | 11 | Open |
@@ -1767,100 +1767,100 @@ The 27 pages kept in the application today, the committee page counted by its ta
 
 | # | Item | Where | Owner | Pri | Phase | Status |
 | --: | :-- | :-- | :-- | :-- | :-- | :-- |
-| 1225 | Home: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | HomePage.tsx | Claude | P1 | 23 | Open |
-| 1226 | Home: error state with the reason in plain words and a retry | HomePage.tsx | Claude | P1 | 23 | Open |
-| 1227 | Home: offline state showing the last data held and when it was fetched, with actions disabled | HomePage.tsx | Claude | P1 | 23 | Open |
+| 1225 | Home: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | HomePage.tsx | Claude | P1 | 22 | Open |
+| 1226 | Home: error state with the reason in plain words and a retry | HomePage.tsx | Claude | P1 | 22 | Open |
+| 1227 | Home: offline state showing the last data held and when it was fetched, with actions disabled | HomePage.tsx | Claude | P1 | 22 | Open |
 | 1228 | Home: deep link restores the screen with its state | HomePage.tsx | Claude | P1 |  | Done |
-| 1229 | Home: empty state: a member with no circles: Start a committee and Join with a code | HomePage.tsx | Claude | P1 | 23 | Open |
+| 1229 | Home: empty state: a member with no circles: Start a committee and Join with a code | HomePage.tsx | Claude | P1 | 22 | Open |
 | 1230 | Home: checked in dark mode, with no hard coded white or black | HomePage.tsx | Claude | P1 |  | Done |
 | 1231 | Home: Urdu text for every string, by a translator | HomePage.tsx | Translator | P1 | H4 | Open |
-| 1232 | Home: right to left layout checked with the Urdu text | HomePage.tsx | Claude | P1 | 23 | Open |
+| 1232 | Home: right to left layout checked with the Urdu text | HomePage.tsx | Claude | P1 | 22 | Open |
 | 1233 | Home: usable at the largest system text size, with nothing cut off | HomePage.tsx | Claude | P1 |  | Done |
 | 1234 | Home: usable at 320 pixels wide | HomePage.tsx | Claude | P1 |  | Done |
 | 1235 | Home: every control named for screen readers, in a logical focus order | HomePage.tsx | Claude | P1 |  | Done |
 | 1236 | Home: contrast of every text and control checked | HomePage.tsx | Claude | P1 |  | Done |
 | 1237 | Home: screen view and main action recorded, with no personal data in the events | HomePage.tsx | Claude | P2 |  | Done |
-| 1238 | Home: component test of every state | HomePage.tsx | Claude | P1 | 23 | Open |
-| 1239 | Home: end to end test of its main path | HomePage.tsx | Claude | P1 | 23 | Open |
+| 1238 | Home: component test of every state | HomePage.tsx | Claude | P1 | 22 | Open |
+| 1239 | Home: end to end test of its main path | HomePage.tsx | Claude | P1 | 22 | Open |
 | 1240 | Home: visual regression snapshot at three widths | HomePage.tsx | Claude | P2 | 57 | Open |
 | 1241 | Home: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | HomePage.tsx | Claude | P1 |  | Done |
-| 1242 | Committees: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | CirclesPage.tsx | Claude | P1 | 23 | Open |
-| 1243 | Committees: loading skeleton in the final layout, never a full screen spinner | CirclesPage.tsx | Claude | P1 | 23 | Open |
-| 1244 | Committees: error state with the reason in plain words and a retry | CirclesPage.tsx | Claude | P1 | 23 | Open |
-| 1245 | Committees: offline state showing the last data held and when it was fetched, with actions disabled | CirclesPage.tsx | Claude | P1 | 23 | Open |
+| 1242 | Committees: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | CirclesPage.tsx | Claude | P1 | 22 | Open |
+| 1243 | Committees: loading skeleton in the final layout, never a full screen spinner | CirclesPage.tsx | Claude | P1 | 22 | Open |
+| 1244 | Committees: error state with the reason in plain words and a retry | CirclesPage.tsx | Claude | P1 | 22 | Open |
+| 1245 | Committees: offline state showing the last data held and when it was fetched, with actions disabled | CirclesPage.tsx | Claude | P1 | 22 | Open |
 | 1246 | Committees: deep link restores the screen with its state | CirclesPage.tsx | Claude | P1 |  | Done |
-| 1247 | Committees: pull to refresh | CirclesPage.tsx | Claude | P1 | 23 | Open |
-| 1248 | Committees: pages loaded as the member scrolls, with an end of list marker | CirclesPage.tsx | Claude | P1 | 23 | Open |
+| 1247 | Committees: pull to refresh | CirclesPage.tsx | Claude | P1 | 22 | Open |
+| 1248 | Committees: pages loaded as the member scrolls, with an end of list marker | CirclesPage.tsx | Claude | P1 | 22 | Open |
 | 1249 | Committees: checked in dark mode, with no hard coded white or black | CirclesPage.tsx | Claude | P1 |  | Done |
 | 1250 | Committees: Urdu text for every string, by a translator | CirclesPage.tsx | Translator | P1 | H4 | Open |
-| 1251 | Committees: right to left layout checked with the Urdu text | CirclesPage.tsx | Claude | P1 | 23 | Open |
+| 1251 | Committees: right to left layout checked with the Urdu text | CirclesPage.tsx | Claude | P1 | 22 | Open |
 | 1252 | Committees: usable at the largest system text size, with nothing cut off | CirclesPage.tsx | Claude | P1 |  | Done |
 | 1253 | Committees: usable at 320 pixels wide | CirclesPage.tsx | Claude | P1 |  | Done |
 | 1254 | Committees: every control named for screen readers, in a logical focus order | CirclesPage.tsx | Claude | P1 |  | Done |
 | 1255 | Committees: contrast of every text and control checked | CirclesPage.tsx | Claude | P1 |  | Done |
 | 1256 | Committees: screen view and main action recorded, with no personal data in the events | CirclesPage.tsx | Claude | P2 |  | Done |
-| 1257 | Committees: component test of every state | CirclesPage.tsx | Claude | P1 | 23 | Open |
-| 1258 | Committees: end to end test of its main path | CirclesPage.tsx | Claude | P1 | 23 | Open |
+| 1257 | Committees: component test of every state | CirclesPage.tsx | Claude | P1 | 22 | Open |
+| 1258 | Committees: end to end test of its main path | CirclesPage.tsx | Claude | P1 | 22 | Open |
 | 1259 | Committees: visual regression snapshot at three widths | CirclesPage.tsx | Claude | P2 | 57 | Open |
 | 1260 | Committees: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | CirclesPage.tsx | Claude | P1 |  | Done |
-| 1261 | Committee, turns tab: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | CommitteePage.tsx | Claude | P1 | 23 | Open |
-| 1262 | Committee, turns tab: loading skeleton in the final layout, never a full screen spinner | CommitteePage.tsx | Claude | P1 | 23 | Open |
-| 1263 | Committee, turns tab: error state with the reason in plain words and a retry | CommitteePage.tsx | Claude | P1 | 23 | Open |
-| 1264 | Committee, turns tab: offline state showing the last data held and when it was fetched, with actions disabled | CommitteePage.tsx | Claude | P1 | 23 | Open |
+| 1261 | Committee, turns tab: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | CommitteePage.tsx | Claude | P1 | 22 | Open |
+| 1262 | Committee, turns tab: loading skeleton in the final layout, never a full screen spinner | CommitteePage.tsx | Claude | P1 | 22 | Open |
+| 1263 | Committee, turns tab: error state with the reason in plain words and a retry | CommitteePage.tsx | Claude | P1 | 22 | Open |
+| 1264 | Committee, turns tab: offline state showing the last data held and when it was fetched, with actions disabled | CommitteePage.tsx | Claude | P1 | 22 | Open |
 | 1265 | Committee, turns tab: deep link restores the screen with its state | CommitteePage.tsx | Claude | P1 |  | Done |
-| 1266 | Committee, turns tab: not found and no access states, each with a route back | CommitteePage.tsx | Claude | P1 | 23 | Open |
+| 1266 | Committee, turns tab: not found and no access states, each with a route back | CommitteePage.tsx | Claude | P1 | 22 | Open |
 | 1267 | Committee, turns tab: checked in dark mode, with no hard coded white or black | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1268 | Committee, turns tab: Urdu text for every string, by a translator | CommitteePage.tsx | Translator | P1 | H4 | Open |
-| 1269 | Committee, turns tab: right to left layout checked with the Urdu text | CommitteePage.tsx | Claude | P1 | 23 | Open |
+| 1269 | Committee, turns tab: right to left layout checked with the Urdu text | CommitteePage.tsx | Claude | P1 | 22 | Open |
 | 1270 | Committee, turns tab: usable at the largest system text size, with nothing cut off | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1271 | Committee, turns tab: usable at 320 pixels wide | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1272 | Committee, turns tab: every control named for screen readers, in a logical focus order | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1273 | Committee, turns tab: contrast of every text and control checked | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1274 | Committee, turns tab: screen view and main action recorded, with no personal data in the events | CommitteePage.tsx | Claude | P2 |  | Done |
-| 1275 | Committee, turns tab: component test of every state | CommitteePage.tsx | Claude | P1 | 23 | Open |
-| 1276 | Committee, turns tab: end to end test of its main path | CommitteePage.tsx | Claude | P1 | 23 | Open |
+| 1275 | Committee, turns tab: component test of every state | CommitteePage.tsx | Claude | P1 | 22 | Open |
+| 1276 | Committee, turns tab: end to end test of its main path | CommitteePage.tsx | Claude | P1 | 22 | Open |
 | 1277 | Committee, turns tab: visual regression snapshot at three widths | CommitteePage.tsx | Claude | P2 | 57 | Open |
 | 1278 | Committee, turns tab: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | CommitteePage.tsx | Claude | P1 |  | Done |
-| 1279 | Committee, payments tab: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | CommitteePage.tsx | Claude | P1 | 23 | Open |
-| 1280 | Committee, payments tab: loading skeleton in the final layout, never a full screen spinner | CommitteePage.tsx | Claude | P1 | 23 | Open |
-| 1281 | Committee, payments tab: error state with the reason in plain words and a retry | CommitteePage.tsx | Claude | P1 | 23 | Open |
-| 1282 | Committee, payments tab: offline state showing the last data held and when it was fetched, with actions disabled | CommitteePage.tsx | Claude | P1 | 23 | Open |
+| 1279 | Committee, payments tab: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | CommitteePage.tsx | Claude | P1 | 22 | Open |
+| 1280 | Committee, payments tab: loading skeleton in the final layout, never a full screen spinner | CommitteePage.tsx | Claude | P1 | 22 | Open |
+| 1281 | Committee, payments tab: error state with the reason in plain words and a retry | CommitteePage.tsx | Claude | P1 | 22 | Open |
+| 1282 | Committee, payments tab: offline state showing the last data held and when it was fetched, with actions disabled | CommitteePage.tsx | Claude | P1 | 22 | Open |
 | 1283 | Committee, payments tab: deep link restores the screen with its state | CommitteePage.tsx | Claude | P1 |  | Done |
-| 1284 | Committee, payments tab: not found and no access states, each with a route back | CommitteePage.tsx | Claude | P1 | 23 | Open |
+| 1284 | Committee, payments tab: not found and no access states, each with a route back | CommitteePage.tsx | Claude | P1 | 22 | Open |
 | 1285 | Committee, payments tab: checked in dark mode, with no hard coded white or black | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1286 | Committee, payments tab: Urdu text for every string, by a translator | CommitteePage.tsx | Translator | P1 | H4 | Open |
-| 1287 | Committee, payments tab: right to left layout checked with the Urdu text | CommitteePage.tsx | Claude | P1 | 23 | Open |
+| 1287 | Committee, payments tab: right to left layout checked with the Urdu text | CommitteePage.tsx | Claude | P1 | 22 | Open |
 | 1288 | Committee, payments tab: usable at the largest system text size, with nothing cut off | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1289 | Committee, payments tab: usable at 320 pixels wide | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1290 | Committee, payments tab: every control named for screen readers, in a logical focus order | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1291 | Committee, payments tab: contrast of every text and control checked | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1292 | Committee, payments tab: screen view and main action recorded, with no personal data in the events | CommitteePage.tsx | Claude | P2 |  | Done |
-| 1293 | Committee, payments tab: component test of every state | CommitteePage.tsx | Claude | P1 | 23 | Open |
-| 1294 | Committee, payments tab: end to end test of its main path | CommitteePage.tsx | Claude | P1 | 23 | Open |
+| 1293 | Committee, payments tab: component test of every state | CommitteePage.tsx | Claude | P1 | 22 | Open |
+| 1294 | Committee, payments tab: end to end test of its main path | CommitteePage.tsx | Claude | P1 | 22 | Open |
 | 1295 | Committee, payments tab: visual regression snapshot at three widths | CommitteePage.tsx | Claude | P2 | 57 | Open |
 | 1296 | Committee, payments tab: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | CommitteePage.tsx | Claude | P1 |  | Done |
-| 1297 | Committee, members tab: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | CommitteePage.tsx | Claude | P1 | 23 | Open |
-| 1298 | Committee, members tab: loading skeleton in the final layout, never a full screen spinner | CommitteePage.tsx | Claude | P1 | 23 | Open |
-| 1299 | Committee, members tab: error state with the reason in plain words and a retry | CommitteePage.tsx | Claude | P1 | 23 | Open |
-| 1300 | Committee, members tab: offline state showing the last data held and when it was fetched, with actions disabled | CommitteePage.tsx | Claude | P1 | 23 | Open |
+| 1297 | Committee, members tab: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | CommitteePage.tsx | Claude | P1 | 22 | Open |
+| 1298 | Committee, members tab: loading skeleton in the final layout, never a full screen spinner | CommitteePage.tsx | Claude | P1 | 22 | Open |
+| 1299 | Committee, members tab: error state with the reason in plain words and a retry | CommitteePage.tsx | Claude | P1 | 22 | Open |
+| 1300 | Committee, members tab: offline state showing the last data held and when it was fetched, with actions disabled | CommitteePage.tsx | Claude | P1 | 22 | Open |
 | 1301 | Committee, members tab: deep link restores the screen with its state | CommitteePage.tsx | Claude | P1 |  | Done |
-| 1302 | Committee, members tab: not found and no access states, each with a route back | CommitteePage.tsx | Claude | P1 | 23 | Open |
+| 1302 | Committee, members tab: not found and no access states, each with a route back | CommitteePage.tsx | Claude | P1 | 22 | Open |
 | 1303 | Committee, members tab: checked in dark mode, with no hard coded white or black | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1304 | Committee, members tab: Urdu text for every string, by a translator | CommitteePage.tsx | Translator | P1 | H4 | Open |
-| 1305 | Committee, members tab: right to left layout checked with the Urdu text | CommitteePage.tsx | Claude | P1 | 23 | Open |
+| 1305 | Committee, members tab: right to left layout checked with the Urdu text | CommitteePage.tsx | Claude | P1 | 22 | Open |
 | 1306 | Committee, members tab: usable at the largest system text size, with nothing cut off | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1307 | Committee, members tab: usable at 320 pixels wide | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1308 | Committee, members tab: every control named for screen readers, in a logical focus order | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1309 | Committee, members tab: contrast of every text and control checked | CommitteePage.tsx | Claude | P1 |  | Done |
 | 1310 | Committee, members tab: screen view and main action recorded, with no personal data in the events | CommitteePage.tsx | Claude | P2 |  | Done |
-| 1311 | Committee, members tab: component test of every state | CommitteePage.tsx | Claude | P1 | 23 | Open |
-| 1312 | Committee, members tab: end to end test of its main path | CommitteePage.tsx | Claude | P1 | 23 | Open |
+| 1311 | Committee, members tab: component test of every state | CommitteePage.tsx | Claude | P1 | 22 | Open |
+| 1312 | Committee, members tab: end to end test of its main path | CommitteePage.tsx | Claude | P1 | 22 | Open |
 | 1313 | Committee, members tab: visual regression snapshot at three widths | CommitteePage.tsx | Claude | P2 | 57 | Open |
 | 1314 | Committee, members tab: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | CommitteePage.tsx | Claude | P1 |  | Done |
-| 1315 | Committee, safety tab: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | ProtectionCenter.tsx | Claude | P1 | 23 | Open |
-| 1316 | Committee, safety tab: loading skeleton in the final layout, never a full screen spinner | ProtectionCenter.tsx | Claude | P1 | 23 | Open |
-| 1317 | Committee, safety tab: error state with the reason in plain words and a retry | ProtectionCenter.tsx | Claude | P1 | 23 | Open |
-| 1318 | Committee, safety tab: offline state showing the last data held and when it was fetched, with actions disabled | ProtectionCenter.tsx | Claude | P1 | 23 | Open |
+| 1315 | Committee, safety tab: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | ProtectionCenter.tsx | Claude | P1 | 22 | Open |
+| 1316 | Committee, safety tab: loading skeleton in the final layout, never a full screen spinner | ProtectionCenter.tsx | Claude | P1 | 22 | Open |
+| 1317 | Committee, safety tab: error state with the reason in plain words and a retry | ProtectionCenter.tsx | Claude | P1 | 22 | Open |
+| 1318 | Committee, safety tab: offline state showing the last data held and when it was fetched, with actions disabled | ProtectionCenter.tsx | Claude | P1 | 22 | Open |
 | 1319 | Committee, safety tab: deep link restores the screen with its state | ProtectionCenter.tsx | Claude | P1 |  | Done |
 | 1320 | Committee, safety tab: not found and no access states, each with a route back | ProtectionCenter.tsx | Claude | P1 | 23 | Open |
 | 1321 | Committee, safety tab: checked in dark mode, with no hard coded white or black | ProtectionCenter.tsx | Claude | P1 |  | Done |
@@ -2000,43 +2000,43 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 1455 | Statement: deep link restores the screen with its state | StatementPage.tsx | Claude | P1 |  | Done |
 | 1456 | Statement: pull to refresh | StatementPage.tsx | Claude | P1 | 23 | Open |
 | 1457 | Statement: empty state: no payments in the chosen dates | StatementPage.tsx | Claude | P1 | 23 | Open |
-| 1458 | Statement: pages loaded as the member scrolls, with an end of list marker | StatementPage.tsx | Claude | P1 | 24 | Open |
-| 1459 | Statement: filters: date range | StatementPage.tsx | Claude | P1 | 24 | Open |
+| 1458 | Statement: pages loaded as the member scrolls, with an end of list marker | StatementPage.tsx | Claude | P1 | 23 | Open |
+| 1459 | Statement: filters: date range | StatementPage.tsx | Claude | P1 | 23 | Open |
 | 1460 | Statement: checked in dark mode, with no hard coded white or black | StatementPage.tsx | Claude | P1 |  | Done |
 | 1461 | Statement: Urdu text for every string, by a translator | StatementPage.tsx | Translator | P1 | H4 | Open |
-| 1462 | Statement: right to left layout checked with the Urdu text | StatementPage.tsx | Claude | P1 | 24 | Open |
+| 1462 | Statement: right to left layout checked with the Urdu text | StatementPage.tsx | Claude | P1 | 23 | Open |
 | 1463 | Statement: usable at the largest system text size, with nothing cut off | StatementPage.tsx | Claude | P1 |  | Done |
 | 1464 | Statement: usable at 320 pixels wide | StatementPage.tsx | Claude | P1 |  | Done |
 | 1465 | Statement: every control named for screen readers, in a logical focus order | StatementPage.tsx | Claude | P1 |  | Done |
 | 1466 | Statement: contrast of every text and control checked | StatementPage.tsx | Claude | P1 |  | Done |
 | 1467 | Statement: screen view and main action recorded, with no personal data in the events | StatementPage.tsx | Claude | P2 |  | Done |
-| 1468 | Statement: component test of every state | StatementPage.tsx | Claude | P1 | 24 | Open |
-| 1469 | Statement: end to end test of its main path | StatementPage.tsx | Claude | P1 | 24 | Open |
+| 1468 | Statement: component test of every state | StatementPage.tsx | Claude | P1 | 23 | Open |
+| 1469 | Statement: end to end test of its main path | StatementPage.tsx | Claude | P1 | 23 | Open |
 | 1470 | Statement: visual regression snapshot at three widths | StatementPage.tsx | Claude | P2 | 57 | Open |
 | 1471 | Statement: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | StatementPage.tsx | Claude | P1 |  | Done |
-| 1472 | Credit report: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | CreditPage.tsx | Claude | P1 | 24 | Open |
-| 1473 | Credit report: loading skeleton in the final layout, never a full screen spinner | CreditPage.tsx | Claude | P1 | 24 | Open |
-| 1474 | Credit report: error state with the reason in plain words and a retry | CreditPage.tsx | Claude | P1 | 24 | Open |
-| 1475 | Credit report: offline state showing the last data held and when it was fetched, with actions disabled | CreditPage.tsx | Claude | P1 | 24 | Open |
+| 1472 | Credit report: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | CreditPage.tsx | Claude | P1 | 23 | Open |
+| 1473 | Credit report: loading skeleton in the final layout, never a full screen spinner | CreditPage.tsx | Claude | P1 | 23 | Open |
+| 1474 | Credit report: error state with the reason in plain words and a retry | CreditPage.tsx | Claude | P1 | 23 | Open |
+| 1475 | Credit report: offline state showing the last data held and when it was fetched, with actions disabled | CreditPage.tsx | Claude | P1 | 23 | Open |
 | 1476 | Credit report: deep link restores the screen with its state | CreditPage.tsx | Claude | P1 |  | Done |
-| 1477 | Credit report: not found and no access states, each with a route back | CreditPage.tsx | Claude | P1 | 24 | Open |
+| 1477 | Credit report: not found and no access states, each with a route back | CreditPage.tsx | Claude | P1 | 23 | Open |
 | 1478 | Credit report: checked in dark mode, with no hard coded white or black | CreditPage.tsx | Claude | P1 |  | Done |
 | 1479 | Credit report: Urdu text for every string, by a translator | CreditPage.tsx | Translator | P1 | H4 | Open |
-| 1480 | Credit report: right to left layout checked with the Urdu text | CreditPage.tsx | Claude | P1 | 24 | Open |
+| 1480 | Credit report: right to left layout checked with the Urdu text | CreditPage.tsx | Claude | P1 | 23 | Open |
 | 1481 | Credit report: usable at the largest system text size, with nothing cut off | CreditPage.tsx | Claude | P1 |  | Done |
 | 1482 | Credit report: usable at 320 pixels wide | CreditPage.tsx | Claude | P1 |  | Done |
 | 1483 | Credit report: every control named for screen readers, in a logical focus order | CreditPage.tsx | Claude | P1 |  | Done |
 | 1484 | Credit report: contrast of every text and control checked | CreditPage.tsx | Claude | P1 |  | Done |
 | 1485 | Credit report: screen view and main action recorded, with no personal data in the events | CreditPage.tsx | Claude | P2 |  | Done |
-| 1486 | Credit report: component test of every state | CreditPage.tsx | Claude | P1 | 24 | Open |
-| 1487 | Credit report: end to end test of its main path | CreditPage.tsx | Claude | P1 | 24 | Open |
+| 1486 | Credit report: component test of every state | CreditPage.tsx | Claude | P1 | 23 | Open |
+| 1487 | Credit report: end to end test of its main path | CreditPage.tsx | Claude | P1 | 23 | Open |
 | 1488 | Credit report: visual regression snapshot at three widths | CreditPage.tsx | Claude | P2 | 57 | Open |
 | 1489 | Credit report: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | CreditPage.tsx | Claude | P1 |  | Done |
-| 1490 | Account: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | ProfilePage.tsx | Claude | P1 | 24 | Open |
+| 1490 | Account: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | ProfilePage.tsx | Claude | P1 | 23 | Open |
 | 1491 | Account: deep link opens it directly | ProfilePage.tsx | Claude | P1 |  | Done |
 | 1492 | Account: checked in dark mode, with no hard coded white or black | ProfilePage.tsx | Claude | P1 |  | Done |
 | 1493 | Account: Urdu text for every string, by a translator | ProfilePage.tsx | Translator | P1 | H4 | Open |
-| 1494 | Account: right to left layout checked with the Urdu text | ProfilePage.tsx | Claude | P1 | 24 | Open |
+| 1494 | Account: right to left layout checked with the Urdu text | ProfilePage.tsx | Claude | P1 | 23 | Open |
 | 1495 | Account: usable at the largest system text size, with nothing cut off | ProfilePage.tsx | Claude | P1 |  | Done |
 | 1496 | Account: usable at 320 pixels wide | ProfilePage.tsx | Claude | P1 |  | Done |
 | 1497 | Account: every control named for screen readers, in a logical focus order | ProfilePage.tsx | Claude | P1 |  | Done |
@@ -2044,11 +2044,11 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 1499 | Account: screen view and main action recorded, with no personal data in the events | ProfilePage.tsx | Claude | P2 |  | Done |
 | 1500 | Account: visual regression snapshot at three widths | ProfilePage.tsx | Claude | P2 | 57 | Open |
 | 1501 | Account: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | ProfilePage.tsx | Claude | P1 |  | Done |
-| 1502 | Settings: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | SettingsPage.tsx | Claude | P1 | 24 | Open |
+| 1502 | Settings: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | SettingsPage.tsx | Claude | P1 | 23 | Open |
 | 1503 | Settings: deep link opens it directly | SettingsPage.tsx | Claude | P1 |  | Done |
 | 1504 | Settings: checked in dark mode, with no hard coded white or black | SettingsPage.tsx | Claude | P1 |  | Done |
 | 1505 | Settings: Urdu text for every string, by a translator | SettingsPage.tsx | Translator | P1 | H4 | Open |
-| 1506 | Settings: right to left layout checked with the Urdu text | SettingsPage.tsx | Claude | P1 | 24 | Open |
+| 1506 | Settings: right to left layout checked with the Urdu text | SettingsPage.tsx | Claude | P1 | 23 | Open |
 | 1507 | Settings: usable at the largest system text size, with nothing cut off | SettingsPage.tsx | Claude | P1 |  | Done |
 | 1508 | Settings: usable at 320 pixels wide | SettingsPage.tsx | Claude | P1 |  | Done |
 | 1509 | Settings: every control named for screen readers, in a logical focus order | SettingsPage.tsx | Claude | P1 |  | Done |
@@ -2079,21 +2079,21 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 1534 | Devices: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | DevicesPage.tsx | Claude | P0 | 3 | Open |
 | 1535 | Devices: loading skeleton in the final layout, never a full screen spinner | DevicesPage.tsx | Claude | P0 | 3 | Open |
 | 1536 | Devices: error state with the reason in plain words and a retry | DevicesPage.tsx | Claude | P0 | 3 | Open |
-| 1537 | Devices: offline state showing the last data held and when it was fetched, with actions disabled | DevicesPage.tsx | Claude | P0 | 4 | Open |
+| 1537 | Devices: offline state showing the last data held and when it was fetched, with actions disabled | DevicesPage.tsx | Claude | P0 | 3 | Open |
 | 1538 | Devices: deep link restores the screen with its state | DevicesPage.tsx | Claude | P0 |  | Done |
-| 1539 | Devices: pull to refresh | DevicesPage.tsx | Claude | P0 | 4 | Open |
-| 1540 | Devices: empty state: only this device | DevicesPage.tsx | Claude | P0 | 4 | Open |
-| 1541 | Devices: pages loaded as the member scrolls, with an end of list marker | DevicesPage.tsx | Claude | P0 | 4 | Open |
+| 1539 | Devices: pull to refresh | DevicesPage.tsx | Claude | P0 | 3 | Open |
+| 1540 | Devices: empty state: only this device | DevicesPage.tsx | Claude | P0 | 3 | Open |
+| 1541 | Devices: pages loaded as the member scrolls, with an end of list marker | DevicesPage.tsx | Claude | P0 | 3 | Open |
 | 1542 | Devices: checked in dark mode, with no hard coded white or black | DevicesPage.tsx | Claude | P0 |  | Done |
 | 1543 | Devices: Urdu text for every string, by a translator | DevicesPage.tsx | Translator | P0 | H4 | Open |
-| 1544 | Devices: right to left layout checked with the Urdu text | DevicesPage.tsx | Claude | P0 | 4 | Open |
+| 1544 | Devices: right to left layout checked with the Urdu text | DevicesPage.tsx | Claude | P0 | 3 | Open |
 | 1545 | Devices: usable at the largest system text size, with nothing cut off | DevicesPage.tsx | Claude | P0 |  | Done |
 | 1546 | Devices: usable at 320 pixels wide | DevicesPage.tsx | Claude | P0 |  | Done |
 | 1547 | Devices: every control named for screen readers, in a logical focus order | DevicesPage.tsx | Claude | P0 |  | Done |
 | 1548 | Devices: contrast of every text and control checked | DevicesPage.tsx | Claude | P0 |  | Done |
 | 1549 | Devices: screen view and main action recorded, with no personal data in the events | DevicesPage.tsx | Claude | P2 |  | Done |
-| 1550 | Devices: component test of every state | DevicesPage.tsx | Claude | P0 | 4 | Open |
-| 1551 | Devices: end to end test of its main path | DevicesPage.tsx | Claude | P0 | 4 | Open |
+| 1550 | Devices: component test of every state | DevicesPage.tsx | Claude | P0 | 3 | Open |
+| 1551 | Devices: end to end test of its main path | DevicesPage.tsx | Claude | P0 | 3 | Open |
 | 1552 | Devices: visual regression snapshot at three widths | DevicesPage.tsx | Claude | P2 | 57 | Open |
 | 1553 | Devices: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | DevicesPage.tsx | Claude | P0 |  | Done |
 | 1554 | Limits: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | LimitsPage.tsx | Claude | P2 | 57 | Open |
@@ -2114,11 +2114,11 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 1569 | Limits: end to end test of its main path | LimitsPage.tsx | Claude | P2 | 58 | Open |
 | 1570 | Limits: visual regression snapshot at three widths | LimitsPage.tsx | Claude | P2 | 58 | Open |
 | 1571 | Limits: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | LimitsPage.tsx | Claude | P2 |  | Done |
-| 1572 | Fees: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | FeesPage.tsx | Claude | P0 | 4 | Open |
+| 1572 | Fees: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | FeesPage.tsx | Claude | P0 | 3 | Open |
 | 1573 | Fees: deep link opens it directly | FeesPage.tsx | Claude | P0 |  | Done |
 | 1574 | Fees: checked in dark mode, with no hard coded white or black | FeesPage.tsx | Claude | P0 |  | Done |
 | 1575 | Fees: Urdu text for every string, by a translator | FeesPage.tsx | Translator | P0 | H4 | Open |
-| 1576 | Fees: right to left layout checked with the Urdu text | FeesPage.tsx | Claude | P0 | 4 | Open |
+| 1576 | Fees: right to left layout checked with the Urdu text | FeesPage.tsx | Claude | P0 | 3 | Open |
 | 1577 | Fees: usable at the largest system text size, with nothing cut off | FeesPage.tsx | Claude | P0 |  | Done |
 | 1578 | Fees: usable at 320 pixels wide | FeesPage.tsx | Claude | P0 |  | Done |
 | 1579 | Fees: every control named for screen readers, in a logical focus order | FeesPage.tsx | Claude | P0 |  | Done |
@@ -2126,59 +2126,59 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 1581 | Fees: screen view and main action recorded, with no personal data in the events | FeesPage.tsx | Claude | P2 |  | Done |
 | 1582 | Fees: visual regression snapshot at three widths | FeesPage.tsx | Claude | P2 | 58 | Open |
 | 1583 | Fees: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | FeesPage.tsx | Claude | P0 |  | Done |
-| 1584 | Payment methods: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | CardsPage.tsx | Claude | P1 | 24 | Open |
-| 1585 | Payment methods: loading skeleton in the final layout, never a full screen spinner | CardsPage.tsx | Claude | P1 | 24 | Open |
-| 1586 | Payment methods: error state with the reason in plain words and a retry | CardsPage.tsx | Claude | P1 | 24 | Open |
-| 1587 | Payment methods: offline state showing the last data held and when it was fetched, with actions disabled | CardsPage.tsx | Claude | P1 | 24 | Open |
+| 1584 | Payment methods: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | CardsPage.tsx | Claude | P1 | 23 | Open |
+| 1585 | Payment methods: loading skeleton in the final layout, never a full screen spinner | CardsPage.tsx | Claude | P1 | 23 | Open |
+| 1586 | Payment methods: error state with the reason in plain words and a retry | CardsPage.tsx | Claude | P1 | 23 | Open |
+| 1587 | Payment methods: offline state showing the last data held and when it was fetched, with actions disabled | CardsPage.tsx | Claude | P1 | 23 | Open |
 | 1588 | Payment methods: deep link restores the screen with its state | CardsPage.tsx | Claude | P1 |  | Done |
-| 1589 | Payment methods: pull to refresh | CardsPage.tsx | Claude | P1 | 24 | Open |
-| 1590 | Payment methods: empty state: no payment method: Add a bank account or wallet | CardsPage.tsx | Claude | P1 | 24 | Open |
-| 1591 | Payment methods: pages loaded as the member scrolls, with an end of list marker | CardsPage.tsx | Claude | P1 | 24 | Open |
+| 1589 | Payment methods: pull to refresh | CardsPage.tsx | Claude | P1 | 23 | Open |
+| 1590 | Payment methods: empty state: no payment method: Add a bank account or wallet | CardsPage.tsx | Claude | P1 | 23 | Open |
+| 1591 | Payment methods: pages loaded as the member scrolls, with an end of list marker | CardsPage.tsx | Claude | P1 | 23 | Open |
 | 1592 | Payment methods: checked in dark mode, with no hard coded white or black | CardsPage.tsx | Claude | P1 |  | Done |
 | 1593 | Payment methods: Urdu text for every string, by a translator | CardsPage.tsx | Translator | P1 | H4 | Open |
-| 1594 | Payment methods: right to left layout checked with the Urdu text | CardsPage.tsx | Claude | P1 | 24 | Open |
+| 1594 | Payment methods: right to left layout checked with the Urdu text | CardsPage.tsx | Claude | P1 | 23 | Open |
 | 1595 | Payment methods: usable at the largest system text size, with nothing cut off | CardsPage.tsx | Claude | P1 |  | Done |
 | 1596 | Payment methods: usable at 320 pixels wide | CardsPage.tsx | Claude | P1 |  | Done |
 | 1597 | Payment methods: every control named for screen readers, in a logical focus order | CardsPage.tsx | Claude | P1 |  | Done |
 | 1598 | Payment methods: contrast of every text and control checked | CardsPage.tsx | Claude | P1 |  | Done |
 | 1599 | Payment methods: screen view and main action recorded, with no personal data in the events | CardsPage.tsx | Claude | P2 |  | Done |
-| 1600 | Payment methods: component test of every state | CardsPage.tsx | Claude | P1 | 24 | Open |
-| 1601 | Payment methods: end to end test of its main path | CardsPage.tsx | Claude | P1 | 24 | Open |
+| 1600 | Payment methods: component test of every state | CardsPage.tsx | Claude | P1 | 23 | Open |
+| 1601 | Payment methods: end to end test of its main path | CardsPage.tsx | Claude | P1 | 23 | Open |
 | 1602 | Payment methods: visual regression snapshot at three widths | CardsPage.tsx | Claude | P2 | 58 | Open |
 | 1603 | Payment methods: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | CardsPage.tsx | Claude | P1 |  | Done |
-| 1604 | Auto-pay: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | AutoPayPage.tsx | Claude | P1 | 24 | Open |
-| 1605 | Auto-pay: loading skeleton in the final layout, never a full screen spinner | AutoPayPage.tsx | Claude | P1 | 24 | Open |
-| 1606 | Auto-pay: error state with the reason in plain words and a retry | AutoPayPage.tsx | Claude | P1 | 24 | Open |
-| 1607 | Auto-pay: offline state showing the last data held and when it was fetched, with actions disabled | AutoPayPage.tsx | Claude | P1 | 24 | Open |
+| 1604 | Auto-pay: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | AutoPayPage.tsx | Claude | P1 | 23 | Open |
+| 1605 | Auto-pay: loading skeleton in the final layout, never a full screen spinner | AutoPayPage.tsx | Claude | P1 | 23 | Open |
+| 1606 | Auto-pay: error state with the reason in plain words and a retry | AutoPayPage.tsx | Claude | P1 | 23 | Open |
+| 1607 | Auto-pay: offline state showing the last data held and when it was fetched, with actions disabled | AutoPayPage.tsx | Claude | P1 | 23 | Open |
 | 1608 | Auto-pay: deep link restores the screen with its state | AutoPayPage.tsx | Claude | P1 |  | Done |
-| 1609 | Auto-pay: not found and no access states, each with a route back | AutoPayPage.tsx | Claude | P1 | 24 | Open |
+| 1609 | Auto-pay: not found and no access states, each with a route back | AutoPayPage.tsx | Claude | P1 | 23 | Open |
 | 1610 | Auto-pay: checked in dark mode, with no hard coded white or black | AutoPayPage.tsx | Claude | P1 |  | Done |
 | 1611 | Auto-pay: Urdu text for every string, by a translator | AutoPayPage.tsx | Translator | P1 | H4 | Open |
-| 1612 | Auto-pay: right to left layout checked with the Urdu text | AutoPayPage.tsx | Claude | P1 | 24 | Open |
+| 1612 | Auto-pay: right to left layout checked with the Urdu text | AutoPayPage.tsx | Claude | P1 | 23 | Open |
 | 1613 | Auto-pay: usable at the largest system text size, with nothing cut off | AutoPayPage.tsx | Claude | P1 |  | Done |
 | 1614 | Auto-pay: usable at 320 pixels wide | AutoPayPage.tsx | Claude | P1 |  | Done |
 | 1615 | Auto-pay: every control named for screen readers, in a logical focus order | AutoPayPage.tsx | Claude | P1 |  | Done |
 | 1616 | Auto-pay: contrast of every text and control checked | AutoPayPage.tsx | Claude | P1 |  | Done |
 | 1617 | Auto-pay: screen view and main action recorded, with no personal data in the events | AutoPayPage.tsx | Claude | P2 |  | Done |
-| 1618 | Auto-pay: component test of every state | AutoPayPage.tsx | Claude | P1 | 24 | Open |
-| 1619 | Auto-pay: end to end test of its main path | AutoPayPage.tsx | Claude | P1 | 24 | Open |
+| 1618 | Auto-pay: component test of every state | AutoPayPage.tsx | Claude | P1 | 23 | Open |
+| 1619 | Auto-pay: end to end test of its main path | AutoPayPage.tsx | Claude | P1 | 23 | Open |
 | 1620 | Auto-pay: visual regression snapshot at three widths | AutoPayPage.tsx | Claude | P2 | 58 | Open |
 | 1621 | Auto-pay: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | AutoPayPage.tsx | Claude | P1 |  | Done |
-| 1622 | Verification: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | VerifyPage.tsx | Claude | P1 | 24 | Open |
-| 1623 | Verification: loading skeleton in the final layout, never a full screen spinner | VerifyPage.tsx | Claude | P1 | 24 | Open |
-| 1624 | Verification: error state with the reason in plain words and a retry | VerifyPage.tsx | Claude | P1 | 24 | Open |
-| 1625 | Verification: offline state showing the last data held and when it was fetched, with actions disabled | VerifyPage.tsx | Claude | P1 | 24 | Open |
+| 1622 | Verification: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | VerifyPage.tsx | Claude | P1 | 23 | Open |
+| 1623 | Verification: loading skeleton in the final layout, never a full screen spinner | VerifyPage.tsx | Claude | P1 | 23 | Open |
+| 1624 | Verification: error state with the reason in plain words and a retry | VerifyPage.tsx | Claude | P1 | 23 | Open |
+| 1625 | Verification: offline state showing the last data held and when it was fetched, with actions disabled | VerifyPage.tsx | Claude | P1 | 23 | Open |
 | 1626 | Verification: deep link restores the screen with its state | VerifyPage.tsx | Claude | P1 |  | Done |
-| 1627 | Verification: not found and no access states, each with a route back | VerifyPage.tsx | Claude | P1 | 24 | Open |
+| 1627 | Verification: not found and no access states, each with a route back | VerifyPage.tsx | Claude | P1 | 23 | Open |
 | 1628 | Verification: checked in dark mode, with no hard coded white or black | VerifyPage.tsx | Claude | P1 |  | Done |
 | 1629 | Verification: Urdu text for every string, by a translator | VerifyPage.tsx | Translator | P1 | H4 | Open |
-| 1630 | Verification: right to left layout checked with the Urdu text | VerifyPage.tsx | Claude | P1 | 24 | Open |
+| 1630 | Verification: right to left layout checked with the Urdu text | VerifyPage.tsx | Claude | P1 | 23 | Open |
 | 1631 | Verification: usable at the largest system text size, with nothing cut off | VerifyPage.tsx | Claude | P1 |  | Done |
 | 1632 | Verification: usable at 320 pixels wide | VerifyPage.tsx | Claude | P1 |  | Done |
 | 1633 | Verification: every control named for screen readers, in a logical focus order | VerifyPage.tsx | Claude | P1 |  | Done |
 | 1634 | Verification: contrast of every text and control checked | VerifyPage.tsx | Claude | P1 |  | Done |
 | 1635 | Verification: screen view and main action recorded, with no personal data in the events | VerifyPage.tsx | Claude | P2 |  | Done |
-| 1636 | Verification: component test of every state | VerifyPage.tsx | Claude | P1 | 24 | Open |
+| 1636 | Verification: component test of every state | VerifyPage.tsx | Claude | P1 | 23 | Open |
 | 1637 | Verification: end to end test of its main path | VerifyPage.tsx | Claude | P1 | 24 | Open |
 | 1638 | Verification: visual regression snapshot at three widths | VerifyPage.tsx | Claude | P2 | 58 | Open |
 | 1639 | Verification: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | VerifyPage.tsx | Claude | P1 |  | Done |
@@ -2323,11 +2323,11 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 1778 | About: screen view and main action recorded, with no personal data in the events | AboutPage.tsx | Claude | P2 |  | Done |
 | 1779 | About: visual regression snapshot at three widths | AboutPage.tsx | Claude | P2 | 58 | Open |
 | 1780 | About: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | AboutPage.tsx | Claude | P2 |  | Done |
-| 1781 | Sign in: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | AuthPage.tsx | Claude | P0 | 4 | Open |
-| 1782 | Sign in: each field checked as it is typed, with one specific message under the field (fields in section AD) | AuthPage.tsx | Claude | P0 | 4 | Open |
-| 1783 | Sign in: submitting state: the button busy and a second tap ignored | AuthPage.tsx | Claude | P0 | 4 | Open |
-| 1784 | Sign in: a refusal from the server shown with the reason and what to change | AuthPage.tsx | Claude | P0 | 4 | Open |
-| 1785 | Sign in: offline: submission held back with a message, and entered data kept | AuthPage.tsx | Claude | P0 | 4 | Open |
+| 1781 | Sign in: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | AuthPage.tsx | Claude | P0 | 3 | Open |
+| 1782 | Sign in: each field checked as it is typed, with one specific message under the field (fields in section AD) | AuthPage.tsx | Claude | P0 | 3 | Open |
+| 1783 | Sign in: submitting state: the button busy and a second tap ignored | AuthPage.tsx | Claude | P0 | 3 | Open |
+| 1784 | Sign in: a refusal from the server shown with the reason and what to change | AuthPage.tsx | Claude | P0 | 3 | Open |
+| 1785 | Sign in: offline: submission held back with a message, and entered data kept | AuthPage.tsx | Claude | P0 | 3 | Open |
 | 1786 | Sign in: the keyboard never hides the focused field or the main button | AuthPage.tsx | Claude | P0 | 4 | Open |
 | 1787 | Sign in: leaving with unsaved changes asks for confirmation | AuthPage.tsx | Claude | P0 | 4 | Open |
 | 1788 | Sign in: success state stating what happened and what comes next | AuthPage.tsx | Claude | P0 | 4 | Open |
@@ -2444,18 +2444,18 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 1894 | Confirm the application PIN: visual regression snapshot at three widths | new page | Claude | P2 | 58 | Open |
 | 1895 | Confirm the application PIN: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P0 | 4 | Open |
 | 1896 | Forgotten PIN recovery: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P0 | 4 | Open |
-| 1897 | Forgotten PIN recovery: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P0 | 5 | Open |
-| 1898 | Forgotten PIN recovery: submitting state: the button busy and a second tap ignored | new page | Claude | P0 | 5 | Open |
-| 1899 | Forgotten PIN recovery: a refusal from the server shown with the reason and what to change | new page | Claude | P0 | 5 | Open |
-| 1900 | Forgotten PIN recovery: offline: submission held back with a message, and entered data kept | new page | Claude | P0 | 5 | Open |
-| 1901 | Forgotten PIN recovery: the keyboard never hides the focused field or the main button | new page | Claude | P0 | 5 | Open |
-| 1902 | Forgotten PIN recovery: leaving with unsaved changes asks for confirmation | new page | Claude | P0 | 5 | Open |
-| 1903 | Forgotten PIN recovery: success state stating what happened and what comes next | new page | Claude | P0 | 5 | Open |
-| 1904 | Forgotten PIN recovery: checked in dark mode, with no hard coded white or black | new page | Claude | P0 | 5 | Open |
+| 1897 | Forgotten PIN recovery: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P0 | 4 | Open |
+| 1898 | Forgotten PIN recovery: submitting state: the button busy and a second tap ignored | new page | Claude | P0 | 4 | Open |
+| 1899 | Forgotten PIN recovery: a refusal from the server shown with the reason and what to change | new page | Claude | P0 | 4 | Open |
+| 1900 | Forgotten PIN recovery: offline: submission held back with a message, and entered data kept | new page | Claude | P0 | 4 | Open |
+| 1901 | Forgotten PIN recovery: the keyboard never hides the focused field or the main button | new page | Claude | P0 | 4 | Open |
+| 1902 | Forgotten PIN recovery: leaving with unsaved changes asks for confirmation | new page | Claude | P0 | 4 | Open |
+| 1903 | Forgotten PIN recovery: success state stating what happened and what comes next | new page | Claude | P0 | 4 | Open |
+| 1904 | Forgotten PIN recovery: checked in dark mode, with no hard coded white or black | new page | Claude | P0 | 4 | Open |
 | 1905 | Forgotten PIN recovery: Urdu text for every string, by a translator | new page | Translator | P0 | H4 | Open |
-| 1906 | Forgotten PIN recovery: right to left layout checked with the Urdu text | new page | Claude | P0 | 5 | Open |
-| 1907 | Forgotten PIN recovery: usable at the largest system text size, with nothing cut off | new page | Claude | P0 | 5 | Open |
-| 1908 | Forgotten PIN recovery: usable at 320 pixels wide | new page | Claude | P0 | 5 | Open |
+| 1906 | Forgotten PIN recovery: right to left layout checked with the Urdu text | new page | Claude | P0 | 4 | Open |
+| 1907 | Forgotten PIN recovery: usable at the largest system text size, with nothing cut off | new page | Claude | P0 | 4 | Open |
+| 1908 | Forgotten PIN recovery: usable at 320 pixels wide | new page | Claude | P0 | 4 | Open |
 | 1909 | Forgotten PIN recovery: every control named for screen readers, in a logical focus order | new page | Claude | P0 | 5 | Open |
 | 1910 | Forgotten PIN recovery: contrast of every text and control checked | new page | Claude | P0 | 5 | Open |
 | 1911 | Forgotten PIN recovery: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 58 | Open |
@@ -2526,51 +2526,51 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 1976 | Occupation and employer: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 24 | Open |
 | 1977 | Occupation and employer: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 24 | Open |
 | 1978 | Occupation and employer: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 24 | Open |
-| 1979 | Occupation and employer: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 25 | Open |
-| 1980 | Occupation and employer: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 25 | Open |
-| 1981 | Occupation and employer: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 25 | Open |
-| 1982 | Occupation and employer: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 25 | Open |
-| 1983 | Occupation and employer: success state stating what happened and what comes next | new page | Claude | P1 | 25 | Open |
-| 1984 | Occupation and employer: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 25 | Open |
+| 1979 | Occupation and employer: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 24 | Open |
+| 1980 | Occupation and employer: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 24 | Open |
+| 1981 | Occupation and employer: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 24 | Open |
+| 1982 | Occupation and employer: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 24 | Open |
+| 1983 | Occupation and employer: success state stating what happened and what comes next | new page | Claude | P1 | 24 | Open |
+| 1984 | Occupation and employer: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 24 | Open |
 | 1985 | Occupation and employer: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 1986 | Occupation and employer: right to left layout checked with the Urdu text | new page | Claude | P1 | 25 | Open |
-| 1987 | Occupation and employer: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 25 | Open |
-| 1988 | Occupation and employer: usable at 320 pixels wide | new page | Claude | P1 | 25 | Open |
-| 1989 | Occupation and employer: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 25 | Open |
-| 1990 | Occupation and employer: contrast of every text and control checked | new page | Claude | P1 | 25 | Open |
+| 1986 | Occupation and employer: right to left layout checked with the Urdu text | new page | Claude | P1 | 24 | Open |
+| 1987 | Occupation and employer: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 24 | Open |
+| 1988 | Occupation and employer: usable at 320 pixels wide | new page | Claude | P1 | 24 | Open |
+| 1989 | Occupation and employer: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 24 | Open |
+| 1990 | Occupation and employer: contrast of every text and control checked | new page | Claude | P1 | 24 | Open |
 | 1991 | Occupation and employer: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 58 | Open |
-| 1992 | Occupation and employer: component test of every state | new page | Claude | P1 | 25 | Open |
-| 1993 | Occupation and employer: end to end test of its main path | new page | Claude | P1 | 25 | Open |
+| 1992 | Occupation and employer: component test of every state | new page | Claude | P1 | 24 | Open |
+| 1993 | Occupation and employer: end to end test of its main path | new page | Claude | P1 | 24 | Open |
 | 1994 | Occupation and employer: visual regression snapshot at three widths | new page | Claude | P2 | 58 | Open |
-| 1995 | Occupation and employer: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 25 | Open |
-| 1996 | Income declaration: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 25 | Open |
-| 1997 | Income declaration: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 25 | Open |
-| 1998 | Income declaration: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 25 | Open |
-| 1999 | Income declaration: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 25 | Open |
-| 2000 | Income declaration: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 25 | Open |
-| 2001 | Income declaration: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 25 | Open |
-| 2002 | Income declaration: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 25 | Open |
-| 2003 | Income declaration: success state stating what happened and what comes next | new page | Claude | P1 | 25 | Open |
-| 2004 | Income declaration: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 25 | Open |
+| 1995 | Occupation and employer: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 24 | Open |
+| 1996 | Income declaration: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 24 | Open |
+| 1997 | Income declaration: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 24 | Open |
+| 1998 | Income declaration: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 24 | Open |
+| 1999 | Income declaration: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 24 | Open |
+| 2000 | Income declaration: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 24 | Open |
+| 2001 | Income declaration: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 24 | Open |
+| 2002 | Income declaration: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 24 | Open |
+| 2003 | Income declaration: success state stating what happened and what comes next | new page | Claude | P1 | 24 | Open |
+| 2004 | Income declaration: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 24 | Open |
 | 2005 | Income declaration: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 2006 | Income declaration: right to left layout checked with the Urdu text | new page | Claude | P1 | 25 | Open |
-| 2007 | Income declaration: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 25 | Open |
-| 2008 | Income declaration: usable at 320 pixels wide | new page | Claude | P1 | 25 | Open |
-| 2009 | Income declaration: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 25 | Open |
-| 2010 | Income declaration: contrast of every text and control checked | new page | Claude | P1 | 25 | Open |
+| 2006 | Income declaration: right to left layout checked with the Urdu text | new page | Claude | P1 | 24 | Open |
+| 2007 | Income declaration: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 24 | Open |
+| 2008 | Income declaration: usable at 320 pixels wide | new page | Claude | P1 | 24 | Open |
+| 2009 | Income declaration: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 24 | Open |
+| 2010 | Income declaration: contrast of every text and control checked | new page | Claude | P1 | 24 | Open |
 | 2011 | Income declaration: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 58 | Open |
-| 2012 | Income declaration: component test of every state | new page | Claude | P1 | 25 | Open |
-| 2013 | Income declaration: end to end test of its main path | new page | Claude | P1 | 25 | Open |
+| 2012 | Income declaration: component test of every state | new page | Claude | P1 | 24 | Open |
+| 2013 | Income declaration: end to end test of its main path | new page | Claude | P1 | 24 | Open |
 | 2014 | Income declaration: visual regression snapshot at three widths | new page | Claude | P2 | 58 | Open |
-| 2015 | Income declaration: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 25 | Open |
-| 2016 | Income verification upload: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 25 | Open |
-| 2017 | Income verification upload: the reason for the camera stated before the system asks | new page | Claude | P1 | 25 | Open |
-| 2018 | Income verification upload: camera refused: how to allow it in settings, and a typed route where one exists | new page | Claude | P1 | 25 | Open |
-| 2019 | Income verification upload: guide frame and live hints while capturing | new page | Claude | P1 | 25 | Open |
-| 2020 | Income verification upload: low light and glare detected, with advice | new page | Claude | P1 | 25 | Open |
-| 2021 | Income verification upload: review and retake before submission | new page | Claude | P1 | 25 | Open |
-| 2022 | Income verification upload: upload progress and a retry on failure | new page | Claude | P1 | 25 | Open |
-| 2023 | Income verification upload: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 25 | Open |
+| 2015 | Income declaration: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 24 | Open |
+| 2016 | Income verification upload: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 24 | Open |
+| 2017 | Income verification upload: the reason for the camera stated before the system asks | new page | Claude | P1 | 24 | Open |
+| 2018 | Income verification upload: camera refused: how to allow it in settings, and a typed route where one exists | new page | Claude | P1 | 24 | Open |
+| 2019 | Income verification upload: guide frame and live hints while capturing | new page | Claude | P1 | 24 | Open |
+| 2020 | Income verification upload: low light and glare detected, with advice | new page | Claude | P1 | 24 | Open |
+| 2021 | Income verification upload: review and retake before submission | new page | Claude | P1 | 24 | Open |
+| 2022 | Income verification upload: upload progress and a retry on failure | new page | Claude | P1 | 24 | Open |
+| 2023 | Income verification upload: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 24 | Open |
 | 2024 | Income verification upload: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
 | 2025 | Income verification upload: right to left layout checked with the Urdu text | new page | Claude | P1 | 25 | Open |
 | 2026 | Income verification upload: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 25 | Open |
@@ -2684,15 +2684,15 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 2129 | CNIC review before submission: visual regression snapshot at three widths | new page | Claude | P2 | 58 | Open |
 | 2130 | CNIC review before submission: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P0 | 5 | Open |
 | 2131 | Identity check in progress: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P0 | 5 | Open |
-| 2132 | Identity check in progress: loading skeleton in the final layout, never a full screen spinner | new page | Claude | P0 | 6 | Open |
-| 2133 | Identity check in progress: error state with the reason in plain words and a retry | new page | Claude | P0 | 6 | Open |
-| 2134 | Identity check in progress: offline state showing the last data held and when it was fetched, with actions disabled | new page | Claude | P0 | 6 | Open |
-| 2135 | Identity check in progress: deep link restores the screen with its state | new page | Claude | P0 | 6 | Open |
-| 2136 | Identity check in progress: not found and no access states, each with a route back | new page | Claude | P0 | 6 | Open |
-| 2137 | Identity check in progress: checked in dark mode, with no hard coded white or black | new page | Claude | P0 | 6 | Open |
+| 2132 | Identity check in progress: loading skeleton in the final layout, never a full screen spinner | new page | Claude | P0 | 5 | Open |
+| 2133 | Identity check in progress: error state with the reason in plain words and a retry | new page | Claude | P0 | 5 | Open |
+| 2134 | Identity check in progress: offline state showing the last data held and when it was fetched, with actions disabled | new page | Claude | P0 | 5 | Open |
+| 2135 | Identity check in progress: deep link restores the screen with its state | new page | Claude | P0 | 5 | Open |
+| 2136 | Identity check in progress: not found and no access states, each with a route back | new page | Claude | P0 | 5 | Open |
+| 2137 | Identity check in progress: checked in dark mode, with no hard coded white or black | new page | Claude | P0 | 5 | Open |
 | 2138 | Identity check in progress: Urdu text for every string, by a translator | new page | Translator | P0 | H4 | Open |
-| 2139 | Identity check in progress: right to left layout checked with the Urdu text | new page | Claude | P0 | 6 | Open |
-| 2140 | Identity check in progress: usable at the largest system text size, with nothing cut off | new page | Claude | P0 | 6 | Open |
+| 2139 | Identity check in progress: right to left layout checked with the Urdu text | new page | Claude | P0 | 5 | Open |
+| 2140 | Identity check in progress: usable at the largest system text size, with nothing cut off | new page | Claude | P0 | 5 | Open |
 | 2141 | Identity check in progress: usable at 320 pixels wide | new page | Claude | P0 | 6 | Open |
 | 2142 | Identity check in progress: every control named for screen readers, in a logical focus order | new page | Claude | P0 | 6 | Open |
 | 2143 | Identity check in progress: contrast of every text and control checked | new page | Claude | P0 | 6 | Open |
@@ -2762,56 +2762,56 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 2207 | Bureau instruction: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 25 | Open |
 | 2208 | Bureau instruction: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 25 | Open |
 | 2209 | Bureau instruction: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 25 | Open |
-| 2210 | Bureau instruction: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 26 | Open |
-| 2211 | Bureau instruction: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 26 | Open |
-| 2212 | Bureau instruction: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 26 | Open |
-| 2213 | Bureau instruction: success state stating what happened and what comes next | new page | Claude | P1 | 26 | Open |
-| 2214 | Bureau instruction: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 26 | Open |
+| 2210 | Bureau instruction: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 25 | Open |
+| 2211 | Bureau instruction: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 25 | Open |
+| 2212 | Bureau instruction: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 25 | Open |
+| 2213 | Bureau instruction: success state stating what happened and what comes next | new page | Claude | P1 | 25 | Open |
+| 2214 | Bureau instruction: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 25 | Open |
 | 2215 | Bureau instruction: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 2216 | Bureau instruction: right to left layout checked with the Urdu text | new page | Claude | P1 | 26 | Open |
-| 2217 | Bureau instruction: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 26 | Open |
-| 2218 | Bureau instruction: usable at 320 pixels wide | new page | Claude | P1 | 26 | Open |
-| 2219 | Bureau instruction: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 26 | Open |
-| 2220 | Bureau instruction: contrast of every text and control checked | new page | Claude | P1 | 26 | Open |
+| 2216 | Bureau instruction: right to left layout checked with the Urdu text | new page | Claude | P1 | 25 | Open |
+| 2217 | Bureau instruction: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 25 | Open |
+| 2218 | Bureau instruction: usable at 320 pixels wide | new page | Claude | P1 | 25 | Open |
+| 2219 | Bureau instruction: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 25 | Open |
+| 2220 | Bureau instruction: contrast of every text and control checked | new page | Claude | P1 | 25 | Open |
 | 2221 | Bureau instruction: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 59 | Open |
-| 2222 | Bureau instruction: component test of every state | new page | Claude | P1 | 26 | Open |
-| 2223 | Bureau instruction: end to end test of its main path | new page | Claude | P1 | 26 | Open |
+| 2222 | Bureau instruction: component test of every state | new page | Claude | P1 | 25 | Open |
+| 2223 | Bureau instruction: end to end test of its main path | new page | Claude | P1 | 25 | Open |
 | 2224 | Bureau instruction: visual regression snapshot at three widths | new page | Claude | P2 | 59 | Open |
-| 2225 | Bureau instruction: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 26 | Open |
-| 2226 | Bureau instruction confirmation: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 26 | Open |
-| 2227 | Bureau instruction confirmation: every figure and reference shown matches the ledger | new page | Claude | P1 | 26 | Open |
-| 2228 | Bureau instruction confirmation: the next step offered | new page | Claude | P1 | 26 | Open |
-| 2229 | Bureau instruction confirmation: share as an image or a PDF with account numbers masked | new page | Claude | P1 | 26 | Open |
-| 2230 | Bureau instruction confirmation: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 26 | Open |
+| 2225 | Bureau instruction: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 25 | Open |
+| 2226 | Bureau instruction confirmation: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 25 | Open |
+| 2227 | Bureau instruction confirmation: every figure and reference shown matches the ledger | new page | Claude | P1 | 25 | Open |
+| 2228 | Bureau instruction confirmation: the next step offered | new page | Claude | P1 | 25 | Open |
+| 2229 | Bureau instruction confirmation: share as an image or a PDF with account numbers masked | new page | Claude | P1 | 25 | Open |
+| 2230 | Bureau instruction confirmation: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 25 | Open |
 | 2231 | Bureau instruction confirmation: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 2232 | Bureau instruction confirmation: right to left layout checked with the Urdu text | new page | Claude | P1 | 26 | Open |
-| 2233 | Bureau instruction confirmation: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 26 | Open |
-| 2234 | Bureau instruction confirmation: usable at 320 pixels wide | new page | Claude | P1 | 26 | Open |
-| 2235 | Bureau instruction confirmation: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 26 | Open |
-| 2236 | Bureau instruction confirmation: contrast of every text and control checked | new page | Claude | P1 | 26 | Open |
+| 2232 | Bureau instruction confirmation: right to left layout checked with the Urdu text | new page | Claude | P1 | 25 | Open |
+| 2233 | Bureau instruction confirmation: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 25 | Open |
+| 2234 | Bureau instruction confirmation: usable at 320 pixels wide | new page | Claude | P1 | 25 | Open |
+| 2235 | Bureau instruction confirmation: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 25 | Open |
+| 2236 | Bureau instruction confirmation: contrast of every text and control checked | new page | Claude | P1 | 25 | Open |
 | 2237 | Bureau instruction confirmation: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 59 | Open |
 | 2238 | Bureau instruction confirmation: visual regression snapshot at three widths | new page | Claude | P2 | 59 | Open |
-| 2239 | Bureau instruction confirmation: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 26 | Open |
-| 2240 | Adverse action disclosure: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 26 | Open |
-| 2241 | Adverse action disclosure: deep link opens it directly | new page | Claude | P1 | 26 | Open |
-| 2242 | Adverse action disclosure: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 26 | Open |
+| 2239 | Bureau instruction confirmation: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 25 | Open |
+| 2240 | Adverse action disclosure: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 25 | Open |
+| 2241 | Adverse action disclosure: deep link opens it directly | new page | Claude | P1 | 25 | Open |
+| 2242 | Adverse action disclosure: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 25 | Open |
 | 2243 | Adverse action disclosure: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 2244 | Adverse action disclosure: right to left layout checked with the Urdu text | new page | Claude | P1 | 26 | Open |
-| 2245 | Adverse action disclosure: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 26 | Open |
-| 2246 | Adverse action disclosure: usable at 320 pixels wide | new page | Claude | P1 | 26 | Open |
-| 2247 | Adverse action disclosure: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 26 | Open |
-| 2248 | Adverse action disclosure: contrast of every text and control checked | new page | Claude | P1 | 26 | Open |
+| 2244 | Adverse action disclosure: right to left layout checked with the Urdu text | new page | Claude | P1 | 25 | Open |
+| 2245 | Adverse action disclosure: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 25 | Open |
+| 2246 | Adverse action disclosure: usable at 320 pixels wide | new page | Claude | P1 | 25 | Open |
+| 2247 | Adverse action disclosure: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 25 | Open |
+| 2248 | Adverse action disclosure: contrast of every text and control checked | new page | Claude | P1 | 25 | Open |
 | 2249 | Adverse action disclosure: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 59 | Open |
 | 2250 | Adverse action disclosure: visual regression snapshot at three widths | new page | Claude | P2 | 59 | Open |
-| 2251 | Adverse action disclosure: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 26 | Open |
+| 2251 | Adverse action disclosure: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 25 | Open |
 
 ### AC4. Missing Screens: Accounts and payment routes
 
 | # | Item | Where | Owner | Pri | Phase | Status |
 | --: | :-- | :-- | :-- | :-- | :-- | :-- |
-| 2252 | Linked accounts: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 26 | Open |
-| 2253 | Linked accounts: loading skeleton in the final layout, never a full screen spinner | new page | Claude | P1 | 26 | Open |
-| 2254 | Linked accounts: error state with the reason in plain words and a retry | new page | Claude | P1 | 26 | Open |
+| 2252 | Linked accounts: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 25 | Open |
+| 2253 | Linked accounts: loading skeleton in the final layout, never a full screen spinner | new page | Claude | P1 | 25 | Open |
+| 2254 | Linked accounts: error state with the reason in plain words and a retry | new page | Claude | P1 | 25 | Open |
 | 2255 | Linked accounts: offline state showing the last data held and when it was fetched, with actions disabled | new page | Claude | P1 | 26 | Open |
 | 2256 | Linked accounts: deep link restores the screen with its state | new page | Claude | P1 | 26 | Open |
 | 2257 | Linked accounts: pull to refresh | new page | Claude | P1 | 26 | Open |
@@ -2888,45 +2888,45 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 2328 | Account title check in progress: visual regression snapshot at three widths | new page | Claude | P2 | 59 | Open |
 | 2329 | Account title check in progress: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 26 | Open |
 | 2330 | Account title mismatch: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 26 | Open |
-| 2331 | Account title mismatch: every figure and reference shown matches the ledger | new page | Claude | P1 | 27 | Open |
-| 2332 | Account title mismatch: the next step offered | new page | Claude | P1 | 27 | Open |
-| 2333 | Account title mismatch: share as an image or a PDF with account numbers masked | new page | Claude | P1 | 27 | Open |
-| 2334 | Account title mismatch: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 27 | Open |
+| 2331 | Account title mismatch: every figure and reference shown matches the ledger | new page | Claude | P1 | 26 | Open |
+| 2332 | Account title mismatch: the next step offered | new page | Claude | P1 | 26 | Open |
+| 2333 | Account title mismatch: share as an image or a PDF with account numbers masked | new page | Claude | P1 | 26 | Open |
+| 2334 | Account title mismatch: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 26 | Open |
 | 2335 | Account title mismatch: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 2336 | Account title mismatch: right to left layout checked with the Urdu text | new page | Claude | P1 | 27 | Open |
-| 2337 | Account title mismatch: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 27 | Open |
-| 2338 | Account title mismatch: usable at 320 pixels wide | new page | Claude | P1 | 27 | Open |
-| 2339 | Account title mismatch: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 27 | Open |
-| 2340 | Account title mismatch: contrast of every text and control checked | new page | Claude | P1 | 27 | Open |
+| 2336 | Account title mismatch: right to left layout checked with the Urdu text | new page | Claude | P1 | 26 | Open |
+| 2337 | Account title mismatch: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 26 | Open |
+| 2338 | Account title mismatch: usable at 320 pixels wide | new page | Claude | P1 | 26 | Open |
+| 2339 | Account title mismatch: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 26 | Open |
+| 2340 | Account title mismatch: contrast of every text and control checked | new page | Claude | P1 | 26 | Open |
 | 2341 | Account title mismatch: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 59 | Open |
 | 2342 | Account title mismatch: visual regression snapshot at three widths | new page | Claude | P2 | 59 | Open |
-| 2343 | Account title mismatch: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 27 | Open |
-| 2344 | Set the default collection account: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 27 | Open |
-| 2345 | Set the default collection account: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 27 | Open |
-| 2346 | Set the default collection account: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 27 | Open |
-| 2347 | Set the default collection account: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 27 | Open |
-| 2348 | Set the default collection account: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 27 | Open |
-| 2349 | Set the default collection account: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 27 | Open |
-| 2350 | Set the default collection account: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 27 | Open |
-| 2351 | Set the default collection account: success state stating what happened and what comes next | new page | Claude | P1 | 27 | Open |
-| 2352 | Set the default collection account: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 27 | Open |
+| 2343 | Account title mismatch: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 26 | Open |
+| 2344 | Set the default collection account: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 26 | Open |
+| 2345 | Set the default collection account: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 26 | Open |
+| 2346 | Set the default collection account: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 26 | Open |
+| 2347 | Set the default collection account: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 26 | Open |
+| 2348 | Set the default collection account: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 26 | Open |
+| 2349 | Set the default collection account: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 26 | Open |
+| 2350 | Set the default collection account: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 26 | Open |
+| 2351 | Set the default collection account: success state stating what happened and what comes next | new page | Claude | P1 | 26 | Open |
+| 2352 | Set the default collection account: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 26 | Open |
 | 2353 | Set the default collection account: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 2354 | Set the default collection account: right to left layout checked with the Urdu text | new page | Claude | P1 | 27 | Open |
-| 2355 | Set the default collection account: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 27 | Open |
-| 2356 | Set the default collection account: usable at 320 pixels wide | new page | Claude | P1 | 27 | Open |
-| 2357 | Set the default collection account: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 27 | Open |
-| 2358 | Set the default collection account: contrast of every text and control checked | new page | Claude | P1 | 27 | Open |
+| 2354 | Set the default collection account: right to left layout checked with the Urdu text | new page | Claude | P1 | 26 | Open |
+| 2355 | Set the default collection account: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 26 | Open |
+| 2356 | Set the default collection account: usable at 320 pixels wide | new page | Claude | P1 | 26 | Open |
+| 2357 | Set the default collection account: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 26 | Open |
+| 2358 | Set the default collection account: contrast of every text and control checked | new page | Claude | P1 | 26 | Open |
 | 2359 | Set the default collection account: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 59 | Open |
-| 2360 | Set the default collection account: component test of every state | new page | Claude | P1 | 27 | Open |
-| 2361 | Set the default collection account: end to end test of its main path | new page | Claude | P1 | 27 | Open |
+| 2360 | Set the default collection account: component test of every state | new page | Claude | P1 | 26 | Open |
+| 2361 | Set the default collection account: end to end test of its main path | new page | Claude | P1 | 26 | Open |
 | 2362 | Set the default collection account: visual regression snapshot at three widths | new page | Claude | P2 | 59 | Open |
-| 2363 | Set the default collection account: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 27 | Open |
-| 2364 | Remove a linked account: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 27 | Open |
-| 2365 | Remove a linked account: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 27 | Open |
-| 2366 | Remove a linked account: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 27 | Open |
-| 2367 | Remove a linked account: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 27 | Open |
-| 2368 | Remove a linked account: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 27 | Open |
-| 2369 | Remove a linked account: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 27 | Open |
+| 2363 | Set the default collection account: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 26 | Open |
+| 2364 | Remove a linked account: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 26 | Open |
+| 2365 | Remove a linked account: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 26 | Open |
+| 2366 | Remove a linked account: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 26 | Open |
+| 2367 | Remove a linked account: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 26 | Open |
+| 2368 | Remove a linked account: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 26 | Open |
+| 2369 | Remove a linked account: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 26 | Open |
 | 2370 | Remove a linked account: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 27 | Open |
 | 2371 | Remove a linked account: success state stating what happened and what comes next | new page | Claude | P1 | 27 | Open |
 | 2372 | Remove a linked account: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 27 | Open |
@@ -3074,12 +3074,12 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 2514 | Mandate cancelled: visual regression snapshot at three widths | new page | Claude | P2 | 59 | Open |
 | 2515 | Mandate cancelled: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P0 | 6 | Open |
 | 2516 | Mandate collection failed: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P0 | 6 | Open |
-| 2517 | Mandate collection failed: every figure and reference shown matches the ledger | new page | Claude | P0 | 7 | Open |
-| 2518 | Mandate collection failed: the next step offered | new page | Claude | P0 | 7 | Open |
-| 2519 | Mandate collection failed: share as an image or a PDF with account numbers masked | new page | Claude | P0 | 7 | Open |
-| 2520 | Mandate collection failed: checked in dark mode, with no hard coded white or black | new page | Claude | P0 | 7 | Open |
+| 2517 | Mandate collection failed: every figure and reference shown matches the ledger | new page | Claude | P0 | 6 | Open |
+| 2518 | Mandate collection failed: the next step offered | new page | Claude | P0 | 6 | Open |
+| 2519 | Mandate collection failed: share as an image or a PDF with account numbers masked | new page | Claude | P0 | 6 | Open |
+| 2520 | Mandate collection failed: checked in dark mode, with no hard coded white or black | new page | Claude | P0 | 6 | Open |
 | 2521 | Mandate collection failed: Urdu text for every string, by a translator | new page | Translator | P0 | H4 | Open |
-| 2522 | Mandate collection failed: right to left layout checked with the Urdu text | new page | Claude | P0 | 7 | Open |
+| 2522 | Mandate collection failed: right to left layout checked with the Urdu text | new page | Claude | P0 | 6 | Open |
 | 2523 | Mandate collection failed: usable at the largest system text size, with nothing cut off | new page | Claude | P0 | 7 | Open |
 | 2524 | Mandate collection failed: usable at 320 pixels wide | new page | Claude | P0 | 7 | Open |
 | 2525 | Mandate collection failed: every control named for screen readers, in a logical focus order | new page | Claude | P0 | 7 | Open |
@@ -3115,41 +3115,41 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 2550 | Circle templates: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 27 | Open |
 | 2551 | Circle templates: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
 | 2552 | Circle templates: right to left layout checked with the Urdu text | new page | Claude | P1 | 27 | Open |
-| 2553 | Circle templates: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 28 | Open |
-| 2554 | Circle templates: usable at 320 pixels wide | new page | Claude | P1 | 28 | Open |
-| 2555 | Circle templates: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 28 | Open |
-| 2556 | Circle templates: contrast of every text and control checked | new page | Claude | P1 | 28 | Open |
+| 2553 | Circle templates: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 27 | Open |
+| 2554 | Circle templates: usable at 320 pixels wide | new page | Claude | P1 | 27 | Open |
+| 2555 | Circle templates: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 27 | Open |
+| 2556 | Circle templates: contrast of every text and control checked | new page | Claude | P1 | 27 | Open |
 | 2557 | Circle templates: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 59 | Open |
-| 2558 | Circle templates: component test of every state | new page | Claude | P1 | 28 | Open |
-| 2559 | Circle templates: end to end test of its main path | new page | Claude | P1 | 28 | Open |
+| 2558 | Circle templates: component test of every state | new page | Claude | P1 | 27 | Open |
+| 2559 | Circle templates: end to end test of its main path | new page | Claude | P1 | 27 | Open |
 | 2560 | Circle templates: visual regression snapshot at three widths | new page | Claude | P2 | 59 | Open |
-| 2561 | Circle templates: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 28 | Open |
-| 2562 | Cadence chooser: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 28 | Open |
-| 2563 | Cadence chooser: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 28 | Open |
-| 2564 | Cadence chooser: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 28 | Open |
-| 2565 | Cadence chooser: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 28 | Open |
-| 2566 | Cadence chooser: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 28 | Open |
-| 2567 | Cadence chooser: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 28 | Open |
-| 2568 | Cadence chooser: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 28 | Open |
-| 2569 | Cadence chooser: success state stating what happened and what comes next | new page | Claude | P1 | 28 | Open |
-| 2570 | Cadence chooser: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 28 | Open |
+| 2561 | Circle templates: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 27 | Open |
+| 2562 | Cadence chooser: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 27 | Open |
+| 2563 | Cadence chooser: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 27 | Open |
+| 2564 | Cadence chooser: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 27 | Open |
+| 2565 | Cadence chooser: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 27 | Open |
+| 2566 | Cadence chooser: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 27 | Open |
+| 2567 | Cadence chooser: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 27 | Open |
+| 2568 | Cadence chooser: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 27 | Open |
+| 2569 | Cadence chooser: success state stating what happened and what comes next | new page | Claude | P1 | 27 | Open |
+| 2570 | Cadence chooser: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 27 | Open |
 | 2571 | Cadence chooser: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 2572 | Cadence chooser: right to left layout checked with the Urdu text | new page | Claude | P1 | 28 | Open |
-| 2573 | Cadence chooser: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 28 | Open |
-| 2574 | Cadence chooser: usable at 320 pixels wide | new page | Claude | P1 | 28 | Open |
-| 2575 | Cadence chooser: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 28 | Open |
-| 2576 | Cadence chooser: contrast of every text and control checked | new page | Claude | P1 | 28 | Open |
+| 2572 | Cadence chooser: right to left layout checked with the Urdu text | new page | Claude | P1 | 27 | Open |
+| 2573 | Cadence chooser: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 27 | Open |
+| 2574 | Cadence chooser: usable at 320 pixels wide | new page | Claude | P1 | 27 | Open |
+| 2575 | Cadence chooser: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 27 | Open |
+| 2576 | Cadence chooser: contrast of every text and control checked | new page | Claude | P1 | 27 | Open |
 | 2577 | Cadence chooser: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 59 | Open |
-| 2578 | Cadence chooser: component test of every state | new page | Claude | P1 | 28 | Open |
-| 2579 | Cadence chooser: end to end test of its main path | new page | Claude | P1 | 28 | Open |
+| 2578 | Cadence chooser: component test of every state | new page | Claude | P1 | 27 | Open |
+| 2579 | Cadence chooser: end to end test of its main path | new page | Claude | P1 | 27 | Open |
 | 2580 | Cadence chooser: visual regression snapshot at three widths | new page | Claude | P2 | 59 | Open |
-| 2581 | Cadence chooser: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 28 | Open |
-| 2582 | Roster size chooser: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 28 | Open |
-| 2583 | Roster size chooser: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 28 | Open |
-| 2584 | Roster size chooser: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 28 | Open |
-| 2585 | Roster size chooser: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 28 | Open |
-| 2586 | Roster size chooser: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 28 | Open |
-| 2587 | Roster size chooser: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 28 | Open |
+| 2581 | Cadence chooser: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 27 | Open |
+| 2582 | Roster size chooser: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 27 | Open |
+| 2583 | Roster size chooser: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 27 | Open |
+| 2584 | Roster size chooser: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 27 | Open |
+| 2585 | Roster size chooser: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 27 | Open |
+| 2586 | Roster size chooser: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 27 | Open |
+| 2587 | Roster size chooser: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 27 | Open |
 | 2588 | Roster size chooser: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 28 | Open |
 | 2589 | Roster size chooser: success state stating what happened and what comes next | new page | Claude | P1 | 28 | Open |
 | 2590 | Roster size chooser: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 28 | Open |
@@ -3271,8 +3271,8 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 2706 | Signature capture: every control named for screen readers, in a logical focus order | new page | Claude | P0 | 7 | Open |
 | 2707 | Signature capture: contrast of every text and control checked | new page | Claude | P0 | 7 | Open |
 | 2708 | Signature capture: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 59 | Open |
-| 2709 | Signature capture: component test of every state | new page | Claude | P0 | 8 | Open |
-| 2710 | Signature capture: end to end test of its main path | new page | Claude | P0 | 8 | Open |
+| 2709 | Signature capture: component test of every state | new page | Claude | P0 | 7 | Open |
+| 2710 | Signature capture: end to end test of its main path | new page | Claude | P0 | 7 | Open |
 | 2711 | Signature capture: visual regression snapshot at three widths | new page | Claude | P2 | 59 | Open |
 | 2712 | Signature capture: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P0 | 8 | Open |
 | 2713 | Agreement archive: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 28 | Open |
@@ -3387,27 +3387,27 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 2817 | Applicant detail: right to left layout checked with the Urdu text | new page | Claude | P1 | 28 | Open |
 | 2818 | Applicant detail: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 28 | Open |
 | 2819 | Applicant detail: usable at 320 pixels wide | new page | Claude | P1 | 28 | Open |
-| 2820 | Applicant detail: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 29 | Open |
-| 2821 | Applicant detail: contrast of every text and control checked | new page | Claude | P1 | 29 | Open |
+| 2820 | Applicant detail: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 28 | Open |
+| 2821 | Applicant detail: contrast of every text and control checked | new page | Claude | P1 | 28 | Open |
 | 2822 | Applicant detail: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 59 | Open |
-| 2823 | Applicant detail: component test of every state | new page | Claude | P1 | 29 | Open |
-| 2824 | Applicant detail: end to end test of its main path | new page | Claude | P1 | 29 | Open |
+| 2823 | Applicant detail: component test of every state | new page | Claude | P1 | 28 | Open |
+| 2824 | Applicant detail: end to end test of its main path | new page | Claude | P1 | 28 | Open |
 | 2825 | Applicant detail: visual regression snapshot at three widths | new page | Claude | P2 | 59 | Open |
-| 2826 | Applicant detail: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 29 | Open |
-| 2827 | Admission decision record: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 29 | Open |
-| 2828 | Admission decision record: every figure and reference shown matches the ledger | new page | Claude | P1 | 29 | Open |
-| 2829 | Admission decision record: the next step offered | new page | Claude | P1 | 29 | Open |
-| 2830 | Admission decision record: share as an image or a PDF with account numbers masked | new page | Claude | P1 | 29 | Open |
-| 2831 | Admission decision record: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 29 | Open |
+| 2826 | Applicant detail: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 28 | Open |
+| 2827 | Admission decision record: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 28 | Open |
+| 2828 | Admission decision record: every figure and reference shown matches the ledger | new page | Claude | P1 | 28 | Open |
+| 2829 | Admission decision record: the next step offered | new page | Claude | P1 | 28 | Open |
+| 2830 | Admission decision record: share as an image or a PDF with account numbers masked | new page | Claude | P1 | 28 | Open |
+| 2831 | Admission decision record: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 28 | Open |
 | 2832 | Admission decision record: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 2833 | Admission decision record: right to left layout checked with the Urdu text | new page | Claude | P1 | 29 | Open |
-| 2834 | Admission decision record: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 29 | Open |
-| 2835 | Admission decision record: usable at 320 pixels wide | new page | Claude | P1 | 29 | Open |
-| 2836 | Admission decision record: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 29 | Open |
-| 2837 | Admission decision record: contrast of every text and control checked | new page | Claude | P1 | 29 | Open |
+| 2833 | Admission decision record: right to left layout checked with the Urdu text | new page | Claude | P1 | 28 | Open |
+| 2834 | Admission decision record: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 28 | Open |
+| 2835 | Admission decision record: usable at 320 pixels wide | new page | Claude | P1 | 28 | Open |
+| 2836 | Admission decision record: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 28 | Open |
+| 2837 | Admission decision record: contrast of every text and control checked | new page | Claude | P1 | 28 | Open |
 | 2838 | Admission decision record: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 59 | Open |
 | 2839 | Admission decision record: visual regression snapshot at three widths | new page | Claude | P2 | 59 | Open |
-| 2840 | Admission decision record: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 29 | Open |
+| 2840 | Admission decision record: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 28 | Open |
 | 2841 | Roster fill request: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P2 | 59 | Open |
 | 2842 | Roster fill request: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P2 | 60 | Open |
 | 2843 | Roster fill request: submitting state: the button busy and a second tap ignored | new page | Claude | P2 | 60 | Open |
@@ -3428,18 +3428,18 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 2858 | Roster fill request: end to end test of its main path | new page | Claude | P2 | 60 | Open |
 | 2859 | Roster fill request: visual regression snapshot at three widths | new page | Claude | P2 | 60 | Open |
 | 2860 | Roster fill request: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P2 | 60 | Open |
-| 2861 | Order of turns assignment, fixed or by ballot: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 29 | Open |
-| 2862 | Order of turns assignment, fixed or by ballot: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 29 | Open |
-| 2863 | Order of turns assignment, fixed or by ballot: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 29 | Open |
-| 2864 | Order of turns assignment, fixed or by ballot: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 29 | Open |
-| 2865 | Order of turns assignment, fixed or by ballot: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 29 | Open |
-| 2866 | Order of turns assignment, fixed or by ballot: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 29 | Open |
-| 2867 | Order of turns assignment, fixed or by ballot: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 29 | Open |
-| 2868 | Order of turns assignment, fixed or by ballot: success state stating what happened and what comes next | new page | Claude | P1 | 29 | Open |
-| 2869 | Order of turns assignment, fixed or by ballot: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 29 | Open |
+| 2861 | Order of turns assignment, fixed or by ballot: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 28 | Open |
+| 2862 | Order of turns assignment, fixed or by ballot: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 28 | Open |
+| 2863 | Order of turns assignment, fixed or by ballot: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 28 | Open |
+| 2864 | Order of turns assignment, fixed or by ballot: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 28 | Open |
+| 2865 | Order of turns assignment, fixed or by ballot: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 28 | Open |
+| 2866 | Order of turns assignment, fixed or by ballot: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 28 | Open |
+| 2867 | Order of turns assignment, fixed or by ballot: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 28 | Open |
+| 2868 | Order of turns assignment, fixed or by ballot: success state stating what happened and what comes next | new page | Claude | P1 | 28 | Open |
+| 2869 | Order of turns assignment, fixed or by ballot: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 28 | Open |
 | 2870 | Order of turns assignment, fixed or by ballot: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 2871 | Order of turns assignment, fixed or by ballot: right to left layout checked with the Urdu text | new page | Claude | P1 | 29 | Open |
-| 2872 | Order of turns assignment, fixed or by ballot: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 29 | Open |
+| 2871 | Order of turns assignment, fixed or by ballot: right to left layout checked with the Urdu text | new page | Claude | P1 | 28 | Open |
+| 2872 | Order of turns assignment, fixed or by ballot: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 28 | Open |
 | 2873 | Order of turns assignment, fixed or by ballot: usable at 320 pixels wide | new page | Claude | P1 | 29 | Open |
 | 2874 | Order of turns assignment, fixed or by ballot: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 29 | Open |
 | 2875 | Order of turns assignment, fixed or by ballot: contrast of every text and control checked | new page | Claude | P1 | 29 | Open |
@@ -3697,7 +3697,7 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 3122 | Receipt: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P0 | 8 | Open |
 | 3123 | Dispute a payment: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P0 | 8 | Open |
 | 3124 | Dispute a payment: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P0 | 8 | Open |
-| 3125 | Dispute a payment: submitting state: the button busy and a second tap ignored | new page | Claude | P0 | 8 | Open |
+| 3125 | Dispute a payment: submitting state: the button busy and a second tap ignored | new page | Claude | P0 | 9 | Open |
 | 3126 | Dispute a payment: a refusal from the server shown with the reason and what to change | new page | Claude | P0 | 9 | Open |
 | 3127 | Dispute a payment: offline: submission held back with a message, and entered data kept | new page | Claude | P0 | 9 | Open |
 | 3128 | Dispute a payment: the keyboard never hides the focused field or the main button | new page | Claude | P0 | 9 | Open |
@@ -3716,23 +3716,23 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 3141 | Dispute a payment: visual regression snapshot at three widths | new page | Claude | P2 | 61 | Open |
 | 3142 | Dispute a payment: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P0 | 9 | Open |
 | 3143 | Dispute status: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 29 | Open |
-| 3144 | Dispute status: loading skeleton in the final layout, never a full screen spinner | new page | Claude | P1 | 30 | Open |
-| 3145 | Dispute status: error state with the reason in plain words and a retry | new page | Claude | P1 | 30 | Open |
-| 3146 | Dispute status: offline state showing the last data held and when it was fetched, with actions disabled | new page | Claude | P1 | 30 | Open |
-| 3147 | Dispute status: deep link restores the screen with its state | new page | Claude | P1 | 30 | Open |
-| 3148 | Dispute status: not found and no access states, each with a route back | new page | Claude | P1 | 30 | Open |
-| 3149 | Dispute status: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 30 | Open |
+| 3144 | Dispute status: loading skeleton in the final layout, never a full screen spinner | new page | Claude | P1 | 29 | Open |
+| 3145 | Dispute status: error state with the reason in plain words and a retry | new page | Claude | P1 | 29 | Open |
+| 3146 | Dispute status: offline state showing the last data held and when it was fetched, with actions disabled | new page | Claude | P1 | 29 | Open |
+| 3147 | Dispute status: deep link restores the screen with its state | new page | Claude | P1 | 29 | Open |
+| 3148 | Dispute status: not found and no access states, each with a route back | new page | Claude | P1 | 29 | Open |
+| 3149 | Dispute status: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 29 | Open |
 | 3150 | Dispute status: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 3151 | Dispute status: right to left layout checked with the Urdu text | new page | Claude | P1 | 30 | Open |
-| 3152 | Dispute status: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 30 | Open |
-| 3153 | Dispute status: usable at 320 pixels wide | new page | Claude | P1 | 30 | Open |
-| 3154 | Dispute status: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 30 | Open |
-| 3155 | Dispute status: contrast of every text and control checked | new page | Claude | P1 | 30 | Open |
+| 3151 | Dispute status: right to left layout checked with the Urdu text | new page | Claude | P1 | 29 | Open |
+| 3152 | Dispute status: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 29 | Open |
+| 3153 | Dispute status: usable at 320 pixels wide | new page | Claude | P1 | 29 | Open |
+| 3154 | Dispute status: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 29 | Open |
+| 3155 | Dispute status: contrast of every text and control checked | new page | Claude | P1 | 29 | Open |
 | 3156 | Dispute status: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 61 | Open |
-| 3157 | Dispute status: component test of every state | new page | Claude | P1 | 30 | Open |
-| 3158 | Dispute status: end to end test of its main path | new page | Claude | P1 | 30 | Open |
+| 3157 | Dispute status: component test of every state | new page | Claude | P1 | 29 | Open |
+| 3158 | Dispute status: end to end test of its main path | new page | Claude | P1 | 29 | Open |
 | 3159 | Dispute status: visual regression snapshot at three widths | new page | Claude | P2 | 61 | Open |
-| 3160 | Dispute status: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 30 | Open |
+| 3160 | Dispute status: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 29 | Open |
 | 3161 | Payout destination confirmation: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P0 | 9 | Open |
 | 3162 | Payout destination confirmation: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P0 | 9 | Open |
 | 3163 | Payout destination confirmation: submitting state: the button busy and a second tap ignored | new page | Claude | P0 | 9 | Open |
@@ -3787,19 +3787,19 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 3212 | Payout receipt: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 61 | Open |
 | 3213 | Payout receipt: visual regression snapshot at three widths | new page | Claude | P2 | 61 | Open |
 | 3214 | Payout receipt: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P0 | 9 | Open |
-| 3215 | Shortfall explanation on a payout: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 30 | Open |
-| 3216 | Shortfall explanation on a payout: deep link opens it directly | new page | Claude | P1 | 30 | Open |
-| 3217 | Shortfall explanation on a payout: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 30 | Open |
+| 3215 | Shortfall explanation on a payout: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 29 | Open |
+| 3216 | Shortfall explanation on a payout: deep link opens it directly | new page | Claude | P1 | 29 | Open |
+| 3217 | Shortfall explanation on a payout: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 29 | Open |
 | 3218 | Shortfall explanation on a payout: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 3219 | Shortfall explanation on a payout: right to left layout checked with the Urdu text | new page | Claude | P1 | 30 | Open |
-| 3220 | Shortfall explanation on a payout: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 30 | Open |
-| 3221 | Shortfall explanation on a payout: usable at 320 pixels wide | new page | Claude | P1 | 30 | Open |
-| 3222 | Shortfall explanation on a payout: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 30 | Open |
-| 3223 | Shortfall explanation on a payout: contrast of every text and control checked | new page | Claude | P1 | 30 | Open |
+| 3219 | Shortfall explanation on a payout: right to left layout checked with the Urdu text | new page | Claude | P1 | 29 | Open |
+| 3220 | Shortfall explanation on a payout: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 29 | Open |
+| 3221 | Shortfall explanation on a payout: usable at 320 pixels wide | new page | Claude | P1 | 29 | Open |
+| 3222 | Shortfall explanation on a payout: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 29 | Open |
+| 3223 | Shortfall explanation on a payout: contrast of every text and control checked | new page | Claude | P1 | 29 | Open |
 | 3224 | Shortfall explanation on a payout: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 61 | Open |
 | 3225 | Shortfall explanation on a payout: visual regression snapshot at three widths | new page | Claude | P2 | 61 | Open |
-| 3226 | Shortfall explanation on a payout: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 30 | Open |
-| 3227 | Set off explanation: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 30 | Open |
+| 3226 | Shortfall explanation on a payout: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 29 | Open |
+| 3227 | Set off explanation: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 29 | Open |
 | 3228 | Set off explanation: deep link opens it directly | new page | Claude | P1 | 30 | Open |
 | 3229 | Set off explanation: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 30 | Open |
 | 3230 | Set off explanation: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
@@ -3956,31 +3956,31 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 3376 | Hardship declaration: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
 | 3377 | Hardship declaration: right to left layout checked with the Urdu text | new page | Claude | P1 | 30 | Open |
 | 3378 | Hardship declaration: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 30 | Open |
-| 3379 | Hardship declaration: usable at 320 pixels wide | new page | Claude | P1 | 31 | Open |
-| 3380 | Hardship declaration: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 31 | Open |
-| 3381 | Hardship declaration: contrast of every text and control checked | new page | Claude | P1 | 31 | Open |
+| 3379 | Hardship declaration: usable at 320 pixels wide | new page | Claude | P1 | 30 | Open |
+| 3380 | Hardship declaration: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 30 | Open |
+| 3381 | Hardship declaration: contrast of every text and control checked | new page | Claude | P1 | 30 | Open |
 | 3382 | Hardship declaration: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 61 | Open |
-| 3383 | Hardship declaration: component test of every state | new page | Claude | P1 | 31 | Open |
-| 3384 | Hardship declaration: end to end test of its main path | new page | Claude | P1 | 31 | Open |
+| 3383 | Hardship declaration: component test of every state | new page | Claude | P1 | 30 | Open |
+| 3384 | Hardship declaration: end to end test of its main path | new page | Claude | P1 | 30 | Open |
 | 3385 | Hardship declaration: visual regression snapshot at three widths | new page | Claude | P2 | 61 | Open |
-| 3386 | Hardship declaration: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 31 | Open |
-| 3387 | Revised date agreement: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 31 | Open |
-| 3388 | Revised date agreement: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 31 | Open |
-| 3389 | Revised date agreement: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 31 | Open |
-| 3390 | Revised date agreement: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 31 | Open |
-| 3391 | Revised date agreement: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 31 | Open |
-| 3392 | Revised date agreement: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 31 | Open |
-| 3393 | Revised date agreement: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 31 | Open |
-| 3394 | Revised date agreement: success state stating what happened and what comes next | new page | Claude | P1 | 31 | Open |
-| 3395 | Revised date agreement: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 31 | Open |
+| 3386 | Hardship declaration: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 30 | Open |
+| 3387 | Revised date agreement: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 30 | Open |
+| 3388 | Revised date agreement: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 30 | Open |
+| 3389 | Revised date agreement: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 30 | Open |
+| 3390 | Revised date agreement: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 30 | Open |
+| 3391 | Revised date agreement: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 30 | Open |
+| 3392 | Revised date agreement: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 30 | Open |
+| 3393 | Revised date agreement: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 30 | Open |
+| 3394 | Revised date agreement: success state stating what happened and what comes next | new page | Claude | P1 | 30 | Open |
+| 3395 | Revised date agreement: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 30 | Open |
 | 3396 | Revised date agreement: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 3397 | Revised date agreement: right to left layout checked with the Urdu text | new page | Claude | P1 | 31 | Open |
-| 3398 | Revised date agreement: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 31 | Open |
-| 3399 | Revised date agreement: usable at 320 pixels wide | new page | Claude | P1 | 31 | Open |
-| 3400 | Revised date agreement: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 31 | Open |
-| 3401 | Revised date agreement: contrast of every text and control checked | new page | Claude | P1 | 31 | Open |
+| 3397 | Revised date agreement: right to left layout checked with the Urdu text | new page | Claude | P1 | 30 | Open |
+| 3398 | Revised date agreement: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 30 | Open |
+| 3399 | Revised date agreement: usable at 320 pixels wide | new page | Claude | P1 | 30 | Open |
+| 3400 | Revised date agreement: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 30 | Open |
+| 3401 | Revised date agreement: contrast of every text and control checked | new page | Claude | P1 | 30 | Open |
 | 3402 | Revised date agreement: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 61 | Open |
-| 3403 | Revised date agreement: component test of every state | new page | Claude | P1 | 31 | Open |
+| 3403 | Revised date agreement: component test of every state | new page | Claude | P1 | 30 | Open |
 | 3404 | Revised date agreement: end to end test of its main path | new page | Claude | P1 | 31 | Open |
 | 3405 | Revised date agreement: visual regression snapshot at three widths | new page | Claude | P2 | 61 | Open |
 | 3406 | Revised date agreement: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 31 | Open |
@@ -4102,29 +4102,29 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 3517 | Exit cooling window: visual regression snapshot at three widths | new page | Claude | P2 | 62 | Open |
 | 3518 | Exit cooling window: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 31 | Open |
 | 3519 | Exit confirmation with PIN and face: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 31 | Open |
-| 3520 | Exit confirmation with PIN and face: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 32 | Open |
-| 3521 | Exit confirmation with PIN and face: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 32 | Open |
-| 3522 | Exit confirmation with PIN and face: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 32 | Open |
-| 3523 | Exit confirmation with PIN and face: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 32 | Open |
-| 3524 | Exit confirmation with PIN and face: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 32 | Open |
-| 3525 | Exit confirmation with PIN and face: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 32 | Open |
-| 3526 | Exit confirmation with PIN and face: success state stating what happened and what comes next | new page | Claude | P1 | 32 | Open |
-| 3527 | Exit confirmation with PIN and face: review step showing every amount before confirmation: the amount and every charge | new page | Claude | P1 | 32 | Open |
+| 3520 | Exit confirmation with PIN and face: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 31 | Open |
+| 3521 | Exit confirmation with PIN and face: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 31 | Open |
+| 3522 | Exit confirmation with PIN and face: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 31 | Open |
+| 3523 | Exit confirmation with PIN and face: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 31 | Open |
+| 3524 | Exit confirmation with PIN and face: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 31 | Open |
+| 3525 | Exit confirmation with PIN and face: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 31 | Open |
+| 3526 | Exit confirmation with PIN and face: success state stating what happened and what comes next | new page | Claude | P1 | 31 | Open |
+| 3527 | Exit confirmation with PIN and face: review step showing every amount before confirmation: the amount and every charge | new page | Claude | P1 | 31 | Open |
 | 3528 | Exit confirmation with PIN and face: transaction PIN required before the action | new page | Claude | P0 | 9 | Open |
 | 3529 | Exit confirmation with PIN and face: refused during the two hour cooling off after a device change, with the time remaining | new page | Claude | P0 | 9 | Open |
 | 3530 | Exit confirmation with PIN and face: one request per confirmation, carried by an idempotency key | new page | Claude | P0 | 9 | Open |
-| 3531 | Exit confirmation with PIN and face: receipt after completion, saved to Activity | new page | Claude | P1 | 32 | Open |
-| 3532 | Exit confirmation with PIN and face: amounts shown as Rs with thousands grouped and no stray decimals | new page | Claude | P1 | 32 | Open |
-| 3533 | Exit confirmation with PIN and face: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 32 | Open |
+| 3531 | Exit confirmation with PIN and face: receipt after completion, saved to Activity | new page | Claude | P1 | 31 | Open |
+| 3532 | Exit confirmation with PIN and face: amounts shown as Rs with thousands grouped and no stray decimals | new page | Claude | P1 | 31 | Open |
+| 3533 | Exit confirmation with PIN and face: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 31 | Open |
 | 3534 | Exit confirmation with PIN and face: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 3535 | Exit confirmation with PIN and face: right to left layout checked with the Urdu text | new page | Claude | P1 | 32 | Open |
-| 3536 | Exit confirmation with PIN and face: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 32 | Open |
-| 3537 | Exit confirmation with PIN and face: usable at 320 pixels wide | new page | Claude | P1 | 32 | Open |
-| 3538 | Exit confirmation with PIN and face: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 32 | Open |
-| 3539 | Exit confirmation with PIN and face: contrast of every text and control checked | new page | Claude | P1 | 32 | Open |
+| 3535 | Exit confirmation with PIN and face: right to left layout checked with the Urdu text | new page | Claude | P1 | 31 | Open |
+| 3536 | Exit confirmation with PIN and face: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 31 | Open |
+| 3537 | Exit confirmation with PIN and face: usable at 320 pixels wide | new page | Claude | P1 | 31 | Open |
+| 3538 | Exit confirmation with PIN and face: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 31 | Open |
+| 3539 | Exit confirmation with PIN and face: contrast of every text and control checked | new page | Claude | P1 | 31 | Open |
 | 3540 | Exit confirmation with PIN and face: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 62 | Open |
-| 3541 | Exit confirmation with PIN and face: component test of every state | new page | Claude | P1 | 32 | Open |
-| 3542 | Exit confirmation with PIN and face: end to end test of its main path | new page | Claude | P1 | 32 | Open |
+| 3541 | Exit confirmation with PIN and face: component test of every state | new page | Claude | P1 | 31 | Open |
+| 3542 | Exit confirmation with PIN and face: end to end test of its main path | new page | Claude | P1 | 31 | Open |
 | 3543 | Exit confirmation with PIN and face: visual regression snapshot at three widths | new page | Claude | P2 | 62 | Open |
 | 3544 | Exit confirmation with PIN and face: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 32 | Open |
 | 3545 | Seat transfer to a replacement: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 32 | Open |
@@ -4320,24 +4320,24 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 3725 | Claim lodged: right to left layout checked with the Urdu text | new page | Claude | P1 | 32 | Open |
 | 3726 | Claim lodged: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 32 | Open |
 | 3727 | Claim lodged: usable at 320 pixels wide | new page | Claude | P1 | 32 | Open |
-| 3728 | Claim lodged: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 33 | Open |
-| 3729 | Claim lodged: contrast of every text and control checked | new page | Claude | P1 | 33 | Open |
+| 3728 | Claim lodged: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 32 | Open |
+| 3729 | Claim lodged: contrast of every text and control checked | new page | Claude | P1 | 32 | Open |
 | 3730 | Claim lodged: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 63 | Open |
-| 3731 | Claim lodged: component test of every state | new page | Claude | P1 | 33 | Open |
-| 3732 | Claim lodged: end to end test of its main path | new page | Claude | P1 | 33 | Open |
+| 3731 | Claim lodged: component test of every state | new page | Claude | P1 | 32 | Open |
+| 3732 | Claim lodged: end to end test of its main path | new page | Claude | P1 | 32 | Open |
 | 3733 | Claim lodged: visual regression snapshot at three widths | new page | Claude | P2 | 63 | Open |
-| 3734 | Claim lodged: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 33 | Open |
-| 3735 | Claim status: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 33 | Open |
-| 3736 | Claim status: loading skeleton in the final layout, never a full screen spinner | new page | Claude | P1 | 33 | Open |
-| 3737 | Claim status: error state with the reason in plain words and a retry | new page | Claude | P1 | 33 | Open |
-| 3738 | Claim status: offline state showing the last data held and when it was fetched, with actions disabled | new page | Claude | P1 | 33 | Open |
-| 3739 | Claim status: deep link restores the screen with its state | new page | Claude | P1 | 33 | Open |
-| 3740 | Claim status: not found and no access states, each with a route back | new page | Claude | P1 | 33 | Open |
-| 3741 | Claim status: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 33 | Open |
+| 3734 | Claim lodged: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 32 | Open |
+| 3735 | Claim status: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 32 | Open |
+| 3736 | Claim status: loading skeleton in the final layout, never a full screen spinner | new page | Claude | P1 | 32 | Open |
+| 3737 | Claim status: error state with the reason in plain words and a retry | new page | Claude | P1 | 32 | Open |
+| 3738 | Claim status: offline state showing the last data held and when it was fetched, with actions disabled | new page | Claude | P1 | 32 | Open |
+| 3739 | Claim status: deep link restores the screen with its state | new page | Claude | P1 | 32 | Open |
+| 3740 | Claim status: not found and no access states, each with a route back | new page | Claude | P1 | 32 | Open |
+| 3741 | Claim status: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 32 | Open |
 | 3742 | Claim status: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 3743 | Claim status: right to left layout checked with the Urdu text | new page | Claude | P1 | 33 | Open |
-| 3744 | Claim status: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 33 | Open |
-| 3745 | Claim status: usable at 320 pixels wide | new page | Claude | P1 | 33 | Open |
+| 3743 | Claim status: right to left layout checked with the Urdu text | new page | Claude | P1 | 32 | Open |
+| 3744 | Claim status: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 32 | Open |
+| 3745 | Claim status: usable at 320 pixels wide | new page | Claude | P1 | 32 | Open |
 | 3746 | Claim status: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 33 | Open |
 | 3747 | Claim status: contrast of every text and control checked | new page | Claude | P1 | 33 | Open |
 | 3748 | Claim status: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 63 | Open |
@@ -4537,21 +4537,21 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 3927 | Language: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 33 | Open |
 | 3928 | Language: a refusal from the server shown with the reason and what to change | new page | Claude | P1 | 33 | Open |
 | 3929 | Language: offline: submission held back with a message, and entered data kept | new page | Claude | P1 | 33 | Open |
-| 3930 | Language: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 34 | Open |
-| 3931 | Language: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 34 | Open |
-| 3932 | Language: success state stating what happened and what comes next | new page | Claude | P1 | 34 | Open |
-| 3933 | Language: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 34 | Open |
+| 3930 | Language: the keyboard never hides the focused field or the main button | new page | Claude | P1 | 33 | Open |
+| 3931 | Language: leaving with unsaved changes asks for confirmation | new page | Claude | P1 | 33 | Open |
+| 3932 | Language: success state stating what happened and what comes next | new page | Claude | P1 | 33 | Open |
+| 3933 | Language: checked in dark mode, with no hard coded white or black | new page | Claude | P1 | 33 | Open |
 | 3934 | Language: Urdu text for every string, by a translator | new page | Translator | P1 | H4 | Open |
-| 3935 | Language: right to left layout checked with the Urdu text | new page | Claude | P1 | 34 | Open |
-| 3936 | Language: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 34 | Open |
-| 3937 | Language: usable at 320 pixels wide | new page | Claude | P1 | 34 | Open |
-| 3938 | Language: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 34 | Open |
-| 3939 | Language: contrast of every text and control checked | new page | Claude | P1 | 34 | Open |
+| 3935 | Language: right to left layout checked with the Urdu text | new page | Claude | P1 | 33 | Open |
+| 3936 | Language: usable at the largest system text size, with nothing cut off | new page | Claude | P1 | 33 | Open |
+| 3937 | Language: usable at 320 pixels wide | new page | Claude | P1 | 33 | Open |
+| 3938 | Language: every control named for screen readers, in a logical focus order | new page | Claude | P1 | 33 | Open |
+| 3939 | Language: contrast of every text and control checked | new page | Claude | P1 | 33 | Open |
 | 3940 | Language: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 63 | Open |
-| 3941 | Language: component test of every state | new page | Claude | P1 | 34 | Open |
-| 3942 | Language: end to end test of its main path | new page | Claude | P1 | 34 | Open |
+| 3941 | Language: component test of every state | new page | Claude | P1 | 33 | Open |
+| 3942 | Language: end to end test of its main path | new page | Claude | P1 | 33 | Open |
 | 3943 | Language: visual regression snapshot at three widths | new page | Claude | P2 | 64 | Open |
-| 3944 | Language: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 34 | Open |
+| 3944 | Language: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P1 | 33 | Open |
 | 3945 | Data export request: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 34 | Open |
 | 3946 | Data export request: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 34 | Open |
 | 3947 | Data export request: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 34 | Open |
@@ -4724,12 +4724,12 @@ The 27 pages kept in the application today, the committee page counted by its ta
 | 4104 | Key fact statement: usable at the largest system text size, with nothing cut off | new page | Claude | P0 | 9 | Open |
 | 4105 | Key fact statement: usable at 320 pixels wide | new page | Claude | P0 | 9 | Open |
 | 4106 | Key fact statement: every control named for screen readers, in a logical focus order | new page | Claude | P0 | 9 | Open |
-| 4107 | Key fact statement: contrast of every text and control checked | new page | Claude | P0 | 9 | Open |
+| 4107 | Key fact statement: contrast of every text and control checked | new page | Claude | P0 | 10 | Open |
 | 4108 | Key fact statement: screen view and main action recorded, with no personal data in the events | new page | Claude | P2 | 64 | Open |
-| 4109 | Key fact statement: component test of every state | new page | Claude | P0 | 9 | Open |
-| 4110 | Key fact statement: end to end test of its main path | new page | Claude | P0 | 9 | Open |
+| 4109 | Key fact statement: component test of every state | new page | Claude | P0 | 10 | Open |
+| 4110 | Key fact statement: end to end test of its main path | new page | Claude | P0 | 10 | Open |
 | 4111 | Key fact statement: visual regression snapshot at three widths | new page | Claude | P2 | 64 | Open |
-| 4112 | Key fact statement: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P0 | 9 | Open |
+| 4112 | Key fact statement: copy checked against the content rules: plain words, at most one line under a title, no eyebrow labels | new page | Claude | P0 | 10 | Open |
 | 4113 | Complaint form: rebuilt to the common rules of C1: one answer first, no box around a section, no card inside a card | new page | Claude | P1 | 34 | Open |
 | 4114 | Complaint form: each field checked as it is typed, with one specific message under the field (fields in section AD) | new page | Claude | P1 | 34 | Open |
 | 4115 | Complaint form: submitting state: the button busy and a second tap ignored | new page | Claude | P1 | 34 | Open |
@@ -5682,15 +5682,15 @@ Each field a member or host fills in, with its rule and message, its Urdu text, 
 | 5011 | Occupation and employer, employer: tests for a valid value, an invalid value and each boundary | tests | Claude | P1 |  | Done |
 | 5012 | Income declaration, monthly income: rule: whole rupees from Rs 1,000 to Rs 10,000,000; message: "Enter your monthly income in rupees" | field | Claude | P1 |  | Done |
 | 5013 | Income declaration, monthly income: Urdu label, hint and message, by a translator | field | Translator | P1 | H4 | Open |
-| 5014 | Income declaration, monthly income: input set up: numeric keypad, grouped as typed | field | Claude | P1 | 35 | Open |
+| 5014 | Income declaration, monthly income: input set up: numeric keypad, grouped as typed | field | Claude | P1 | 34 | Open |
 | 5015 | Income declaration, monthly income: tests for a valid value, an invalid value and each boundary | tests | Claude | P1 |  | Done |
 | 5016 | Income declaration, income source: rule: salary, business, daily wages, remittance, pension or other; message: "Choose where your income comes from" | field | Claude | P1 |  | Done |
 | 5017 | Income declaration, income source: Urdu label, hint and message, by a translator | field | Translator | P1 | H4 | Open |
-| 5018 | Income declaration, income source: input set up: single choice list | field | Claude | P1 | 35 | Open |
+| 5018 | Income declaration, income source: input set up: single choice list | field | Claude | P1 | 34 | Open |
 | 5019 | Income declaration, income source: tests for a valid value, an invalid value and each boundary | tests | Claude | P1 |  | Done |
 | 5020 | Income verification upload, statement file: rule: PDF, JPG or PNG, at most 5 MB, covering the last three months; message: "Upload a statement for the last three months" | field | Claude | P1 |  | Done |
 | 5021 | Income verification upload, statement file: Urdu label, hint and message, by a translator | field | Translator | P1 | H4 | Open |
-| 5022 | Income verification upload, statement file: input set up: file picker and camera | field | Claude | P1 | 35 | Open |
+| 5022 | Income verification upload, statement file: input set up: file picker and camera | field | Claude | P1 | 34 | Open |
 | 5023 | Income verification upload, statement file: tests for a valid value, an invalid value and each boundary | tests | Claude | P1 |  | Done |
 | 5024 | Bank account opening consent, consent to share data with the bank: rule: ticked before the bank's screens open; message: "Allow Halqa to share your details with the bank to open your account" | field | Claude | P0 |  | Done |
 | 5025 | Bank account opening consent, consent to share data with the bank: Urdu label, hint and message, by a translator | field | Translator | P0 | H4 | Open |
@@ -5719,7 +5719,7 @@ Each field a member or host fills in, with its rule and message, its Urdu text, 
 | 5043 | CNIC review before submission, confirmation: tests for a valid value, an invalid value and each boundary | tests | Claude | P0 |  | Done |
 | 5044 | Bureau instruction, instruction to the bureau: rule: ticked, naming the bureau and the purpose; message: "Allow Halqa to request your report from the bureau named" | field | Claude | P1 |  | Done |
 | 5045 | Bureau instruction, instruction to the bureau: Urdu label, hint and message, by a translator | field | Translator | P1 | H4 | Open |
-| 5046 | Bureau instruction, instruction to the bureau: input set up: check box with the full text | field | Claude | P1 | 35 | Open |
+| 5046 | Bureau instruction, instruction to the bureau: input set up: check box with the full text | field | Claude | P1 | 34 | Open |
 | 5047 | Bureau instruction, instruction to the bureau: tests for a valid value, an invalid value and each boundary | tests | Claude | P1 |  | Done |
 
 ### AD3. Accounts and payment routes
@@ -5728,23 +5728,23 @@ Each field a member or host fills in, with its rule and message, its Urdu text, 
 | --: | :-- | :-- | :-- | :-- | :-- | :-- |
 | 5048 | Add a bank account, bank: rule: chosen from the list of banks; message: "Choose your bank" | field | Claude | P1 |  | Done |
 | 5049 | Add a bank account, bank: Urdu label, hint and message, by a translator | field | Translator | P1 | H4 | Open |
-| 5050 | Add a bank account, bank: input set up: searchable list | field | Claude | P1 | 35 | Open |
+| 5050 | Add a bank account, bank: input set up: searchable list | field | Claude | P1 | 34 | Open |
 | 5051 | Add a bank account, bank: tests for a valid value, an invalid value and each boundary | tests | Claude | P1 |  | Done |
 | 5052 | Add a bank account, IBAN: rule: PK, two check digits, four letters for the bank and sixteen digits, 24 characters, passing the IBAN check; message: "Enter the 24 character IBAN, for example PK36SCBL0000001123456702" | field | Claude | P1 |  | Done |
 | 5053 | Add a bank account, IBAN: Urdu label, hint and message, by a translator | field | Translator | P1 | H4 | Open |
-| 5054 | Add a bank account, IBAN: input set up: upper case, grouped in fours, paste accepted | field | Claude | P1 | 35 | Open |
+| 5054 | Add a bank account, IBAN: input set up: upper case, grouped in fours, paste accepted | field | Claude | P1 | 34 | Open |
 | 5055 | Add a bank account, IBAN: tests for a valid value, an invalid value and each boundary | tests | Claude | P1 |  | Done |
 | 5056 | Add a wallet account, wallet provider: rule: chosen from the list of wallets; message: "Choose your wallet" | field | Claude | P1 |  | Done |
 | 5057 | Add a wallet account, wallet provider: Urdu label, hint and message, by a translator | field | Translator | P1 | H4 | Open |
-| 5058 | Add a wallet account, wallet provider: input set up: list | field | Claude | P1 | 35 | Open |
+| 5058 | Add a wallet account, wallet provider: input set up: list | field | Claude | P1 | 34 | Open |
 | 5059 | Add a wallet account, wallet provider: tests for a valid value, an invalid value and each boundary | tests | Claude | P1 |  | Done |
 | 5060 | Add a wallet account, wallet number: rule: a mobile number registered with that wallet; message: "Enter the mobile number of your wallet" | field | Claude | P1 |  | Done |
 | 5061 | Add a wallet account, wallet number: Urdu label, hint and message, by a translator | field | Translator | P1 | H4 | Open |
-| 5062 | Add a wallet account, wallet number: input set up: numeric keypad | field | Claude | P1 | 35 | Open |
+| 5062 | Add a wallet account, wallet number: input set up: numeric keypad | field | Claude | P1 | 34 | Open |
 | 5063 | Add a wallet account, wallet number: tests for a valid value, an invalid value and each boundary | tests | Claude | P1 |  | Done |
 | 5064 | Set the default collection account, default account: rule: one of the verified linked accounts; message: "Choose one account for collections" | field | Claude | P1 |  | Done |
 | 5065 | Set the default collection account, default account: Urdu label, hint and message, by a translator | field | Translator | P1 | H4 | Open |
-| 5066 | Set the default collection account, default account: input set up: single choice list | field | Claude | P1 | 35 | Open |
+| 5066 | Set the default collection account, default account: input set up: single choice list | field | Claude | P1 | 34 | Open |
 | 5067 | Set the default collection account, default account: tests for a valid value, an invalid value and each boundary | tests | Claude | P1 |  | Done |
 | 5068 | Authorise a mandate, account: rule: a verified account at the partner bank; message: "Choose the account the instalment comes from" | field | Claude | P0 |  | Done |
 | 5069 | Authorise a mandate, account: Urdu label, hint and message, by a translator | field | Translator | P0 | H4 | Open |
@@ -6200,7 +6200,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5461 | POST /api/agreements/sign: response carries no internal field and no other member's personal data | routes/agreements.ts:59 | Claude | P1 |  | Done |
 | 5462 | POST /api/agreements/sign: error responses use the shared error codes and plain messages | routes/agreements.ts:59 | Claude | P1 |  | Done |
 | 5463 | POST /api/agreements/sign: described in the interface specification with its request, response and errors | routes/agreements.ts:59 | Claude | P2 |  | Done |
-| 5464 | POST /api/agreements/sign: integration test: success | routes/agreements.ts:59 | Claude | P1 | 17 | Open |
+| 5464 | POST /api/agreements/sign: integration test: success | routes/agreements.ts:59 | Claude | P1 |  | Done |
 | 5465 | POST /api/agreements/sign: integration test: refused for a member without access | routes/agreements.ts:59 | Claude | P1 |  | Done |
 | 5466 | POST /api/agreements/sign: integration test: refused for invalid input | routes/agreements.ts:59 | Claude | P1 |  | Done |
 | 5467 | POST /api/auth/register: input checked against a schema before any logic | routes/auth.ts:51 | Claude | P0 |  | Done |
@@ -6234,7 +6234,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5495 | POST /api/auth/phone-otp/verify: response carries no internal field and no other member's personal data | routes/auth.ts:145 | Claude | P0 |  | Done |
 | 5496 | POST /api/auth/phone-otp/verify: error responses use the shared error codes and plain messages | routes/auth.ts:145 | Claude | P0 |  | Done |
 | 5497 | POST /api/auth/phone-otp/verify: described in the interface specification with its request, response and errors | routes/auth.ts:145 | Claude | P2 |  | Done |
-| 5498 | POST /api/auth/phone-otp/verify: integration test: success | routes/auth.ts:145 | Claude | P1 | 17 | Open |
+| 5498 | POST /api/auth/phone-otp/verify: integration test: success | routes/auth.ts:145 | Claude | P1 |  | Done |
 | 5499 | POST /api/auth/phone-otp/verify: integration test: refused for invalid input | routes/auth.ts:145 | Claude | P1 |  | Done |
 | 5500 | POST /api/auth/set-pin: input checked against a schema before any logic | routes/auth.ts:176 | Claude | P0 |  | Done |
 | 5501 | POST /api/auth/set-pin: sign in required | routes/auth.ts:176 | Claude | P0 |  | Done |
@@ -6295,7 +6295,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5556 | POST /api/auth/refresh: response carries no internal field and no other member's personal data | routes/auth.ts:237 | Claude | P0 |  | Done |
 | 5557 | POST /api/auth/refresh: error responses use the shared error codes and plain messages | routes/auth.ts:237 | Claude | P0 |  | Done |
 | 5558 | POST /api/auth/refresh: described in the interface specification with its request, response and errors | routes/auth.ts:237 | Claude | P2 |  | Done |
-| 5559 | POST /api/auth/refresh: integration test: success | routes/auth.ts:237 | Claude | P1 | 17 | Open |
+| 5559 | POST /api/auth/refresh: integration test: success | routes/auth.ts:237 | Claude | P1 |  | Done |
 | 5560 | POST /api/auth/refresh: integration test: refused for invalid input | routes/auth.ts:237 | Claude | P1 |  | Done |
 | 5561 | POST /api/auth/logout: input checked against a schema before any logic | routes/auth.ts:267 | Claude | P0 |  | Done |
 | 5562 | POST /api/auth/logout: sign in required | routes/auth.ts:267 | Claude | P0 |  | Done |
@@ -6462,7 +6462,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5723 | POST /api/committees/:id/start: response carries no internal field and no other member's personal data | routes/committees.ts:444 | Claude | P0 |  | Done |
 | 5724 | POST /api/committees/:id/start: error responses use the shared error codes and plain messages | routes/committees.ts:444 | Claude | P0 |  | Done |
 | 5725 | POST /api/committees/:id/start: described in the interface specification with its request, response and errors | routes/committees.ts:444 | Claude | P2 |  | Done |
-| 5726 | POST /api/committees/:id/start: integration test: success | routes/committees.ts:444 | Claude | P1 | 17 | Open |
+| 5726 | POST /api/committees/:id/start: integration test: success | routes/committees.ts:444 | Claude | P1 |  | Done |
 | 5727 | POST /api/committees/:id/start: integration test: refused for a member without access | routes/committees.ts:444 | Claude | P1 |  | Done |
 | 5728 | POST /api/committees/:id/start: integration test: refused for invalid input | routes/committees.ts:444 | Claude | P1 |  | Done |
 | 5729 | GET /api/committees/:id/payment-matrix: input checked against a schema before any logic | routes/committees.ts:604 | Claude | P0 |  | Done |
@@ -6486,7 +6486,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5747 | POST /api/committees/:id/nudge/:userId: response carries no internal field and no other member's personal data | routes/committees.ts:636 | Claude | P0 |  | Done |
 | 5748 | POST /api/committees/:id/nudge/:userId: error responses use the shared error codes and plain messages | routes/committees.ts:636 | Claude | P0 |  | Done |
 | 5749 | POST /api/committees/:id/nudge/:userId: described in the interface specification with its request, response and errors | routes/committees.ts:636 | Claude | P2 |  | Done |
-| 5750 | POST /api/committees/:id/nudge/:userId: integration test: success | routes/committees.ts:636 | Claude | P1 | 17 | Open |
+| 5750 | POST /api/committees/:id/nudge/:userId: integration test: success | routes/committees.ts:636 | Claude | P1 |  | Done |
 | 5751 | POST /api/committees/:id/nudge/:userId: integration test: refused for a member without access | routes/committees.ts:636 | Claude | P1 |  | Done |
 | 5752 | POST /api/committees/:id/nudge/:userId: integration test: refused for invalid input | routes/committees.ts:636 | Claude | P1 |  | Done |
 | 5753 | POST /api/committees/:id/payout: input checked against a schema before any logic | routes/committees.ts:724 | Claude | P0 |  | Done |
@@ -6500,7 +6500,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5761 | POST /api/committees/:id/payout: response carries no internal field and no other member's personal data | routes/committees.ts:724 | Claude | P0 |  | Done |
 | 5762 | POST /api/committees/:id/payout: error responses use the shared error codes and plain messages | routes/committees.ts:724 | Claude | P0 |  | Done |
 | 5763 | POST /api/committees/:id/payout: described in the interface specification with its request, response and errors | routes/committees.ts:724 | Claude | P2 |  | Done |
-| 5764 | POST /api/committees/:id/payout: integration test: success | routes/committees.ts:724 | Claude | P1 | 17 | Open |
+| 5764 | POST /api/committees/:id/payout: integration test: success | routes/committees.ts:724 | Claude | P1 |  | Done |
 | 5765 | POST /api/committees/:id/payout: integration test: refused for a member without access | routes/committees.ts:724 | Claude | P1 |  | Done |
 | 5766 | POST /api/committees/:id/payout: integration test: refused for invalid input | routes/committees.ts:724 | Claude | P1 |  | Done |
 | 5767 | GET /api/committees/:id/receivables-pack: input checked against a schema before any logic | routes/committees.ts:1053 | Claude | P0 |  | Done |
@@ -6524,7 +6524,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5785 | POST /api/committees/:id/leave: response carries no internal field and no other member's personal data | routes/committees.ts:1095 | Claude | P0 |  | Done |
 | 5786 | POST /api/committees/:id/leave: error responses use the shared error codes and plain messages | routes/committees.ts:1095 | Claude | P0 |  | Done |
 | 5787 | POST /api/committees/:id/leave: described in the interface specification with its request, response and errors | routes/committees.ts:1095 | Claude | P2 |  | Done |
-| 5788 | POST /api/committees/:id/leave: integration test: success | routes/committees.ts:1095 | Claude | P1 | 17 | Open |
+| 5788 | POST /api/committees/:id/leave: integration test: success | routes/committees.ts:1095 | Claude | P1 |  | Done |
 | 5789 | POST /api/committees/:id/leave: integration test: refused for a member without access | routes/committees.ts:1095 | Claude | P1 |  | Done |
 | 5790 | POST /api/committees/:id/leave: integration test: refused for invalid input | routes/committees.ts:1095 | Claude | P1 |  | Done |
 | 5791 | POST /api/committees/:id/listing: input checked against a schema before any logic | routes/committees.ts:1114 | Claude | P0 |  | Done |
@@ -6564,7 +6564,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5825 | POST /api/committees/:id/withdraw: response carries no internal field and no other member's personal data | routes/committees.ts:1156 | Claude | P0 |  | Done |
 | 5826 | POST /api/committees/:id/withdraw: error responses use the shared error codes and plain messages | routes/committees.ts:1156 | Claude | P0 |  | Done |
 | 5827 | POST /api/committees/:id/withdraw: described in the interface specification with its request, response and errors | routes/committees.ts:1156 | Claude | P2 |  | Done |
-| 5828 | POST /api/committees/:id/withdraw: integration test: success | routes/committees.ts:1156 | Claude | P1 | 17 | Open |
+| 5828 | POST /api/committees/:id/withdraw: integration test: success | routes/committees.ts:1156 | Claude | P1 |  | Done |
 | 5829 | POST /api/committees/:id/withdraw: integration test: refused for a member without access | routes/committees.ts:1156 | Claude | P1 |  | Done |
 | 5830 | POST /api/committees/:id/withdraw: integration test: refused for invalid input | routes/committees.ts:1156 | Claude | P1 |  | Done |
 | 5831 | PATCH /api/committees/:id/avatar: input checked against a schema before any logic | routes/committees.ts:1217 | Claude | P0 |  | Done |
@@ -6652,7 +6652,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5913 | POST /api/exits/committee/:id: response carries no internal field and no other member's personal data | routes/exits.ts:93 | Claude | P1 |  | Done |
 | 5914 | POST /api/exits/committee/:id: error responses use the shared error codes and plain messages | routes/exits.ts:93 | Claude | P1 |  | Done |
 | 5915 | POST /api/exits/committee/:id: described in the interface specification with its request, response and errors | routes/exits.ts:93 | Claude | P2 |  | Done |
-| 5916 | POST /api/exits/committee/:id: integration test: success | routes/exits.ts:93 | Claude | P1 | 17 | Open |
+| 5916 | POST /api/exits/committee/:id: integration test: success | routes/exits.ts:93 | Claude | P1 |  | Done |
 | 5917 | POST /api/exits/committee/:id: integration test: refused for a member without access | routes/exits.ts:93 | Claude | P1 |  | Done |
 | 5918 | POST /api/exits/committee/:id: integration test: refused for invalid input | routes/exits.ts:93 | Claude | P1 |  | Done |
 | 5919 | POST /api/exits/:requestId/vote: input checked against a schema before any logic | routes/exits.ts:192 | Claude | P1 |  | Done |
@@ -6666,7 +6666,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5927 | POST /api/exits/:requestId/vote: response carries no internal field and no other member's personal data | routes/exits.ts:192 | Claude | P1 |  | Done |
 | 5928 | POST /api/exits/:requestId/vote: error responses use the shared error codes and plain messages | routes/exits.ts:192 | Claude | P1 |  | Done |
 | 5929 | POST /api/exits/:requestId/vote: described in the interface specification with its request, response and errors | routes/exits.ts:192 | Claude | P2 |  | Done |
-| 5930 | POST /api/exits/:requestId/vote: integration test: success | routes/exits.ts:192 | Claude | P1 | 17 | Open |
+| 5930 | POST /api/exits/:requestId/vote: integration test: success | routes/exits.ts:192 | Claude | P1 |  | Done |
 | 5931 | POST /api/exits/:requestId/vote: integration test: refused for a member without access | routes/exits.ts:192 | Claude | P1 |  | Done |
 | 5932 | POST /api/exits/:requestId/vote: integration test: refused for invalid input | routes/exits.ts:192 | Claude | P1 |  | Done |
 | 5933 | POST /api/exits/:requestId/settle: input checked against a schema before any logic | routes/exits.ts:243 | Claude | P1 |  | Done |
@@ -6690,7 +6690,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5951 | GET /api/exits/committee/:id: response carries no internal field and no other member's personal data | routes/exits.ts:267 | Claude | P1 |  | Done |
 | 5952 | GET /api/exits/committee/:id: error responses use the shared error codes and plain messages | routes/exits.ts:267 | Claude | P1 |  | Done |
 | 5953 | GET /api/exits/committee/:id: described in the interface specification with its request, response and errors | routes/exits.ts:267 | Claude | P2 |  | Done |
-| 5954 | GET /api/exits/committee/:id: integration test: success | routes/exits.ts:267 | Claude | P1 | 17 | Open |
+| 5954 | GET /api/exits/committee/:id: integration test: success | routes/exits.ts:267 | Claude | P1 |  | Done |
 | 5955 | GET /api/exits/committee/:id: integration test: refused for a member without access | routes/exits.ts:267 | Claude | P1 |  | Done |
 | 5956 | GET /api/exits/committee/:id: integration test: refused for invalid input | routes/exits.ts:267 | Claude | P1 | 17 | Open |
 | 5957 | GET /api/notifications: input checked against a schema before any logic | routes/notifications.ts:7 | Claude | P1 |  | Done |
@@ -6714,7 +6714,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5975 | PATCH /api/notifications/:id/read: response carries no internal field and no other member's personal data | routes/notifications.ts:8 | Claude | P1 |  | Done |
 | 5976 | PATCH /api/notifications/:id/read: error responses use the shared error codes and plain messages | routes/notifications.ts:8 | Claude | P1 |  | Done |
 | 5977 | PATCH /api/notifications/:id/read: described in the interface specification with its request, response and errors | routes/notifications.ts:8 | Claude | P2 |  | Done |
-| 5978 | PATCH /api/notifications/:id/read: integration test: success | routes/notifications.ts:8 | Claude | P1 | 17 | Open |
+| 5978 | PATCH /api/notifications/:id/read: integration test: success | routes/notifications.ts:8 | Claude | P1 |  | Done |
 | 5979 | PATCH /api/notifications/:id/read: integration test: refused for a member without access | routes/notifications.ts:8 | Claude | P1 |  | Done |
 | 5980 | PATCH /api/notifications/:id/read: integration test: refused for invalid input | routes/notifications.ts:8 | Claude | P1 | 17 | Open |
 | 5981 | PATCH /api/notifications/read-all: input checked against a schema before any logic | routes/notifications.ts:12 | Claude | P1 |  | Done |
@@ -6738,7 +6738,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 5999 | GET /api/partner: response carries no internal field and no other member's personal data | routes/partner.ts:29 | Claude | P1 |  | Done |
 | 6000 | GET /api/partner: error responses use the shared error codes and plain messages | routes/partner.ts:29 | Claude | P1 |  | Done |
 | 6001 | GET /api/partner: described in the interface specification with its request, response and errors | routes/partner.ts:29 | Claude | P2 |  | Done |
-| 6002 | GET /api/partner: integration test: success | routes/partner.ts:29 | Claude | P1 | 17 | Open |
+| 6002 | GET /api/partner: integration test: success | routes/partner.ts:29 | Claude | P1 |  | Done |
 | 6003 | GET /api/partner: integration test: refused for a member without access | routes/partner.ts:29 | Claude | P1 | 17 | Open |
 | 6004 | GET /api/partner: integration test: refused for invalid input | routes/partner.ts:29 | Claude | P1 | 17 | Open |
 | 6005 | POST /api/partner/kyc: input checked against a schema before any logic | routes/partner.ts:40 | Claude | P1 |  | Done |
@@ -6778,7 +6778,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 6039 | POST /api/payments/initiate: response carries no internal field and no other member's personal data | routes/payments.ts:19 | Claude | P0 |  | Done |
 | 6040 | POST /api/payments/initiate: error responses use the shared error codes and plain messages | routes/payments.ts:19 | Claude | P0 |  | Done |
 | 6041 | POST /api/payments/initiate: described in the interface specification with its request, response and errors | routes/payments.ts:19 | Claude | P2 |  | Done |
-| 6042 | POST /api/payments/initiate: integration test: success | routes/payments.ts:19 | Claude | P1 | 17 | Open |
+| 6042 | POST /api/payments/initiate: integration test: success | routes/payments.ts:19 | Claude | P1 |  | Done |
 | 6043 | POST /api/payments/initiate: integration test: refused for a member without access | routes/payments.ts:19 | Claude | P1 |  | Done |
 | 6044 | POST /api/payments/initiate: integration test: refused for invalid input | routes/payments.ts:19 | Claude | P1 |  | Done |
 | 6045 | GET /api/payments/mine: input checked against a schema before any logic | routes/payments.ts:42 | Claude | P0 |  | Done |
@@ -6802,7 +6802,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 6063 | POST /api/payments: response carries no internal field and no other member's personal data | routes/payments.ts:46 | Claude | P0 |  | Done |
 | 6064 | POST /api/payments: error responses use the shared error codes and plain messages | routes/payments.ts:46 | Claude | P0 |  | Done |
 | 6065 | POST /api/payments: described in the interface specification with its request, response and errors | routes/payments.ts:46 | Claude | P2 |  | Done |
-| 6066 | POST /api/payments: integration test: success | routes/payments.ts:46 | Claude | P1 | 17 | Open |
+| 6066 | POST /api/payments: integration test: success | routes/payments.ts:46 | Claude | P1 |  | Done |
 | 6067 | POST /api/payments: integration test: refused for a member without access | routes/payments.ts:46 | Claude | P1 |  | Done |
 | 6068 | POST /api/payments: integration test: refused for invalid input | routes/payments.ts:46 | Claude | P1 |  | Done |
 | 6069 | POST /api/profile/verify-income: input checked against a schema before any logic | routes/profile.ts:21 | Claude | P1 |  | Done |
@@ -6960,7 +6960,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 6221 | POST /api/profile/payment-methods/:id/preferred: response carries no internal field and no other member's personal data | routes/profile.ts:210 | Claude | P1 |  | Done |
 | 6222 | POST /api/profile/payment-methods/:id/preferred: error responses use the shared error codes and plain messages | routes/profile.ts:210 | Claude | P1 |  | Done |
 | 6223 | POST /api/profile/payment-methods/:id/preferred: described in the interface specification with its request, response and errors | routes/profile.ts:210 | Claude | P2 |  | Done |
-| 6224 | POST /api/profile/payment-methods/:id/preferred: integration test: success | routes/profile.ts:210 | Claude | P1 | 17 | Open |
+| 6224 | POST /api/profile/payment-methods/:id/preferred: integration test: success | routes/profile.ts:210 | Claude | P1 |  | Done |
 | 6225 | POST /api/profile/payment-methods/:id/preferred: integration test: refused for a member without access | routes/profile.ts:210 | Claude | P1 |  | Done |
 | 6226 | POST /api/profile/payment-methods/:id/preferred: integration test: refused for invalid input | routes/profile.ts:210 | Claude | P1 |  | Done |
 | 6227 | POST /api/profile/payment-methods/:id/salary: input checked against a schema before any logic | routes/profile.ts:226 | Claude | P1 |  | Done |
@@ -6973,7 +6973,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 6234 | POST /api/profile/payment-methods/:id/salary: response carries no internal field and no other member's personal data | routes/profile.ts:226 | Claude | P1 |  | Done |
 | 6235 | POST /api/profile/payment-methods/:id/salary: error responses use the shared error codes and plain messages | routes/profile.ts:226 | Claude | P1 |  | Done |
 | 6236 | POST /api/profile/payment-methods/:id/salary: described in the interface specification with its request, response and errors | routes/profile.ts:226 | Claude | P2 |  | Done |
-| 6237 | POST /api/profile/payment-methods/:id/salary: integration test: success | routes/profile.ts:226 | Claude | P1 | 17 | Open |
+| 6237 | POST /api/profile/payment-methods/:id/salary: integration test: success | routes/profile.ts:226 | Claude | P1 |  | Done |
 | 6238 | POST /api/profile/payment-methods/:id/salary: integration test: refused for a member without access | routes/profile.ts:226 | Claude | P1 |  | Done |
 | 6239 | POST /api/profile/payment-methods/:id/salary: integration test: refused for invalid input | routes/profile.ts:226 | Claude | P1 |  | Done |
 | 6240 | DELETE /api/profile/payment-methods/:id: input checked against a schema before any logic | routes/profile.ts:246 | Claude | P1 |  | Done |
@@ -6986,7 +6986,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 6247 | DELETE /api/profile/payment-methods/:id: response carries no internal field and no other member's personal data | routes/profile.ts:246 | Claude | P1 |  | Done |
 | 6248 | DELETE /api/profile/payment-methods/:id: error responses use the shared error codes and plain messages | routes/profile.ts:246 | Claude | P1 |  | Done |
 | 6249 | DELETE /api/profile/payment-methods/:id: described in the interface specification with its request, response and errors | routes/profile.ts:246 | Claude | P2 |  | Done |
-| 6250 | DELETE /api/profile/payment-methods/:id: integration test: success | routes/profile.ts:246 | Claude | P1 | 17 | Open |
+| 6250 | DELETE /api/profile/payment-methods/:id: integration test: success | routes/profile.ts:246 | Claude | P1 |  | Done |
 | 6251 | DELETE /api/profile/payment-methods/:id: integration test: refused for a member without access | routes/profile.ts:246 | Claude | P1 |  | Done |
 | 6252 | DELETE /api/profile/payment-methods/:id: integration test: refused for invalid input | routes/profile.ts:246 | Claude | P1 |  | Done |
 | 6253 | POST /api/profile/salary-day: input checked against a schema before any logic | routes/profile.ts:272 | Claude | P1 |  | Done |
@@ -7239,7 +7239,7 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 6500 | GET /api/risk/committee/:id/projection: response carries no internal field and no other member's personal data | routes/risk.ts:127 | Claude | P1 |  | Done |
 | 6501 | GET /api/risk/committee/:id/projection: error responses use the shared error codes and plain messages | routes/risk.ts:127 | Claude | P1 |  | Done |
 | 6502 | GET /api/risk/committee/:id/projection: described in the interface specification with its request, response and errors | routes/risk.ts:127 | Claude | P2 |  | Done |
-| 6503 | GET /api/risk/committee/:id/projection: integration test: success | routes/risk.ts:127 | Claude | P1 | 17 | Open |
+| 6503 | GET /api/risk/committee/:id/projection: integration test: success | routes/risk.ts:127 | Claude | P1 |  | Done |
 | 6504 | GET /api/risk/committee/:id/projection: integration test: refused for a member without access | routes/risk.ts:127 | Claude | P1 |  | Done |
 | 6505 | GET /api/risk/committee/:id/projection: integration test: refused for invalid input | routes/risk.ts:127 | Claude | P1 | 17 | Open |
 | 6506 | PATCH /api/risk/committee/:id/policy: input checked against a schema before any logic | routes/risk.ts:170 | Claude | P1 |  | Done |
@@ -7312,22 +7312,22 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 6573 | POST /api/support/tickets/:id/reply: response carries no internal field and no other member's personal data | routes/support.ts:114 | Claude | P1 |  | Done |
 | 6574 | POST /api/support/tickets/:id/reply: error responses use the shared error codes and plain messages | routes/support.ts:114 | Claude | P1 |  | Done |
 | 6575 | POST /api/support/tickets/:id/reply: described in the interface specification with its request, response and errors | routes/support.ts:114 | Claude | P2 |  | Done |
-| 6576 | POST /api/support/tickets/:id/reply: integration test: success | routes/support.ts:114 | Claude | P1 | 18 | Open |
-| 6577 | POST /api/support/tickets/:id/reply: integration test: refused for a member without access | routes/support.ts:114 | Claude | P1 | 18 | Open |
-| 6578 | POST /api/support/tickets/:id/reply: integration test: refused for invalid input | routes/support.ts:114 | Claude | P1 | 18 | Open |
+| 6576 | POST /api/support/tickets/:id/reply: integration test: success | routes/support.ts:114 | Claude | P1 | 17 | Open |
+| 6577 | POST /api/support/tickets/:id/reply: integration test: refused for a member without access | routes/support.ts:114 | Claude | P1 | 17 | Open |
+| 6578 | POST /api/support/tickets/:id/reply: integration test: refused for invalid input | routes/support.ts:114 | Claude | P1 | 17 | Open |
 | 6579 | POST /api/support/tickets/:id/close: input checked against a schema before any logic | routes/support.ts:134 | Claude | P1 |  | Done |
 | 6580 | POST /api/support/tickets/:id/close: sign in required | routes/support.ts:134 | Claude | P0 |  | Done |
 | 6581 | POST /api/support/tickets/:id/close: access checked against membership, hosting or ownership of the record before acting | routes/support.ts:134 | Claude | P1 |  | Done |
 | 6582 | POST /api/support/tickets/:id/close: rate limit for this route; the global limit of 1,500 requests in 15 minutes is in place | routes/support.ts:134 | Claude | P1 |  | Done |
-| 6583 | POST /api/support/tickets/:id/close: idempotency key accepted and enforced | routes/support.ts:134 | Claude | P1 | 18 | Open |
+| 6583 | POST /api/support/tickets/:id/close: idempotency key accepted and enforced | routes/support.ts:134 | Claude | P1 | 17 | Open |
 | 6584 | POST /api/support/tickets/:id/close: audit log entry with the actor, the action and the record | routes/support.ts:134 | Claude | P1 |  | Done |
 | 6585 | POST /api/support/tickets/:id/close: writes made in one database transaction, or shown to need none | routes/support.ts:134 | Claude | P1 |  | Done |
 | 6586 | POST /api/support/tickets/:id/close: response carries no internal field and no other member's personal data | routes/support.ts:134 | Claude | P1 |  | Done |
 | 6587 | POST /api/support/tickets/:id/close: error responses use the shared error codes and plain messages | routes/support.ts:134 | Claude | P1 |  | Done |
 | 6588 | POST /api/support/tickets/:id/close: described in the interface specification with its request, response and errors | routes/support.ts:134 | Claude | P2 |  | Done |
-| 6589 | POST /api/support/tickets/:id/close: integration test: success | routes/support.ts:134 | Claude | P1 | 18 | Open |
-| 6590 | POST /api/support/tickets/:id/close: integration test: refused for a member without access | routes/support.ts:134 | Claude | P1 | 18 | Open |
-| 6591 | POST /api/support/tickets/:id/close: integration test: refused for invalid input | routes/support.ts:134 | Claude | P1 | 18 | Open |
+| 6589 | POST /api/support/tickets/:id/close: integration test: success | routes/support.ts:134 | Claude | P1 | 17 | Open |
+| 6590 | POST /api/support/tickets/:id/close: integration test: refused for a member without access | routes/support.ts:134 | Claude | P1 | 17 | Open |
+| 6591 | POST /api/support/tickets/:id/close: integration test: refused for invalid input | routes/support.ts:134 | Claude | P1 | 17 | Open |
 
 ### AE4. New Endpoints for the Bank Route
 
@@ -7427,9 +7427,9 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 6683 | POST /api/mandates/:id/cancel: errors use the shared codes | new routes/mandates.ts | Claude | P0 | 45 | Open |
 | 6684 | POST /api/mandates/:id/cancel: described in the interface specification | new routes/mandates.ts | Claude | P2 | 74 | Open |
 | 6685 | POST /api/mandates/:id/cancel: integration tests: success, refusal and invalid input | new routes/mandates.ts | Claude | P0 | 45 | Open |
-| 6686 | POST /api/collections/run: build: run the day's collections, sharded and resumable, for the scheduler only | new routes/collections.ts | Claude | P1 | 18 | Open |
-| 6687 | POST /api/collections/run: input checked against a schema | new routes/collections.ts | Claude | P1 | 18 | Open |
-| 6688 | POST /api/collections/run: open only to the scheduler or to named administrators | new routes/collections.ts | Claude | P1 | 18 | Open |
+| 6686 | POST /api/collections/run: build: run the day's collections, sharded and resumable, for the scheduler only | new routes/collections.ts | Claude | P1 | 17 | Open |
+| 6687 | POST /api/collections/run: input checked against a schema | new routes/collections.ts | Claude | P1 | 17 | Open |
+| 6688 | POST /api/collections/run: open only to the scheduler or to named administrators | new routes/collections.ts | Claude | P1 | 17 | Open |
 | 6689 | POST /api/collections/run: rate limit for this route | new routes/collections.ts | Claude | P1 | 18 | Open |
 | 6690 | POST /api/collections/run: idempotency key enforced | new routes/collections.ts | Claude | P1 | 18 | Open |
 | 6691 | POST /api/collections/run: audit log entry | new routes/collections.ts | Claude | P1 | 18 | Open |
@@ -7791,16 +7791,16 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 7047 | POST /api/kfs/:circleId/accept: errors use the shared codes | new routes/kfs.ts | Claude | P0 | 2 | Open |
 | 7048 | POST /api/kfs/:circleId/accept: described in the interface specification | new routes/kfs.ts | Claude | P2 | 57 | Open |
 | 7049 | POST /api/kfs/:circleId/accept: integration tests: success, refusal and invalid input | new routes/kfs.ts | Claude | P0 | 2 | Open |
-| 7050 | GET /api/consents: build: list the member's consents | new routes/consents.ts | Claude | P1 | 19 | Open |
-| 7051 | GET /api/consents: input checked against a schema | new routes/consents.ts | Claude | P1 | 19 | Open |
-| 7052 | GET /api/consents: sign in and access checks | new routes/consents.ts | Claude | P1 | 19 | Open |
-| 7053 | GET /api/consents: rate limit for this route | new routes/consents.ts | Claude | P1 | 19 | Open |
-| 7054 | GET /api/consents: bounded with cursor pagination | new routes/consents.ts | Claude | P1 | 19 | Open |
-| 7055 | GET /api/consents: errors use the shared codes | new routes/consents.ts | Claude | P1 | 19 | Open |
+| 7050 | GET /api/consents: build: list the member's consents | new routes/consents.ts | Claude | P1 | 18 | Open |
+| 7051 | GET /api/consents: input checked against a schema | new routes/consents.ts | Claude | P1 | 18 | Open |
+| 7052 | GET /api/consents: sign in and access checks | new routes/consents.ts | Claude | P1 | 18 | Open |
+| 7053 | GET /api/consents: rate limit for this route | new routes/consents.ts | Claude | P1 | 18 | Open |
+| 7054 | GET /api/consents: bounded with cursor pagination | new routes/consents.ts | Claude | P1 | 18 | Open |
+| 7055 | GET /api/consents: errors use the shared codes | new routes/consents.ts | Claude | P1 | 18 | Open |
 | 7056 | GET /api/consents: described in the interface specification | new routes/consents.ts | Claude | P2 | 57 | Open |
-| 7057 | GET /api/consents: integration tests: success, refusal and invalid input | new routes/consents.ts | Claude | P1 | 19 | Open |
-| 7058 | POST /api/consents/:purpose/withdraw: build: withdraw a consent where the law allows | new routes/consents.ts | Claude | P1 | 19 | Open |
-| 7059 | POST /api/consents/:purpose/withdraw: input checked against a schema | new routes/consents.ts | Claude | P1 | 19 | Open |
+| 7057 | GET /api/consents: integration tests: success, refusal and invalid input | new routes/consents.ts | Claude | P1 | 18 | Open |
+| 7058 | POST /api/consents/:purpose/withdraw: build: withdraw a consent where the law allows | new routes/consents.ts | Claude | P1 | 18 | Open |
+| 7059 | POST /api/consents/:purpose/withdraw: input checked against a schema | new routes/consents.ts | Claude | P1 | 18 | Open |
 | 7060 | POST /api/consents/:purpose/withdraw: sign in and access checks | new routes/consents.ts | Claude | P1 | 19 | Open |
 | 7061 | POST /api/consents/:purpose/withdraw: rate limit for this route | new routes/consents.ts | Claude | P1 | 19 | Open |
 | 7062 | POST /api/consents/:purpose/withdraw: idempotency key enforced | new routes/consents.ts | Claude | P1 | 19 | Open |
@@ -7923,17 +7923,17 @@ Each kept endpoint with every check it needs: items 501, 502, 542, 545, 546 and 
 | 7179 | POST /api/admin/queues/:name/:id/decide: rate limit for this route | new routes/admin.ts | Claude | P1 | 19 | Open |
 | 7180 | POST /api/admin/queues/:name/:id/decide: idempotency key enforced | new routes/admin.ts | Claude | P1 | 19 | Open |
 | 7181 | POST /api/admin/queues/:name/:id/decide: audit log entry | new routes/admin.ts | Claude | P1 | 19 | Open |
-| 7182 | POST /api/admin/queues/:name/:id/decide: errors use the shared codes | new routes/admin.ts | Claude | P1 | 20 | Open |
+| 7182 | POST /api/admin/queues/:name/:id/decide: errors use the shared codes | new routes/admin.ts | Claude | P1 | 19 | Open |
 | 7183 | POST /api/admin/queues/:name/:id/decide: described in the interface specification | new routes/admin.ts | Claude | P2 | 57 | Open |
-| 7184 | POST /api/admin/queues/:name/:id/decide: integration tests: success, refusal and invalid input | new routes/admin.ts | Claude | P1 | 20 | Open |
-| 7185 | GET /api/admin/audit: build: search the audit log | new routes/admin.ts | Claude | P1 | 20 | Open |
-| 7186 | GET /api/admin/audit: input checked against a schema | new routes/admin.ts | Claude | P1 | 20 | Open |
-| 7187 | GET /api/admin/audit: open only to the scheduler or to named administrators | new routes/admin.ts | Claude | P1 | 20 | Open |
-| 7188 | GET /api/admin/audit: rate limit for this route | new routes/admin.ts | Claude | P1 | 20 | Open |
-| 7189 | GET /api/admin/audit: bounded with cursor pagination | new routes/admin.ts | Claude | P1 | 20 | Open |
-| 7190 | GET /api/admin/audit: errors use the shared codes | new routes/admin.ts | Claude | P1 | 20 | Open |
+| 7184 | POST /api/admin/queues/:name/:id/decide: integration tests: success, refusal and invalid input | new routes/admin.ts | Claude | P1 | 19 | Open |
+| 7185 | GET /api/admin/audit: build: search the audit log | new routes/admin.ts | Claude | P1 | 19 | Open |
+| 7186 | GET /api/admin/audit: input checked against a schema | new routes/admin.ts | Claude | P1 | 19 | Open |
+| 7187 | GET /api/admin/audit: open only to the scheduler or to named administrators | new routes/admin.ts | Claude | P1 | 19 | Open |
+| 7188 | GET /api/admin/audit: rate limit for this route | new routes/admin.ts | Claude | P1 | 19 | Open |
+| 7189 | GET /api/admin/audit: bounded with cursor pagination | new routes/admin.ts | Claude | P1 | 19 | Open |
+| 7190 | GET /api/admin/audit: errors use the shared codes | new routes/admin.ts | Claude | P1 | 19 | Open |
 | 7191 | GET /api/admin/audit: described in the interface specification | new routes/admin.ts | Claude | P2 | 57 | Open |
-| 7192 | GET /api/admin/audit: integration tests: success, refusal and invalid input | new routes/admin.ts | Claude | P1 | 20 | Open |
+| 7192 | GET /api/admin/audit: integration tests: success, refusal and invalid input | new routes/admin.ts | Claude | P1 | 19 | Open |
 | 7193 | GET /api/admin/reports/bank: build: produce the monthly report pack for the bank | new routes/admin.ts | Claude | P1 | 20 | Open |
 | 7194 | GET /api/admin/reports/bank: input checked against a schema | new routes/admin.ts | Claude | P1 | 20 | Open |
 | 7195 | GET /api/admin/reports/bank: open only to the scheduler or to named administrators | new routes/admin.ts | Claude | P1 | 20 | Open |
@@ -8003,63 +8003,63 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7233 | User: foreign keys with the delete rule stated for each | schema.prisma: User | Claude | P1 |  | Done |
 | 7234 | User: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: User | Claude | P1 |  | Done |
 | 7235 | User: personal data classified: name, phone, CNIC, date of birth, address, city, occupation, employer, income, photo | schema.prisma: User | Claude | P0 | 2 | Open |
-| 7236 | User: retention period set and applied by the deletion job | schema.prisma: User | Claude | P1 | 20 | Open |
+| 7236 | User: retention period set and applied by the deletion job | schema.prisma: User | Claude | P1 |  | Done |
 | 7237 | User: field level encryption for CNIC number, phone, address, date of birth and income | schema.prisma: User | Claude | P0 | 2 | Open |
-| 7238 | User: every change recorded in the audit log with the actor | schema.prisma: User | Claude | P0 | 3 | Open |
+| 7238 | User: every change recorded in the audit log with the actor | schema.prisma: User | Claude | P0 |  | Done |
 | 7239 | User: test fixtures for every state it can be in | schema.prisma: User | Claude | P1 | 20 | Open |
 | 7240 | User: each field documented in the data dictionary | schema.prisma: User | Claude | P2 |  | Done |
 | 7241 | Committee: included in the baseline migration and reviewed field by field (79 fields) | schema.prisma: Committee | Claude | P0 | 3 | Open |
 | 7242 | Committee: index for every list query that filters or sorts on it | schema.prisma: Committee | Claude | P1 |  | Done |
 | 7243 | Committee: foreign keys with the delete rule stated for each | schema.prisma: Committee | Claude | P1 |  | Done |
 | 7244 | Committee: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: Committee | Claude | P1 |  | Done |
-| 7245 | Committee: retention period set, with the reason | schema.prisma: Committee | Claude | P1 | 20 | Open |
-| 7246 | Committee: every change recorded in the audit log with the actor | schema.prisma: Committee | Claude | P0 | 3 | Open |
+| 7245 | Committee: retention period set, with the reason | schema.prisma: Committee | Claude | P1 |  | Done |
+| 7246 | Committee: every change recorded in the audit log with the actor | schema.prisma: Committee | Claude | P0 |  | Done |
 | 7247 | Committee: test fixtures for every state it can be in | schema.prisma: Committee | Claude | P1 | 20 | Open |
 | 7248 | Committee: each field documented in the data dictionary | schema.prisma: Committee | Claude | P2 |  | Done |
 | 7249 | CommitteeWaitlist: included in the baseline migration and reviewed field by field (8 fields) | schema.prisma: CommitteeWaitlist | Claude | P0 | 3 | Open |
 | 7250 | CommitteeWaitlist: index for every list query that filters or sorts on it | schema.prisma: CommitteeWaitlist | Claude | P1 |  | Done |
 | 7251 | CommitteeWaitlist: foreign keys with the delete rule stated for each | schema.prisma: CommitteeWaitlist | Claude | P1 |  | Done |
 | 7252 | CommitteeWaitlist: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: CommitteeWaitlist | Claude | P1 |  | Done |
-| 7253 | CommitteeWaitlist: retention period set, with the reason | schema.prisma: CommitteeWaitlist | Claude | P1 | 20 | Open |
+| 7253 | CommitteeWaitlist: retention period set, with the reason | schema.prisma: CommitteeWaitlist | Claude | P1 |  | Done |
 | 7254 | CommitteeWaitlist: test fixtures for every state it can be in | schema.prisma: CommitteeWaitlist | Claude | P1 | 20 | Open |
 | 7255 | CommitteeWaitlist: each field documented in the data dictionary | schema.prisma: CommitteeWaitlist | Claude | P2 |  | Done |
 | 7256 | CommitteeMember: included in the baseline migration and reviewed field by field (17 fields) | schema.prisma: CommitteeMember | Claude | P0 | 3 | Open |
 | 7257 | CommitteeMember: index for every list query that filters or sorts on it | schema.prisma: CommitteeMember | Claude | P1 |  | Done |
 | 7258 | CommitteeMember: foreign keys with the delete rule stated for each | schema.prisma: CommitteeMember | Claude | P1 |  | Done |
 | 7259 | CommitteeMember: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: CommitteeMember | Claude | P1 |  | Done |
-| 7260 | CommitteeMember: retention period set, with the reason | schema.prisma: CommitteeMember | Claude | P1 | 20 | Open |
-| 7261 | CommitteeMember: every change recorded in the audit log with the actor | schema.prisma: CommitteeMember | Claude | P0 | 3 | Open |
+| 7260 | CommitteeMember: retention period set, with the reason | schema.prisma: CommitteeMember | Claude | P1 |  | Done |
+| 7261 | CommitteeMember: every change recorded in the audit log with the actor | schema.prisma: CommitteeMember | Claude | P0 |  | Done |
 | 7262 | CommitteeMember: test fixtures for every state it can be in | schema.prisma: CommitteeMember | Claude | P1 | 20 | Open |
 | 7263 | CommitteeMember: each field documented in the data dictionary | schema.prisma: CommitteeMember | Claude | P2 |  | Done |
 | 7264 | Round: included in the baseline migration and reviewed field by field (18 fields) | schema.prisma: Round | Claude | P0 | 3 | Open |
 | 7265 | Round: index for every list query that filters or sorts on it | schema.prisma: Round | Claude | P1 |  | Done |
 | 7266 | Round: foreign keys with the delete rule stated for each | schema.prisma: Round | Claude | P1 |  | Done |
 | 7267 | Round: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: Round | Claude | P1 |  | Done |
-| 7268 | Round: retention period set, with the reason | schema.prisma: Round | Claude | P1 | 20 | Open |
-| 7269 | Round: every change recorded in the audit log with the actor | schema.prisma: Round | Claude | P0 | 3 | Open |
+| 7268 | Round: retention period set, with the reason | schema.prisma: Round | Claude | P1 |  | Done |
+| 7269 | Round: every change recorded in the audit log with the actor | schema.prisma: Round | Claude | P0 |  | Done |
 | 7270 | Round: test fixtures for every state it can be in | schema.prisma: Round | Claude | P1 | 20 | Open |
 | 7271 | Round: each field documented in the data dictionary | schema.prisma: Round | Claude | P2 |  | Done |
 | 7272 | Payment: included in the baseline migration and reviewed field by field (15 fields) | schema.prisma: Payment | Claude | P0 | 3 | Open |
 | 7273 | Payment: index for every list query that filters or sorts on it | schema.prisma: Payment | Claude | P1 |  | Done |
 | 7274 | Payment: foreign keys with the delete rule stated for each | schema.prisma: Payment | Claude | P1 |  | Done |
 | 7275 | Payment: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: Payment | Claude | P1 |  | Done |
-| 7276 | Payment: retention period set, with the reason | schema.prisma: Payment | Claude | P1 | 20 | Open |
-| 7277 | Payment: every change recorded in the audit log with the actor | schema.prisma: Payment | Claude | P0 | 3 | Open |
+| 7276 | Payment: retention period set, with the reason | schema.prisma: Payment | Claude | P1 |  | Done |
+| 7277 | Payment: every change recorded in the audit log with the actor | schema.prisma: Payment | Claude | P0 |  | Done |
 | 7278 | Payment: test fixtures for every state it can be in | schema.prisma: Payment | Claude | P1 | 20 | Open |
 | 7279 | Payment: each field documented in the data dictionary | schema.prisma: Payment | Claude | P2 |  | Done |
 | 7280 | LedgerEntry: included in the baseline migration and reviewed field by field (13 fields) | schema.prisma: LedgerEntry | Claude | P0 | 3 | Open |
 | 7281 | LedgerEntry: index for every list query that filters or sorts on it | schema.prisma: LedgerEntry | Claude | P1 |  | Done |
 | 7282 | LedgerEntry: foreign keys with the delete rule stated for each | schema.prisma: LedgerEntry | Claude | P1 |  | Done |
 | 7283 | LedgerEntry: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: LedgerEntry | Claude | P1 |  | Done |
-| 7284 | LedgerEntry: retention period set, with the reason | schema.prisma: LedgerEntry | Claude | P1 | 20 | Open |
-| 7285 | LedgerEntry: every change recorded in the audit log with the actor | schema.prisma: LedgerEntry | Claude | P0 | 3 | Open |
+| 7284 | LedgerEntry: retention period set, with the reason | schema.prisma: LedgerEntry | Claude | P1 |  | Done |
+| 7285 | LedgerEntry: every change recorded in the audit log with the actor | schema.prisma: LedgerEntry | Claude | P0 |  | Done |
 | 7286 | LedgerEntry: test fixtures for every state it can be in | schema.prisma: LedgerEntry | Claude | P1 | 20 | Open |
 | 7287 | LedgerEntry: each field documented in the data dictionary | schema.prisma: LedgerEntry | Claude | P2 |  | Done |
 | 7288 | ProtectionCommitment: included in the baseline migration and reviewed field by field (11 fields) | schema.prisma: ProtectionCommitment | Claude | P0 | 3 | Open |
 | 7289 | ProtectionCommitment: index for every list query that filters or sorts on it | schema.prisma: ProtectionCommitment | Claude | P1 |  | Done |
 | 7290 | ProtectionCommitment: foreign keys with the delete rule stated for each | schema.prisma: ProtectionCommitment | Claude | P1 |  | Done |
 | 7291 | ProtectionCommitment: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: ProtectionCommitment | Claude | P1 |  | Done |
-| 7292 | ProtectionCommitment: retention period set, with the reason | schema.prisma: ProtectionCommitment | Claude | P1 | 20 | Open |
+| 7292 | ProtectionCommitment: retention period set, with the reason | schema.prisma: ProtectionCommitment | Claude | P1 |  | Done |
 | 7293 | ProtectionCommitment: test fixtures for every state it can be in | schema.prisma: ProtectionCommitment | Claude | P1 | 20 | Open |
 | 7294 | ProtectionCommitment: each field documented in the data dictionary | schema.prisma: ProtectionCommitment | Claude | P2 |  | Done |
 | 7295 | RecoveryCase: included in the baseline migration and reviewed field by field (14 fields) | schema.prisma: RecoveryCase | Claude | P0 | 3 | Open |
@@ -8067,38 +8067,38 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7297 | RecoveryCase: foreign keys with the delete rule stated for each | schema.prisma: RecoveryCase | Claude | P1 |  | Done |
 | 7298 | RecoveryCase: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: RecoveryCase | Claude | P1 |  | Done |
 | 7299 | RecoveryCase: personal data classified: hardship reasons | schema.prisma: RecoveryCase | Claude | P0 | 3 | Open |
-| 7300 | RecoveryCase: retention period set and applied by the deletion job | schema.prisma: RecoveryCase | Claude | P1 | 20 | Open |
-| 7301 | RecoveryCase: every change recorded in the audit log with the actor | schema.prisma: RecoveryCase | Claude | P0 | 3 | Open |
+| 7300 | RecoveryCase: retention period set and applied by the deletion job | schema.prisma: RecoveryCase | Claude | P1 |  | Done |
+| 7301 | RecoveryCase: every change recorded in the audit log with the actor | schema.prisma: RecoveryCase | Claude | P0 |  | Done |
 | 7302 | RecoveryCase: test fixtures for every state it can be in | schema.prisma: RecoveryCase | Claude | P1 | 20 | Open |
 | 7303 | RecoveryCase: each field documented in the data dictionary | schema.prisma: RecoveryCase | Claude | P2 |  | Done |
 | 7304 | RiskAssessment: included in the baseline migration and reviewed field by field (16 fields) | schema.prisma: RiskAssessment | Claude | P0 | 3 | Open |
 | 7305 | RiskAssessment: index for every list query that filters or sorts on it | schema.prisma: RiskAssessment | Claude | P1 |  | Done |
 | 7306 | RiskAssessment: foreign keys with the delete rule stated for each | schema.prisma: RiskAssessment | Claude | P1 |  | Done |
 | 7307 | RiskAssessment: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: RiskAssessment | Claude | P1 |  | Done |
-| 7308 | RiskAssessment: retention period set, with the reason | schema.prisma: RiskAssessment | Claude | P1 | 20 | Open |
+| 7308 | RiskAssessment: retention period set, with the reason | schema.prisma: RiskAssessment | Claude | P1 |  | Done |
 | 7309 | RiskAssessment: test fixtures for every state it can be in | schema.prisma: RiskAssessment | Claude | P1 | 20 | Open |
 | 7310 | RiskAssessment: each field documented in the data dictionary | schema.prisma: RiskAssessment | Claude | P2 |  | Done |
 | 7311 | ExchangeListing: included in the baseline migration and reviewed field by field (14 fields) | schema.prisma: ExchangeListing | Claude | P0 | 3 | Open |
 | 7312 | ExchangeListing: index for every list query that filters or sorts on it | schema.prisma: ExchangeListing | Claude | P1 |  | Done |
 | 7313 | ExchangeListing: foreign keys with the delete rule stated for each | schema.prisma: ExchangeListing | Claude | P1 |  | Done |
 | 7314 | ExchangeListing: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: ExchangeListing | Claude | P1 |  | Done |
-| 7315 | ExchangeListing: retention period set, with the reason | schema.prisma: ExchangeListing | Claude | P1 | 20 | Open |
-| 7316 | ExchangeListing: every change recorded in the audit log with the actor | schema.prisma: ExchangeListing | Claude | P0 | 3 | Open |
+| 7315 | ExchangeListing: retention period set, with the reason | schema.prisma: ExchangeListing | Claude | P1 |  | Done |
+| 7316 | ExchangeListing: every change recorded in the audit log with the actor | schema.prisma: ExchangeListing | Claude | P0 |  | Done |
 | 7317 | ExchangeListing: test fixtures for every state it can be in | schema.prisma: ExchangeListing | Claude | P1 | 20 | Open |
 | 7318 | ExchangeListing: each field documented in the data dictionary | schema.prisma: ExchangeListing | Claude | P2 |  | Done |
 | 7319 | ExchangeBid: included in the baseline migration and reviewed field by field (8 fields) | schema.prisma: ExchangeBid | Claude | P0 | 3 | Open |
 | 7320 | ExchangeBid: index for every list query that filters or sorts on it | schema.prisma: ExchangeBid | Claude | P1 |  | Done |
 | 7321 | ExchangeBid: foreign keys with the delete rule stated for each | schema.prisma: ExchangeBid | Claude | P1 |  | Done |
 | 7322 | ExchangeBid: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: ExchangeBid | Claude | P1 |  | Done |
-| 7323 | ExchangeBid: retention period set, with the reason | schema.prisma: ExchangeBid | Claude | P1 | 20 | Open |
-| 7324 | ExchangeBid: every change recorded in the audit log with the actor | schema.prisma: ExchangeBid | Claude | P0 | 3 | Open |
+| 7323 | ExchangeBid: retention period set, with the reason | schema.prisma: ExchangeBid | Claude | P1 |  | Done |
+| 7324 | ExchangeBid: every change recorded in the audit log with the actor | schema.prisma: ExchangeBid | Claude | P0 |  | Done |
 | 7325 | ExchangeBid: test fixtures for every state it can be in | schema.prisma: ExchangeBid | Claude | P1 | 20 | Open |
 | 7326 | ExchangeBid: each field documented in the data dictionary | schema.prisma: ExchangeBid | Claude | P2 |  | Done |
 | 7327 | CreditEvent: included in the baseline migration and reviewed field by field (11 fields) | schema.prisma: CreditEvent | Claude | P0 | 3 | Open |
 | 7328 | CreditEvent: index for every list query that filters or sorts on it | schema.prisma: CreditEvent | Claude | P1 |  | Done |
 | 7329 | CreditEvent: foreign keys with the delete rule stated for each | schema.prisma: CreditEvent | Claude | P1 |  | Done |
 | 7330 | CreditEvent: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: CreditEvent | Claude | P1 |  | Done |
-| 7331 | CreditEvent: retention period set, with the reason | schema.prisma: CreditEvent | Claude | P1 | 20 | Open |
+| 7331 | CreditEvent: retention period set, with the reason | schema.prisma: CreditEvent | Claude | P1 |  | Done |
 | 7332 | CreditEvent: test fixtures for every state it can be in | schema.prisma: CreditEvent | Claude | P1 | 20 | Open |
 | 7333 | CreditEvent: each field documented in the data dictionary | schema.prisma: CreditEvent | Claude | P2 |  | Done |
 | 7334 | ChatMessage: included in the baseline migration and reviewed field by field (8 fields) | schema.prisma: ChatMessage | Claude | P0 | 3 | Open |
@@ -8106,21 +8106,21 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7336 | ChatMessage: foreign keys with the delete rule stated for each | schema.prisma: ChatMessage | Claude | P1 |  | Done |
 | 7337 | ChatMessage: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: ChatMessage | Claude | P1 |  | Done |
 | 7338 | ChatMessage: personal data classified: message text | schema.prisma: ChatMessage | Claude | P0 | 3 | Open |
-| 7339 | ChatMessage: retention period set and applied by the deletion job | schema.prisma: ChatMessage | Claude | P1 | 20 | Open |
+| 7339 | ChatMessage: retention period set and applied by the deletion job | schema.prisma: ChatMessage | Claude | P1 |  | Done |
 | 7340 | ChatMessage: test fixtures for every state it can be in | schema.prisma: ChatMessage | Claude | P1 | 20 | Open |
 | 7341 | ChatMessage: each field documented in the data dictionary | schema.prisma: ChatMessage | Claude | P2 |  | Done |
 | 7342 | ChatRead: included in the baseline migration and reviewed field by field (6 fields) | schema.prisma: ChatRead | Claude | P0 | 3 | Open |
 | 7343 | ChatRead: index for every list query that filters or sorts on it | schema.prisma: ChatRead | Claude | P1 |  | Done |
 | 7344 | ChatRead: foreign keys with the delete rule stated for each | schema.prisma: ChatRead | Claude | P1 |  | Done |
 | 7345 | ChatRead: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: ChatRead | Claude | P1 |  | Done |
-| 7346 | ChatRead: retention period set, with the reason | schema.prisma: ChatRead | Claude | P1 | 20 | Open |
+| 7346 | ChatRead: retention period set, with the reason | schema.prisma: ChatRead | Claude | P1 |  | Done |
 | 7347 | ChatRead: test fixtures for every state it can be in | schema.prisma: ChatRead | Claude | P1 | 20 | Open |
 | 7348 | ChatRead: each field documented in the data dictionary | schema.prisma: ChatRead | Claude | P2 |  | Done |
 | 7349 | Notification: included in the baseline migration and reviewed field by field (7 fields) | schema.prisma: Notification | Claude | P0 | 3 | Open |
 | 7350 | Notification: index for every list query that filters or sorts on it | schema.prisma: Notification | Claude | P1 |  | Done |
 | 7351 | Notification: foreign keys with the delete rule stated for each | schema.prisma: Notification | Claude | P1 |  | Done |
 | 7352 | Notification: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: Notification | Claude | P1 |  | Done |
-| 7353 | Notification: retention period set, with the reason | schema.prisma: Notification | Claude | P1 | 20 | Open |
+| 7353 | Notification: retention period set, with the reason | schema.prisma: Notification | Claude | P1 |  | Done |
 | 7354 | Notification: test fixtures for every state it can be in | schema.prisma: Notification | Claude | P1 | 20 | Open |
 | 7355 | Notification: each field documented in the data dictionary | schema.prisma: Notification | Claude | P2 |  | Done |
 | 7356 | KycRecord: included in the baseline migration and reviewed field by field (11 fields) | schema.prisma: KycRecord | Claude | P0 | 3 | Open |
@@ -8128,38 +8128,38 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7358 | KycRecord: foreign keys with the delete rule stated for each | schema.prisma: KycRecord | Claude | P1 |  | Done |
 | 7359 | KycRecord: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: KycRecord | Claude | P1 |  | Done |
 | 7360 | KycRecord: personal data classified: CNIC data, verification results | schema.prisma: KycRecord | Claude | P0 | 3 | Open |
-| 7361 | KycRecord: retention period set and applied by the deletion job | schema.prisma: KycRecord | Claude | P1 | 20 | Open |
+| 7361 | KycRecord: retention period set and applied by the deletion job | schema.prisma: KycRecord | Claude | P1 |  | Done |
 | 7362 | KycRecord: field level encryption for CNIC number and the verification payload | schema.prisma: KycRecord | Claude | P0 | 3 | Open |
-| 7363 | KycRecord: every change recorded in the audit log with the actor | schema.prisma: KycRecord | Claude | P0 | 3 | Open |
+| 7363 | KycRecord: every change recorded in the audit log with the actor | schema.prisma: KycRecord | Claude | P0 |  | Done |
 | 7364 | KycRecord: test fixtures for every state it can be in | schema.prisma: KycRecord | Claude | P1 | 20 | Open |
 | 7365 | KycRecord: each field documented in the data dictionary | schema.prisma: KycRecord | Claude | P2 |  | Done |
 | 7366 | ScheduleChangeRequest: included in the baseline migration and reviewed field by field (10 fields) | schema.prisma: ScheduleChangeRequest | Claude | P0 | 3 | Open |
 | 7367 | ScheduleChangeRequest: index for every list query that filters or sorts on it | schema.prisma: ScheduleChangeRequest | Claude | P1 |  | Done |
 | 7368 | ScheduleChangeRequest: foreign keys with the delete rule stated for each | schema.prisma: ScheduleChangeRequest | Claude | P1 |  | Done |
 | 7369 | ScheduleChangeRequest: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: ScheduleChangeRequest | Claude | P1 |  | Done |
-| 7370 | ScheduleChangeRequest: retention period set, with the reason | schema.prisma: ScheduleChangeRequest | Claude | P1 | 20 | Open |
+| 7370 | ScheduleChangeRequest: retention period set, with the reason | schema.prisma: ScheduleChangeRequest | Claude | P1 |  | Done |
 | 7371 | ScheduleChangeRequest: test fixtures for every state it can be in | schema.prisma: ScheduleChangeRequest | Claude | P1 | 20 | Open |
 | 7372 | ScheduleChangeRequest: each field documented in the data dictionary | schema.prisma: ScheduleChangeRequest | Claude | P2 |  | Done |
 | 7373 | AuditLog: included in the baseline migration and reviewed field by field (7 fields) | schema.prisma: AuditLog | Claude | P0 | 3 | Open |
 | 7374 | AuditLog: index for every list query that filters or sorts on it | schema.prisma: AuditLog | Claude | P1 |  | Done |
 | 7375 | AuditLog: foreign keys with the delete rule stated for each | schema.prisma: AuditLog | Claude | P1 |  | Done |
 | 7376 | AuditLog: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: AuditLog | Claude | P1 |  | Done |
-| 7377 | AuditLog: retention period set, with the reason | schema.prisma: AuditLog | Claude | P1 | 20 | Open |
+| 7377 | AuditLog: retention period set, with the reason | schema.prisma: AuditLog | Claude | P1 |  | Done |
 | 7378 | AuditLog: test fixtures for every state it can be in | schema.prisma: AuditLog | Claude | P1 | 20 | Open |
 | 7379 | AuditLog: each field documented in the data dictionary | schema.prisma: AuditLog | Claude | P2 |  | Done |
 | 7380 | PartnerBank: included in the baseline migration and reviewed field by field (11 fields) | schema.prisma: PartnerBank | Claude | P0 | 3 | Open |
 | 7381 | PartnerBank: index for every list query that filters or sorts on it | schema.prisma: PartnerBank | Claude | P1 |  | Done |
 | 7382 | PartnerBank: foreign keys with the delete rule stated for each | schema.prisma: PartnerBank | Claude | P1 |  | Done |
 | 7383 | PartnerBank: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: PartnerBank | Claude | P1 |  | Done |
-| 7384 | PartnerBank: retention period set, with the reason | schema.prisma: PartnerBank | Claude | P1 | 20 | Open |
-| 7385 | PartnerBank: every change recorded in the audit log with the actor | schema.prisma: PartnerBank | Claude | P0 | 3 | Open |
+| 7384 | PartnerBank: retention period set, with the reason | schema.prisma: PartnerBank | Claude | P1 |  | Done |
+| 7385 | PartnerBank: every change recorded in the audit log with the actor | schema.prisma: PartnerBank | Claude | P0 |  | Done |
 | 7386 | PartnerBank: test fixtures for every state it can be in | schema.prisma: PartnerBank | Claude | P1 | 20 | Open |
 | 7387 | PartnerBank: each field documented in the data dictionary | schema.prisma: PartnerBank | Claude | P2 |  | Done |
 | 7388 | StatementBatch: included in the baseline migration and reviewed field by field (10 fields) | schema.prisma: StatementBatch | Claude | P0 | 3 | Open |
 | 7389 | StatementBatch: index for every list query that filters or sorts on it | schema.prisma: StatementBatch | Claude | P1 |  | Done |
 | 7390 | StatementBatch: foreign keys with the delete rule stated for each | schema.prisma: StatementBatch | Claude | P1 |  | Done |
 | 7391 | StatementBatch: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: StatementBatch | Claude | P1 |  | Done |
-| 7392 | StatementBatch: retention period set, with the reason | schema.prisma: StatementBatch | Claude | P1 | 20 | Open |
+| 7392 | StatementBatch: retention period set, with the reason | schema.prisma: StatementBatch | Claude | P1 |  | Done |
 | 7393 | StatementBatch: test fixtures for every state it can be in | schema.prisma: StatementBatch | Claude | P1 | 20 | Open |
 | 7394 | StatementBatch: each field documented in the data dictionary | schema.prisma: StatementBatch | Claude | P2 |  | Done |
 | 7395 | StatementLine: included in the baseline migration and reviewed field by field (9 fields) | schema.prisma: StatementLine | Claude | P0 | 3 | Open |
@@ -8167,7 +8167,7 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7397 | StatementLine: foreign keys with the delete rule stated for each | schema.prisma: StatementLine | Claude | P1 |  | Done |
 | 7398 | StatementLine: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: StatementLine | Claude | P1 |  | Done |
 | 7399 | StatementLine: personal data classified: narration and account references | schema.prisma: StatementLine | Claude | P0 | 3 | Open |
-| 7400 | StatementLine: retention period set and applied by the deletion job | schema.prisma: StatementLine | Claude | P1 | 20 | Open |
+| 7400 | StatementLine: retention period set and applied by the deletion job | schema.prisma: StatementLine | Claude | P1 |  | Done |
 | 7401 | StatementLine: field level encryption for account numbers | schema.prisma: StatementLine | Claude | P0 | 3 | Open |
 | 7402 | StatementLine: test fixtures for every state it can be in | schema.prisma: StatementLine | Claude | P1 | 20 | Open |
 | 7403 | StatementLine: each field documented in the data dictionary | schema.prisma: StatementLine | Claude | P2 |  | Done |
@@ -8176,7 +8176,7 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7406 | RefreshToken: foreign keys with the delete rule stated for each | schema.prisma: RefreshToken | Claude | P1 |  | Done |
 | 7407 | RefreshToken: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: RefreshToken | Claude | P1 |  | Done |
 | 7408 | RefreshToken: personal data classified: device and address | schema.prisma: RefreshToken | Claude | P0 | 3 | Open |
-| 7409 | RefreshToken: retention period set and applied by the deletion job | schema.prisma: RefreshToken | Claude | P1 | 20 | Open |
+| 7409 | RefreshToken: retention period set and applied by the deletion job | schema.prisma: RefreshToken | Claude | P1 |  | Done |
 | 7410 | RefreshToken: test fixtures for every state it can be in | schema.prisma: RefreshToken | Claude | P1 | 20 | Open |
 | 7411 | RefreshToken: each field documented in the data dictionary | schema.prisma: RefreshToken | Claude | P2 |  | Done |
 | 7412 | AgreementSignature: included in the baseline migration and reviewed field by field (13 fields) | schema.prisma: AgreementSignature | Claude | P0 | 3 | Open |
@@ -8184,8 +8184,8 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7414 | AgreementSignature: foreign keys with the delete rule stated for each | schema.prisma: AgreementSignature | Claude | P1 |  | Done |
 | 7415 | AgreementSignature: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: AgreementSignature | Claude | P1 |  | Done |
 | 7416 | AgreementSignature: personal data classified: signature, address and device | schema.prisma: AgreementSignature | Claude | P0 | 3 | Open |
-| 7417 | AgreementSignature: retention period set and applied by the deletion job | schema.prisma: AgreementSignature | Claude | P1 | 20 | Open |
-| 7418 | AgreementSignature: every change recorded in the audit log with the actor | schema.prisma: AgreementSignature | Claude | P0 | 3 | Open |
+| 7417 | AgreementSignature: retention period set and applied by the deletion job | schema.prisma: AgreementSignature | Claude | P1 |  | Done |
+| 7418 | AgreementSignature: every change recorded in the audit log with the actor | schema.prisma: AgreementSignature | Claude | P0 |  | Done |
 | 7419 | AgreementSignature: test fixtures for every state it can be in | schema.prisma: AgreementSignature | Claude | P1 | 20 | Open |
 | 7420 | AgreementSignature: each field documented in the data dictionary | schema.prisma: AgreementSignature | Claude | P2 |  | Done |
 | 7421 | PaymentAttempt: included in the baseline migration and reviewed field by field (10 fields) | schema.prisma: PaymentAttempt | Claude | P0 | 3 | Open |
@@ -8193,7 +8193,7 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7423 | PaymentAttempt: foreign keys with the delete rule stated for each | schema.prisma: PaymentAttempt | Claude | P1 |  | Done |
 | 7424 | PaymentAttempt: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: PaymentAttempt | Claude | P1 |  | Done |
 | 7425 | PaymentAttempt: personal data classified: account references | schema.prisma: PaymentAttempt | Claude | P0 | 3 | Open |
-| 7426 | PaymentAttempt: retention period set and applied by the deletion job | schema.prisma: PaymentAttempt | Claude | P1 | 20 | Open |
+| 7426 | PaymentAttempt: retention period set and applied by the deletion job | schema.prisma: PaymentAttempt | Claude | P1 |  | Done |
 | 7427 | PaymentAttempt: test fixtures for every state it can be in | schema.prisma: PaymentAttempt | Claude | P1 | 20 | Open |
 | 7428 | PaymentAttempt: each field documented in the data dictionary | schema.prisma: PaymentAttempt | Claude | P2 |  | Done |
 | 7429 | SalarySignal: included in the baseline migration and reviewed field by field (8 fields) | schema.prisma: SalarySignal | Claude | P0 | 3 | Open |
@@ -8201,7 +8201,7 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7431 | SalarySignal: foreign keys with the delete rule stated for each | schema.prisma: SalarySignal | Claude | P1 |  | Done |
 | 7432 | SalarySignal: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: SalarySignal | Claude | P1 |  | Done |
 | 7433 | SalarySignal: personal data classified: salary credits and dates | schema.prisma: SalarySignal | Claude | P0 | 3 | Open |
-| 7434 | SalarySignal: retention period set and applied by the deletion job | schema.prisma: SalarySignal | Claude | P1 | 20 | Open |
+| 7434 | SalarySignal: retention period set and applied by the deletion job | schema.prisma: SalarySignal | Claude | P1 |  | Done |
 | 7435 | SalarySignal: test fixtures for every state it can be in | schema.prisma: SalarySignal | Claude | P1 | 20 | Open |
 | 7436 | SalarySignal: each field documented in the data dictionary | schema.prisma: SalarySignal | Claude | P2 |  | Done |
 | 7437 | PayslipUpload: included in the baseline migration and reviewed field by field (10 fields) | schema.prisma: PayslipUpload | Claude | P0 | 3 | Open |
@@ -8209,7 +8209,7 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7439 | PayslipUpload: foreign keys with the delete rule stated for each | schema.prisma: PayslipUpload | Claude | P1 |  | Done |
 | 7440 | PayslipUpload: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: PayslipUpload | Claude | P1 |  | Done |
 | 7441 | PayslipUpload: personal data classified: payslip images and amounts | schema.prisma: PayslipUpload | Claude | P0 | 3 | Open |
-| 7442 | PayslipUpload: retention period set and applied by the deletion job | schema.prisma: PayslipUpload | Claude | P1 | 20 | Open |
+| 7442 | PayslipUpload: retention period set and applied by the deletion job | schema.prisma: PayslipUpload | Claude | P1 |  | Done |
 | 7443 | PayslipUpload: field level encryption for the stored file and the amounts read from it | schema.prisma: PayslipUpload | Claude | P0 | 3 | Open |
 | 7444 | PayslipUpload: test fixtures for every state it can be in | schema.prisma: PayslipUpload | Claude | P1 | 20 | Open |
 | 7445 | PayslipUpload: each field documented in the data dictionary | schema.prisma: PayslipUpload | Claude | P2 |  | Done |
@@ -8218,14 +8218,14 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7448 | SecurityEvent: foreign keys with the delete rule stated for each | schema.prisma: SecurityEvent | Claude | P1 |  | Done |
 | 7449 | SecurityEvent: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: SecurityEvent | Claude | P1 |  | Done |
 | 7450 | SecurityEvent: personal data classified: device and address | schema.prisma: SecurityEvent | Claude | P0 | 3 | Open |
-| 7451 | SecurityEvent: retention period set and applied by the deletion job | schema.prisma: SecurityEvent | Claude | P1 | 20 | Open |
+| 7451 | SecurityEvent: retention period set and applied by the deletion job | schema.prisma: SecurityEvent | Claude | P1 |  | Done |
 | 7452 | SecurityEvent: test fixtures for every state it can be in | schema.prisma: SecurityEvent | Claude | P1 | 20 | Open |
 | 7453 | SecurityEvent: each field documented in the data dictionary | schema.prisma: SecurityEvent | Claude | P2 |  | Done |
 | 7454 | RewardEvent: included in the baseline migration and reviewed field by field (12 fields) | schema.prisma: RewardEvent | Claude | P0 | 3 | Open |
 | 7455 | RewardEvent: index for every list query that filters or sorts on it | schema.prisma: RewardEvent | Claude | P1 |  | Done |
 | 7456 | RewardEvent: foreign keys with the delete rule stated for each | schema.prisma: RewardEvent | Claude | P1 |  | Done |
 | 7457 | RewardEvent: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: RewardEvent | Claude | P1 |  | Done |
-| 7458 | RewardEvent: retention period set, with the reason | schema.prisma: RewardEvent | Claude | P1 | 20 | Open |
+| 7458 | RewardEvent: retention period set, with the reason | schema.prisma: RewardEvent | Claude | P1 |  | Done |
 | 7459 | RewardEvent: test fixtures for every state it can be in | schema.prisma: RewardEvent | Claude | P1 | 20 | Open |
 | 7460 | RewardEvent: each field documented in the data dictionary | schema.prisma: RewardEvent | Claude | P2 |  | Done |
 | 7461 | ExitRequest: included in the baseline migration and reviewed field by field (25 fields) | schema.prisma: ExitRequest | Claude | P0 | 3 | Open |
@@ -8233,23 +8233,23 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7463 | ExitRequest: foreign keys with the delete rule stated for each | schema.prisma: ExitRequest | Claude | P1 |  | Done |
 | 7464 | ExitRequest: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: ExitRequest | Claude | P1 |  | Done |
 | 7465 | ExitRequest: personal data classified: reasons | schema.prisma: ExitRequest | Claude | P0 | 3 | Open |
-| 7466 | ExitRequest: retention period set and applied by the deletion job | schema.prisma: ExitRequest | Claude | P1 | 20 | Open |
-| 7467 | ExitRequest: every change recorded in the audit log with the actor | schema.prisma: ExitRequest | Claude | P0 | 3 | Open |
+| 7466 | ExitRequest: retention period set and applied by the deletion job | schema.prisma: ExitRequest | Claude | P1 |  | Done |
+| 7467 | ExitRequest: every change recorded in the audit log with the actor | schema.prisma: ExitRequest | Claude | P0 |  | Done |
 | 7468 | ExitRequest: test fixtures for every state it can be in | schema.prisma: ExitRequest | Claude | P1 | 20 | Open |
 | 7469 | ExitRequest: each field documented in the data dictionary | schema.prisma: ExitRequest | Claude | P2 |  | Done |
 | 7470 | ExitVote: included in the baseline migration and reviewed field by field (7 fields) | schema.prisma: ExitVote | Claude | P0 | 3 | Open |
 | 7471 | ExitVote: index for every list query that filters or sorts on it | schema.prisma: ExitVote | Claude | P1 |  | Done |
 | 7472 | ExitVote: foreign keys with the delete rule stated for each | schema.prisma: ExitVote | Claude | P1 |  | Done |
 | 7473 | ExitVote: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: ExitVote | Claude | P1 |  | Done |
-| 7474 | ExitVote: retention period set, with the reason | schema.prisma: ExitVote | Claude | P1 | 20 | Open |
+| 7474 | ExitVote: retention period set, with the reason | schema.prisma: ExitVote | Claude | P1 |  | Done |
 | 7475 | ExitVote: test fixtures for every state it can be in | schema.prisma: ExitVote | Claude | P1 | 20 | Open |
 | 7476 | ExitVote: each field documented in the data dictionary | schema.prisma: ExitVote | Claude | P2 |  | Done |
 | 7477 | RestitutionDebt: included in the baseline migration and reviewed field by field (8 fields) | schema.prisma: RestitutionDebt | Claude | P0 | 3 | Open |
 | 7478 | RestitutionDebt: index for every list query that filters or sorts on it | schema.prisma: RestitutionDebt | Claude | P1 |  | Done |
 | 7479 | RestitutionDebt: foreign keys with the delete rule stated for each | schema.prisma: RestitutionDebt | Claude | P1 |  | Done |
 | 7480 | RestitutionDebt: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: RestitutionDebt | Claude | P1 |  | Done |
-| 7481 | RestitutionDebt: retention period set, with the reason | schema.prisma: RestitutionDebt | Claude | P1 | 20 | Open |
-| 7482 | RestitutionDebt: every change recorded in the audit log with the actor | schema.prisma: RestitutionDebt | Claude | P0 | 3 | Open |
+| 7481 | RestitutionDebt: retention period set, with the reason | schema.prisma: RestitutionDebt | Claude | P1 |  | Done |
+| 7482 | RestitutionDebt: every change recorded in the audit log with the actor | schema.prisma: RestitutionDebt | Claude | P0 |  | Done |
 | 7483 | RestitutionDebt: test fixtures for every state it can be in | schema.prisma: RestitutionDebt | Claude | P1 | 20 | Open |
 | 7484 | RestitutionDebt: each field documented in the data dictionary | schema.prisma: RestitutionDebt | Claude | P2 |  | Done |
 | 7485 | SupportTicket: included in the baseline migration and reviewed field by field (13 fields) | schema.prisma: SupportTicket | Claude | P0 | 3 | Open |
@@ -8257,7 +8257,7 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7487 | SupportTicket: foreign keys with the delete rule stated for each | schema.prisma: SupportTicket | Claude | P1 |  | Done |
 | 7488 | SupportTicket: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: SupportTicket | Claude | P1 |  | Done |
 | 7489 | SupportTicket: personal data classified: description | schema.prisma: SupportTicket | Claude | P0 | 3 | Open |
-| 7490 | SupportTicket: retention period set and applied by the deletion job | schema.prisma: SupportTicket | Claude | P1 | 20 | Open |
+| 7490 | SupportTicket: retention period set and applied by the deletion job | schema.prisma: SupportTicket | Claude | P1 |  | Done |
 | 7491 | SupportTicket: test fixtures for every state it can be in | schema.prisma: SupportTicket | Claude | P1 | 20 | Open |
 | 7492 | SupportTicket: each field documented in the data dictionary | schema.prisma: SupportTicket | Claude | P2 |  | Done |
 | 7493 | SupportMessage: included in the baseline migration and reviewed field by field (6 fields) | schema.prisma: SupportMessage | Claude | P0 | 3 | Open |
@@ -8265,8 +8265,8 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7495 | SupportMessage: foreign keys with the delete rule stated for each | schema.prisma: SupportMessage | Claude | P1 |  | Done |
 | 7496 | SupportMessage: constraints: amounts not negative, values only from their lists, required fields required | schema.prisma: SupportMessage | Claude | P1 |  | Done |
 | 7497 | SupportMessage: personal data classified: message text | schema.prisma: SupportMessage | Claude | P0 | 3 | Open |
-| 7498 | SupportMessage: retention period set and applied by the deletion job | schema.prisma: SupportMessage | Claude | P1 | 21 | Open |
-| 7499 | SupportMessage: test fixtures for every state it can be in | schema.prisma: SupportMessage | Claude | P1 | 21 | Open |
+| 7498 | SupportMessage: retention period set and applied by the deletion job | schema.prisma: SupportMessage | Claude | P1 |  | Done |
+| 7499 | SupportMessage: test fixtures for every state it can be in | schema.prisma: SupportMessage | Claude | P1 | 20 | Open |
 | 7500 | SupportMessage: each field documented in the data dictionary | schema.prisma: SupportMessage | Claude | P2 |  | Done |
 
 ### AF4. New Models for the Bank Route
@@ -8329,21 +8329,21 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7554 | ReconciliationBreak: changes recorded in the audit log | new model ReconciliationBreak | Claude | P1 | 49 | Open |
 | 7555 | ReconciliationBreak: test fixtures | new model ReconciliationBreak | Claude | P1 | 49 | Open |
 | 7556 | ReconciliationBreak: documented in the data dictionary | new model ReconciliationBreak | Claude | P2 | 74 | Open |
-| 7557 | FeeSchedule: model created: the versioned fee rules: Rs 85, the PSP service fee rule, Hyper Rs 15 | new model FeeSchedule | Claude | P1 | 21 | Open |
-| 7558 | FeeSchedule: migration written and applied to staging first | new model FeeSchedule | Claude | P1 | 21 | Open |
-| 7559 | FeeSchedule: indexes for its queries | new model FeeSchedule | Claude | P1 | 21 | Open |
-| 7560 | FeeSchedule: keys and constraints | new model FeeSchedule | Claude | P1 | 21 | Open |
-| 7561 | FeeSchedule: personal data classified and retention set | new model FeeSchedule | Claude | P1 | 21 | Open |
-| 7562 | FeeSchedule: changes recorded in the audit log | new model FeeSchedule | Claude | P1 | 21 | Open |
-| 7563 | FeeSchedule: test fixtures | new model FeeSchedule | Claude | P1 | 21 | Open |
+| 7557 | FeeSchedule: model created: the versioned fee rules: Rs 85, the PSP service fee rule, Hyper Rs 15 | new model FeeSchedule | Claude | P1 | 20 | Open |
+| 7558 | FeeSchedule: migration written and applied to staging first | new model FeeSchedule | Claude | P1 | 20 | Open |
+| 7559 | FeeSchedule: indexes for its queries | new model FeeSchedule | Claude | P1 | 20 | Open |
+| 7560 | FeeSchedule: keys and constraints | new model FeeSchedule | Claude | P1 | 20 | Open |
+| 7561 | FeeSchedule: personal data classified and retention set | new model FeeSchedule | Claude | P1 | 20 | Open |
+| 7562 | FeeSchedule: changes recorded in the audit log | new model FeeSchedule | Claude | P1 | 20 | Open |
+| 7563 | FeeSchedule: test fixtures | new model FeeSchedule | Claude | P1 | 20 | Open |
 | 7564 | FeeSchedule: documented in the data dictionary | new model FeeSchedule | Claude | P2 | 57 | Open |
-| 7565 | FeeCharge: model created: each fee charged with the schedule version applied | new model FeeCharge | Claude | P1 | 21 | Open |
-| 7566 | FeeCharge: migration written and applied to staging first | new model FeeCharge | Claude | P1 | 21 | Open |
-| 7567 | FeeCharge: indexes for its queries | new model FeeCharge | Claude | P1 | 21 | Open |
-| 7568 | FeeCharge: keys and constraints | new model FeeCharge | Claude | P1 | 21 | Open |
-| 7569 | FeeCharge: personal data classified and retention set | new model FeeCharge | Claude | P1 | 21 | Open |
-| 7570 | FeeCharge: changes recorded in the audit log | new model FeeCharge | Claude | P1 | 21 | Open |
-| 7571 | FeeCharge: test fixtures | new model FeeCharge | Claude | P1 | 21 | Open |
+| 7565 | FeeCharge: model created: each fee charged with the schedule version applied | new model FeeCharge | Claude | P1 | 20 | Open |
+| 7566 | FeeCharge: migration written and applied to staging first | new model FeeCharge | Claude | P1 | 20 | Open |
+| 7567 | FeeCharge: indexes for its queries | new model FeeCharge | Claude | P1 | 20 | Open |
+| 7568 | FeeCharge: keys and constraints | new model FeeCharge | Claude | P1 | 20 | Open |
+| 7569 | FeeCharge: personal data classified and retention set | new model FeeCharge | Claude | P1 | 20 | Open |
+| 7570 | FeeCharge: changes recorded in the audit log | new model FeeCharge | Claude | P1 | 20 | Open |
+| 7571 | FeeCharge: test fixtures | new model FeeCharge | Claude | P1 | 20 | Open |
 | 7572 | FeeCharge: documented in the data dictionary | new model FeeCharge | Claude | P2 | 57 | Open |
 | 7573 | PspCharge: model created: each PSP charge, refund and dispute with the PSP reference | new model PspCharge | Claude | P1 | 53 | Open |
 | 7574 | PspCharge: migration written and applied to staging first | new model PspCharge | Claude | P1 | 53 | Open |
@@ -8353,13 +8353,13 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7578 | PspCharge: changes recorded in the audit log | new model PspCharge | Claude | P1 | 53 | Open |
 | 7579 | PspCharge: test fixtures | new model PspCharge | Claude | P1 | 53 | Open |
 | 7580 | PspCharge: documented in the data dictionary | new model PspCharge | Claude | P2 | 78 | Open |
-| 7581 | PointsEntry: model created: the append only points ledger: issue, purchase, transfer, redemption, lapse | new model PointsEntry | Claude | P1 | 21 | Open |
-| 7582 | PointsEntry: migration written and applied to staging first | new model PointsEntry | Claude | P1 | 21 | Open |
-| 7583 | PointsEntry: indexes for its queries | new model PointsEntry | Claude | P1 | 21 | Open |
-| 7584 | PointsEntry: keys and constraints | new model PointsEntry | Claude | P1 | 21 | Open |
-| 7585 | PointsEntry: personal data classified and retention set | new model PointsEntry | Claude | P1 | 21 | Open |
-| 7586 | PointsEntry: changes recorded in the audit log | new model PointsEntry | Claude | P1 | 21 | Open |
-| 7587 | PointsEntry: test fixtures | new model PointsEntry | Claude | P1 | 21 | Open |
+| 7581 | PointsEntry: model created: the append only points ledger: issue, purchase, transfer, redemption, lapse | new model PointsEntry | Claude | P1 | 20 | Open |
+| 7582 | PointsEntry: migration written and applied to staging first | new model PointsEntry | Claude | P1 | 20 | Open |
+| 7583 | PointsEntry: indexes for its queries | new model PointsEntry | Claude | P1 | 20 | Open |
+| 7584 | PointsEntry: keys and constraints | new model PointsEntry | Claude | P1 | 20 | Open |
+| 7585 | PointsEntry: personal data classified and retention set | new model PointsEntry | Claude | P1 | 20 | Open |
+| 7586 | PointsEntry: changes recorded in the audit log | new model PointsEntry | Claude | P1 | 20 | Open |
+| 7587 | PointsEntry: test fixtures | new model PointsEntry | Claude | P1 | 20 | Open |
 | 7588 | PointsEntry: documented in the data dictionary | new model PointsEntry | Claude | P2 | 57 | Open |
 | 7589 | PointsPurchase: model created: each purchase of points with money and its bank reference | new model PointsPurchase | Claude | P1 | 49 | Open |
 | 7590 | PointsPurchase: migration written and applied to staging first | new model PointsPurchase | Claude | P1 | 49 | Open |
@@ -8369,19 +8369,19 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7594 | PointsPurchase: changes recorded in the audit log | new model PointsPurchase | Claude | P1 | 49 | Open |
 | 7595 | PointsPurchase: test fixtures | new model PointsPurchase | Claude | P1 | 49 | Open |
 | 7596 | PointsPurchase: documented in the data dictionary | new model PointsPurchase | Claude | P2 | 74 | Open |
-| 7597 | Merchant: model created: marketplace merchants and their agreements | new model Merchant | Claude | P1 | 21 | Open |
-| 7598 | Merchant: migration written and applied to staging first | new model Merchant | Claude | P1 | 21 | Open |
-| 7599 | Merchant: indexes for its queries | new model Merchant | Claude | P1 | 21 | Open |
-| 7600 | Merchant: keys and constraints | new model Merchant | Claude | P1 | 21 | Open |
-| 7601 | Merchant: personal data classified and retention set | new model Merchant | Claude | P1 | 21 | Open |
-| 7602 | Merchant: changes recorded in the audit log | new model Merchant | Claude | P1 | 21 | Open |
-| 7603 | Merchant: test fixtures | new model Merchant | Claude | P1 | 21 | Open |
+| 7597 | Merchant: model created: marketplace merchants and their agreements | new model Merchant | Claude | P1 | 20 | Open |
+| 7598 | Merchant: migration written and applied to staging first | new model Merchant | Claude | P1 | 20 | Open |
+| 7599 | Merchant: indexes for its queries | new model Merchant | Claude | P1 | 20 | Open |
+| 7600 | Merchant: keys and constraints | new model Merchant | Claude | P1 | 20 | Open |
+| 7601 | Merchant: personal data classified and retention set | new model Merchant | Claude | P1 | 20 | Open |
+| 7602 | Merchant: changes recorded in the audit log | new model Merchant | Claude | P1 | 20 | Open |
+| 7603 | Merchant: test fixtures | new model Merchant | Claude | P1 | 20 | Open |
 | 7604 | Merchant: documented in the data dictionary | new model Merchant | Claude | P2 | 57 | Open |
-| 7605 | Product: model created: catalogue products with prices in points | new model Product | Claude | P1 | 21 | Open |
-| 7606 | Product: migration written and applied to staging first | new model Product | Claude | P1 | 21 | Open |
-| 7607 | Product: indexes for its queries | new model Product | Claude | P1 | 21 | Open |
-| 7608 | Product: keys and constraints | new model Product | Claude | P1 | 21 | Open |
-| 7609 | Product: personal data classified and retention set | new model Product | Claude | P1 | 21 | Open |
+| 7605 | Product: model created: catalogue products with prices in points | new model Product | Claude | P1 | 20 | Open |
+| 7606 | Product: migration written and applied to staging first | new model Product | Claude | P1 | 20 | Open |
+| 7607 | Product: indexes for its queries | new model Product | Claude | P1 | 20 | Open |
+| 7608 | Product: keys and constraints | new model Product | Claude | P1 | 20 | Open |
+| 7609 | Product: personal data classified and retention set | new model Product | Claude | P1 | 20 | Open |
 | 7610 | Product: changes recorded in the audit log | new model Product | Claude | P1 | 21 | Open |
 | 7611 | Product: test fixtures | new model Product | Claude | P1 | 21 | Open |
 | 7612 | Product: documented in the data dictionary | new model Product | Claude | P2 | 57 | Open |
@@ -8431,7 +8431,7 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7656 | BureauConsent: keys and constraints | new model BureauConsent | Claude | P1 | 21 | Open |
 | 7657 | BureauConsent: personal data classified and retention set | new model BureauConsent | Claude | P1 | 21 | Open |
 | 7658 | BureauConsent: changes recorded in the audit log | new model BureauConsent | Claude | P1 | 21 | Open |
-| 7659 | BureauConsent: test fixtures | new model BureauConsent | Claude | P1 | 22 | Open |
+| 7659 | BureauConsent: test fixtures | new model BureauConsent | Claude | P1 | 21 | Open |
 | 7660 | BureauConsent: documented in the data dictionary | new model BureauConsent | Claude | P2 | 57 | Open |
 | 7661 | BureauSubmission: model created: each monthly submission and its checks | new model BureauSubmission | Claude | P1 | 53 | Open |
 | 7662 | BureauSubmission: migration written and applied to staging first | new model BureauSubmission | Claude | P1 | 53 | Open |
@@ -8449,44 +8449,44 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7674 | BureauDispute: changes recorded in the audit log | new model BureauDispute | Claude | P1 | 53 | Open |
 | 7675 | BureauDispute: test fixtures | new model BureauDispute | Claude | P1 | 53 | Open |
 | 7676 | BureauDispute: documented in the data dictionary | new model BureauDispute | Claude | P2 | 78 | Open |
-| 7677 | Complaint: model created: complaints with category, timeline and outcome | new model Complaint | Claude | P1 | 22 | Open |
-| 7678 | Complaint: migration written and applied to staging first | new model Complaint | Claude | P1 | 22 | Open |
-| 7679 | Complaint: indexes for its queries | new model Complaint | Claude | P1 | 22 | Open |
-| 7680 | Complaint: keys and constraints | new model Complaint | Claude | P1 | 22 | Open |
-| 7681 | Complaint: personal data classified and retention set | new model Complaint | Claude | P1 | 22 | Open |
-| 7682 | Complaint: changes recorded in the audit log | new model Complaint | Claude | P1 | 22 | Open |
-| 7683 | Complaint: test fixtures | new model Complaint | Claude | P1 | 22 | Open |
+| 7677 | Complaint: model created: complaints with category, timeline and outcome | new model Complaint | Claude | P1 | 21 | Open |
+| 7678 | Complaint: migration written and applied to staging first | new model Complaint | Claude | P1 | 21 | Open |
+| 7679 | Complaint: indexes for its queries | new model Complaint | Claude | P1 | 21 | Open |
+| 7680 | Complaint: keys and constraints | new model Complaint | Claude | P1 | 21 | Open |
+| 7681 | Complaint: personal data classified and retention set | new model Complaint | Claude | P1 | 21 | Open |
+| 7682 | Complaint: changes recorded in the audit log | new model Complaint | Claude | P1 | 21 | Open |
+| 7683 | Complaint: test fixtures | new model Complaint | Claude | P1 | 21 | Open |
 | 7684 | Complaint: documented in the data dictionary | new model Complaint | Claude | P2 | 57 | Open |
-| 7685 | Consent: model created: each consent by purpose, version and time | new model Consent | Claude | P1 | 22 | Open |
-| 7686 | Consent: migration written and applied to staging first | new model Consent | Claude | P1 | 22 | Open |
-| 7687 | Consent: indexes for its queries | new model Consent | Claude | P1 | 22 | Open |
-| 7688 | Consent: keys and constraints | new model Consent | Claude | P1 | 22 | Open |
-| 7689 | Consent: personal data classified and retention set | new model Consent | Claude | P1 | 22 | Open |
-| 7690 | Consent: changes recorded in the audit log | new model Consent | Claude | P1 | 22 | Open |
-| 7691 | Consent: test fixtures | new model Consent | Claude | P1 | 22 | Open |
+| 7685 | Consent: model created: each consent by purpose, version and time | new model Consent | Claude | P1 | 21 | Open |
+| 7686 | Consent: migration written and applied to staging first | new model Consent | Claude | P1 | 21 | Open |
+| 7687 | Consent: indexes for its queries | new model Consent | Claude | P1 | 21 | Open |
+| 7688 | Consent: keys and constraints | new model Consent | Claude | P1 | 21 | Open |
+| 7689 | Consent: personal data classified and retention set | new model Consent | Claude | P1 | 21 | Open |
+| 7690 | Consent: changes recorded in the audit log | new model Consent | Claude | P1 | 21 | Open |
+| 7691 | Consent: test fixtures | new model Consent | Claude | P1 | 21 | Open |
 | 7692 | Consent: documented in the data dictionary | new model Consent | Claude | P2 | 57 | Open |
-| 7693 | DeviceBinding: model created: the bound device, binding time and cooling off end | new model DeviceBinding | Claude | P1 | 22 | Open |
-| 7694 | DeviceBinding: migration written and applied to staging first | new model DeviceBinding | Claude | P1 | 22 | Open |
-| 7695 | DeviceBinding: indexes for its queries | new model DeviceBinding | Claude | P1 | 22 | Open |
-| 7696 | DeviceBinding: keys and constraints | new model DeviceBinding | Claude | P1 | 22 | Open |
-| 7697 | DeviceBinding: personal data classified and retention set | new model DeviceBinding | Claude | P1 | 22 | Open |
-| 7698 | DeviceBinding: changes recorded in the audit log | new model DeviceBinding | Claude | P1 | 22 | Open |
-| 7699 | DeviceBinding: test fixtures | new model DeviceBinding | Claude | P1 | 22 | Open |
+| 7693 | DeviceBinding: model created: the bound device, binding time and cooling off end | new model DeviceBinding | Claude | P1 | 21 | Open |
+| 7694 | DeviceBinding: migration written and applied to staging first | new model DeviceBinding | Claude | P1 | 21 | Open |
+| 7695 | DeviceBinding: indexes for its queries | new model DeviceBinding | Claude | P1 | 21 | Open |
+| 7696 | DeviceBinding: keys and constraints | new model DeviceBinding | Claude | P1 | 21 | Open |
+| 7697 | DeviceBinding: personal data classified and retention set | new model DeviceBinding | Claude | P1 | 21 | Open |
+| 7698 | DeviceBinding: changes recorded in the audit log | new model DeviceBinding | Claude | P1 | 21 | Open |
+| 7699 | DeviceBinding: test fixtures | new model DeviceBinding | Claude | P1 | 21 | Open |
 | 7700 | DeviceBinding: documented in the data dictionary | new model DeviceBinding | Claude | P2 | 57 | Open |
-| 7701 | TransactionPin: model created: the transaction PIN hash and attempts | new model TransactionPin | Claude | P1 | 22 | Open |
-| 7702 | TransactionPin: migration written and applied to staging first | new model TransactionPin | Claude | P1 | 22 | Open |
-| 7703 | TransactionPin: indexes for its queries | new model TransactionPin | Claude | P1 | 22 | Open |
-| 7704 | TransactionPin: keys and constraints | new model TransactionPin | Claude | P1 | 22 | Open |
-| 7705 | TransactionPin: personal data classified and retention set | new model TransactionPin | Claude | P1 | 22 | Open |
-| 7706 | TransactionPin: changes recorded in the audit log | new model TransactionPin | Claude | P1 | 22 | Open |
-| 7707 | TransactionPin: test fixtures | new model TransactionPin | Claude | P1 | 22 | Open |
+| 7701 | TransactionPin: model created: the transaction PIN hash and attempts | new model TransactionPin | Claude | P1 | 21 | Open |
+| 7702 | TransactionPin: migration written and applied to staging first | new model TransactionPin | Claude | P1 | 21 | Open |
+| 7703 | TransactionPin: indexes for its queries | new model TransactionPin | Claude | P1 | 21 | Open |
+| 7704 | TransactionPin: keys and constraints | new model TransactionPin | Claude | P1 | 21 | Open |
+| 7705 | TransactionPin: personal data classified and retention set | new model TransactionPin | Claude | P1 | 21 | Open |
+| 7706 | TransactionPin: changes recorded in the audit log | new model TransactionPin | Claude | P1 | 21 | Open |
+| 7707 | TransactionPin: test fixtures | new model TransactionPin | Claude | P1 | 21 | Open |
 | 7708 | TransactionPin: documented in the data dictionary | new model TransactionPin | Claude | P2 | 57 | Open |
-| 7709 | NotificationLog: model created: every alert sent, by channel, with delivery status | new model NotificationLog | Claude | P1 | 22 | Open |
-| 7710 | NotificationLog: migration written and applied to staging first | new model NotificationLog | Claude | P1 | 22 | Open |
-| 7711 | NotificationLog: indexes for its queries | new model NotificationLog | Claude | P1 | 22 | Open |
-| 7712 | NotificationLog: keys and constraints | new model NotificationLog | Claude | P1 | 22 | Open |
-| 7713 | NotificationLog: personal data classified and retention set | new model NotificationLog | Claude | P1 | 22 | Open |
-| 7714 | NotificationLog: changes recorded in the audit log | new model NotificationLog | Claude | P1 | 22 | Open |
+| 7709 | NotificationLog: model created: every alert sent, by channel, with delivery status | new model NotificationLog | Claude | P1 | 21 | Open |
+| 7710 | NotificationLog: migration written and applied to staging first | new model NotificationLog | Claude | P1 | 21 | Open |
+| 7711 | NotificationLog: indexes for its queries | new model NotificationLog | Claude | P1 | 21 | Open |
+| 7712 | NotificationLog: keys and constraints | new model NotificationLog | Claude | P1 | 21 | Open |
+| 7713 | NotificationLog: personal data classified and retention set | new model NotificationLog | Claude | P1 | 21 | Open |
+| 7714 | NotificationLog: changes recorded in the audit log | new model NotificationLog | Claude | P1 | 21 | Open |
 | 7715 | NotificationLog: test fixtures | new model NotificationLog | Claude | P1 | 22 | Open |
 | 7716 | NotificationLog: documented in the data dictionary | new model NotificationLog | Claude | P2 | 57 | Open |
 | 7717 | KeyFactAcceptance: model created: each key fact statement accepted, with its version | new model KeyFactAcceptance | Claude | P1 | 22 | Open |
@@ -8550,7 +8550,7 @@ Each of the 34 models kept, with every check it needs: items 498 and 503 broken 
 | 7770 | Personal data map: which tables hold which personal data and where each is stored | docs | Claude | P0 | 3 | Partly done |
 | 7771 | Field level encryption key held in a managed vault and rotated | infrastructure | Claude | P0 | 3 | Open |
 | 7772 | Anonymised copy of production for testing, with no real personal data | infrastructure | Claude | P2 | 57 | Open |
-| 7773 | Database roles: the application cannot drop tables; migrations run with a separate role | infrastructure | Claude | P1 | 23 | Open |
+| 7773 | Database roles: the application cannot drop tables; migrations run with a separate role | infrastructure | Claude | P1 | 22 | Open |
 | 7774 | Slow query log reviewed each week | operations | Claude | P2 | 57 | Open |
 
 ## AG. Connections to Partners
@@ -9222,14 +9222,14 @@ Every operation with an outside party, each with its contract, client, retries, 
 
 | # | Item | Where | Owner | Pri | Phase | Status |
 | --: | :-- | :-- | :-- | :-- | :-- | :-- |
-| 8396 | Liveness Service, liveness session creation: contract written: request, response, errors and limits, agreed with the provider | integration | Claude | P1 | 42 | Open |
-| 8397 | Liveness Service, liveness session creation: client built behind one module, with nothing else calling the provider directly | integration | Claude | P1 | 42 | Open |
-| 8398 | Liveness Service, liveness session creation: timeouts, retries with backoff and a limit on attempts | integration | Claude | P1 | 42 | Open |
-| 8399 | Liveness Service, liveness session creation: idempotency key or reference on every request that changes anything | integration | Claude | P1 | 42 | Open |
-| 8400 | Liveness Service, liveness session creation: every provider error mapped to a reason and a sentence the member understands | integration | Claude | P1 | 42 | Open |
-| 8401 | Liveness Service, liveness session creation: tested against the provider's sandbox | integration | Claude | P1 | 42 | Open |
-| 8402 | Liveness Service, liveness session creation: contract test that fails the build if the provider's format changes | integration | Claude | P1 | 42 | Open |
-| 8403 | Liveness Service, liveness session creation: monitored, with an alert to a named person on failure or delay | integration | Claude | P1 | 42 | Open |
+| 8396 | Liveness Service, liveness session creation: contract written: request, response, errors and limits, agreed with the provider | integration | Claude | P1 | 41 | Open |
+| 8397 | Liveness Service, liveness session creation: client built behind one module, with nothing else calling the provider directly | integration | Claude | P1 | 41 | Open |
+| 8398 | Liveness Service, liveness session creation: timeouts, retries with backoff and a limit on attempts | integration | Claude | P1 | 41 | Open |
+| 8399 | Liveness Service, liveness session creation: idempotency key or reference on every request that changes anything | integration | Claude | P1 | 41 | Open |
+| 8400 | Liveness Service, liveness session creation: every provider error mapped to a reason and a sentence the member understands | integration | Claude | P1 | 41 | Open |
+| 8401 | Liveness Service, liveness session creation: tested against the provider's sandbox | integration | Claude | P1 | 41 | Open |
+| 8402 | Liveness Service, liveness session creation: contract test that fails the build if the provider's format changes | integration | Claude | P1 | 41 | Open |
+| 8403 | Liveness Service, liveness session creation: monitored, with an alert to a named person on failure or delay | integration | Claude | P1 | 41 | Open |
 | 8404 | Liveness Service, liveness session creation: runbook entry: what to do when it fails | integration | Claude | P1 | 42 | Open |
 | 8405 | Liveness Service, liveness session creation: credentials held in the managed secret store and rotated | integration | Claude | P1 | 42 | Open |
 | 8406 | Liveness Service, liveness result and face match: contract written: request, response, errors and limits, agreed with the provider | integration | Claude | P1 | 42 | Open |
@@ -9265,8 +9265,8 @@ Every operation with an outside party, each with its contract, client, retries, 
 | 8431 | Monitoring Services, error reports with personal data removed: tested against the provider's sandbox | integration | Claude | P0 | 12 | Open |
 | 8432 | Monitoring Services, error reports with personal data removed: contract test that fails the build if the provider's format changes | integration | Claude | P0 | 12 | Open |
 | 8433 | Monitoring Services, error reports with personal data removed: monitored, with an alert to a named person on failure or delay | integration | Claude | P0 | 12 | Open |
-| 8434 | Monitoring Services, error reports with personal data removed: runbook entry: what to do when it fails | integration | Claude | P0 | 12 | Open |
-| 8435 | Monitoring Services, error reports with personal data removed: credentials held in the managed secret store and rotated | integration | Claude | P0 | 12 | Open |
+| 8434 | Monitoring Services, error reports with personal data removed: runbook entry: what to do when it fails | integration | Claude | P0 | 13 | Open |
+| 8435 | Monitoring Services, error reports with personal data removed: credentials held in the managed secret store and rotated | integration | Claude | P0 | 13 | Open |
 | 8436 | Monitoring Services, uptime checks: contract written: request, response, errors and limits, agreed with the provider | integration | Claude | P1 | 42 | Open |
 | 8437 | Monitoring Services, uptime checks: client built behind one module, with nothing else calling the provider directly | integration | Claude | P1 | 42 | Open |
 | 8438 | Monitoring Services, uptime checks: timeouts, retries with backoff and a limit on attempts | integration | Claude | P1 | 42 | Open |
@@ -9317,7 +9317,7 @@ Every event a member or host must be told about, with its trigger, its text in e
 | 8469 | Notice: one time code for sign in or recovery: SMS text in Urdu, by a translator | content | Translator | P0 | H4 | Open |
 | 8470 | Notice: one time code for sign in or recovery: always sent, whatever the member's preferences, as a financial alert | lib/notices.ts | Claude | P0 |  | Done |
 | 8471 | Notice: one time code for sign in or recovery: logged with channel and delivery status | NotificationLog | Claude | P0 |  | Done |
-| 8472 | Notice: one time code for sign in or recovery: test that it fires once, at the right time, to the right member | tests | Claude | P0 | 11 | Open |
+| 8472 | Notice: one time code for sign in or recovery: test that it fires once, at the right time, to the right member | tests | Claude | P0 | 12 | Open |
 | 8473 | Notice: welcome after sign up: trigger written in the notice job, with its timing | lib/notices.ts | Claude | P1 |  | Done |
 | 8474 | Notice: welcome after sign up: in the application text in English | content | Claude | P1 |  | Done |
 | 8475 | Notice: welcome after sign up: in the application text in Urdu, by a translator | content | Translator | P1 | H4 | Open |
@@ -9353,7 +9353,7 @@ Every event a member or host must be told about, with its trigger, its text in e
 | 8505 | Notice: identity check failed, with the reason and next step: WhatsApp template submitted and approved in both languages | commercial | Partner | P0 | H3 | Open |
 | 8506 | Notice: identity check failed, with the reason and next step: respects the member's preferences and quiet hours | lib/notices.ts | Claude | P0 |  | Done |
 | 8507 | Notice: identity check failed, with the reason and next step: logged with channel and delivery status | NotificationLog | Claude | P0 |  | Done |
-| 8508 | Notice: identity check failed, with the reason and next step: test that it fires once, at the right time, to the right member | tests | Claude | P0 | 11 | Open |
+| 8508 | Notice: identity check failed, with the reason and next step: test that it fires once, at the right time, to the right member | tests | Claude | P0 | 12 | Open |
 | 8509 | Notice: bank account opened: trigger written in the notice job, with its timing | lib/notices.ts | Claude | P0 |  | Done |
 | 8510 | Notice: bank account opened: in the application text in English | content | Claude | P0 |  | Done |
 | 8511 | Notice: bank account opened: in the application text in Urdu, by a translator | content | Translator | P0 | H4 | Open |
@@ -9364,7 +9364,7 @@ Every event a member or host must be told about, with its trigger, its text in e
 | 8516 | Notice: bank account opened: WhatsApp template submitted and approved in both languages | commercial | Partner | P0 | H3 | Open |
 | 8517 | Notice: bank account opened: respects the member's preferences and quiet hours | lib/notices.ts | Claude | P0 |  | Done |
 | 8518 | Notice: bank account opened: logged with channel and delivery status | NotificationLog | Claude | P0 |  | Done |
-| 8519 | Notice: bank account opened: test that it fires once, at the right time, to the right member | tests | Claude | P0 | 11 | Open |
+| 8519 | Notice: bank account opened: test that it fires once, at the right time, to the right member | tests | Claude | P0 | 12 | Open |
 | 8520 | Notice: bank account refused, with the reason: trigger written in the notice job, with its timing | lib/notices.ts | Claude | P0 |  | Done |
 | 8521 | Notice: bank account refused, with the reason: in the application text in English | content | Claude | P0 |  | Done |
 | 8522 | Notice: bank account refused, with the reason: in the application text in Urdu, by a translator | content | Translator | P0 | H4 | Open |
@@ -9375,7 +9375,7 @@ Every event a member or host must be told about, with its trigger, its text in e
 | 8527 | Notice: bank account refused, with the reason: WhatsApp template submitted and approved in both languages | commercial | Partner | P0 | H3 | Open |
 | 8528 | Notice: bank account refused, with the reason: respects the member's preferences and quiet hours | lib/notices.ts | Claude | P0 |  | Done |
 | 8529 | Notice: bank account refused, with the reason: logged with channel and delivery status | NotificationLog | Claude | P0 |  | Done |
-| 8530 | Notice: bank account refused, with the reason: test that it fires once, at the right time, to the right member | tests | Claude | P0 | 11 | Open |
+| 8530 | Notice: bank account refused, with the reason: test that it fires once, at the right time, to the right member | tests | Claude | P0 | 12 | Open |
 | 8531 | Notice: CNIC about to expire: trigger written in the notice job, with its timing | lib/notices.ts | Claude | P2 |  | Done |
 | 8532 | Notice: CNIC about to expire: in the application text in English | content | Claude | P2 |  | Done |
 | 8533 | Notice: CNIC about to expire: in the application text in Urdu, by a translator | content | Translator | P2 | H4 | Open |
@@ -9412,7 +9412,7 @@ Every event a member or host must be told about, with its trigger, its text in e
 | 8559 | Notice: new device registered: SMS text in Urdu, by a translator | content | Translator | P0 | H4 | Open |
 | 8560 | Notice: new device registered: always sent, whatever the member's preferences, as a financial alert | lib/notices.ts | Claude | P0 |  | Done |
 | 8561 | Notice: new device registered: logged with channel and delivery status | NotificationLog | Claude | P0 |  | Done |
-| 8562 | Notice: new device registered: test that it fires once, at the right time, to the right member | tests | Claude | P0 | 11 | Open |
+| 8562 | Notice: new device registered: test that it fires once, at the right time, to the right member | tests | Claude | P0 | 12 | Open |
 | 8563 | Notice: cooling off started after a device change: trigger written in the notice job, with its timing | lib/notices.ts | Claude | P0 |  | Done |
 | 8564 | Notice: cooling off started after a device change: in the application text in English | content | Claude | P0 |  | Done |
 | 8565 | Notice: cooling off started after a device change: in the application text in Urdu, by a translator | content | Translator | P0 | H4 | Open |
@@ -10325,9 +10325,9 @@ Each business rule with its own test case, then the journeys a member takes from
 | # | Item | Where | Owner | Pri | Phase | Status |
 | --: | :-- | :-- | :-- | :-- | :-- | :-- |
 | 9330 | Journey test: sign up to a verified account at the bank | tests | Claude | P1 | 39 | Open |
-| 9331 | Journey test: host creates a circle and admits members | tests | Claude | P1 | 40 | Open |
-| 9332 | Journey test: member joins with a code and accepts the key facts | tests | Claude | P1 | 40 | Open |
-| 9333 | Journey test: member authorises a mandate | tests | Claude | P1 | 40 | Open |
+| 9331 | Journey test: host creates a circle and admits members | tests | Claude | P1 | 39 | Open |
+| 9332 | Journey test: member joins with a code and accepts the key facts | tests | Claude | P1 | 39 | Open |
+| 9333 | Journey test: member authorises a mandate | tests | Claude | P1 | 39 | Open |
 | 9334 | Journey test: first collection succeeds on payday | tests | Claude | P1 | 40 | Open |
 | 9335 | Journey test: collection fails, retries and succeeds before the 8th | tests | Claude | P1 | 40 | Open |
 | 9336 | Journey test: member pays by hand through Raast | tests | Claude | P1 | 40 | Open |
@@ -10358,7 +10358,7 @@ Each business rule with its own test case, then the journeys a member takes from
 | 9361 | Journey test: host removes a member against the published test | tests | Claude | P1 | 40 | Open |
 | 9362 | Journey test: ballot sets the order of turns | tests | Claude | P1 | 40 | Open |
 | 9363 | Journey test: member abroad joins through Mashreq's UAE route | tests | Claude | P1 | 40 | Open |
-| 9364 | Journey test: reported record disputed and corrected | tests | Claude | P1 | 41 | Open |
+| 9364 | Journey test: reported record disputed and corrected | tests | Claude | P1 | 40 | Open |
 
 ### AI20. Performance
 
@@ -10381,13 +10381,13 @@ Each business rule with its own test case, then the journeys a member takes from
 
 | # | Item | Where | Owner | Pri | Phase | Status |
 | --: | :-- | :-- | :-- | :-- | :-- | :-- |
-| 9377 | Security test: sign in bypass attempts on every route | tests | Claude | P1 | 41 | Open |
-| 9378 | Security test: access to another member's circle, payment, receipt and profile by changing identifiers | tests | Claude | P1 | 41 | Open |
-| 9379 | Security test: rate limits enforced on sign in, codes and financial actions | tests | Claude | P1 | 41 | Open |
-| 9380 | Security test: token expiry, refresh rotation and revocation | tests | Claude | P1 | 41 | Open |
-| 9381 | Security test: forged and replayed webhooks from the bank and the PSP | tests | Claude | P1 | 41 | Open |
-| 9382 | Security test: injection through every input | tests | Claude | P1 | 41 | Open |
-| 9383 | Security test: script injection through chat, names and support text | tests | Claude | P1 | 41 | Open |
+| 9377 | Security test: sign in bypass attempts on every route | tests | Claude | P1 | 40 | Open |
+| 9378 | Security test: access to another member's circle, payment, receipt and profile by changing identifiers | tests | Claude | P1 | 40 | Open |
+| 9379 | Security test: rate limits enforced on sign in, codes and financial actions | tests | Claude | P1 | 40 | Open |
+| 9380 | Security test: token expiry, refresh rotation and revocation | tests | Claude | P1 | 40 | Open |
+| 9381 | Security test: forged and replayed webhooks from the bank and the PSP | tests | Claude | P1 | 40 | Open |
+| 9382 | Security test: injection through every input | tests | Claude | P1 | 40 | Open |
+| 9383 | Security test: script injection through chat, names and support text | tests | Claude | P1 | 40 | Open |
 | 9384 | Security test: file uploads checked for type, size and content | tests | Claude | P1 | 41 | Open |
 | 9385 | Security test: no secret in the application bundle | tests | Claude | P1 | 41 | Open |
 | 9386 | Security test: content security policy blocks inline scripts | tests | Claude | P1 | 41 | Open |
@@ -10431,15 +10431,15 @@ OWASP MASVS v2.1: 24 controls in eight groups. Controls already held by an item 
 | 9408 | Meet MASVS-AUTH-3: sensitive operations secured with additional authentication: the transaction PIN | native and web | Claude | P1 | 35 | Open |
 | 9409 | Meet MASVS-NETWORK-1: all network traffic secured to current practice: TLS 1.2 or later only | native and web | Claude | P1 | 35 | Open |
 | 9410 | Meet MASVS-NETWORK-2: identity pinning for Halqa's own endpoints | native and web | Claude | P1 | 35 | Open |
-| 9411 | Meet MASVS-PLATFORM-1: inter process communication used securely: deep links validated before acting | native and web | Claude | P1 | 36 | Open |
-| 9412 | Meet MASVS-PLATFORM-2: web views used securely: no file access, no script bridges to untrusted content | native and web | Claude | P1 | 36 | Open |
-| 9413 | Meet MASVS-PLATFORM-3: the user interface used securely: sensitive fields masked, overlays detected on payment screens | native and web | Claude | P1 | 36 | Open |
-| 9414 | Meet MASVS-CODE-1: an up to date platform version required | native and web | Claude | P1 | 36 | Open |
-| 9415 | Meet MASVS-CODE-2: a mechanism to enforce updates for a critical fix | native and web | Claude | P1 | 36 | Open |
-| 9416 | Meet MASVS-CODE-3: only components without known vulnerabilities | native and web | Claude | P1 | 36 | Open |
-| 9417 | Meet MASVS-CODE-4: all untrusted input validated and sanitised, including deep link parameters and QR contents | native and web | Claude | P1 | 36 | Open |
-| 9418 | Meet MASVS-RESILIENCE-1: the integrity of the platform validated: rooted and jailbroken devices detected | native and web | Claude | P1 | 36 | Open |
-| 9419 | Meet MASVS-RESILIENCE-2: anti tampering: the application's own integrity checked | native and web | Claude | P1 | 36 | Open |
+| 9411 | Meet MASVS-PLATFORM-1: inter process communication used securely: deep links validated before acting | native and web | Claude | P1 | 35 | Open |
+| 9412 | Meet MASVS-PLATFORM-2: web views used securely: no file access, no script bridges to untrusted content | native and web | Claude | P1 | 35 | Open |
+| 9413 | Meet MASVS-PLATFORM-3: the user interface used securely: sensitive fields masked, overlays detected on payment screens | native and web | Claude | P1 | 35 | Open |
+| 9414 | Meet MASVS-CODE-1: an up to date platform version required | native and web | Claude | P1 | 35 | Open |
+| 9415 | Meet MASVS-CODE-2: a mechanism to enforce updates for a critical fix | native and web | Claude | P1 | 35 | Open |
+| 9416 | Meet MASVS-CODE-3: only components without known vulnerabilities | native and web | Claude | P1 | 35 | Open |
+| 9417 | Meet MASVS-CODE-4: all untrusted input validated and sanitised, including deep link parameters and QR contents | native and web | Claude | P1 | 35 | Open |
+| 9418 | Meet MASVS-RESILIENCE-1: the integrity of the platform validated: rooted and jailbroken devices detected | native and web | Claude | P1 | 35 | Open |
+| 9419 | Meet MASVS-RESILIENCE-2: anti tampering: the application's own integrity checked | native and web | Claude | P1 | 35 | Open |
 | 9420 | Meet MASVS-RESILIENCE-3: anti static analysis: code obfuscated in release builds | native and web | Claude | P1 | 36 | Open |
 | 9421 | Meet MASVS-RESILIENCE-4: anti dynamic analysis: debuggers and hooking frameworks detected before financial actions | native and web | Claude | P1 | 36 | Open |
 | 9422 | Meet MASVS-PRIVACY-1: access to sensitive data and resources minimised: camera only for capture, no contacts or photos | native and web | Claude | P1 | 36 | Open |
@@ -11189,7 +11189,7 @@ In the manner of a large technology company: objectives, error budgets, on call 
 | 10058 | On call rota with a backup, and the escalation path | operations | Chairman | P1 | H4 | Open |
 | 10059 | Post incident review, blameless, written within five working days, with actions tracked | operations | Claude | P1 | 42 | Open |
 | 10060 | Production readiness review before any launch: monitoring, runbooks, rollback, load | process | Claude | P1 | 42 | Open |
-| 10061 | No releases from two days before the 8th to the day after, so payout day is never at risk | process | Claude | P0 | 12 | Open |
+| 10061 | No releases from two days before the 8th to the day after, so payout day is never at risk | process | Claude | P0 | 13 | Open |
 | 10062 | Release calendar shared with the bank | process | Claude | P2 | 72 | Open |
 | 10063 | Capacity review each month against growth | process | Claude | P3 | 80 | Open |
 
@@ -11555,15 +11555,15 @@ Item 1012 by question: each likely question with an answer written and rehearsed
 | 10364 | Answer prepared for the bank: how members are verified | meeting | Claude | P1 | 37 | Open |
 | 10365 | Answer prepared for the bank: whether Halqa stores fingerprints or faces | meeting | Claude | P1 | 37 | Open |
 | 10366 | Answer prepared for the bank: how the payday is known | meeting | Claude | P1 | 37 | Open |
-| 10367 | Answer prepared for the bank: what happens when a salary is late | meeting | Claude | P1 | 38 | Open |
-| 10368 | Answer prepared for the bank: why the 8th | meeting | Claude | P1 | 38 | Open |
-| 10369 | Answer prepared for the bank: what the fee is and who earns it | meeting | Claude | P1 | 38 | Open |
-| 10370 | Answer prepared for the bank: what share the bank keeps | meeting | Claude | P1 | 38 | Open |
-| 10371 | Answer prepared for the bank: what deposits the bank gains | meeting | Claude | P1 | 38 | Open |
-| 10372 | Answer prepared for the bank: how many accounts each circle brings | meeting | Claude | P1 | 38 | Open |
-| 10373 | Answer prepared for the bank: how credit is reported and by whom | meeting | Claude | P1 | 38 | Open |
-| 10374 | Answer prepared for the bank: Halqa's legal position and why it needs no licence of its own | meeting | Claude | P1 | 38 | Open |
-| 10375 | Answer prepared for the bank: how Halqa meets the outsourcing framework | meeting | Claude | P1 | 38 | Open |
+| 10367 | Answer prepared for the bank: what happens when a salary is late | meeting | Claude | P1 | 37 | Open |
+| 10368 | Answer prepared for the bank: why the 8th | meeting | Claude | P1 | 37 | Open |
+| 10369 | Answer prepared for the bank: what the fee is and who earns it | meeting | Claude | P1 | 37 | Open |
+| 10370 | Answer prepared for the bank: what share the bank keeps | meeting | Claude | P1 | 37 | Open |
+| 10371 | Answer prepared for the bank: what deposits the bank gains | meeting | Claude | P1 | 37 | Open |
+| 10372 | Answer prepared for the bank: how many accounts each circle brings | meeting | Claude | P1 | 37 | Open |
+| 10373 | Answer prepared for the bank: how credit is reported and by whom | meeting | Claude | P1 | 37 | Open |
+| 10374 | Answer prepared for the bank: Halqa's legal position and why it needs no licence of its own | meeting | Claude | P1 | 37 | Open |
+| 10375 | Answer prepared for the bank: how Halqa meets the outsourcing framework | meeting | Claude | P1 | 37 | Open |
 | 10376 | Answer prepared for the bank: where the data is hosted | meeting | Claude | P1 | 38 | Open |
 | 10377 | Answer prepared for the bank: what security testing has been done | meeting | Claude | P1 | 38 | Open |
 | 10378 | Answer prepared for the bank: the continuity plan | meeting | Claude | P1 | 38 | Open |
@@ -11684,7 +11684,7 @@ Where the pot is recoverable from security the member holds, no credit history i
 | 10449 | Sources combine: points, savings and an asset committee are added together and tested against the pot | new lib/security.ts | Claude | P1 |  | Done |
 | 10450 | Relaxation of 10 per cent: security counts as sufficient at 90 per cent of the pot or more, in every case (5 October) | new lib/security.ts | Claude | P1 |  | Done |
 | 10451 | The member signs a clause not to withdraw the money for the circle's duration | new page | Claude | P1 | 35 | Open |
-| 10452 | The bank places the hold on the member's own account; Halqa never holds the money, so the no custody position stands (5 October) | integration | Claude | P0 | 10 | Open |
+| 10452 | The bank places the hold on the member's own account; Halqa never holds the money, so the no custody position stands (5 October) | integration | Claude | P0 | 11 | Open |
 | 10453 | Held money sits in the partner bank's savings product and earns its profit for the member throughout the lock, so giving security costs the member nothing (chairman, 5 October: not too harsh) | integration | Bank | P0 | H2 | Open |
 | 10454 | The savings product used for security is the same one that holds instalments between payday and the 8th (D12), so the bank needs no second product | bank | Bank | P1 | H2 | Open |
 | 10455 | Profit earned on held security shown to the member during the circle | new page | Claude | P2 | 67 | Open |

@@ -124,12 +124,32 @@ export async function cleanup() {
   const committees = await prisma.committee.findMany({ where: { hostId: { in: ids } }, select: { id: true } });
   const cids = committees.map(c => c.id);
   if (cids.length) {
+    // The ledger and the money rows are RESTRICT now, on purpose: a circle
+    // with entries against it cannot be deleted, because the ledger is
+    // evidence and must not vanish with the thing it is evidence about
+    // (schema of 6 October). A test tidying up has to clear them explicitly,
+    // which is the correct shape of this problem rather than a workaround.
+    await prisma.ledgerEntry.deleteMany({ where: { committeeId: { in: cids } } });
+    await prisma.creditEvent.deleteMany({ where: { committeeId: { in: cids } } });
+    await prisma.recoveryCase.deleteMany({ where: { committeeId: { in: cids } } });
+    await prisma.exchangeBid.deleteMany({ where: { listing: { committeeId: { in: cids } } } });
+    await prisma.exchangeListing.deleteMany({ where: { committeeId: { in: cids } } });
+    await prisma.riskConsent.deleteMany({ where: { committeeId: { in: cids } } });
+    await prisma.investment.deleteMany({ where: { committeeId: { in: cids } } });
+    await prisma.chatMessage.deleteMany({ where: { committeeId: { in: cids } } });
+    await prisma.committeeWaitlist.deleteMany({ where: { committeeId: { in: cids } } });
+    await prisma.payoutHoldback.deleteMany({ where: { committeeId: { in: cids } } });
+    await prisma.securityDeposit.deleteMany({ where: { membership: { committeeId: { in: cids } } } });
+    await prisma.protectionCommitment.deleteMany({ where: { membership: { committeeId: { in: cids } } } });
     await prisma.payment.deleteMany({ where: { round: { committeeId: { in: cids } } } });
     await prisma.round.deleteMany({ where: { committeeId: { in: cids } } });
     await prisma.committeeMember.deleteMany({ where: { committeeId: { in: cids } } });
     await prisma.agreementSignature.deleteMany({ where: { committeeId: { in: cids } } });
     await prisma.committee.deleteMany({ where: { id: { in: cids } } });
   }
+  await prisma.paymentAttempt.deleteMany({ where: { userId: { in: ids } } });
+  await prisma.idempotencyRecord.deleteMany({ where: { userId: { in: ids } } });
+  await prisma.creditEvent.deleteMany({ where: { userId: { in: ids } } });
   await prisma.committeeMember.deleteMany({ where: { userId: { in: ids } } });
   await prisma.agreementSignature.deleteMany({ where: { userId: { in: ids } } });
   await prisma.auditLog.deleteMany({ where: { actorId: { in: ids } } });
@@ -137,4 +157,61 @@ export async function cleanup() {
   await prisma.securityEvent.deleteMany({ where: { userId: { in: ids } } });
   await prisma.refreshToken.deleteMany({ where: { userId: { in: ids } } });
   await prisma.user.deleteMany({ where: { id: { in: ids } } });
+}
+
+/**
+ * A circle that is RUNNING: started, with a collecting round and a payment
+ * obligation for every member.
+ *
+ * Forty two success-path tests in the register need one of these and could not
+ * be written without it, because almost everything interesting about a
+ * committee only exists once it starts: the rounds, the payments, the payout,
+ * the turn market, the exit ladder.
+ *
+ * Starting is deliberately two-stage — FORMING opens a 24-hour confirmation
+ * window, and the circle activates when the window has run — so a member can
+ * withdraw before anybody is committed. A test cannot wait a day, so the window
+ * is moved into the past directly, which is the one thing here that reaches
+ * past the API rather than through it.
+ */
+export async function makeLiveCircle(host: Member, memberCount = 3) {
+  const { prisma } = await import('../../src/db');
+  const created = await makeCircle(host, {
+    memberCap: memberCount, minMembersToStart: memberCount, listedPublicly: true,
+    // No security deposits: the schema calls 0 "the live product default", and
+    // a fixture standing in for a real circle should not demand deposits that
+    // the real product does not take.
+    depositCoverageBps: 0,
+  });
+  if (created.status !== 201) throw new Error(`circle not created: ${created.status} ${JSON.stringify(created.body).slice(0, 200)}`);
+  const circleId = created.body.id as string;
+
+  // The host holds a seat too, so only the rest need to join.
+  const members: Member[] = [host];
+  for (let i = 1; i < memberCount; i++) {
+    const m = await makeMember({ creditScore: 700, committeesCompletedClean: 1 });
+    await signUndertaking(m);
+    const joined = await api().post(`/api/committees/${circleId}/join`).set(auth(m)).send({});
+    if (joined.status !== 201) throw new Error(`member ${i} could not join: ${joined.status} ${JSON.stringify(joined.body).slice(0, 200)}`);
+    members.push(m);
+  }
+
+  const opened = await api().post(`/api/committees/${circleId}/start`).set(auth(host)).send({});
+  if (opened.status >= 400) throw new Error(`window would not open: ${opened.status} ${JSON.stringify(opened.body).slice(0, 300)}`);
+
+  // Move the confirmation window into the past so the circle can activate now.
+  await prisma.committee.update({
+    where: { id: circleId },
+    data: { confirmingSince: new Date(Date.now() - 25 * 3_600_000) },
+  });
+
+  const activated = await api().post(`/api/committees/${circleId}/start`).set(auth(host)).send({});
+  if (activated.status >= 400) throw new Error(`circle would not activate: ${activated.status} ${JSON.stringify(activated.body).slice(0, 300)}`);
+
+  const round = await prisma.round.findFirst({
+    where: { committeeId: circleId, status: 'COLLECTING' },
+    include: { payments: true },
+  });
+  if (!round) throw new Error('the circle started with no collecting round');
+  return { circleId, members, round };
 }

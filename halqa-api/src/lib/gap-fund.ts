@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { Prisma, PrismaClient } from '@prisma/client';
+import { audit } from './audit';
 
 // Fund-the-gap (the Money Fellows move): a forming circle with empty slots can
 // start anyway — Halqa fills the missing positions with sponsor slots instead
@@ -21,7 +22,7 @@ export async function ensureSponsorUser(tx: Tx, index: number) {
   const username = `${GAP_USERNAME_PREFIX}${index}`;
   const existing = await tx.user.findUnique({ where: { username } });
   if (existing) return existing;
-  return tx.user.create({ data: {
+  const created = await tx.user.create({ data: {
     fullName: 'Halqa Gap Fund',
     username,
     phone: `0300${String(9000000 + index)}`,
@@ -29,6 +30,12 @@ export async function ensureSponsorUser(tx: Tx, index: number) {
     passwordHash: `!locked:${randomUUID()}`, // never a valid bcrypt hash — unsignable account
     creditScore: 700,
   } });
+  // Halqa putting its own money into a seat is the one member creation nobody
+  // asked for, so it is the one that most needs recording. The actor is null:
+  // this is the service acting, not a person, and saying so is the honest
+  // entry rather than attributing it to whoever happened to trigger it.
+  await audit(tx, null, 'GAP_SPONSOR_CREATED', 'User', created.id, { username, index });
+  return created;
 }
 
 // Auto-settle every sponsor payment on a round: mark PAID and record the
